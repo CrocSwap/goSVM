@@ -1,0 +1,10 @@
+bash scripts/verify.sh tokens
+    Finished `release` profile [optimized] target(s) in 0.06s
+build/verify: replacing existing signature
+PASS: 206 token-swap simulations, 4 committed swaps, 4 rollback checks
+go wide-swap        20321 CU
+go maximum-input    20303 CU
+go small-swap       20233 CU
+rust wide-swap        20380 CU
+rust maximum-input    20468 CU
+rust small-swap       20029 CU

@@ -1,0 +1,92 @@
+{
+  "cases": [
+    {
+      "name": "swap",
+      "cu": 486,
+      "error": 0,
+      "committed": true
+    },
+    {
+      "name": "zero amount",
+      "cu": 262,
+      "error": 3,
+      "committed": true
+    },
+    {
+      "name": "slippage",
+      "cu": 279,
+      "error": 5,
+      "committed": true
+    },
+    {
+      "name": "invalid reserves",
+      "cu": 255,
+      "error": 2,
+      "committed": true
+    },
+    {
+      "name": "counter overflow",
+      "cu": 268,
+      "error": 4,
+      "committed": true
+    },
+    {
+      "name": "owner",
+      "cu": 87,
+      "error": 6002,
+      "committed": true
+    },
+    {
+      "name": "readonly",
+      "cu": 81,
+      "error": 6001,
+      "committed": true
+    },
+    {
+      "name": "missing account",
+      "cu": 21,
+      "error": 6000,
+      "committed": true
+    },
+    {
+      "name": "short state",
+      "cu": 99,
+      "error": 6003,
+      "committed": true
+    },
+    {
+      "name": "state discriminator",
+      "cu": 104,
+      "error": 6003,
+      "committed": true
+    },
+    {
+      "name": "instruction discriminator",
+      "cu": 135,
+      "error": 6004,
+      "committed": true
+    },
+    {
+      "name": "long instruction",
+      "cu": 106,
+      "error": 6004,
+      "committed": true
+    },
+    {
+      "name": "two swaps",
+      "cu": 972,
+      "error": 0,
+      "committed": true
+    },
+    {
+      "name": "atomic rollback",
+      "cu": 765,
+      "error": 5,
+      "committed": true
+    }
+  ],
+  "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+  "fixtures_sha256": "031fce8e446fbf014269027b84cbbfee7049b4c31a23796d6ced9061b96dc58f",
+  "schema": 1,
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)"
+}

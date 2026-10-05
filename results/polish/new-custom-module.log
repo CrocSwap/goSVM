@@ -1,0 +1,2 @@
+Created /var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm polish i58vmqo9/custom-swap
+Next: cd "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm polish i58vmqo9/custom-swap" && gosvm check && go test ./... && gosvm build

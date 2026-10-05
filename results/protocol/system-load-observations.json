@@ -1,0 +1,32 @@
+{
+  "observation": "During final SBF cold build, before ProgramTest build",
+  "load_average_1_5_15_minutes": [
+    71.13818359375,
+    91.51171875,
+    103.83642578125
+  ],
+  "interpretation": "Machine substantially loaded; record CPU time and artifact counts, do not generalize precise wall-time ratios.",
+  "hardware": {
+    "hw.model": "Mac14,2",
+    "hw.memsize": "25769803776",
+    "hw.ncpu": "8",
+    "hw.physicalcpu": "8",
+    "cpu_brand": "Apple M2"
+  },
+  "build_constraints": {
+    "cargo_jobs": 4,
+    "go_maxprocs": 4,
+    "rust_incremental_env": "unset; default Cargo profiles",
+    "native_test_profile": "debug",
+    "sbf_profile": "release",
+    "crate_sources": "already downloaded",
+    "toolchains": "already installed"
+  },
+  "openssl_observation": {
+    "at": "2026-10-04T23:17:23.039428+00:00",
+    "description": "During the apparent end-of-dependency pause, the only remaining Cargo work was the openssl-sys build script and nested make/clang processes. Vendored OpenSSL is enabled by the runtime graph, not by the benchmark manifest.",
+    "feature_origin": "agave-precompiles 2.3.9 -> solana-secp256r1-program/openssl-vendored -> openssl/vendored",
+    "origin_manifest": "/Users/colkitt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agave-precompiles-2.3.9/Cargo.toml",
+    "origin_excerpt": "version = \"2.2.3\"\nfeatures = [\"openssl-vendored\"]"
+  }
+}

@@ -1,0 +1,28 @@
+[package]
+name = "protocol-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+solana-program = "=2.3.0"
+borsh = { version = "=1.8.1", features = ["derive"] }
+# Same platform-tools 1.51 compatibility constraints as Basanos.
+indexmap = "=2.13.0"
+blake3 = "=1.8.2"
+proc-macro-crate = "=3.3.0"
+zeroize = "=1.8.1"
+
+[profile.release]
+overflow-checks = false
+lto = true
+codegen-units = 1
+
+[profile.fasttest]
+inherits = "release"
+lto = false
+codegen-units = 16
+incremental = true

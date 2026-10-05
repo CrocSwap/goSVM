@@ -1,0 +1,189 @@
+{
+  "cases": {
+    "bounded-go": {
+      "cold_seconds": 1.4405887918546796,
+      "edit_seconds": [
+        0.20898108277469873,
+        0.24476074986159801,
+        0.2437665411271155
+      ],
+      "noop_seconds": [
+        0.0364982089959085,
+        0.04533241596072912,
+        0.0328078749589622
+      ],
+      "edit_median_seconds": 0.2437665411271155,
+      "noop_median_seconds": 0.0364982089959085,
+      "cold_artifact_bytes": 3369,
+      "retained_artifact_bytes": 3369,
+      "elf_bytes": 3216,
+      "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+      "cu": 486
+    },
+    "bounded-lean": {
+      "cold_seconds": 2.7060568751767278,
+      "edit_seconds": [
+        0.6570834158919752,
+        0.5377479582093656,
+        0.6716536656022072
+      ],
+      "noop_seconds": [
+        0.1439172080717981,
+        0.18470104224979877,
+        0.34890299988910556
+      ],
+      "edit_median_seconds": 0.6570834158919752,
+      "noop_median_seconds": 0.18470104224979877,
+      "cold_artifact_bytes": 55029,
+      "retained_artifact_bytes": 118406,
+      "elf_bytes": 1784,
+      "elf_sha256": "a2b586edef444d66f7b00f0c12e67b4364ea6929cd8b3bc4df4f1d9bb628c1f9",
+      "locked_packages": 1,
+      "cu": 348
+    },
+    "bounded-anchor": {
+      "cold_seconds": 159.01706795906648,
+      "edit_seconds": [
+        6.58396220812574,
+        10.00056966720149,
+        9.09468554193154
+      ],
+      "noop_seconds": [
+        1.351872666273266,
+        1.4482080419547856,
+        1.4372894586995244
+      ],
+      "edit_median_seconds": 9.09468554193154,
+      "noop_median_seconds": 1.4372894586995244,
+      "cold_artifact_bytes": 289727978,
+      "retained_artifact_bytes": 289748972,
+      "elf_bytes": 154344,
+      "elf_sha256": "924f4e2d16b39bfbbed13b5b711bc398229757caf2f3e09682f7e46b30756fa3",
+      "locked_packages": 162,
+      "cu": 768
+    },
+    "token-go": {
+      "cold_seconds": 2.60615950031206,
+      "edit_seconds": [
+        0.58630166715011,
+        0.6734909587539732,
+        0.5686300001107156
+      ],
+      "noop_seconds": [
+        0.037158749997615814,
+        0.06006470788270235,
+        0.047255124896764755
+      ],
+      "edit_median_seconds": 0.58630166715011,
+      "noop_median_seconds": 0.047255124896764755,
+      "cold_artifact_bytes": 8217,
+      "retained_artifact_bytes": 8217,
+      "elf_bytes": 8064,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "cu": 20329
+    },
+    "token-lean": {
+      "cold_seconds": 1.9208128340542316,
+      "edit_seconds": [
+        1.0057718749158084,
+        0.9226600001566112,
+        0.9366962499916553
+      ],
+      "noop_seconds": [
+        0.20776195917278528,
+        0.20251125004142523,
+        0.16454937495291233
+      ],
+      "edit_median_seconds": 0.9366962499916553,
+      "noop_median_seconds": 0.20251125004142523,
+      "cold_artifact_bytes": 88347,
+      "retained_artifact_bytes": 173799,
+      "elf_bytes": 12288,
+      "elf_sha256": "f70487227385f97513922fb77f2e82d7c3b7cfd80fc9bd7c62057b103bf87b98",
+      "locked_packages": 1,
+      "cu": 20392
+    },
+    "token-anchor": {
+      "cold_seconds": 155.7417236668989,
+      "edit_seconds": [
+        2.473875833209604,
+        2.461749415844679,
+        2.5333210001699626
+      ],
+      "noop_seconds": [
+        0.3153070001862943,
+        0.44606287498027086,
+        0.32515545934438705
+      ],
+      "edit_median_seconds": 2.473875833209604,
+      "noop_median_seconds": 0.32515545934438705,
+      "cold_artifact_bytes": 310338473,
+      "retained_artifact_bytes": 310326848,
+      "elf_bytes": 188768,
+      "elf_sha256": "fca6bb6931d5eaaf5e04550053b3693ac5f88b1ecb0da32a84d59c12951fb283",
+      "locked_packages": 169,
+      "cu": 19431
+    }
+  },
+  "successful_token_CU": {
+    "go": {
+      "count": 68,
+      "min": 20241,
+      "median": 20320.0,
+      "max": 20354
+    },
+    "lean-rust": {
+      "count": 68,
+      "min": 20041,
+      "median": 20420.0,
+      "max": 20503
+    },
+    "anchor": {
+      "count": 68,
+      "min": 19080,
+      "median": 19459.0,
+      "max": 19542
+    }
+  },
+  "source_sha256": {
+    "benchmarks/anchor/README.md": "2db1d9a3c252660083521d8dd8bbaca41d26ef1e5d92ebdb3adf3b3ced524af7",
+    "benchmarks/anchor/bounded/Cargo.lock": "f6c7ddd1e2f9060ed32c2d02993a687e8651ca1bdb47fa4c9f7113f61bb016ee",
+    "benchmarks/anchor/bounded/Cargo.toml": "e56476a9083cf05a5780891d4307fd764deec8179063527f7265e74d97f6c663",
+    "benchmarks/anchor/bounded/src/lib.rs": "25d573c3dab54b924dcf2b36ee54a8cd0d2d8276dfc27d762faf2fbe67bc3bf7",
+    "benchmarks/anchor/go-token/swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0",
+    "benchmarks/anchor/lean-bounded/Cargo.lock": "a8d58e1dbf3af3d016a45a5a8c9535e603b167cde4f15ad15865c753c37e7a89",
+    "benchmarks/anchor/lean-bounded/Cargo.toml": "81ab2770979dad27c22810e4b901abd5c0e2e2eaae7c904c7a51227681676b02",
+    "benchmarks/anchor/lean-bounded/src/lib.rs": "acb578b2781009b915b6af343440290ba0957af3c64d13ea8477abb6ada85bab",
+    "benchmarks/anchor/lean-token/Cargo.lock": "f2a13d489d4f1b63a209516b028784974bc294c228bd99217be72724e409a8ca",
+    "benchmarks/anchor/lean-token/Cargo.toml": "d193675ced35b0d65a74391c96297d7e1e71ff31be25325d6e35a238ef184c6b",
+    "benchmarks/anchor/lean-token/src/lib.rs": "ca35c42bf573473d6260b703cd1a43fe277a7957bb39a1850056af8db68c3fb2",
+    "benchmarks/anchor/token/Cargo.lock": "c7d2dd5da9798647ed15bf8e3d326d0ef92b37c5cbf1c9aa9ab180cd3f242fc7",
+    "benchmarks/anchor/token/Cargo.toml": "6a2a1286075dc46eca25c788d20270745212735743b019319ec048a25e09b81f",
+    "benchmarks/anchor/token/src/lib.rs": "9bf6c36c1a54ac85d32594abca29d5dc778c5addb51daeb58dd77f8bc62a3411",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/build.go": "8e8b0c59aff8980e482776b58bccd4052377a7e3905afe53d15f3371a357bcf2",
+    "internal/compiler/cache.go": "2430443b181104660100ffc5fd55f68fbc1d8f48ea02bd3dc5460abe2b3b6bd0",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "847f487bfa7171d337f541b95ec8558a32b286f6d8e2aa707a89c003e909b73c",
+    "internal/compiler/compiler_test.go": "7db5a1a0e80cd309d72881b14cf0c99d1eeefbbeab6434dff7e76532d3808c3c",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "solana/api.go": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/source.go": "83eeb25914c4abcb566e44bebbfe2b0caa9e5efb4ad1db6352f3a3c68f3fc418",
+    "cmd/verify/anchor.go": "092d51d7ad19f00d884ef27d33c0277ea07245372a77761ad64c125e9cf6a4dc",
+    "cmd/verify/main.go": "5d9c99beb61e26b0c43aaaae0d73b480373987cd721069fbf6aa241919b4cf8d",
+    "cmd/verify/protocol.go": "fa54ff62afe392559191ae4371ccedd03fee4aca0ee864050db8d60c62b20bbc",
+    "cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "cmd/verify/tokens.go": "096d97ee6629a4365eb9e7574991f594342c479b36878c2c5d01cbaab75be48e",
+    "scripts/anchor_bench.py": "25f189cf95340781104067913e33bf0d29fe02ec136a8fe91e7c60d71d0e92bf",
+    "scripts/verify-anchor.sh": "4fd3d9e9272b074a27f86d888dc93309a70e0454ab8bc95bccab325694fdba30",
+    "scripts/anchor_report.py": "524e65632eac56506be4939535daaa4442d617231e1355c0e707d86587d62163",
+    "scripts/anchor_prepare.py": "a9603d3ad82f152e12fd81ca7cea42fce5d247013ad46c00a3b80bad12da9682"
+  }
+}

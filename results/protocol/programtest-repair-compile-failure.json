@@ -1,0 +1,26 @@
+{
+  "wall_seconds": 9.0063936249353,
+  "cpu_seconds": 5.468562,
+  "load_average_before": [
+    73.689453125,
+    76.8642578125,
+    73.21923828125
+  ],
+  "load_average_after": [
+    67.42041015625,
+    75.4189453125,
+    72.7490234375
+  ],
+  "exit_code": 101,
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+    "--offline",
+    "--locked",
+    "--tests",
+    "--no-run"
+  ],
+  "log": "build/protocol/rust-programtest-harness-repair.log"
+}

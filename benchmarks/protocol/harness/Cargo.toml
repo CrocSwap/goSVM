@@ -1,0 +1,32 @@
+[package]
+name = "protocol-test-harness"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+solana-program = "=2.3.0"
+solana-program-test = "=2.3.9"
+solana-account = "=2.2.1"
+solana-instruction = "=2.3.3"
+solana-keypair = "=2.2.3"
+solana-message = "=2.4.0"
+solana-pubkey = "=2.4.0"
+solana-signer = "=2.2.1"
+solana-transaction = "=2.2.3"
+solana-transaction-error = "=2.2.1"
+tokio = { version = "=1.53.1", features = ["macros", "rt-multi-thread"] }
+serde_json = "=1.0.151"
+
+protocol-bench = { path = "../rust" }
+
+[profile.release]
+overflow-checks = false
+lto = true
+codegen-units = 1
+
+[profile.fasttest]
+inherits = "release"
+lto = false
+codegen-units = 16
+incremental = true

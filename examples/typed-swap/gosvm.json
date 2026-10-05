@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "name": "typed-swap",
+  "module": "example.com/typed-swap",
+  "platform_tools": "v1.51",
+  "sbf": "v3",
+  "state": "Pool",
+  "instruction": "SwapArgs",
+  "handler": "Swap",
+  "result": "SwapResult",
+  "sdk_sha256": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e"
+}

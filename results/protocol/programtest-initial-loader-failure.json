@@ -1,0 +1,30 @@
+{
+  "measurement": {
+    "wall_seconds": 9.126595916692168,
+    "cpu_seconds": 1.702310000000125,
+    "load_average_before": [
+      89.55615234375,
+      68.30810546875,
+      69.16162109375
+    ],
+    "load_average_after": [
+      92.65380859375,
+      69.65234375,
+      69.62744140625
+    ],
+    "exit_code": 101,
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+      "--offline",
+      "--locked",
+      "--tests",
+      "--",
+      "--test-threads=1"
+    ],
+    "log": "build/protocol/rust-programtest-execute.log"
+  },
+  "cause": "ProgramTest 2.3.9 / solana-sbpf 0.11.1 expects five program headers including PT_GNU_STACK and PT_NULL; platform-tools v1.51 emits four PT_LOAD headers. Final harness deliberately uses native Rust processor mode; external validator 3.0.15 verifies both actual SBF images."
+}

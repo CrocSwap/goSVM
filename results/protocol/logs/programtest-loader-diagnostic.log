@@ -1,0 +1,104 @@
+
+running 1 test
+[2026-10-04T23:25:02.110221000Z INFO  solana_program_test] "protocol_go" SBF program from /Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so, modified 43 minutes, 48 seconds, 680 ms, 146 µs and 200 ns ago
+[2026-10-04T23:25:02.130771000Z DEBUG solana_program_test] Payer address: HUPgkUXpu2jgnMqxVhcxb4b5CnC4XMCPk9RPrayEQC1C
+[2026-10-04T23:25:02.130865000Z DEBUG solana_program_test] Genesis config: Creation time: 2026-10-04T23:25:02+00:00
+    Cluster type: Development
+    Genesis hash: 8zMzHSCYRWSuLA8u2Vnar6QYiLRSN3j8kZTPBGFrNZ67
+    Shred version: 45739
+    Ticks per slot: 64
+    Hashes per tick: None
+    Target tick duration: 100µs
+    Slots per epoch: 432000
+    Warmup epochs: enabled
+    Slots per year: 4930769686.5
+    Inflation { initial: 0.08, terminal: 0.015, taper: 0.15, foundation: 0.05, foundation_term: 7.0, __unused: 0.0 }
+    Rent { lamports_per_byte_year: 3480, exemption_threshold: 2.0, burn_percent: 50 }
+    FeeRateGovernor { lamports_per_signature: 5000, target_lamports_per_signature: 10000, target_signatures_per_slot: 20000, min_lamports_per_signature: 0, max_lamports_per_signature: 0, burn_percent: 50 }
+    Capitalization: 3000001280641162 lamports in 242 accounts
+    Native instruction processors: []
+    Rewards pool: {}
+    
+[2026-10-04T23:25:02.395260000Z INFO  solana_accounts_db::read_only_accounts_cache] AccountsReadCacheEvictor has started
+[2026-10-04T23:25:02.535242000Z DEBUG solana_svm::transaction_processor] Adding program zk_token_proof_program under ZkTokenProof1111111111111111111111111111111
+[2026-10-04T23:25:02.539089000Z DEBUG solana_svm::transaction_processor] Added program zk_token_proof_program under ZkTokenProof1111111111111111111111111111111
+[2026-10-04T23:25:02.539169000Z DEBUG solana_svm::transaction_processor] Adding program loader_v4 under LoaderV411111111111111111111111111111111111
+[2026-10-04T23:25:02.539258000Z DEBUG solana_svm::transaction_processor] Added program loader_v4 under LoaderV411111111111111111111111111111111111
+[2026-10-04T23:25:02.539297000Z DEBUG solana_svm::transaction_processor] Adding program zk_elgamal_proof_program under ZkE1Gama1Proof11111111111111111111111111111
+[2026-10-04T23:25:02.539353000Z DEBUG solana_svm::transaction_processor] Added program zk_elgamal_proof_program under ZkE1Gama1Proof11111111111111111111111111111
+[2026-10-04T23:25:02.539859000Z DEBUG solana_runtime::bank] Adding precompiled program Secp256r1SigVerify1111111111111111111111111
+[2026-10-04T23:25:02.564973000Z DEBUG solana_runtime::bank] Added precompiled program Secp256r1SigVerify1111111111111111111111111
+[2026-10-04T23:25:02.565058000Z DEBUG solana_svm::transaction_processor] Adding program system_program under 11111111111111111111111111111111
+[2026-10-04T23:25:02.565147000Z DEBUG solana_svm::transaction_processor] Added program system_program under 11111111111111111111111111111111
+[2026-10-04T23:25:02.569106000Z DEBUG solana_svm::transaction_processor] Adding program vote_program under Vote111111111111111111111111111111111111111
+[2026-10-04T23:25:02.577453000Z DEBUG solana_svm::transaction_processor] Added program vote_program under Vote111111111111111111111111111111111111111
+[2026-10-04T23:25:02.577519000Z DEBUG solana_svm::transaction_processor] Adding program stake_program under Stake11111111111111111111111111111111111111
+[2026-10-04T23:25:02.577594000Z DEBUG solana_svm::transaction_processor] Added program stake_program under Stake11111111111111111111111111111111111111
+[2026-10-04T23:25:02.581843000Z DEBUG solana_svm::transaction_processor] Adding program solana_bpf_loader_deprecated_program under BPFLoader1111111111111111111111111111111111
+[2026-10-04T23:25:02.649138000Z DEBUG solana_svm::transaction_processor] Added program solana_bpf_loader_deprecated_program under BPFLoader1111111111111111111111111111111111
+[2026-10-04T23:25:02.649316000Z DEBUG solana_svm::transaction_processor] Adding program solana_bpf_loader_program under BPFLoader2111111111111111111111111111111111
+[2026-10-04T23:25:02.649521000Z DEBUG solana_svm::transaction_processor] Added program solana_bpf_loader_program under BPFLoader2111111111111111111111111111111111
+[2026-10-04T23:25:02.649607000Z DEBUG solana_svm::transaction_processor] Adding program solana_bpf_loader_upgradeable_program under BPFLoaderUpgradeab1e11111111111111111111111
+[2026-10-04T23:25:02.649679000Z DEBUG solana_svm::transaction_processor] Added program solana_bpf_loader_upgradeable_program under BPFLoaderUpgradeab1e11111111111111111111111
+[2026-10-04T23:25:02.649710000Z DEBUG solana_svm::transaction_processor] Adding program compute_budget_program under ComputeBudget111111111111111111111111111111
+[2026-10-04T23:25:02.649761000Z DEBUG solana_svm::transaction_processor] Added program compute_budget_program under ComputeBudget111111111111111111111111111111
+[2026-10-04T23:25:02.649789000Z DEBUG solana_runtime::bank] Adding precompiled program KeccakSecp256k11111111111111111111111111111
+[2026-10-04T23:25:02.649831000Z DEBUG solana_runtime::bank] Added precompiled program KeccakSecp256k11111111111111111111111111111
+[2026-10-04T23:25:02.649855000Z DEBUG solana_runtime::bank] Adding precompiled program Ed25519SigVerify111111111111111111111111111
+[2026-10-04T23:25:02.649911000Z DEBUG solana_runtime::bank] Added precompiled program Ed25519SigVerify111111111111111111111111111
+[2026-10-04T23:25:02.655716000Z INFO  solana_metrics::metrics] metrics disabled: environment variable not found
+[2026-10-04T23:25:02.659803000Z INFO  solana_metrics::metrics] datapoint: bank-timestamp get_timestamp_estimate_us=244i
+[2026-10-04T23:25:02.660093000Z INFO  solana_metrics::metrics] datapoint: bank-timestamp-correction slot=0i from_genesis=1791156302i corrected=0i ancestor_timestamp=0i
+[2026-10-04T23:25:02.908341000Z DEBUG solana_accounts_db::accounts_hash] hashing 311 time took 25ms
+[2026-10-04T23:25:02.919839000Z DEBUG solana_accounts_db::accounts_hash] hashing 20 time took 11ms
+[2026-10-04T23:25:02.919985000Z DEBUG solana_accounts_db::accounts_hash] hashing 2 time took 49us
+[2026-10-04T23:25:02.920162000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 0, reason: PausedForRecentBlockhash): started at Thread { id: ThreadId(2), name: Some("group_0"), .. }...
+[2026-10-04T23:25:02.921486000Z INFO  solana_metrics::metrics] datapoint: calculate_accounts_hash_from_index accounts_scan=155373i hash=37018i hash_total=311i collect=51846i
+[2026-10-04T23:25:02.921123000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 0, reason: PausedForRecentBlockhash): noop: true, result: None at Thread { id: ThreadId(2), name: Some("group_0"), .. }...
+[2026-10-04T23:25:03.080570000Z INFO  solana_metrics::metrics] datapoint: bank-accounts_lt_hash slot=0i num_accounts_total=312i num_accounts_modified=312i num_accounts_unmodified=0i num_cache_misses=312i total_us=138891i loading_accounts_curr_us=204i par_loading_accounts_prev_us=2827i par_comparing_accounts_us=0i par_computing_hashes_us=262024i par_mixing_hashes_us=7262i num_inspect_account_hits=0i num_inspect_account_misses=0i num_inspect_account_after_frozen=0i inspect_account_lookup_ns=0i inspect_account_insert_ns=0i
+[2026-10-04T23:25:03.081082000Z INFO  solana_metrics::metrics] datapoint: bank-hash_internal_state slot=0i total_us=459i
+[2026-10-04T23:25:03.081075000Z INFO  solana_runtime::bank] bank frozen: 0 hash: 3fFhn63D35tzEzA13gPZLapVoTNNt1n23cd2mm2jni9T signature_count: 0 last_blockhash: 5Jq6NhSQCWgh9GhMZJ3aJJhdZdALBoX2NWjqDUrh8VK5 capitalization: 3000012829507815, accounts_lt_hash checksum: 2ZnVGE6g4VRiCH5nupBtw91PotYzmiuKKHFSbEmv4sB4, stats: BankHashStats { num_updated_accounts: 313, num_removed_accounts: 0, num_lamports_stored: 3000012872214375, total_data_len: 1644487, num_executable_accounts: 22 }
+[2026-10-04T23:25:03.081216000Z DEBUG solana_fee_calculator] new_derived(): lamports_per_signature: 5000
+[2026-10-04T23:25:03.081393000Z INFO  solana_metrics::metrics] datapoint: slot_repeated_writes same_account_writes=1i same_account_writes_size=6008i unique_account_writes_size=1638479i size=1638479i accounts_count=312i
+[2026-10-04T23:25:03.081441000Z INFO  solana_metrics::metrics] datapoint: accounts_cache_size num_roots=0i num_slots=1i total_size=1638479i total_accounts_count=312i
+[2026-10-04T23:25:03.081532000Z INFO  solana_metrics::metrics] datapoint: bank-timestamp get_timestamp_estimate_us=21i
+[2026-10-04T23:25:03.081572000Z INFO  solana_metrics::metrics] datapoint: bank-timestamp-correction slot=1i from_genesis=1791156302i corrected=1791156302i ancestor_timestamp=1791156302i
+[2026-10-04T23:25:03.081761000Z INFO  solana_metrics::metrics] datapoint: bank-new_from_parent-heights slot=1i block_height=1i parent_slot=0i bank_rc_creation_us=5i total_elapsed_us=155373i status_cache_us=0i fee_components_us=23i blockhash_queue_us=5i stakes_cache_us=3i epoch_stakes_time_us=2i builtin_programs_us=3i rewards_pool_pubkeys_us=0i executor_cache_us=0i transaction_debug_keys_us=0i transaction_log_collector_config_us=0i feature_set_us=0i ancestors_us=13i update_epoch_us=4i cache_preparation_time_us=17i update_sysvars_us=243i fill_sysvar_cache_us=113i num_accounts_modified_this_slot=2i populate_cache_for_accounts_lt_hash_us=42i
+[2026-10-04T23:25:03.081818000Z INFO  solana_metrics::metrics] datapoint: loaded-programs-cache-stats slot=0i hits=0i misses=0i evictions=0i reloads=0i insertions=10i lost_insertions=0i replace_entry=0i one_hit_wonders=0i prunes_orphan=0i prunes_environment=0i empty_entries=0i water_level=0i
+[2026-10-04T23:25:03.081803000Z DEBUG solana_program_runtime::loaded_programs] Loaded Programs Cache Stats -- Hits: 0, Misses: 0, Evictions: 0, Reloads: 0, Insertions: 10, Lost-Insertions: 0, Replacements: 0, One-Hit-Wonders: 0, Prunes-Orphan: 0, Prunes-Environment: 0, Empty: 0, Water-Level: 0
+[2026-10-04T23:25:03.081870000Z DEBUG solana_program_test] Bank slot: 1
+[2026-10-04T23:25:03.088518000Z INFO  tarpc::client] RPC; rpc.deadline=2026-10-04T23:25:13.088474000Z otel.kind="client" otel.name="Banks.process_transaction_with_commitment_and_context"
+[2026-10-04T23:25:03.088561000Z WARN  tarpc::client] OpenTelemetry subscriber not installed; making unsampled child context.
+[2026-10-04T23:25:03.089435000Z INFO  tarpc::client] SendRequest
+[2026-10-04T23:25:03.089524000Z INFO  tarpc::server] RPC; rpc.trace_id=00 rpc.deadline=2026-10-04T23:25:13.088474000Z otel.kind="server"
+[2026-10-04T23:25:03.089834000Z INFO  tarpc::server] ReceiveRequest
+[2026-10-04T23:25:03.090308000Z INFO  tarpc::server] RPC; otel.name="Banks.process_transaction_with_commitment_and_context"
+[2026-10-04T23:25:03.090364000Z INFO  tarpc::server] BeginRequest
+[2026-10-04T23:25:03.094016000Z DEBUG solana_runtime::message_processor::stable_log] Program 11157t3sqMV725NVRLrVQbAu98Jjfk1uCKehJnXXQs invoke [1]
+[2026-10-04T23:25:03.094955000Z DEBUG solana_runtime::message_processor::stable_log] Program is not deployed
+[2026-10-04T23:25:03.095160000Z DEBUG solana_runtime::message_processor::stable_log] Program 11157t3sqMV725NVRLrVQbAu98Jjfk1uCKehJnXXQs failed: Unsupported program id
+[2026-10-04T23:25:03.095239000Z DEBUG solana_svm::transaction_processor] load: 60us execute: 1290us txs_len=1
+[2026-10-04T23:25:03.095271000Z DEBUG solana_runtime::bank] tx error: InstructionError(0, UnsupportedProgramId) RuntimeTransaction { transaction: SanitizedTransaction { message: Legacy(LegacyMessage { message: Message { header: MessageHeader { num_required_signatures: 2, num_readonly_signed_accounts: 1, num_readonly_unsigned_accounts: 3 }, account_keys: [HUPgkUXpu2jgnMqxVhcxb4b5CnC4XMCPk9RPrayEQC1C, FVen3X669xLzsi6N2V91DoiyzHzg1uAgqiT8jZ9nS96Z, 1117mWrzzrZr312ebPDHu8tbfMwFNvCvMbr6WepCNG, 11157t3sqMV725NVRLrVQbAu98Jjfk1uCKehJnXXQs, 1119DWteoLSdjvrT6g6L8C2PfDD2faiTQUpsjY2RiF, 111BuZ6b86gm7XhxjvTakhRvxSMjXp2GqgifkNUmDK], recent_blockhash: 5Jq6NhSQCWgh9GhMZJ3aJJhdZdALBoX2NWjqDUrh8VK5, instructions: [CompiledInstruction { program_id_index: 3, accounts: [2, 1, 4, 5], data: [0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 73, 53, 118, 1, 141, 146, 29, 13, 152, 204, 99, 254, 116, 28, 12, 130, 105, 142, 143, 169, 82, 123, 210, 75, 107, 8, 209, 78, 35, 145, 214, 3] }] }, is_writable_account_cache: [true, false, true, false, false, false] }), message_hash: 3Ls4LCYxj6mdcVfvJv6SD73peB8X98GU9JH9Jjb1M3Uu, is_simple_vote_tx: false, signatures: [qfZpNantm8egNbvcYxkXhNhuNaKW5qYeUBgokLhuJvRXr3YQcTWAquuzfkibSUEaW3HT8FuUbKJYSxtKUzNfRcT, 3e2J22KVvwQjWTdHDN1JzK2Y2g5yM8sJgaisNQm8d31Yecz9vpRmSNH7H1vx8VZsLejcBytrL5HmAZPMTogcnrEK] }, meta: TransactionMeta { message_hash: 3Ls4LCYxj6mdcVfvJv6SD73peB8X98GU9JH9Jjb1M3Uu, is_simple_vote_transaction: false, signature_details: TransactionSignatureDetails { num_transaction_signatures: 2, num_secp256k1_instruction_signatures: 0, num_ed25519_instruction_signatures: 0, num_secp256r1_instruction_signatures: 0 }, compute_budget_instruction_details: ComputeBudgetInstructionDetails { requested_compute_unit_limit: None, requested_compute_unit_price: None, requested_heap_size: None, requested_loaded_accounts_data_size_limit: None, num_non_compute_budget_instructions: 1, num_non_migratable_builtin_instructions: 0, num_non_builtin_instructions: 1, migrating_builtin_feature_counters: MigrationBuiltinFeatureCounter { migrating_builtin: [0] } }, instruction_data_len: 72 } }
+[2026-10-04T23:25:03.096443000Z DEBUG solana_accounts_db::accounts] bank unlock accounts
+[2026-10-04T23:25:03.098410000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 1, reason: PausedForRecentBlockhash): started at Thread { id: ThreadId(2), name: Some("group_0"), .. }...
+[2026-10-04T23:25:03.098480000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 1, reason: PausedForRecentBlockhash): noop: true, result: None at Thread { id: ThreadId(2), name: Some("group_0"), .. }...
+[2026-10-04T23:25:03.098708000Z INFO  tarpc::server] CompleteRequest
+[2026-10-04T23:25:03.098746000Z INFO  tarpc::server] BufferResponse
+[2026-10-04T23:25:03.098810000Z INFO  tarpc::server] SendResponse
+[2026-10-04T23:25:03.098847000Z INFO  tarpc::client::in_flight_requests] ReceiveResponse
+
+thread 'group_0' (307634001) panicked at tests/support/mod.rs:64:24:
+called `Result::unwrap()` on an `Err` value: TransactionError(InstructionError(0, UnsupportedProgramId))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2026-10-04T23:25:03.105496000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 1, reason: DroppedFromBankForks): started at Thread { id: ThreadId(23), name: Some("solBankForksCli"), .. }...
+[2026-10-04T23:25:03.105566000Z DEBUG solana_runtime::installed_scheduler_pool] wait_for_scheduler_termination(slot: 1, reason: DroppedFromBankForks): noop: true, result: None at Thread { id: ThreadId(23), name: Some("solBankForksCli"), .. }...
+test group_0 ... FAILED
+
+failures:
+
+failures:
+    group_0
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.33s
+
+[2026-10-04T23:25:03.106225000Z INFO  solana_accounts_db::accounts_db] remove_dead_slots_metadata: 1 dead slots

@@ -1,0 +1,94 @@
+{
+  "recorded_at": "2026-10-04T21:44:22.183285+00:00",
+  "platform_tools": "v1.51",
+  "target": "sBPF v3",
+  "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "versions": {
+    "go": "go version go1.22.0 darwin/arm64",
+    "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)\nTarget: aarch64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin",
+    "ld.lld": "LLD 19.1.7 (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed) (compatible with GNU linkers)",
+    "rustc": "rustc 1.84.1-dev",
+    "cargo-build-sbf": "solana-cargo-build-sbf 3.0.15\nplatform-tools v1.51\nrustc 1.84.1",
+    "solana-test-validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)"
+  },
+  "tools": {
+    "go": {
+      "path": "/usr/local/go/bin/go",
+      "sha256": "4da134a5fc2aef30ccefd7277e7ede0e9b31838377784426b552bdd4cc8b8c1c"
+    },
+    "clang": {
+      "path": "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang-19",
+      "sha256": "ec3fc09b50c81d5d7cd5925b6671ee69d340ae251949589ddfae4d66dfbde3ac"
+    },
+    "ld.lld": {
+      "path": "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/lld",
+      "sha256": "969e4ced1adfa882763460657b0cd817f02ec172c21799d9c068becbee26941b"
+    },
+    "rustc": {
+      "path": "/Users/colkitt/.cache/solana/v1.51/platform-tools/rust/bin/rustc",
+      "sha256": "087632e31ffbbead51803d851d46d93466e833da3dd89cdefcd542e3bf749f2c"
+    },
+    "cargo-build-sbf": {
+      "path": "/Users/colkitt/.local/share/solana/install/releases/stable-42c10bf3385efbb369c8fd6da9bb59e0562bce50/solana-release/bin/cargo-build-sbf",
+      "sha256": "2cf30b834dba2d7e17631714c56f26a3d218b218c2d76555b1cb476bf90498d6"
+    },
+    "solana-test-validator": {
+      "path": "/Users/colkitt/.local/share/solana/install/releases/stable-42c10bf3385efbb369c8fd6da9bb59e0562bce50/solana-release/bin/solana-test-validator",
+      "sha256": "138bea75e2ce6a22002881c37ec3f20129c537ec583920b2ee83a67ad4164d50"
+    }
+  },
+  "source_sha256": {
+    ".gitignore": "0cf256cc9234b415f912f5b0e9f8c9364688466041611047cd3f599c35f4efa6",
+    "Makefile": "e9a531c8a4c4b3ff77cc4dbe8ed365c2a3e174177c4e72f1a999ca63b8875a9d",
+    "README.md": "adcd2a2919bf65dbac0a39f56afe394a094e078b6544389f183c66f2aba1ca4c",
+    "THIRD_PARTY_NOTICES": "aaae30067ea59c2ce76c84e870d1c461203d596c10188432e8646985c588fd0e",
+    "baselines/rust/Cargo.lock": "daa69a0c1032db2a5cc51ef05b6cb7b9d99bdc98c6351207703c85583a470667",
+    "baselines/rust/Cargo.toml": "31ce33074580279ae35d28f9401d8e1590fc5bd76d308b88649dd3a5476da089",
+    "baselines/rust/src/lib.rs": "070cbc13b249e56d299ce1249fff7484d9a3b0946fcafcf1fd28adba7a92c867",
+    "baselines/tokenswap-rust/Cargo.lock": "1a990aac2f0930836df66d35c9b355ba56bb74a3cbe7ad4927e1e79d77de8c9e",
+    "baselines/tokenswap-rust/Cargo.toml": "9bee86abcfee6f8bbb072d81070491eb49462588872580f49ba4619f1b186a78",
+    "baselines/tokenswap-rust/src/lib.rs": "bfdccfd9b6f312edc7e2d8928ae7d9752962e3c3d732dbe343704cf4b66bd3a2",
+    "cmd/gosvm/main.go": "82be0c8bbf4edb549a2aad1576907286fa702a4f04d121c6f9fae0ca7e2491b8",
+    "cmd/verify/main.go": "2cb9776d28cd863a530dc5b5e0d3346ca3e5cb74937c91d96461cd246a91c055",
+    "cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "cmd/verify/tokens.go": "52833dee8cd58db77676bff0f2af0c70402714fbbd88f55391ef09a2823dd748",
+    "examples/amm/amm.go": "123655f1deb009078415c1be05c6c670ed136aa0a0bef99b696c46e1b79e41ce",
+    "examples/amm/amm_test.go": "8e3f7ff51d02a5cfc98249d995b1a4557222a736bb07607283f907d0e2d8fbc0",
+    "examples/tokenswap/swap.go": "219b28248670fff4d29894dd7af7746d43950e43cc6a6c769d4f979ebf22a6c0",
+    "examples/tokenswap/swap_test.go": "399025f4c4465348dc2a6585cc15c32454971bf27d13a13f504dd2ac71f49148",
+    "go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/build.go": "b8be9d94fe1a782060ef96ef9a4fb5ed12780dcda07e8ac5ad037eeadd1d7610",
+    "internal/compiler/cache.go": "a881419b9863c084516c5344ab0d3f4adc17a9bc6da78a20b52f5cd5569ec97a",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "4d3c41a99689007a3e0b5be493adde2ab76f832a419a5aab491e01c83c533412",
+    "internal/compiler/compiler_test.go": "bd2a15577ba9d9f12123b87dfca684e26ce28de95c2209028572c6cd53953e82",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "c60bec539308a56dee700531d692451981aab936170b9f3adc75a7d7d867e6ed",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "scripts/bench.py": "201e888fe402c682fef76f31bf52f116e2c495341ed61222d73e93afbf955bad",
+    "scripts/build-tokens.sh": "82de355720115bb96ba0c7f2e8b9ca6bd77e65384d77de4feebd7268bcb0da2a",
+    "scripts/build.sh": "7ab322fdbaf8b7987f5af55a3fd6b4499df5be54c51b2cbcdef05ead4f1d0f67",
+    "scripts/save-results.py": "fc398446793e45878e493a19b0b21b38aa8e6669fc1118464d802de8b09f9387",
+    "scripts/scale.py": "459220a0fd500b2757a0be2faaa557469d3988a501bfd0a999c9085666a71046",
+    "scripts/verify.sh": "21f32d102926ab03ec08b84229e3ef46ccb5b677eafef31f92d3952cb7dc3603",
+    "solana/api.go": "f5f2b283f36964edd8f9c69d1c247d88dd672152747c4b33e1c1eccf16eb9de3",
+    "solana/source.go": "83eeb25914c4abcb566e44bebbfe2b0caa9e5efb4ad1db6352f3a3c68f3fc418",
+    "third_party/Go-LICENSE": "2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067"
+  },
+  "results_sha256": {
+    "MILESTONE-1.md": "04959f5a0a36c81ba4149f2e9ea92d4e25181b171bab53ba92d4fbee11a44135",
+    "benchmark.json": "759b51930009c6c558eb4cff7983e86a42077af8c4ebd1d14ba673c603e804db",
+    "clang-o2-profile.txt": "dc87376153b08a391d8bbf73ca8d4b622c19350ed61f6d7a1fea75789f1d0266",
+    "scaling-benchmark.json": "031d6dda4bc95d3e989e0f2fafa8731fb39a2149f297170867edfbfd4e8df987",
+    "scaling-verification.json": "73d04d4fd4a4c3cbdc8db9d4a62bc1cb7444a4a3f600a9013b7f2b3ad6948753",
+    "summary.json": "35997c804f817f175e0ab6ebbb1ae57a47ff29ebb1bb26d05199c9e8075f0225",
+    "tokenswap-benchmark.json": "b74f84cb61dcaad51eedf17007af083de7053b73f1951ebca468d03a842b8deb",
+    "tokenswap-exploratory-benchmark.json": "2ef28ab84b239eabedefa739ef82df5faa7d46ae50e31dece133315e8dd33264",
+    "tokenswap-o1-verification.json": "6e83a166302ce6fa292309f200f2732b7e96ea57d148850319d8cd890cde0ab4",
+    "tokenswap-verification.json": "6a5921d6cdc0286cc49fbad428c69b1965a158e632fbad4e35c932e3add5ae11",
+    "verification.json": "47502b7a9afffbf54728bdf6485d938c7654286397fb52d7e678c41c444e6367"
+  }
+}

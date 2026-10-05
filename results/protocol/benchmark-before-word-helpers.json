@@ -1,0 +1,1937 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "scope": "Installed compilers/crate downloads warm; cold project outputs; 4 build jobs; debug ProgramTest; 12 test binaries; one cold sample, three cached edits/noops; no public network or Basanos builds",
+  "measurements": {
+    "frontend-installed-build": {
+      "wall_seconds": 1.4834367907606065,
+      "cpu_seconds": 0.5699639999999999,
+      "exit_code": 0,
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-ldflags=-s -w",
+        "-o",
+        "build/gosvm",
+        "./cmd/gosvm"
+      ],
+      "log": "build/protocol/frontend-installed-build.log"
+    },
+    "go-contract-cold": {
+      "wall_seconds": 3.0225367918610573,
+      "cpu_seconds": 0.673078,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-cold.log"
+    },
+    "go-contract-edit-0": {
+      "wall_seconds": 1.9439643751829863,
+      "cpu_seconds": 0.5071119999999998,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-0.log"
+    },
+    "go-contract-noop-0": {
+      "wall_seconds": 0.040271541103720665,
+      "cpu_seconds": 0.012301000000000006,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-0.log"
+    },
+    "go-contract-edit-1": {
+      "wall_seconds": 1.8647926249541342,
+      "cpu_seconds": 0.49669200000000013,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-1.log"
+    },
+    "go-contract-noop-1": {
+      "wall_seconds": 0.0710913329385221,
+      "cpu_seconds": 0.014654999999999974,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-1.log"
+    },
+    "go-contract-edit-2": {
+      "wall_seconds": 1.674331166781485,
+      "cpu_seconds": 0.4968650000000001,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-2.log"
+    },
+    "go-contract-noop-2": {
+      "wall_seconds": 0.04551216587424278,
+      "cpu_seconds": 0.015272999999999648,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-2.log"
+    },
+    "rust-contract-cold": {
+      "wall_seconds": 411.5901583340019,
+      "cpu_seconds": 222.00931899999998,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-cold.log"
+    },
+    "rust-contract-edit-0": {
+      "wall_seconds": 7.911944541148841,
+      "cpu_seconds": 1.9392679999999913,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-edit-0.log"
+    },
+    "rust-contract-noop-0": {
+      "wall_seconds": 2.223909500055015,
+      "cpu_seconds": 0.654227999999982,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-noop-0.log"
+    },
+    "rust-contract-edit-1": {
+      "wall_seconds": 6.564283709041774,
+      "cpu_seconds": 1.7973499999999802,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-edit-1.log"
+    },
+    "rust-contract-noop-1": {
+      "wall_seconds": 1.860608708113432,
+      "cpu_seconds": 0.6200580000000144,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-noop-1.log"
+    },
+    "rust-contract-edit-2": {
+      "wall_seconds": 5.358354874886572,
+      "cpu_seconds": 1.5551089999999874,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-edit-2.log"
+    },
+    "rust-contract-noop-2": {
+      "wall_seconds": 2.413177624810487,
+      "cpu_seconds": 0.6379260000000215,
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-noop-2.log"
+    },
+    "go-harness-fresh-cache": {
+      "wall_seconds": 46.20299499994144,
+      "cpu_seconds": 37.458062999999996,
+      "load_average_before": [
+        67.42041015625,
+        75.4189453125,
+        72.7490234375
+      ],
+      "load_average_after": [
+        94.80712890625,
+        80.3310546875,
+        74.62060546875
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "build",
+        "-p",
+        "4",
+        "-ldflags=-linkmode=external",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/verify",
+        "./cmd/verify"
+      ],
+      "log": "build/protocol/go-harness-fresh-cache.log"
+    },
+    "go-harness-noop": {
+      "wall_seconds": 1.1853151246905327,
+      "cpu_seconds": 0.6767149999999997,
+      "load_average_before": [
+        94.80712890625,
+        80.3310546875,
+        74.62060546875
+      ],
+      "load_average_after": [
+        96.50390625,
+        80.9228515625,
+        74.86279296875
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "build",
+        "-p",
+        "4",
+        "-ldflags=-linkmode=external",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/verify",
+        "./cmd/verify"
+      ],
+      "log": "build/protocol/go-harness-noop.log"
+    },
+    "go-harness-codesign": {
+      "wall_seconds": 0.22661016695201397,
+      "cpu_seconds": 0.045363999999993965,
+      "load_average_before": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "load_average_after": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "exit_code": 0,
+      "command": [
+        "codesign",
+        "--force",
+        "--sign",
+        "-",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/verify"
+      ],
+      "log": "build/protocol/go-harness-codesign.log"
+    },
+    "external-validator-verify": {
+      "wall_seconds": 75.42483229190111,
+      "cpu_seconds": 27.66993800000001,
+      "load_average_before": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "load_average_after": [
+        125.93359375,
+        93.3427734375,
+        80.12646484375
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/verify",
+        "protocol"
+      ],
+      "log": "build/protocol/external-validator-verify.log"
+    },
+    "rust-programtest-cold": {
+      "wall_seconds": 2135.224545416888,
+      "cpu_seconds": 1450.8255159999999,
+      "load_average_before": [
+        59.78369140625,
+        83.60888671875,
+        99.68408203125
+      ],
+      "load_average_after": [
+        89.55615234375,
+        68.30810546875,
+        69.16162109375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-programtest-cold.log"
+    },
+    "rust-programtest-execute": {
+      "wall_seconds": 77.68514295807108,
+      "cpu_seconds": 8.716639,
+      "load_average_before": [
+        84.37109375,
+        87.8525390625,
+        80.52490234375
+      ],
+      "load_average_after": [
+        90.185546875,
+        88.611328125,
+        81.45654296875
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--",
+        "--test-threads=1"
+      ],
+      "log": "build/protocol/rust-programtest-execute.log"
+    },
+    "go-native-tests-build": {
+      "wall_seconds": 6.106045375112444,
+      "cpu_seconds": 7.721851999999998,
+      "load_average_before": [
+        96.50390625,
+        80.9228515625,
+        74.86279296875
+      ],
+      "load_average_after": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-build.log"
+    },
+    "go-native-tests-execute": {
+      "wall_seconds": 0.7814720422029495,
+      "cpu_seconds": 0.06553299999999851,
+      "load_average_before": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "load_average_after": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test"
+      ],
+      "log": "build/protocol/go-native-tests-execute.log"
+    },
+    "go-native-tests-edit-0": {
+      "wall_seconds": 1.0889420001767576,
+      "cpu_seconds": 0.7300719999999998,
+      "load_average_before": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "load_average_after": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-edit-0.log"
+    },
+    "go-native-tests-noop-0": {
+      "wall_seconds": 0.5944711673073471,
+      "cpu_seconds": 0.4695329999999984,
+      "load_average_before": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "load_average_after": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-noop-0.log"
+    },
+    "go-native-tests-edit-1": {
+      "wall_seconds": 0.6039869580417871,
+      "cpu_seconds": 0.5846050000000034,
+      "load_average_before": [
+        100.30712890625,
+        81.9697265625,
+        75.267578125
+      ],
+      "load_average_after": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-edit-1.log"
+    },
+    "go-native-tests-noop-1": {
+      "wall_seconds": 0.543566667009145,
+      "cpu_seconds": 0.45424699999999874,
+      "load_average_before": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "load_average_after": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-noop-1.log"
+    },
+    "go-native-tests-edit-2": {
+      "wall_seconds": 0.7167315003462136,
+      "cpu_seconds": 0.6060880000000051,
+      "load_average_before": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "load_average_after": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-edit-2.log"
+    },
+    "go-native-tests-noop-2": {
+      "wall_seconds": 0.534775790758431,
+      "cpu_seconds": 0.3961230000000029,
+      "load_average_before": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "load_average_after": [
+        101.4833984375,
+        82.51806640625,
+        75.5
+      ],
+      "exit_code": 0,
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-p",
+        "4",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/native-protocol.test",
+        "./examples/protocol"
+      ],
+      "log": "build/protocol/go-native-tests-noop-2.log"
+    },
+    "rust-programtest-harness-repair-initial": {
+      "wall_seconds": 91.49644520832226,
+      "cpu_seconds": 79.550673,
+      "load_average_before": [
+        121.66455078125,
+        94.48388671875,
+        80.8427734375
+      ],
+      "load_average_after": [
+        85.212890625,
+        89.7294921875,
+        80.39990234375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-harness-repair-initial.log"
+    },
+    "rust-programtest-harness-repair": {
+      "wall_seconds": 5.846180541906506,
+      "cpu_seconds": 1.472202,
+      "load_average_before": [
+        85.2744140625,
+        88.08642578125,
+        80.5634765625
+      ],
+      "load_average_after": [
+        84.37109375,
+        87.8525390625,
+        80.52490234375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-harness-repair.log"
+    },
+    "rust-programtest-edit-0": {
+      "wall_seconds": 59.58769974997267,
+      "cpu_seconds": 61.06253599999999,
+      "load_average_before": [
+        90.185546875,
+        88.611328125,
+        81.45654296875
+      ],
+      "load_average_after": [
+        84.47265625,
+        87.11181640625,
+        81.37158203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-edit-0.log"
+    },
+    "rust-programtest-noop-0": {
+      "wall_seconds": 4.8287788750603795,
+      "cpu_seconds": 1.3730800000000087,
+      "load_average_before": [
+        84.47265625,
+        87.11181640625,
+        81.37158203125
+      ],
+      "load_average_after": [
+        82.9931640625,
+        86.76123046875,
+        81.28125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-noop-0.log"
+    },
+    "rust-programtest-edit-1": {
+      "wall_seconds": 54.585436458233744,
+      "cpu_seconds": 59.37799799999999,
+      "load_average_before": [
+        82.9931640625,
+        86.76123046875,
+        81.28125
+      ],
+      "load_average_after": [
+        94.1689453125,
+        88.87353515625,
+        82.35302734375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-edit-1.log"
+    },
+    "rust-programtest-noop-1": {
+      "wall_seconds": 5.968254624865949,
+      "cpu_seconds": 1.4624570000000006,
+      "load_average_before": [
+        94.1689453125,
+        88.87353515625,
+        82.35302734375
+      ],
+      "load_average_after": [
+        94.09423828125,
+        89.05322265625,
+        82.49365234375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-noop-1.log"
+    },
+    "rust-programtest-edit-2": {
+      "wall_seconds": 52.67076083412394,
+      "cpu_seconds": 60.227664,
+      "load_average_before": [
+        94.09423828125,
+        89.05322265625,
+        82.49365234375
+      ],
+      "load_average_after": [
+        96.1318359375,
+        90.0625,
+        83.2216796875
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-edit-2.log"
+    },
+    "rust-programtest-noop-2": {
+      "wall_seconds": 7.680007167160511,
+      "cpu_seconds": 1.645368000000019,
+      "load_average_before": [
+        96.1318359375,
+        90.0625,
+        83.2216796875
+      ],
+      "load_average_after": [
+        90.4228515625,
+        89.0390625,
+        82.9384765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness/Cargo.toml",
+        "--offline",
+        "--locked",
+        "--tests",
+        "--no-run"
+      ],
+      "log": "build/protocol/rust-programtest-noop-2.log"
+    }
+  },
+  "disk": {
+    "rust_sbf_target": {
+      "logical_bytes": 227342965,
+      "allocated_bytes": 242065408,
+      "files": 1194
+    },
+    "rust_sbf_deploy": {
+      "logical_bytes": 54136,
+      "allocated_bytes": 61440,
+      "files": 2
+    },
+    "go_harness_cache": {
+      "logical_bytes": 87639170,
+      "allocated_bytes": 91869184,
+      "files": 1211
+    },
+    "go_harness_binary_bytes": 5648176,
+    "rust_sbf_target_after_cold": {
+      "logical_bytes": 227417926,
+      "allocated_bytes": 242122752,
+      "files": 1188
+    },
+    "rust_host_target_after_cold": {
+      "logical_bytes": 4116555221,
+      "allocated_bytes": 4342390784,
+      "files": 10221
+    },
+    "go_native_tests_binary_bytes": 3880530,
+    "rust_host_target_after_edits": {
+      "logical_bytes": 5043147034,
+      "allocated_bytes": 5282934784,
+      "files": 19091
+    },
+    "rust_host_subtrees": {
+      ".fingerprint": {
+        "logical_bytes": 636139,
+        "allocated_bytes": 11853824,
+        "files": 2881
+      },
+      "incremental": {
+        "logical_bytes": 640166638,
+        "allocated_bytes": 658407424,
+        "files": 3652
+      },
+      "examples": {
+        "logical_bytes": 0,
+        "allocated_bytes": 0,
+        "files": 0
+      },
+      "deps": {
+        "logical_bytes": 4247526949,
+        "allocated_bytes": 4454486016,
+        "files": 11842
+      },
+      "build": {
+        "logical_bytes": 153191633,
+        "allocated_bytes": 156557312,
+        "files": 709
+      }
+    }
+  },
+  "versions": {
+    "go": "go version go1.22.0 darwin/arm64",
+    "host_rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "sbf_rustc": "rustc 1.84.1-dev",
+    "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+    "platform_tools": "v1.51"
+  },
+  "elf": {
+    "protocol_go": {
+      "bytes": 35568,
+      "sha256": "aa53a6a9abedbed721fb6d68513481b296aab355cf67bb862a7fe6512a94d565"
+    },
+    "protocol_bench": {
+      "bytes": 53912,
+      "sha256": "bbda3cba743290b52db3607079ac85cffc5d19879ee5a17f4eaabab14aecb299"
+    }
+  },
+  "rust_contract_cold_timing": {
+    "file": "build/protocol/sbf-target/cargo-timings/cargo-timing-20261004T224118Z.html",
+    "units": 171,
+    "top_units": [
+      {
+        "i": 53,
+        "name": "zerocopy",
+        "version": "0.8.56",
+        "mode": "todo",
+        "target": "",
+        "start": 118.1,
+        "duration": 82.7,
+        "rmeta_time": 81.86,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          89
+        ]
+      },
+      {
+        "i": 81,
+        "name": "syn",
+        "version": "2.0.119",
+        "mode": "todo",
+        "target": "",
+        "start": 175.93,
+        "duration": 81.78,
+        "rmeta_time": 50.39,
+        "unlocked_units": [
+          139,
+          113
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 154,
+        "name": "toml_edit",
+        "version": "0.22.27",
+        "mode": "todo",
+        "target": "",
+        "start": 321.44,
+        "duration": 80.36,
+        "rmeta_time": 23.53,
+        "unlocked_units": [
+          170
+        ],
+        "unlocked_rmeta_units": [
+          169
+        ]
+      },
+      {
+        "i": 43,
+        "name": "syn",
+        "version": "1.0.109",
+        "mode": "todo",
+        "target": "",
+        "start": 45.35,
+        "duration": 68.98,
+        "rmeta_time": 38.72,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          63,
+          62
+        ]
+      },
+      {
+        "i": 18,
+        "name": "syn",
+        "version": "3.0.4",
+        "mode": "todo",
+        "target": "",
+        "start": 13.27,
+        "duration": 61.84,
+        "rmeta_time": 41.21,
+        "unlocked_units": [
+          120,
+          52,
+          45
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 45,
+        "name": "serde_derive",
+        "version": "1.0.229",
+        "mode": "todo",
+        "target": "",
+        "start": 75.13,
+        "duration": 48.81,
+        "rmeta_time": null,
+        "unlocked_units": [
+          54
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 44,
+        "name": "toml_edit",
+        "version": "0.22.27",
+        "mode": "todo",
+        "target": "",
+        "start": 53.71,
+        "duration": 46.22,
+        "rmeta_time": 24.03,
+        "unlocked_units": [
+          51
+        ],
+        "unlocked_rmeta_units": [
+          47
+        ]
+      },
+      {
+        "i": 82,
+        "name": "serde_json",
+        "version": "1.0.151",
+        "mode": "todo",
+        "target": "",
+        "start": 182.56,
+        "duration": 46.15,
+        "rmeta_time": 17.46,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 146,
+        "name": "solana-vote-interface",
+        "version": "2.2.6",
+        "mode": "todo",
+        "target": "",
+        "start": 298.21,
+        "duration": 45.82,
+        "rmeta_time": 17.08,
+        "unlocked_units": [
+          168
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 38,
+        "name": "serde_core",
+        "version": "1.0.229",
+        "mode": "todo",
+        "target": "",
+        "start": 40.49,
+        "duration": 35.44,
+        "rmeta_time": 35.02,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          46
+        ]
+      },
+      {
+        "i": 8,
+        "name": "serde_core",
+        "version": "1.0.229",
+        "mode": "todo",
+        "target": "",
+        "start": 5.21,
+        "duration": 35.27,
+        "rmeta_time": 33.94,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          97
+        ]
+      },
+      {
+        "i": 144,
+        "name": "winnow",
+        "version": "0.7.15",
+        "mode": "todo",
+        "target": "",
+        "start": 288.34,
+        "duration": 33.71,
+        "rmeta_time": 28.87,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          154
+        ]
+      },
+      {
+        "i": 58,
+        "name": "borsh",
+        "version": "1.8.1",
+        "mode": "todo",
+        "target": "",
+        "start": 132.31,
+        "duration": 33.68,
+        "rmeta_time": 20.46,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          69
+        ]
+      },
+      {
+        "i": 51,
+        "name": "borsh-derive",
+        "version": "1.8.1",
+        "mode": "todo",
+        "target": "",
+        "start": 99.93,
+        "duration": 32.38,
+        "rmeta_time": null,
+        "unlocked_units": [
+          58
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 23,
+        "name": "winnow",
+        "version": "0.7.15",
+        "mode": "todo",
+        "target": "",
+        "start": 24.18,
+        "duration": 29.52,
+        "rmeta_time": 28.58,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          44
+        ]
+      },
+      {
+        "i": 88,
+        "name": "cc",
+        "version": "1.4.4",
+        "mode": "todo",
+        "target": "",
+        "start": 188.96,
+        "duration": 27.93,
+        "rmeta_time": 16.31,
+        "unlocked_units": [
+          94
+        ],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 93,
+        "name": "borsh",
+        "version": "0.10.4",
+        "mode": "todo",
+        "target": "",
+        "start": 219.01,
+        "duration": 26.69,
+        "rmeta_time": 16.6,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          107,
+          161
+        ]
+      },
+      {
+        "i": 130,
+        "name": "solana-stake-interface",
+        "version": "1.2.1",
+        "mode": "todo",
+        "target": "",
+        "start": 273.17,
+        "duration": 25.04,
+        "rmeta_time": 13.38,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": [
+          148
+        ]
+      },
+      {
+        "i": 147,
+        "name": "solana-message",
+        "version": "2.4.0",
+        "mode": "todo",
+        "target": "",
+        "start": 299.12,
+        "duration": 25.0,
+        "rmeta_time": 5.28,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": []
+      },
+      {
+        "i": 68,
+        "name": "sha2",
+        "version": "0.10.9",
+        "mode": "todo",
+        "target": "",
+        "start": 148.38,
+        "duration": 22.17,
+        "rmeta_time": 2.87,
+        "unlocked_units": [],
+        "unlocked_rmeta_units": []
+      }
+    ]
+  },
+  "rust_programtest_cold_timing": {
+    "file": "build/protocol/host-target/cargo-timings/cargo-timing-20261004T224834358Z-f5932dd3ca623107.html",
+    "units": 749,
+    "top_units": [
+      {
+        "i": 329,
+        "name": "openssl-sys",
+        "version": "0.9.117",
+        "mode": "run-custom-build",
+        "target": " build-script (run)",
+        "features": [
+          "openssl-src",
+          "vendored"
+        ],
+        "start": 971.91,
+        "duration": 966.41,
+        "unblocked_units": [
+          324,
+          327
+        ],
+        "unblocked_rmeta_units": [],
+        "sections": null
+      },
+      {
+        "i": 577,
+        "name": "solana-rpc-client",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "default",
+          "spinner"
+        ],
+        "start": 1042.37,
+        "duration": 324.57,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          617,
+          579
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 49.89
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 49.89,
+              "end": 324.57
+            }
+          ]
+        ]
+      },
+      {
+        "i": 485,
+        "name": "solana-accounts-db",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [],
+        "start": 1367.03,
+        "duration": 161.5,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 49.32
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 49.32,
+              "end": 161.5
+            }
+          ]
+        ]
+      },
+      {
+        "i": 748,
+        "name": "zstd-sys",
+        "version": "2.1.0+zstd.1.5.7",
+        "mode": "run-custom-build",
+        "target": " build-script (run)",
+        "features": [
+          "legacy",
+          "std",
+          "zdict_builder"
+        ],
+        "start": 682.86,
+        "duration": 131.14,
+        "unblocked_units": [
+          745,
+          746
+        ],
+        "unblocked_rmeta_units": [],
+        "sections": null
+      },
+      {
+        "i": 424,
+        "name": "rustls",
+        "version": "0.23.44",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "ring",
+          "std",
+          "tls12"
+        ],
+        "start": 364.53,
+        "duration": 127.56,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          683
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 53.86
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 53.86,
+              "end": 127.56
+            }
+          ]
+        ]
+      },
+      {
+        "i": 680,
+        "name": "tokio",
+        "version": "1.53.1",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "bytes",
+          "default",
+          "fs",
+          "full",
+          "io-std",
+          "io-util",
+          "libc",
+          "macros",
+          "mio",
+          "net",
+          "parking_lot",
+          "process",
+          "rt",
+          "rt-multi-thread",
+          "signal",
+          "signal-hook-registry",
+          "socket2",
+          "sync",
+          "time",
+          "tokio-macros"
+        ],
+        "start": 220.18,
+        "duration": 111.64,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          687,
+          688,
+          685
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 58.46
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 58.46,
+              "end": 111.64
+            }
+          ]
+        ]
+      },
+      {
+        "i": 385,
+        "name": "quinn-proto",
+        "version": "0.11.17",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "bloom",
+          "default",
+          "log",
+          "platform-verifier",
+          "ring",
+          "rustls-ring"
+        ],
+        "start": 952.35,
+        "duration": 88.58,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          382
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 44.41
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 44.41,
+              "end": 88.58
+            }
+          ]
+        ]
+      },
+      {
+        "i": 409,
+        "name": "reqwest",
+        "version": "0.12.28",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "__rustls",
+          "__rustls-ring",
+          "__tls",
+          "blocking",
+          "brotli",
+          "deflate",
+          "gzip",
+          "json",
+          "rustls-tls",
+          "rustls-tls-webpki-roots",
+          "rustls-tls-webpki-roots-no-provider"
+        ],
+        "start": 485.68,
+        "duration": 87.66,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          546
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 24.39
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 24.39,
+              "end": 87.66
+            }
+          ]
+        ]
+      },
+      {
+        "i": 273,
+        "name": "lz4-sys",
+        "version": "1.11.1+lz4-1.10.0",
+        "mode": "run-custom-build",
+        "target": " build-script (run)",
+        "features": [],
+        "start": 1064.92,
+        "duration": 85.96,
+        "unblocked_units": [
+          271
+        ],
+        "unblocked_rmeta_units": [],
+        "sections": null
+      },
+      {
+        "i": 581,
+        "name": "solana-runtime",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [],
+        "start": 1961.74,
+        "duration": 71.24,
+        "unblocked_units": [
+          373,
+          378,
+          375,
+          365,
+          368,
+          371,
+          374,
+          377,
+          376,
+          372,
+          370,
+          367,
+          369
+        ],
+        "unblocked_rmeta_units": [
+          592
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 23.41
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 23.41,
+              "end": 71.24
+            }
+          ]
+        ]
+      },
+      {
+        "i": 584,
+        "name": "solana-sbpf",
+        "version": "0.11.1",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "default",
+          "jit",
+          "libc",
+          "winapi"
+        ],
+        "start": 630.14,
+        "duration": 62.22,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          566
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 31.48
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 31.48,
+              "end": 62.22
+            }
+          ]
+        ]
+      },
+      {
+        "i": 421,
+        "name": "rustls",
+        "version": "0.21.12",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "default",
+          "log",
+          "logging",
+          "tls12"
+        ],
+        "start": 911.4,
+        "duration": 60.51,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          682
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 27.0
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 27.0,
+              "end": 60.51
+            }
+          ]
+        ]
+      },
+      {
+        "i": 654,
+        "name": "syn",
+        "version": "2.0.119",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "clone-impls",
+          "default",
+          "derive",
+          "extra-traits",
+          "fold",
+          "full",
+          "parsing",
+          "printing",
+          "proc-macro",
+          "visit",
+          "visit-mut"
+        ],
+        "start": 16.64,
+        "duration": 59.22,
+        "unblocked_units": [
+          697,
+          344,
+          325,
+          304,
+          380,
+          134,
+          735,
+          81,
+          671,
+          143
+        ],
+        "unblocked_rmeta_units": [
+          658
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 34.97
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 34.97,
+              "end": 59.22
+            }
+          ]
+        ]
+      },
+      {
+        "i": 23,
+        "name": "ark-ff",
+        "version": "0.4.2",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "default"
+        ],
+        "start": 708.66,
+        "duration": 58.15,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          26
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 57.45
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 57.45,
+              "end": 58.15
+            }
+          ]
+        ]
+      },
+      {
+        "i": 651,
+        "name": "syn",
+        "version": "1.0.109",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "clone-impls",
+          "default",
+          "derive",
+          "extra-traits",
+          "fold",
+          "full",
+          "parsing",
+          "printing",
+          "proc-macro",
+          "quote",
+          "visit"
+        ],
+        "start": 36.18,
+        "duration": 57.45,
+        "unblocked_units": [
+          661,
+          24,
+          285,
+          287,
+          126,
+          35,
+          28
+        ],
+        "unblocked_rmeta_units": [
+          61,
+          62
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 38.36
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 38.36,
+              "end": 57.45
+            }
+          ]
+        ]
+      },
+      {
+        "i": 569,
+        "name": "solana-pubsub-client",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [],
+        "start": 1174.77,
+        "duration": 56.6,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          621
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 12.01
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 12.01,
+              "end": 56.6
+            }
+          ]
+        ]
+      },
+      {
+        "i": 655,
+        "name": "syn",
+        "version": "3.0.4",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "clone-impls",
+          "default",
+          "derive",
+          "extra-traits",
+          "fold",
+          "full",
+          "parsing",
+          "printing",
+          "proc-macro",
+          "visit-mut"
+        ],
+        "start": 16.36,
+        "duration": 55.12,
+        "unblocked_units": [
+          456,
+          71,
+          172,
+          681,
+          132,
+          738,
+          40,
+          672
+        ],
+        "unblocked_rmeta_units": [],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 31.55
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 31.55,
+              "end": 55.12
+            }
+          ]
+        ]
+      },
+      {
+        "i": 407,
+        "name": "regex-automata",
+        "version": "0.4.18",
+        "mode": "todo",
+        "target": "",
+        "features": [
+          "alloc",
+          "dfa-onepass",
+          "hybrid",
+          "meta",
+          "nfa-backtrack",
+          "nfa-pikevm",
+          "nfa-thompson",
+          "perf-inline",
+          "perf-literal",
+          "perf-literal-multisubstring",
+          "perf-literal-substring",
+          "std",
+          "syntax",
+          "unicode",
+          "unicode-age",
+          "unicode-bool",
+          "unicode-case",
+          "unicode-gencat",
+          "unicode-perl",
+          "unicode-script",
+          "unicode-segment",
+          "unicode-word-boundary"
+        ],
+        "start": 644.75,
+        "duration": 52.86,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [
+          406
+        ],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 25.91
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 25.91,
+              "end": 52.86
+            }
+          ]
+        ]
+      },
+      {
+        "i": 500,
+        "name": "solana-client",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [],
+        "start": 1415.19,
+        "duration": 52.64,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 11.32
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 11.32,
+              "end": 52.64
+            }
+          ]
+        ]
+      },
+      {
+        "i": 558,
+        "name": "solana-poseidon",
+        "version": "2.3.9",
+        "mode": "todo",
+        "target": "",
+        "features": [],
+        "start": 804.8,
+        "duration": 52.17,
+        "unblocked_units": [],
+        "unblocked_rmeta_units": [],
+        "sections": [
+          [
+            "frontend",
+            {
+              "start": 0.0,
+              "end": 1.02
+            }
+          ],
+          [
+            "codegen",
+            {
+              "start": 1.02,
+              "end": 52.17
+            }
+          ]
+        ]
+      }
+    ]
+  }
+}

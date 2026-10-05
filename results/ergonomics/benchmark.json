@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "notes": [
+    "Shared M2 desktop; installed tools and warm OS caches; scheduling is uncontrolled.",
+    "Source bootstrap has an isolated empty GOCACHE. Downloads are disabled/excluded.",
+    "Contract clean builds delete only generated build output; frontend and backend are installed.",
+    "Edit samples append a comment to invalidate the whole-program build cache.",
+    "Native test timings force test execution but allow the shared Go compilation cache.",
+    "There is no equivalent Rust framework comparison in this measurement."
+  ],
+  "commands": [
+    {
+      "label": "install",
+      "args": [
+        "bash",
+        "scripts/install.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "seconds": 2.294419208075851,
+      "exit_code": 0
+    },
+    {
+      "label": "bootstrap-fresh-cache",
+      "args": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/fresh-gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "seconds": 13.374806041829288,
+      "exit_code": 0
+    },
+    {
+      "label": "doctor",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "doctor"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "seconds": 0.7290863748639822,
+      "exit_code": 0
+    },
+    {
+      "label": "new",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "new",
+        "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "seconds": 0.01781112514436245,
+      "exit_code": 0
+    },
+    {
+      "label": "check",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "check"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.012869416270405054,
+      "exit_code": 0
+    },
+    {
+      "label": "clean-0",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.2569797500036657,
+      "exit_code": 0
+    },
+    {
+      "label": "edit-0",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.13728920789435506,
+      "exit_code": 0
+    },
+    {
+      "label": "noop-0",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.056123750284314156,
+      "exit_code": 0
+    },
+    {
+      "label": "native-0",
+      "args": [
+        "go",
+        "test",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.9074132917448878,
+      "exit_code": 0
+    },
+    {
+      "label": "clean-1",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.14652470871806145,
+      "exit_code": 0
+    },
+    {
+      "label": "edit-1",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.32163558388128877,
+      "exit_code": 0
+    },
+    {
+      "label": "noop-1",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.05690141627565026,
+      "exit_code": 0
+    },
+    {
+      "label": "native-1",
+      "args": [
+        "go",
+        "test",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.7443494996987283,
+      "exit_code": 0
+    },
+    {
+      "label": "clean-2",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.1894012908451259,
+      "exit_code": 0
+    },
+    {
+      "label": "edit-2",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.16185054229572415,
+      "exit_code": 0
+    },
+    {
+      "label": "noop-2",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "build"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.06243120785802603,
+      "exit_code": 0
+    },
+    {
+      "label": "native-2",
+      "args": [
+        "go",
+        "test",
+        "-count=1",
+        "./..."
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 0.6802474996075034,
+      "exit_code": 0
+    },
+    {
+      "label": "sbf",
+      "args": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/ergonomics/bin/gosvm",
+        "test",
+        "--sbf"
+      ],
+      "cwd": "/var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap",
+      "seconds": 9.77871258277446,
+      "exit_code": 0
+    }
+  ],
+  "bootstrap_cache_bytes": 92763739,
+  "clean_build_seconds": [
+    0.2569797500036657,
+    0.14652470871806145,
+    0.1894012908451259
+  ],
+  "edit_build_seconds": [
+    0.13728920789435506,
+    0.32163558388128877,
+    0.16185054229572415
+  ],
+  "noop_build_seconds": [
+    0.056123750284314156,
+    0.05690141627565026,
+    0.06243120785802603
+  ],
+  "native_test_seconds": [
+    0.9074132917448878,
+    0.7443494996987283,
+    0.6802474996075034
+  ],
+  "median_seconds": {
+    "clean": 0.1894012908451259,
+    "edit": 0.16185054229572415,
+    "noop": 0.05690141627565026,
+    "native": 0.7443494996987283
+  },
+  "elf_bytes": 3216,
+  "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+  "cli_bytes": 7000608,
+  "build_elf_and_receipt_bytes": 3369,
+  "scaffold_bytes": 20917,
+  "scaffold_sha256": {
+    ".gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    ".gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    ".gosvm/sdk/solana/api.go": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "README.md": "4fc6366beb98596305089bdb9d18d52075cdea5ed13a0a3a2b3c21d7e74a6fe2",
+    "client/zz_gosvm.go": "8222b775fc95a79fb23252ae4c9d4214d94064c7a0d9398f89ff3e0396297502",
+    "go.mod": "d04d7b2a7f462391c1c10dea4c6a3d529f9051b20180191e577ff43dc24165e4",
+    "gosvm.json": "c06934e833dfc49b362e79866b0f1d4009411e0a118712d69ea233de8b0150b1",
+    "idl.json": "6eebbd078dd638c4fd6264c2d9bcbda2a5690a223905898a74a7b1ab346ba222",
+    "program.go": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "program_test.go": "0e29241ceec116b1b9a53f967ede6199faf9fe97f4d7c7625e5e085a310d48fd",
+    "testdata/sbf.json": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "zz_gosvm.go": "a5cf4a749b99d45d2b85e60be38db17ac05bfeb8a00d3c666c105b431a33ceec"
+  },
+  "source_sha256": {
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/build.go": "8e8b0c59aff8980e482776b58bccd4052377a7e3905afe53d15f3371a357bcf2",
+    "internal/compiler/cache.go": "2430443b181104660100ffc5fd55f68fbc1d8f48ea02bd3dc5460abe2b3b6bd0",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "847f487bfa7171d337f541b95ec8558a32b286f6d8e2aa707a89c003e909b73c",
+    "internal/compiler/compiler_test.go": "7db5a1a0e80cd309d72881b14cf0c99d1eeefbbeab6434dff7e76532d3808c3c",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "de16b284e0ef00f707a1a180504180981d397209516a5b9bca02ef119ef0a801",
+    "internal/compiler/values_test.go": "5c2d3923448a9fd1bbbef5a72258d47a9c647b191792b31309887d09babf8a6d",
+    "internal/project/generate.go": "0f530b48bdd6714899556bf219010fa0a8924d2d4b26f4b652f2d7ef06e732da",
+    "internal/project/project.go": "2a31bc2410edad343a97ef325fe1ca2dd17e143063a6d95cedb18375c8549002",
+    "internal/project/project_test.go": "691413b82edc97fae495fed037cd5965dafd21a6007c507bfc9802de85c0e4ee",
+    "internal/project/templates/README.md.tmpl": "4fc6366beb98596305089bdb9d18d52075cdea5ed13a0a3a2b3c21d7e74a6fe2",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/sbftest/run.go": "45c86e9da21d340d36ed63adb7ed1650eab6740916b4927b71c952dbea5dddcf",
+    "cmd/gosvm/main.go": "48f144bf5623d736489f73c7881a656fe7f25bae17e406de01906ed1b1d98643",
+    "cmd/gosvm/project.go": "4a2bbd0e9007267d9c52511edd04dc2973ff669c2e6ddc482765931355f7fa30",
+    "solana/api.go": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/source.go": "83eeb25914c4abcb566e44bebbfe2b0caa9e5efb4ad1db6352f3a3c68f3fc418",
+    "scripts/install.sh": "6ba4cba077e7f69db3532d9a32bd8d4085686746b57dcd39d1427695f5fd39f1",
+    "scripts/build-cli.sh": "14334eed5948e43dbaa16e00c577bda09fbc706b7822e98d7c428932b5a8cb98",
+    "scripts/ergonomics_bench.py": "dfe3b1acc1ac21268b0c408b92b05e72839ebde11f9986f18b0954fe2cbc3c6a"
+  },
+  "go": "go version go1.22.0 darwin/arm64",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)"
+}

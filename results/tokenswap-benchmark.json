@@ -1,0 +1,297 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "repeats": 7,
+  "workload": "tokenswap",
+  "go": "go version go1.22.0 darwin/arm64",
+  "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+  "rustc": "rustc 1.84.1-dev",
+  "scope": "sBPF v3; installed tools and warm OS cache; no dependency downloads",
+  "builds": {
+    "go_sbf": {
+      "project_clean": {
+        "median_ms": 334.466,
+        "min_ms": 264.334,
+        "max_ms": 682.343,
+        "samples_ms": [
+          349.901,
+          264.334,
+          331.922,
+          498.319,
+          334.466,
+          682.343,
+          283.315
+        ],
+        "cpu": {
+          "median_ms": 234.89,
+          "min_ms": 224.537,
+          "max_ms": 239.508,
+          "samples_ms": [
+            233.346,
+            224.537,
+            236.643,
+            239.508,
+            235.055,
+            234.89,
+            228.958
+          ]
+        }
+      },
+      "source_edit": {
+        "median_ms": 308.285,
+        "min_ms": 259.556,
+        "max_ms": 388.071,
+        "samples_ms": [
+          326.446,
+          288.248,
+          388.071,
+          308.285,
+          259.556,
+          292.875,
+          358.166
+        ],
+        "cpu": {
+          "median_ms": 217.76,
+          "min_ms": 206.389,
+          "max_ms": 237.105,
+          "samples_ms": [
+            217.76,
+            230.004,
+            227.676,
+            237.105,
+            206.389,
+            217.399,
+            213.397
+          ]
+        }
+      },
+      "no_op": {
+        "median_ms": 19.693,
+        "min_ms": 12.137,
+        "max_ms": 45.653,
+        "samples_ms": [
+          45.653,
+          12.137,
+          12.225,
+          37.661,
+          14.999,
+          19.693,
+          26.158
+        ],
+        "cpu": {
+          "median_ms": 10.183,
+          "min_ms": 9.381,
+          "max_ms": 11.827,
+          "samples_ms": [
+            11.827,
+            9.381,
+            9.572,
+            10.183,
+            9.789,
+            11.436,
+            10.553
+          ]
+        }
+      }
+    },
+    "rust_sbf": {
+      "project_clean": {
+        "median_ms": 1062.486,
+        "min_ms": 768.741,
+        "max_ms": 1752.244,
+        "samples_ms": [
+          768.741,
+          1254.664,
+          1185.549,
+          1752.244,
+          1062.486,
+          918.209,
+          1042.083
+        ],
+        "cpu": {
+          "median_ms": 599.865,
+          "min_ms": 586.467,
+          "max_ms": 660.006,
+          "samples_ms": [
+            603.07,
+            592.177,
+            597.757,
+            660.006,
+            604.097,
+            599.865,
+            586.467
+          ]
+        }
+      },
+      "source_edit": {
+        "median_ms": 661.696,
+        "min_ms": 590.687,
+        "max_ms": 855.917,
+        "samples_ms": [
+          590.687,
+          661.696,
+          686.684,
+          736.254,
+          624.368,
+          611.968,
+          855.917
+        ],
+        "cpu": {
+          "median_ms": 454.87,
+          "min_ms": 432.538,
+          "max_ms": 470.194,
+          "samples_ms": [
+            445.394,
+            456.069,
+            454.87,
+            470.194,
+            445.73,
+            432.538,
+            460.989
+          ]
+        }
+      },
+      "no_op": {
+        "median_ms": 199.54,
+        "min_ms": 147.34,
+        "max_ms": 251.207,
+        "samples_ms": [
+          150.975,
+          147.34,
+          151.063,
+          209.053,
+          251.207,
+          250.25,
+          199.54
+        ],
+        "cpu": {
+          "median_ms": 95.818,
+          "min_ms": 87.616,
+          "max_ms": 101.373,
+          "samples_ms": [
+            87.616,
+            98.643,
+            95.818,
+            94.287,
+            97.885,
+            101.373,
+            89.007
+          ]
+        }
+      }
+    },
+    "go_native": {
+      "project_clean": {
+        "median_ms": 541.352,
+        "min_ms": 452.5,
+        "max_ms": 864.233,
+        "samples_ms": [
+          619.319,
+          452.5,
+          528.018,
+          864.233,
+          630.105,
+          466.274,
+          541.352
+        ],
+        "cpu": {
+          "median_ms": 517.441,
+          "min_ms": 485.689,
+          "max_ms": 540.202,
+          "samples_ms": [
+            505.103,
+            518.433,
+            535.924,
+            517.441,
+            540.202,
+            485.689,
+            503.92
+          ]
+        }
+      },
+      "source_edit": {
+        "median_ms": 651.011,
+        "min_ms": 458.333,
+        "max_ms": 745.838,
+        "samples_ms": [
+          741.489,
+          526.117,
+          651.011,
+          742.877,
+          745.838,
+          458.333,
+          512.027
+        ],
+        "cpu": {
+          "median_ms": 499.408,
+          "min_ms": 471.098,
+          "max_ms": 517.64,
+          "samples_ms": [
+            508.171,
+            494.858,
+            499.408,
+            501.526,
+            517.64,
+            471.098,
+            490.301
+          ]
+        }
+      },
+      "no_op": {
+        "median_ms": 282.83,
+        "min_ms": 214.229,
+        "max_ms": 317.024,
+        "samples_ms": [
+          217.741,
+          294.166,
+          214.229,
+          309.524,
+          317.024,
+          282.83,
+          219.191
+        ],
+        "cpu": {
+          "median_ms": 284.568,
+          "min_ms": 274.255,
+          "max_ms": 303.991,
+          "samples_ms": [
+            281.692,
+            303.991,
+            274.255,
+            275.186,
+            286.031,
+            291.351,
+            284.568
+          ]
+        }
+      }
+    }
+  },
+  "sampling_order": "serial, backends interleaved with random seed 20261004 within each scenario",
+  "elf_sha256": {
+    "go": "fff341a09455901553f95a518f4765b382730a93744700c2130740af73d9c1c8",
+    "rust": "c9a71e2e21836edf55eb89a3ab0c6daff17831139473358a9d37a83b3a4b47dd"
+  },
+  "project_artifact_bytes": {
+    "go_sbf_elf": 8000,
+    "go_sbf_build_receipt": 153,
+    "rust_sbf_elf": 12192,
+    "rust_target_and_deploy": 45101,
+    "native_go_executable": 1470658
+  },
+  "isolated_clang_and_lld_build_verified": true,
+  "frontend_bootstrap_fresh_go_cache_ms": 13320.26,
+  "frontend_bootstrap_cache_bytes": 50995375,
+  "toolchain_bytes": {
+    "gosvm_frontend": 3599906,
+    "clang_and_lld": 176073704,
+    "installed_solana_llvm": 398819809,
+    "installed_solana_rust": 1058639978,
+    "installed_go": 221655728
+  },
+  "test_harness_bytes": {
+    "go_harness_binary": 5631008,
+    "validator_binary": 61284224,
+    "installed_solana_cli_directory": 205746906,
+    "note": "Logical bytes; validator binary is included in CLI directory, not additive. Temporary ledgers are removed after verification. Shared Go build cache excluded from project artifacts; fresh frontend cache measured separately."
+  }
+}

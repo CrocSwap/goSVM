@@ -1,0 +1,1407 @@
+{
+  "atomic_rollback_per_backend": true,
+  "committed_lifecycle_instructions_per_backend": 20,
+  "deactivated_features": [],
+  "elf_sha256": {
+    "protocol_bench": "bbda3cba743290b52db3607079ac85cffc5d19879ee5a17f4eaabab14aecb299",
+    "protocol_go": "80bb3ae796bd8a192e5930b22166446430b5e850fd0f8cd6cdfadae915511135"
+  },
+  "reference": "Python hashlib and uint64 arithmetic; all 64 kernels exercised",
+  "results": [
+    {
+      "name": "commit",
+      "backend": "go",
+      "cu": 2450,
+      "code": 0
+    },
+    {
+      "name": "step-00",
+      "backend": "go",
+      "cu": 3874,
+      "code": 0
+    },
+    {
+      "name": "step-01",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-02",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-03",
+      "backend": "go",
+      "cu": 3893,
+      "code": 0
+    },
+    {
+      "name": "step-04",
+      "backend": "go",
+      "cu": 3874,
+      "code": 0
+    },
+    {
+      "name": "step-05",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-06",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-07",
+      "backend": "go",
+      "cu": 3893,
+      "code": 0
+    },
+    {
+      "name": "checkpoint",
+      "backend": "go",
+      "cu": 1262,
+      "code": 0
+    },
+    {
+      "name": "step-08",
+      "backend": "go",
+      "cu": 3874,
+      "code": 0
+    },
+    {
+      "name": "step-09",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-10",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-11",
+      "backend": "go",
+      "cu": 3893,
+      "code": 0
+    },
+    {
+      "name": "step-12",
+      "backend": "go",
+      "cu": 3874,
+      "code": 0
+    },
+    {
+      "name": "step-13",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-14",
+      "backend": "go",
+      "cu": 3894,
+      "code": 0
+    },
+    {
+      "name": "step-15",
+      "backend": "go",
+      "cu": 3962,
+      "code": 0
+    },
+    {
+      "name": "finalize",
+      "backend": "go",
+      "cu": 1332,
+      "code": 0
+    },
+    {
+      "name": "reset",
+      "backend": "go",
+      "cu": 1369,
+      "code": 0
+    },
+    {
+      "name": "kernel-00",
+      "backend": "go",
+      "cu": 2427,
+      "code": 0
+    },
+    {
+      "name": "kernel-01",
+      "backend": "go",
+      "cu": 2428,
+      "code": 0
+    },
+    {
+      "name": "kernel-02",
+      "backend": "go",
+      "cu": 2427,
+      "code": 0
+    },
+    {
+      "name": "kernel-03",
+      "backend": "go",
+      "cu": 2428,
+      "code": 0
+    },
+    {
+      "name": "kernel-04",
+      "backend": "go",
+      "cu": 2427,
+      "code": 0
+    },
+    {
+      "name": "kernel-05",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-06",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-07",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-08",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-09",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-10",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-11",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-12",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-13",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-14",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-15",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-16",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-17",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-18",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-19",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-20",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-21",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-22",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-23",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-24",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-25",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-26",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-27",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-28",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-29",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-30",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-31",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-32",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-33",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-34",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-35",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-36",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-37",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-38",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-39",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-40",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-41",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-42",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-43",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-44",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-45",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-46",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-47",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-48",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-49",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-50",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-51",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-52",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-53",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-54",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-55",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-56",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-57",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-58",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-59",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-60",
+      "backend": "go",
+      "cu": 2431,
+      "code": 0
+    },
+    {
+      "name": "kernel-61",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "kernel-62",
+      "backend": "go",
+      "cu": 2430,
+      "code": 0
+    },
+    {
+      "name": "kernel-63",
+      "backend": "go",
+      "cu": 2432,
+      "code": 0
+    },
+    {
+      "name": "wrong-owner",
+      "backend": "go",
+      "cu": 292,
+      "code": 103
+    },
+    {
+      "name": "config-owner",
+      "backend": "go",
+      "cu": 306,
+      "code": 103
+    },
+    {
+      "name": "payload-owner",
+      "backend": "go",
+      "cu": 315,
+      "code": 103
+    },
+    {
+      "name": "readonly",
+      "backend": "go",
+      "cu": 282,
+      "code": 103
+    },
+    {
+      "name": "no-signer",
+      "backend": "go",
+      "cu": 325,
+      "code": 104
+    },
+    {
+      "name": "alias",
+      "backend": "go",
+      "cu": 691,
+      "code": 105
+    },
+    {
+      "name": "accounts-0",
+      "backend": "go",
+      "cu": 20,
+      "code": 101
+    },
+    {
+      "name": "accounts-3",
+      "backend": "go",
+      "cu": 173,
+      "code": 101
+    },
+    {
+      "name": "accounts-5",
+      "backend": "go",
+      "cu": 686,
+      "code": 101
+    },
+    {
+      "name": "short-state",
+      "backend": "go",
+      "cu": 274,
+      "code": 102
+    },
+    {
+      "name": "short-config",
+      "backend": "go",
+      "cu": 276,
+      "code": 102
+    },
+    {
+      "name": "short-payload",
+      "backend": "go",
+      "cu": 278,
+      "code": 102
+    },
+    {
+      "name": "short-instruction",
+      "backend": "go",
+      "cu": 272,
+      "code": 102
+    },
+    {
+      "name": "long-instruction",
+      "backend": "go",
+      "cu": 272,
+      "code": 102
+    },
+    {
+      "name": "authority",
+      "backend": "go",
+      "cu": 330,
+      "code": 104
+    },
+    {
+      "name": "config-authority",
+      "backend": "go",
+      "cu": 342,
+      "code": 104
+    },
+    {
+      "name": "config-limit",
+      "backend": "go",
+      "cu": 378,
+      "code": 106
+    },
+    {
+      "name": "nonce",
+      "backend": "go",
+      "cu": 568,
+      "code": 201
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "go",
+      "cu": 617,
+      "code": 202
+    },
+    {
+      "name": "phase",
+      "backend": "go",
+      "cu": 620,
+      "code": 203
+    },
+    {
+      "name": "commit-digest",
+      "backend": "go",
+      "cu": 1906,
+      "code": 204
+    },
+    {
+      "name": "step-zero",
+      "backend": "go",
+      "cu": 649,
+      "code": 205
+    },
+    {
+      "name": "step-large",
+      "backend": "go",
+      "cu": 673,
+      "code": 205
+    },
+    {
+      "name": "cursor",
+      "backend": "go",
+      "cu": 647,
+      "code": 205
+    },
+    {
+      "name": "past-payload",
+      "backend": "go",
+      "cu": 677,
+      "code": 205
+    },
+    {
+      "name": "credits",
+      "backend": "go",
+      "cu": 726,
+      "code": 206
+    },
+    {
+      "name": "payload-substitute",
+      "backend": "go",
+      "cu": 2010,
+      "code": 204
+    },
+    {
+      "name": "checkpoint-digest",
+      "backend": "go",
+      "cu": 921,
+      "code": 207
+    },
+    {
+      "name": "finalize-early",
+      "backend": "go",
+      "cu": 644,
+      "code": 203
+    },
+    {
+      "name": "finalize-digest",
+      "backend": "go",
+      "cu": 922,
+      "code": 207
+    },
+    {
+      "name": "nonce-overflow",
+      "backend": "go",
+      "cu": 631,
+      "code": 208
+    },
+    {
+      "name": "unknown-tag",
+      "backend": "go",
+      "cu": 625,
+      "code": 209
+    },
+    {
+      "name": "commit",
+      "backend": "rust",
+      "cu": 2374,
+      "code": 0
+    },
+    {
+      "name": "step-00",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-01",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-02",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-03",
+      "backend": "rust",
+      "cu": 3810,
+      "code": 0
+    },
+    {
+      "name": "step-04",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-05",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-06",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-07",
+      "backend": "rust",
+      "cu": 3810,
+      "code": 0
+    },
+    {
+      "name": "checkpoint",
+      "backend": "rust",
+      "cu": 1358,
+      "code": 0
+    },
+    {
+      "name": "step-08",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-09",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-10",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-11",
+      "backend": "rust",
+      "cu": 3810,
+      "code": 0
+    },
+    {
+      "name": "step-12",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-13",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-14",
+      "backend": "rust",
+      "cu": 3811,
+      "code": 0
+    },
+    {
+      "name": "step-15",
+      "backend": "rust",
+      "cu": 3815,
+      "code": 0
+    },
+    {
+      "name": "finalize",
+      "backend": "rust",
+      "cu": 1363,
+      "code": 0
+    },
+    {
+      "name": "reset",
+      "backend": "rust",
+      "cu": 1223,
+      "code": 0
+    },
+    {
+      "name": "kernel-00",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-01",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-02",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-03",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-04",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-05",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-06",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-07",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-08",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-09",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-10",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-11",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-12",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-13",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-14",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-15",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-16",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-17",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-18",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-19",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-20",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-21",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-22",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-23",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-24",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-25",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-26",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-27",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-28",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-29",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-30",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-31",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-32",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-33",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-34",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-35",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-36",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-37",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-38",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-39",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-40",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-41",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-42",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-43",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-44",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-45",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-46",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-47",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-48",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-49",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-50",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-51",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-52",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-53",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-54",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-55",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-56",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-57",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-58",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-59",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-60",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-61",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-62",
+      "backend": "rust",
+      "cu": 2491,
+      "code": 0
+    },
+    {
+      "name": "kernel-63",
+      "backend": "rust",
+      "cu": 2490,
+      "code": 0
+    },
+    {
+      "name": "wrong-owner",
+      "backend": "rust",
+      "cu": 1022,
+      "code": 103
+    },
+    {
+      "name": "config-owner",
+      "backend": "rust",
+      "cu": 1045,
+      "code": 103
+    },
+    {
+      "name": "payload-owner",
+      "backend": "rust",
+      "cu": 1068,
+      "code": 103
+    },
+    {
+      "name": "readonly",
+      "backend": "rust",
+      "cu": 1004,
+      "code": 103
+    },
+    {
+      "name": "no-signer",
+      "backend": "rust",
+      "cu": 1086,
+      "code": 104
+    },
+    {
+      "name": "alias",
+      "backend": "rust",
+      "cu": 812,
+      "code": 105
+    },
+    {
+      "name": "accounts-0",
+      "backend": "rust",
+      "cu": 121,
+      "code": 101
+    },
+    {
+      "name": "accounts-3",
+      "backend": "rust",
+      "cu": 695,
+      "code": 101
+    },
+    {
+      "name": "accounts-5",
+      "backend": "rust",
+      "cu": 948,
+      "code": 101
+    },
+    {
+      "name": "short-state",
+      "backend": "rust",
+      "cu": 993,
+      "code": 102
+    },
+    {
+      "name": "short-config",
+      "backend": "rust",
+      "cu": 996,
+      "code": 102
+    },
+    {
+      "name": "short-payload",
+      "backend": "rust",
+      "cu": 999,
+      "code": 102
+    },
+    {
+      "name": "short-instruction",
+      "backend": "rust",
+      "cu": 997,
+      "code": 102
+    },
+    {
+      "name": "long-instruction",
+      "backend": "rust",
+      "cu": 997,
+      "code": 102
+    },
+    {
+      "name": "authority",
+      "backend": "rust",
+      "cu": 1102,
+      "code": 104
+    },
+    {
+      "name": "config-authority",
+      "backend": "rust",
+      "cu": 1128,
+      "code": 104
+    },
+    {
+      "name": "config-limit",
+      "backend": "rust",
+      "cu": 1142,
+      "code": 106
+    },
+    {
+      "name": "nonce",
+      "backend": "rust",
+      "cu": 1221,
+      "code": 201
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "rust",
+      "cu": 1225,
+      "code": 202
+    },
+    {
+      "name": "phase",
+      "backend": "rust",
+      "cu": 1231,
+      "code": 203
+    },
+    {
+      "name": "commit-digest",
+      "backend": "rust",
+      "cu": 2384,
+      "code": 204
+    },
+    {
+      "name": "step-zero",
+      "backend": "rust",
+      "cu": 1239,
+      "code": 205
+    },
+    {
+      "name": "step-large",
+      "backend": "rust",
+      "cu": 1245,
+      "code": 205
+    },
+    {
+      "name": "cursor",
+      "backend": "rust",
+      "cu": 1237,
+      "code": 205
+    },
+    {
+      "name": "past-payload",
+      "backend": "rust",
+      "cu": 1243,
+      "code": 205
+    },
+    {
+      "name": "credits",
+      "backend": "rust",
+      "cu": 1253,
+      "code": 206
+    },
+    {
+      "name": "payload-substitute",
+      "backend": "rust",
+      "cu": 2410,
+      "code": 204
+    },
+    {
+      "name": "checkpoint-digest",
+      "backend": "rust",
+      "cu": 1380,
+      "code": 207
+    },
+    {
+      "name": "finalize-early",
+      "backend": "rust",
+      "cu": 1235,
+      "code": 203
+    },
+    {
+      "name": "finalize-digest",
+      "backend": "rust",
+      "cu": 1380,
+      "code": 207
+    },
+    {
+      "name": "nonce-overflow",
+      "backend": "rust",
+      "cu": 1236,
+      "code": 208
+    },
+    {
+      "name": "unknown-tag",
+      "backend": "rust",
+      "cu": 1234,
+      "code": 209
+    }
+  ],
+  "target": "sBPF v3",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+  "vectors_per_backend": 116
+}

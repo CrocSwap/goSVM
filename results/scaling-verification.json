@@ -1,0 +1,288 @@
+{
+  "deactivated_features": [],
+  "reference": "independent Python uint64 arithmetic, five input seeds at each size",
+  "results": [
+    {
+      "backend": "go",
+      "cu": 318,
+      "elf_sha256": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+      "functions": 1,
+      "seed": 0
+    },
+    {
+      "backend": "go",
+      "cu": 318,
+      "elf_sha256": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+      "functions": 1,
+      "seed": 1
+    },
+    {
+      "backend": "go",
+      "cu": 318,
+      "elf_sha256": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+      "functions": 1,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "go",
+      "cu": 318,
+      "elf_sha256": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+      "functions": 1,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "go",
+      "cu": 318,
+      "elf_sha256": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+      "functions": 1,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "rust",
+      "cu": 303,
+      "elf_sha256": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585",
+      "functions": 1,
+      "seed": 0
+    },
+    {
+      "backend": "rust",
+      "cu": 303,
+      "elf_sha256": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585",
+      "functions": 1,
+      "seed": 1
+    },
+    {
+      "backend": "rust",
+      "cu": 303,
+      "elf_sha256": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585",
+      "functions": 1,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "rust",
+      "cu": 303,
+      "elf_sha256": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585",
+      "functions": 1,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "rust",
+      "cu": 303,
+      "elf_sha256": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585",
+      "functions": 1,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "go",
+      "cu": 1038,
+      "elf_sha256": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+      "functions": 16,
+      "seed": 0
+    },
+    {
+      "backend": "go",
+      "cu": 1038,
+      "elf_sha256": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+      "functions": 16,
+      "seed": 1
+    },
+    {
+      "backend": "go",
+      "cu": 1038,
+      "elf_sha256": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+      "functions": 16,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "go",
+      "cu": 1038,
+      "elf_sha256": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+      "functions": 16,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "go",
+      "cu": 1038,
+      "elf_sha256": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+      "functions": 16,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "rust",
+      "cu": 1023,
+      "elf_sha256": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c",
+      "functions": 16,
+      "seed": 0
+    },
+    {
+      "backend": "rust",
+      "cu": 1023,
+      "elf_sha256": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c",
+      "functions": 16,
+      "seed": 1
+    },
+    {
+      "backend": "rust",
+      "cu": 1023,
+      "elf_sha256": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c",
+      "functions": 16,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "rust",
+      "cu": 1023,
+      "elf_sha256": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c",
+      "functions": 16,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "rust",
+      "cu": 1023,
+      "elf_sha256": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c",
+      "functions": 16,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "go",
+      "cu": 3342,
+      "elf_sha256": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+      "functions": 64,
+      "seed": 0
+    },
+    {
+      "backend": "go",
+      "cu": 3342,
+      "elf_sha256": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+      "functions": 64,
+      "seed": 1
+    },
+    {
+      "backend": "go",
+      "cu": 3342,
+      "elf_sha256": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+      "functions": 64,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "go",
+      "cu": 3342,
+      "elf_sha256": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+      "functions": 64,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "go",
+      "cu": 3342,
+      "elf_sha256": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+      "functions": 64,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "rust",
+      "cu": 3327,
+      "elf_sha256": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a",
+      "functions": 64,
+      "seed": 0
+    },
+    {
+      "backend": "rust",
+      "cu": 3327,
+      "elf_sha256": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a",
+      "functions": 64,
+      "seed": 1
+    },
+    {
+      "backend": "rust",
+      "cu": 3327,
+      "elf_sha256": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a",
+      "functions": 64,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "rust",
+      "cu": 3327,
+      "elf_sha256": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a",
+      "functions": 64,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "rust",
+      "cu": 3327,
+      "elf_sha256": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a",
+      "functions": 64,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "go",
+      "cu": 12558,
+      "elf_sha256": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+      "functions": 256,
+      "seed": 0
+    },
+    {
+      "backend": "go",
+      "cu": 12558,
+      "elf_sha256": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+      "functions": 256,
+      "seed": 1
+    },
+    {
+      "backend": "go",
+      "cu": 12558,
+      "elf_sha256": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+      "functions": 256,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "go",
+      "cu": 12558,
+      "elf_sha256": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+      "functions": 256,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "go",
+      "cu": 12558,
+      "elf_sha256": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+      "functions": 256,
+      "seed": 9223372036854775808
+    },
+    {
+      "backend": "rust",
+      "cu": 12543,
+      "elf_sha256": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef",
+      "functions": 256,
+      "seed": 0
+    },
+    {
+      "backend": "rust",
+      "cu": 12543,
+      "elf_sha256": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef",
+      "functions": 256,
+      "seed": 1
+    },
+    {
+      "backend": "rust",
+      "cu": 12543,
+      "elf_sha256": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef",
+      "functions": 256,
+      "seed": 18446744073709551615
+    },
+    {
+      "backend": "rust",
+      "cu": 12543,
+      "elf_sha256": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef",
+      "functions": 256,
+      "seed": 1311768467463790320
+    },
+    {
+      "backend": "rust",
+      "cu": 12543,
+      "elf_sha256": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef",
+      "functions": 256,
+      "seed": 9223372036854775808
+    }
+  ],
+  "target": "sBPF v3",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)"
+}

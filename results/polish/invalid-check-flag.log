@@ -1,0 +1,5 @@
+flag provided but not defined: -no-cache
+Usage of gosvm check:
+  -dir string
+    	project directory (default ".")
+gosvm: flag provided but not defined: -no-cache

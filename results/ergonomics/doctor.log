@@ -1,0 +1,3 @@
+go version go1.22.0 darwin/arm64
+solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)
+OK LLVM 19.1.7: /Users/colkitt/.cache/solana/v1.51/platform-tools/llvm

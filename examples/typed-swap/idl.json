@@ -1,0 +1,84 @@
+{
+  "account": {
+    "name": "Pool",
+    "discriminator": [
+      33,
+      65,
+      37,
+      242,
+      140,
+      68,
+      141,
+      192
+    ],
+    "size": 32,
+    "fields": [
+      {
+        "name": "ReserveX",
+        "type": "uint64",
+        "offset": 8,
+        "size": 8
+      },
+      {
+        "name": "ReserveY",
+        "type": "uint64",
+        "offset": 16,
+        "size": 8
+      },
+      {
+        "name": "SwapCount",
+        "type": "uint64",
+        "offset": 24,
+        "size": 8
+      }
+    ]
+  },
+  "constraints": {
+    "account_count": 1,
+    "executable": false,
+    "owner": "program_id",
+    "writable": true
+  },
+  "errors": {
+    "AccountCount": 6000,
+    "AccountFlags": 6001,
+    "AccountOwner": 6002,
+    "ErrCounterOverflow": 4,
+    "ErrInvalidAmount": 3,
+    "ErrInvalidReserves": 2,
+    "ErrSlippage": 5,
+    "InstructionLayout": 6004,
+    "StateLayout": 6003
+  },
+  "format": "gosvm-1",
+  "handler": "Swap",
+  "instruction": {
+    "name": "SwapArgs",
+    "discriminator": [
+      184,
+      167,
+      8,
+      246,
+      65,
+      96,
+      167,
+      23
+    ],
+    "size": 24,
+    "fields": [
+      {
+        "name": "AmountIn",
+        "type": "uint64",
+        "offset": 8,
+        "size": 8
+      },
+      {
+        "name": "MinAmountOut",
+        "type": "uint64",
+        "offset": 16,
+        "size": 8
+      }
+    ]
+  },
+  "name": "typed-swap"
+}

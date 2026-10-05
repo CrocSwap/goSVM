@@ -1,0 +1,158 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "repeats": 7,
+  "go": "go version go1.22.0 darwin/arm64",
+  "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+  "rustc": "rustc 1.84.1-dev",
+  "scope": "sBPF v3; installed tools and warm OS cache; no dependency downloads",
+  "builds": {
+    "go_sbf": {
+      "project_clean": {
+        "median_ms": 168.832,
+        "min_ms": 118.962,
+        "max_ms": 369.955,
+        "samples_ms": [
+          369.955,
+          266.732,
+          227.718,
+          148.484,
+          168.832,
+          139.827,
+          118.962
+        ]
+      },
+      "source_edit": {
+        "median_ms": 157.577,
+        "min_ms": 124.556,
+        "max_ms": 531.267,
+        "samples_ms": [
+          151.015,
+          128.477,
+          211.686,
+          157.577,
+          124.556,
+          220.689,
+          531.267
+        ]
+      },
+      "no_op": {
+        "median_ms": 151.202,
+        "min_ms": 118.569,
+        "max_ms": 319.975,
+        "samples_ms": [
+          319.975,
+          215.575,
+          206.472,
+          118.569,
+          151.202,
+          127.324,
+          124.032
+        ]
+      }
+    },
+    "rust_sbf": {
+      "project_clean": {
+        "median_ms": 759.545,
+        "min_ms": 575.122,
+        "max_ms": 1020.251,
+        "samples_ms": [
+          584.219,
+          1020.251,
+          808.334,
+          575.122,
+          762.412,
+          759.545,
+          664.953
+        ]
+      },
+      "source_edit": {
+        "median_ms": 605.183,
+        "min_ms": 446.742,
+        "max_ms": 780.754,
+        "samples_ms": [
+          499.704,
+          446.742,
+          780.014,
+          780.754,
+          759.545,
+          605.183,
+          528.702
+        ]
+      },
+      "no_op": {
+        "median_ms": 135.896,
+        "min_ms": 120.479,
+        "max_ms": 149.355,
+        "samples_ms": [
+          133.774,
+          149.355,
+          121.15,
+          139.78,
+          120.479,
+          135.896,
+          136.196
+        ]
+      }
+    },
+    "go_native": {
+      "project_clean": {
+        "median_ms": 549.896,
+        "min_ms": 378.353,
+        "max_ms": 872.74,
+        "samples_ms": [
+          872.74,
+          519.756,
+          549.896,
+          378.353,
+          594.276,
+          716.143,
+          429.179
+        ]
+      },
+      "source_edit": {
+        "median_ms": 367.691,
+        "min_ms": 358.768,
+        "max_ms": 833.824,
+        "samples_ms": [
+          367.691,
+          358.768,
+          434.501,
+          833.824,
+          364.117,
+          392.585,
+          365.899
+        ]
+      },
+      "no_op": {
+        "median_ms": 300.883,
+        "min_ms": 193.713,
+        "max_ms": 415.65,
+        "samples_ms": [
+          193.713,
+          230.041,
+          342.039,
+          300.883,
+          415.65,
+          262.686,
+          304.703
+        ]
+      }
+    }
+  },
+  "project_artifact_bytes": {
+    "go_sbf_elf": 1824,
+    "rust_sbf_elf": 1704,
+    "rust_target_and_deploy": 11400,
+    "native_go_executable": 1366450
+  },
+  "isolated_clang_and_lld_build_verified": true,
+  "frontend_bootstrap_fresh_go_cache_ms": 17442.364,
+  "frontend_bootstrap_cache_bytes": 48406978,
+  "toolchain_bytes": {
+    "gosvm_frontend": 3297602,
+    "clang_and_lld": 176073704,
+    "installed_solana_llvm": 398819809,
+    "installed_solana_rust": 1058639978,
+    "installed_go": 221655728
+  }
+}

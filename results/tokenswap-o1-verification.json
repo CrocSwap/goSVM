@@ -1,0 +1,1194 @@
+{
+  "committed_swaps_per_backend": 2,
+  "cpi_logs_verified": true,
+  "deactivated_features": [],
+  "elf_sha256": {
+    "tokenswap-go.so": "2e59a86e40fcb2562e9e4480941c7c4255f7d265206b64034525757d3dd1992b",
+    "tokenswap_rust.so": "c9a71e2e21836edf55eb89a3ab0c6daff17831139473358a9d37a83b3a4b47dd"
+  },
+  "failed_second_cpi_rollback_per_backend": true,
+  "failed_second_instruction_rollback_per_backend": true,
+  "results": [
+    {
+      "name": "wide-swap",
+      "backend": "go",
+      "cu": 29500,
+      "code": 0
+    },
+    {
+      "name": "pool-owner",
+      "backend": "go",
+      "cu": 1563,
+      "code": 103
+    },
+    {
+      "name": "pool-readonly",
+      "backend": "go",
+      "cu": 2069,
+      "code": 103
+    },
+    {
+      "name": "pool-length",
+      "backend": "go",
+      "cu": 1532,
+      "code": 102
+    },
+    {
+      "name": "no-signer",
+      "backend": "go",
+      "cu": 2079,
+      "code": 104
+    },
+    {
+      "name": "fake-program",
+      "backend": "go",
+      "cu": 2091,
+      "code": 105
+    },
+    {
+      "name": "alias",
+      "backend": "go",
+      "cu": 4009,
+      "code": 106
+    },
+    {
+      "name": "vault-substitute",
+      "backend": "go",
+      "cu": 3920,
+      "code": 107
+    },
+    {
+      "name": "token-owner",
+      "backend": "go",
+      "cu": 5427,
+      "code": 108
+    },
+    {
+      "name": "token-length",
+      "backend": "go",
+      "cu": 7366,
+      "code": 108
+    },
+    {
+      "name": "token-readonly",
+      "backend": "go",
+      "cu": 6716,
+      "code": 108
+    },
+    {
+      "name": "uninitialized",
+      "backend": "go",
+      "cu": 5942,
+      "code": 108
+    },
+    {
+      "name": "native-token",
+      "backend": "go",
+      "cu": 6032,
+      "code": 108
+    },
+    {
+      "name": "mint",
+      "backend": "go",
+      "cu": 10380,
+      "code": 109
+    },
+    {
+      "name": "same-mint",
+      "backend": "go",
+      "cu": 8784,
+      "code": 109
+    },
+    {
+      "name": "user-authority",
+      "backend": "go",
+      "cu": 11118,
+      "code": 110
+    },
+    {
+      "name": "vault-authority",
+      "backend": "go",
+      "cu": 13351,
+      "code": 110
+    },
+    {
+      "name": "pda",
+      "backend": "go",
+      "cu": 15596,
+      "code": 111
+    },
+    {
+      "name": "bump",
+      "backend": "go",
+      "cu": 15584,
+      "code": 111
+    },
+    {
+      "name": "input-frozen",
+      "backend": "go",
+      "cu": 22869,
+      "code": 17
+    },
+    {
+      "name": "output-frozen",
+      "backend": "go",
+      "cu": 29003,
+      "code": 17
+    },
+    {
+      "name": "short-ix",
+      "backend": "go",
+      "cu": 1532,
+      "code": 102
+    },
+    {
+      "name": "long-ix",
+      "backend": "go",
+      "cu": 1532,
+      "code": 102
+    },
+    {
+      "name": "zero-input",
+      "backend": "go",
+      "cu": 16328,
+      "code": 112
+    },
+    {
+      "name": "empty-pool",
+      "backend": "go",
+      "cu": 16327,
+      "code": 112
+    },
+    {
+      "name": "input-overflow",
+      "backend": "go",
+      "cu": 16327,
+      "code": 112
+    },
+    {
+      "name": "insufficient-input",
+      "backend": "go",
+      "cu": 16489,
+      "code": 112
+    },
+    {
+      "name": "fee-rounding-zero",
+      "backend": "go",
+      "cu": 16511,
+      "code": 113
+    },
+    {
+      "name": "slippage",
+      "backend": "go",
+      "cu": 16815,
+      "code": 113
+    },
+    {
+      "name": "output-overflow",
+      "backend": "go",
+      "cu": 16947,
+      "code": 113
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "go",
+      "cu": 17096,
+      "code": 114
+    },
+    {
+      "name": "maximum-input",
+      "backend": "go",
+      "cu": 29469,
+      "code": 0
+    },
+    {
+      "name": "near-limit-reserve",
+      "backend": "go",
+      "cu": 29465,
+      "code": 0
+    },
+    {
+      "name": "small-swap",
+      "backend": "go",
+      "cu": 29388,
+      "code": 0
+    },
+    {
+      "name": "random-00",
+      "backend": "go",
+      "cu": 29522,
+      "code": 0
+    },
+    {
+      "name": "random-01",
+      "backend": "go",
+      "cu": 29498,
+      "code": 0
+    },
+    {
+      "name": "random-02",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-03",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-04",
+      "backend": "go",
+      "cu": 29511,
+      "code": 0
+    },
+    {
+      "name": "random-05",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-06",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-07",
+      "backend": "go",
+      "cu": 29500,
+      "code": 0
+    },
+    {
+      "name": "random-08",
+      "backend": "go",
+      "cu": 29497,
+      "code": 0
+    },
+    {
+      "name": "random-09",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-10",
+      "backend": "go",
+      "cu": 29514,
+      "code": 0
+    },
+    {
+      "name": "random-11",
+      "backend": "go",
+      "cu": 29498,
+      "code": 0
+    },
+    {
+      "name": "random-12",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-13",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-14",
+      "backend": "go",
+      "cu": 29498,
+      "code": 0
+    },
+    {
+      "name": "random-15",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-16",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-17",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-18",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-19",
+      "backend": "go",
+      "cu": 29493,
+      "code": 0
+    },
+    {
+      "name": "random-20",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-21",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-22",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-23",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-24",
+      "backend": "go",
+      "cu": 29511,
+      "code": 0
+    },
+    {
+      "name": "random-25",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-26",
+      "backend": "go",
+      "cu": 29491,
+      "code": 0
+    },
+    {
+      "name": "random-27",
+      "backend": "go",
+      "cu": 29516,
+      "code": 0
+    },
+    {
+      "name": "random-28",
+      "backend": "go",
+      "cu": 29486,
+      "code": 0
+    },
+    {
+      "name": "random-29",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-30",
+      "backend": "go",
+      "cu": 29486,
+      "code": 0
+    },
+    {
+      "name": "random-31",
+      "backend": "go",
+      "cu": 29498,
+      "code": 0
+    },
+    {
+      "name": "random-32",
+      "backend": "go",
+      "cu": 29491,
+      "code": 0
+    },
+    {
+      "name": "random-33",
+      "backend": "go",
+      "cu": 29557,
+      "code": 0
+    },
+    {
+      "name": "random-34",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-35",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-36",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-37",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-38",
+      "backend": "go",
+      "cu": 29504,
+      "code": 0
+    },
+    {
+      "name": "random-39",
+      "backend": "go",
+      "cu": 29479,
+      "code": 0
+    },
+    {
+      "name": "random-40",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-41",
+      "backend": "go",
+      "cu": 29495,
+      "code": 0
+    },
+    {
+      "name": "random-42",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-43",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-44",
+      "backend": "go",
+      "cu": 29521,
+      "code": 0
+    },
+    {
+      "name": "random-45",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-46",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-47",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-48",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-49",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-50",
+      "backend": "go",
+      "cu": 29496,
+      "code": 0
+    },
+    {
+      "name": "random-51",
+      "backend": "go",
+      "cu": 29474,
+      "code": 0
+    },
+    {
+      "name": "random-52",
+      "backend": "go",
+      "cu": 29502,
+      "code": 0
+    },
+    {
+      "name": "random-53",
+      "backend": "go",
+      "cu": 29504,
+      "code": 0
+    },
+    {
+      "name": "random-54",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-55",
+      "backend": "go",
+      "cu": 29488,
+      "code": 0
+    },
+    {
+      "name": "random-56",
+      "backend": "go",
+      "cu": 29495,
+      "code": 0
+    },
+    {
+      "name": "random-57",
+      "backend": "go",
+      "cu": 29498,
+      "code": 0
+    },
+    {
+      "name": "random-58",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-59",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-60",
+      "backend": "go",
+      "cu": 29523,
+      "code": 0
+    },
+    {
+      "name": "random-61",
+      "backend": "go",
+      "cu": 29481,
+      "code": 0
+    },
+    {
+      "name": "random-62",
+      "backend": "go",
+      "cu": 29497,
+      "code": 0
+    },
+    {
+      "name": "random-63",
+      "backend": "go",
+      "cu": 29491,
+      "code": 0
+    },
+    {
+      "name": "wide-swap",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "pool-owner",
+      "backend": "rust",
+      "cu": 424,
+      "code": 103
+    },
+    {
+      "name": "pool-readonly",
+      "backend": "rust",
+      "cu": 706,
+      "code": 103
+    },
+    {
+      "name": "pool-length",
+      "backend": "rust",
+      "cu": 410,
+      "code": 102
+    },
+    {
+      "name": "no-signer",
+      "backend": "rust",
+      "cu": 711,
+      "code": 104
+    },
+    {
+      "name": "fake-program",
+      "backend": "rust",
+      "cu": 716,
+      "code": 105
+    },
+    {
+      "name": "alias",
+      "backend": "rust",
+      "cu": 1597,
+      "code": 106
+    },
+    {
+      "name": "vault-substitute",
+      "backend": "rust",
+      "cu": 1633,
+      "code": 107
+    },
+    {
+      "name": "token-owner",
+      "backend": "rust",
+      "cu": 2236,
+      "code": 108
+    },
+    {
+      "name": "token-length",
+      "backend": "rust",
+      "cu": 3133,
+      "code": 108
+    },
+    {
+      "name": "token-readonly",
+      "backend": "rust",
+      "cu": 2828,
+      "code": 108
+    },
+    {
+      "name": "uninitialized",
+      "backend": "rust",
+      "cu": 2511,
+      "code": 108
+    },
+    {
+      "name": "native-token",
+      "backend": "rust",
+      "cu": 2515,
+      "code": 108
+    },
+    {
+      "name": "mint",
+      "backend": "rust",
+      "cu": 4333,
+      "code": 109
+    },
+    {
+      "name": "same-mint",
+      "backend": "rust",
+      "cu": 3679,
+      "code": 109
+    },
+    {
+      "name": "user-authority",
+      "backend": "rust",
+      "cu": 4628,
+      "code": 110
+    },
+    {
+      "name": "vault-authority",
+      "backend": "rust",
+      "cu": 5509,
+      "code": 110
+    },
+    {
+      "name": "pda",
+      "backend": "rust",
+      "cu": 7338,
+      "code": 111
+    },
+    {
+      "name": "bump",
+      "backend": "rust",
+      "cu": 7322,
+      "code": 111
+    },
+    {
+      "name": "input-frozen",
+      "backend": "rust",
+      "cu": 13993,
+      "code": 17
+    },
+    {
+      "name": "output-frozen",
+      "backend": "rust",
+      "cu": 20033,
+      "code": 17
+    },
+    {
+      "name": "short-ix",
+      "backend": "rust",
+      "cu": 408,
+      "code": 102
+    },
+    {
+      "name": "long-ix",
+      "backend": "rust",
+      "cu": 408,
+      "code": 102
+    },
+    {
+      "name": "zero-input",
+      "backend": "rust",
+      "cu": 7660,
+      "code": 112
+    },
+    {
+      "name": "empty-pool",
+      "backend": "rust",
+      "cu": 7668,
+      "code": 112
+    },
+    {
+      "name": "input-overflow",
+      "backend": "rust",
+      "cu": 7655,
+      "code": 112
+    },
+    {
+      "name": "insufficient-input",
+      "backend": "rust",
+      "cu": 7663,
+      "code": 112
+    },
+    {
+      "name": "fee-rounding-zero",
+      "backend": "rust",
+      "cu": 7827,
+      "code": 113
+    },
+    {
+      "name": "slippage",
+      "backend": "rust",
+      "cu": 8315,
+      "code": 113
+    },
+    {
+      "name": "output-overflow",
+      "backend": "rust",
+      "cu": 8311,
+      "code": 113
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "rust",
+      "cu": 8325,
+      "code": 114
+    },
+    {
+      "name": "maximum-input",
+      "backend": "rust",
+      "cu": 20468,
+      "code": 0
+    },
+    {
+      "name": "near-limit-reserve",
+      "backend": "rust",
+      "cu": 20138,
+      "code": 0
+    },
+    {
+      "name": "small-swap",
+      "backend": "rust",
+      "cu": 20029,
+      "code": 0
+    },
+    {
+      "name": "random-00",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-01",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-02",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-03",
+      "backend": "rust",
+      "cu": 20389,
+      "code": 0
+    },
+    {
+      "name": "random-04",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-05",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-06",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-07",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-08",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-09",
+      "backend": "rust",
+      "cu": 20388,
+      "code": 0
+    },
+    {
+      "name": "random-10",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-11",
+      "backend": "rust",
+      "cu": 20388,
+      "code": 0
+    },
+    {
+      "name": "random-12",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-13",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-14",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-15",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-16",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-17",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-18",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-19",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-20",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-21",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-22",
+      "backend": "rust",
+      "cu": 20406,
+      "code": 0
+    },
+    {
+      "name": "random-23",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-24",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-25",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-26",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-27",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-28",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-29",
+      "backend": "rust",
+      "cu": 20418,
+      "code": 0
+    },
+    {
+      "name": "random-30",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-31",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-32",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-33",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-34",
+      "backend": "rust",
+      "cu": 20417,
+      "code": 0
+    },
+    {
+      "name": "random-35",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-36",
+      "backend": "rust",
+      "cu": 20407,
+      "code": 0
+    },
+    {
+      "name": "random-37",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-38",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-39",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-40",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-41",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-42",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-43",
+      "backend": "rust",
+      "cu": 20407,
+      "code": 0
+    },
+    {
+      "name": "random-44",
+      "backend": "rust",
+      "cu": 20407,
+      "code": 0
+    },
+    {
+      "name": "random-45",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-46",
+      "backend": "rust",
+      "cu": 20406,
+      "code": 0
+    },
+    {
+      "name": "random-47",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-48",
+      "backend": "rust",
+      "cu": 20389,
+      "code": 0
+    },
+    {
+      "name": "random-49",
+      "backend": "rust",
+      "cu": 20407,
+      "code": 0
+    },
+    {
+      "name": "random-50",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-51",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-52",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-53",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-54",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-55",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-56",
+      "backend": "rust",
+      "cu": 20491,
+      "code": 0
+    },
+    {
+      "name": "random-57",
+      "backend": "rust",
+      "cu": 20378,
+      "code": 0
+    },
+    {
+      "name": "random-58",
+      "backend": "rust",
+      "cu": 20409,
+      "code": 0
+    },
+    {
+      "name": "random-59",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-60",
+      "backend": "rust",
+      "cu": 20379,
+      "code": 0
+    },
+    {
+      "name": "random-61",
+      "backend": "rust",
+      "cu": 20380,
+      "code": 0
+    },
+    {
+      "name": "random-62",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    },
+    {
+      "name": "random-63",
+      "backend": "rust",
+      "cu": 20408,
+      "code": 0
+    }
+  ],
+  "target": "sBPF v3",
+  "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "token_program_elf_sha256": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+  "vectors_per_backend": 98
+}

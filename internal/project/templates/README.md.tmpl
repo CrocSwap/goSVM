@@ -1,0 +1,61 @@
+# Bounded swap starter
+
+```
+gosvm toolchain install  # first use on macOS arm64, if no backend is installed
+gosvm doctor
+gosvm check
+go test ./...
+gosvm build
+gosvm test --sbf
+```
+
+Edit `program.go`: ordinary structs, named errors, and a handler returning state
+plus a uint64 status (zero means success). `gosvm check`, `build`, and `test`
+regenerate `zz_gosvm.go`, `client/zz_gosvm.go`, and `idl.json` from the binding in
+`gosvm.json`. Run `gosvm generate` after changing struct fields before invoking
+`go test` directly. Generated files are inspectable and should be committed.
+The SDK snapshot in `.gosvm/sdk` should also be committed: native Go tools work
+offline and no published Go dependency is required. Do not edit the snapshot.
+
+The generated entrypoint requires exactly one writable, nonexecutable,
+program-owned account. It checks exact sizes and 8-byte discriminators, decodes
+little-endian unsigned fields, calls the handler, and writes state only on success.
+Code 6000: account count; 6001: account flags; 6002: owner;
+6003: account size/discriminator; 6004: instruction size/discriminator.
+Handler error codes should stay below 6000. Wire layout is independent of Go
+struct alignment. Reordering fields changes the wire format: there is no automatic
+state migration. The JSON IDL is experimental gosvm-1, not Anchor-compatible.
+
+`go test` runs normal Go; it does not establish SBF compatibility. `gosvm check`
+checks the restricted on-chain subset without LLVM. `gosvm test --sbf` builds the
+ELF and runs `testdata/sbf.json` fixtures on an isolated local validator. It checks
+simulated CU, committed state, and rollback. Keys and ledger are temporary; no
+wallet, public RPC, or Rust build is used. Validator 3.0.15 is required separately.
+Test fixtures are independent expected bytes: update them deliberately after
+changing the wire layout or business semantics. The fixture schema supports one
+state account and up to eight instructions per case, including atomic
+success-then-failure transactions with explicit expected final state.
+
+`build/program.so` is the deployable-format SBF v3 artifact, not a declaration
+that this sample is safe to deploy. This sample exercises arithmetic only; state
+is preinitialized in tests. It has no token custody/transfers, initialization,
+PDA constraints, signer authorization, or production security review.
+
+Currently supported project bindings: one handler, one state account, flat
+uint64/uint32/byte fields. The compiler supports multiple root Go files, named
+unsigned scalars and nested value structs. Arrays, imported user packages,
+pointers, heap allocation, interfaces, generics and goroutines remain unsupported.
+Host tests and `client/` may use the full Go language and standard library.
+
+Installation is experimental: build the CLI from the goSVM repository with
+`scripts/install.sh`, then use `gosvm toolchain install` on macOS arm64. This
+verifies the official v1.51 archive and retains only Clang and LLD. The initial
+448 MB download still contains the full upstream tools; Cargo is not needed.
+`gosvm toolchain status` verifies the cached binaries. Other hosts can supply
+`SBF_LLVM`; validator 3.0.15 is separate and optional for native development.
+There is no hosted signed CLI binary distribution yet.
+
+Commands work from project subdirectories. Pass native test flags after `--`:
+`gosvm test -- -run TestSwap -count=1`. `gosvm new -module example.org/my/swap swap`
+selects a custom Go module path; keep it consistent in `go.mod` and `gosvm.json`.
+`gosvm test` disables ambient Go workspaces so it uses this project's SDK snapshot.

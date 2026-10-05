@@ -1,0 +1,165 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "repeats": 7,
+  "workload": "tokenswap",
+  "go": "go version go1.22.0 darwin/arm64",
+  "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+  "rustc": "rustc 1.84.1-dev",
+  "scope": "sBPF v3; installed tools and warm OS cache; no dependency downloads",
+  "builds": {
+    "go_sbf": {
+      "project_clean": {
+        "median_ms": 1649.744,
+        "min_ms": 1572.492,
+        "max_ms": 1946.216,
+        "samples_ms": [
+          1613.304,
+          1851.418,
+          1946.216,
+          1636.799,
+          1572.492,
+          1649.744,
+          1861.101
+        ]
+      },
+      "source_edit": {
+        "median_ms": 1808.087,
+        "min_ms": 1544.846,
+        "max_ms": 2363.401,
+        "samples_ms": [
+          1871.816,
+          1742.67,
+          2363.401,
+          1764.193,
+          1808.087,
+          1969.659,
+          1544.846
+        ]
+      },
+      "no_op": {
+        "median_ms": 1610.753,
+        "min_ms": 1351.077,
+        "max_ms": 1687.028,
+        "samples_ms": [
+          1687.028,
+          1375.83,
+          1610.753,
+          1665.662,
+          1619.201,
+          1415.913,
+          1351.077
+        ]
+      }
+    },
+    "rust_sbf": {
+      "project_clean": {
+        "median_ms": 2191.873,
+        "min_ms": 1793.926,
+        "max_ms": 2645.41,
+        "samples_ms": [
+          2240.476,
+          1793.926,
+          1820.854,
+          2275.732,
+          2191.873,
+          2012.17,
+          2645.41
+        ]
+      },
+      "source_edit": {
+        "median_ms": 1828.098,
+        "min_ms": 1731.858,
+        "max_ms": 2076.343,
+        "samples_ms": [
+          1987.207,
+          1731.858,
+          1756.468,
+          1933.206,
+          2076.343,
+          1733.168,
+          1828.098
+        ]
+      },
+      "no_op": {
+        "median_ms": 202.469,
+        "min_ms": 145.1,
+        "max_ms": 259.304,
+        "samples_ms": [
+          228.378,
+          207.541,
+          259.304,
+          202.469,
+          145.1,
+          198.896,
+          162.166
+        ]
+      }
+    },
+    "go_native": {
+      "project_clean": {
+        "median_ms": 1092.702,
+        "min_ms": 892.003,
+        "max_ms": 1253.132,
+        "samples_ms": [
+          1253.132,
+          1092.702,
+          892.003,
+          1120.686,
+          1198.071,
+          1028.166,
+          1052.468
+        ]
+      },
+      "source_edit": {
+        "median_ms": 1072.07,
+        "min_ms": 963.025,
+        "max_ms": 1678.84,
+        "samples_ms": [
+          1544.284,
+          1072.07,
+          1678.84,
+          963.025,
+          1135.516,
+          1016.74,
+          1015.712
+        ]
+      },
+      "no_op": {
+        "median_ms": 508.429,
+        "min_ms": 278.988,
+        "max_ms": 573.628,
+        "samples_ms": [
+          573.628,
+          508.429,
+          535.682,
+          533.424,
+          398.862,
+          300.42,
+          278.988
+        ]
+      }
+    }
+  },
+  "project_artifact_bytes": {
+    "go_sbf_elf": 8000,
+    "rust_sbf_elf": 12192,
+    "rust_target_and_deploy": 45090,
+    "native_go_executable": 1470658
+  },
+  "isolated_clang_and_lld_build_verified": true,
+  "frontend_bootstrap_fresh_go_cache_ms": 37380.908,
+  "frontend_bootstrap_cache_bytes": 48496299,
+  "toolchain_bytes": {
+    "gosvm_frontend": 3314194,
+    "clang_and_lld": 176073704,
+    "installed_solana_llvm": 398819809,
+    "installed_solana_rust": 1058639978,
+    "installed_go": 221655728
+  },
+  "test_harness_bytes": {
+    "go_harness_binary": 5528736,
+    "validator_binary": 61284224,
+    "installed_solana_cli_directory": 205746906,
+    "note": "Logical bytes; validator binary is included in CLI directory, not additive. Temporary ledgers are removed after verification. Shared Go build cache excluded from project artifacts; fresh frontend cache measured separately."
+  }
+}

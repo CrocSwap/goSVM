@@ -1,0 +1,21 @@
+{
+  "go": {
+    "successes": 68,
+    "cu_min": 20233,
+    "cu_median": 20312.0,
+    "cu_max": 20343,
+    "caller_plus_cpi_overhead_median": 11022.0
+  },
+  "rust": {
+    "successes": 68,
+    "cu_min": 20029,
+    "cu_median": 20408.0,
+    "cu_max": 20491,
+    "caller_plus_cpi_overhead_median": 11118.0
+  },
+  "paired_go_cu_percent_vs_rust": {
+    "min": -0.8540334781123371,
+    "median": -0.46304254014805646,
+    "max": 1.0185231414449047
+  }
+}

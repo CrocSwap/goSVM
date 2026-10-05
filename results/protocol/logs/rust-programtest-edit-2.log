@@ -1,0 +1,38 @@
+   Compiling protocol-bench v0.1.0 (/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust)
+   Compiling protocol-test-harness v0.1.0 (/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness)
+warning: use of deprecated associated function `solana_keypair::Keypair::from_bytes`: Use Keypair::try_from(&[u8]) instead
+  --> tests/support/mod.rs:37:14
+   |
+37 |     Keypair::from_bytes(&[seed,public].concat()).unwrap()
+   |              ^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: `protocol-test-harness` (test "group04") generated 1 warning
+warning: `protocol-test-harness` (test "group10") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group03") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group09") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group05") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group07") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group11") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group06") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group02") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group00") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group01") generated 1 warning (1 duplicate)
+warning: `protocol-test-harness` (test "group08") generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 52.11s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+  Executable unittests src/lib.rs (build/protocol/host-target/debug/deps/protocol_test_harness-6f17ad70d21a6464)
+  Executable tests/group00.rs (build/protocol/host-target/debug/deps/group00-1a9477c412f3b87c)
+  Executable tests/group01.rs (build/protocol/host-target/debug/deps/group01-5921e1bc95ba2a87)
+  Executable tests/group02.rs (build/protocol/host-target/debug/deps/group02-f81f45ce851ba9d3)
+  Executable tests/group03.rs (build/protocol/host-target/debug/deps/group03-c0a690d6d0519a51)
+  Executable tests/group04.rs (build/protocol/host-target/debug/deps/group04-e4fc31462b08f619)
+  Executable tests/group05.rs (build/protocol/host-target/debug/deps/group05-f87521cbf27ab6a7)
+  Executable tests/group06.rs (build/protocol/host-target/debug/deps/group06-dcd05343f17b5937)
+  Executable tests/group07.rs (build/protocol/host-target/debug/deps/group07-74488de6b7604b94)
+  Executable tests/group08.rs (build/protocol/host-target/debug/deps/group08-63b73290d2b24cfd)
+  Executable tests/group09.rs (build/protocol/host-target/debug/deps/group09-a9198b15661de0a7)
+  Executable tests/group10.rs (build/protocol/host-target/debug/deps/group10-e47d60e7349f3d97)
+  Executable tests/group11.rs (build/protocol/host-target/debug/deps/group11-eba6a343f41a0074)

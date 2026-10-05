@@ -1,0 +1,987 @@
+{
+  "atomic_rollback_per_backend": true,
+  "deactivated_features": [],
+  "elf_sha256": {
+    "amm-go.so": "417d9dfefd0db13e6facb02a29de86269324d1273a5b4f4835fd534e888623e4",
+    "amm_rust.so": "b4482fa142205523be552bcbb1bf4d004133a9e628bd14d3c97e80ca7f461a38"
+  },
+  "persistent_swaps_per_backend": 2,
+  "results": [
+    {
+      "name": "swap",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "max-input",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "zero-input",
+      "backend": "go",
+      "cu": 280,
+      "code": 3
+    },
+    {
+      "name": "input-cap",
+      "backend": "go",
+      "cu": 280,
+      "code": 3
+    },
+    {
+      "name": "reserve-cap",
+      "backend": "go",
+      "cu": 283,
+      "code": 3
+    },
+    {
+      "name": "empty-pool",
+      "backend": "go",
+      "cu": 270,
+      "code": 2
+    },
+    {
+      "name": "invalid-reserve",
+      "backend": "go",
+      "cu": 270,
+      "code": 2
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "go",
+      "cu": 286,
+      "code": 4
+    },
+    {
+      "name": "slippage",
+      "backend": "go",
+      "cu": 295,
+      "code": 5
+    },
+    {
+      "name": "rounds-to-zero",
+      "backend": "go",
+      "cu": 292,
+      "code": 5
+    },
+    {
+      "name": "short-state",
+      "backend": "go",
+      "cu": 15,
+      "code": 12
+    },
+    {
+      "name": "short-instruction",
+      "backend": "go",
+      "cu": 18,
+      "code": 13
+    },
+    {
+      "name": "long-instruction",
+      "backend": "go",
+      "cu": 18,
+      "code": 13
+    },
+    {
+      "name": "readonly",
+      "backend": "go",
+      "cu": 10,
+      "code": 11
+    },
+    {
+      "name": "wrong-owner",
+      "backend": "go",
+      "cu": 30,
+      "code": 14
+    },
+    {
+      "name": "no-accounts",
+      "backend": "go",
+      "cu": 5,
+      "code": 10
+    },
+    {
+      "name": "duplicate-account",
+      "backend": "go",
+      "cu": 5,
+      "code": 10
+    },
+    {
+      "name": "random-00",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-01",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-02",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-03",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-04",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-05",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-06",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-07",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-08",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-09",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-10",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-11",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-12",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-13",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-14",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-15",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-16",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-17",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-18",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-19",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-20",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-21",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-22",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-23",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-24",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-25",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-26",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-27",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-28",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-29",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-30",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-31",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-32",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-33",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-34",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-35",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-36",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-37",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-38",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-39",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-40",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-41",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-42",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-43",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-44",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-45",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-46",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-47",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-48",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-49",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-50",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-51",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-52",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-53",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-54",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-55",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-56",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-57",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-58",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-59",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-60",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-61",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-62",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "random-63",
+      "backend": "go",
+      "cu": 351,
+      "code": 0
+    },
+    {
+      "name": "swap",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "max-input",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "zero-input",
+      "backend": "rust",
+      "cu": 267,
+      "code": 3
+    },
+    {
+      "name": "input-cap",
+      "backend": "rust",
+      "cu": 267,
+      "code": 3
+    },
+    {
+      "name": "reserve-cap",
+      "backend": "rust",
+      "cu": 270,
+      "code": 3
+    },
+    {
+      "name": "empty-pool",
+      "backend": "rust",
+      "cu": 258,
+      "code": 2
+    },
+    {
+      "name": "invalid-reserve",
+      "backend": "rust",
+      "cu": 258,
+      "code": 2
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "rust",
+      "cu": 273,
+      "code": 4
+    },
+    {
+      "name": "slippage",
+      "backend": "rust",
+      "cu": 282,
+      "code": 5
+    },
+    {
+      "name": "rounds-to-zero",
+      "backend": "rust",
+      "cu": 279,
+      "code": 5
+    },
+    {
+      "name": "short-state",
+      "backend": "rust",
+      "cu": 16,
+      "code": 12
+    },
+    {
+      "name": "short-instruction",
+      "backend": "rust",
+      "cu": 19,
+      "code": 13
+    },
+    {
+      "name": "long-instruction",
+      "backend": "rust",
+      "cu": 19,
+      "code": 13
+    },
+    {
+      "name": "readonly",
+      "backend": "rust",
+      "cu": 11,
+      "code": 11
+    },
+    {
+      "name": "wrong-owner",
+      "backend": "rust",
+      "cu": 29,
+      "code": 14
+    },
+    {
+      "name": "no-accounts",
+      "backend": "rust",
+      "cu": 6,
+      "code": 10
+    },
+    {
+      "name": "duplicate-account",
+      "backend": "rust",
+      "cu": 6,
+      "code": 10
+    },
+    {
+      "name": "random-00",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-01",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-02",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-03",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-04",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-05",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-06",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-07",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-08",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-09",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-10",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-11",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-12",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-13",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-14",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-15",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-16",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-17",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-18",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-19",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-20",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-21",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-22",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-23",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-24",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-25",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-26",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-27",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-28",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-29",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-30",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-31",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-32",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-33",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-34",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-35",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-36",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-37",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-38",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-39",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-40",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-41",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-42",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-43",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-44",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-45",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-46",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-47",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-48",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-49",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-50",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-51",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-52",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-53",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-54",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-55",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-56",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-57",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-58",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-59",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-60",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-61",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-62",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    },
+    {
+      "name": "random-63",
+      "backend": "rust",
+      "cu": 338,
+      "code": 0
+    }
+  ],
+  "runtime_guard_checks": 3,
+  "target": "sBPF v3",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+  "vectors_per_backend": 81
+}

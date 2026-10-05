@@ -1,0 +1,3209 @@
+{
+  "committed_swaps_per_backend": 2,
+  "cpi_logs_verified": true,
+  "deactivated_features": [],
+  "elf_sha256": {
+    "anchor_lean_token.so": "f70487227385f97513922fb77f2e82d7c3b7cfd80fc9bd7c62057b103bf87b98",
+    "anchor_token_bench.so": "fca6bb6931d5eaaf5e04550053b3693ac5f88b1ecb0da32a84d59c12951fb283",
+    "go-token.so": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+  },
+  "failed_second_cpi_rollback_per_backend": true,
+  "failed_second_instruction_rollback_per_backend": true,
+  "observed_errors": {
+    "anchor/account-limit": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "anchor/alias": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2014
+        }
+      ]
+    },
+    "anchor/bump": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2006
+        }
+      ]
+    },
+    "anchor/counter-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6006
+        }
+      ]
+    },
+    "anchor/empty-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    },
+    "anchor/extra-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "anchor/fake-program": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3008
+        }
+      ]
+    },
+    "anchor/fee-rounding-zero": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6005
+        }
+      ]
+    },
+    "anchor/input-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "anchor/input-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    },
+    "anchor/instruction-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "anchor/insufficient-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    },
+    "anchor/long-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "anchor/long-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    },
+    "anchor/maximum-input": null,
+    "anchor/mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2014
+        }
+      ]
+    },
+    "anchor/missing-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "anchor/native-token": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    },
+    "anchor/near-limit-reserve": null,
+    "anchor/no-accounts": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "anchor/no-signer": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3010
+        }
+      ]
+    },
+    "anchor/output-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "anchor/output-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6005
+        }
+      ]
+    },
+    "anchor/pda": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2006
+        }
+      ]
+    },
+    "anchor/pool-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3002
+        }
+      ]
+    },
+    "anchor/pool-length": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3003
+        }
+      ]
+    },
+    "anchor/pool-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3007
+        }
+      ]
+    },
+    "anchor/pool-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2000
+        }
+      ]
+    },
+    "anchor/random-00": null,
+    "anchor/random-01": null,
+    "anchor/random-02": null,
+    "anchor/random-03": null,
+    "anchor/random-04": null,
+    "anchor/random-05": null,
+    "anchor/random-06": null,
+    "anchor/random-07": null,
+    "anchor/random-08": null,
+    "anchor/random-09": null,
+    "anchor/random-10": null,
+    "anchor/random-11": null,
+    "anchor/random-12": null,
+    "anchor/random-13": null,
+    "anchor/random-14": null,
+    "anchor/random-15": null,
+    "anchor/random-16": null,
+    "anchor/random-17": null,
+    "anchor/random-18": null,
+    "anchor/random-19": null,
+    "anchor/random-20": null,
+    "anchor/random-21": null,
+    "anchor/random-22": null,
+    "anchor/random-23": null,
+    "anchor/random-24": null,
+    "anchor/random-25": null,
+    "anchor/random-26": null,
+    "anchor/random-27": null,
+    "anchor/random-28": null,
+    "anchor/random-29": null,
+    "anchor/random-30": null,
+    "anchor/random-31": null,
+    "anchor/random-32": null,
+    "anchor/random-33": null,
+    "anchor/random-34": null,
+    "anchor/random-35": null,
+    "anchor/random-36": null,
+    "anchor/random-37": null,
+    "anchor/random-38": null,
+    "anchor/random-39": null,
+    "anchor/random-40": null,
+    "anchor/random-41": null,
+    "anchor/random-42": null,
+    "anchor/random-43": null,
+    "anchor/random-44": null,
+    "anchor/random-45": null,
+    "anchor/random-46": null,
+    "anchor/random-47": null,
+    "anchor/random-48": null,
+    "anchor/random-49": null,
+    "anchor/random-50": null,
+    "anchor/random-51": null,
+    "anchor/random-52": null,
+    "anchor/random-53": null,
+    "anchor/random-54": null,
+    "anchor/random-55": null,
+    "anchor/random-56": null,
+    "anchor/random-57": null,
+    "anchor/random-58": null,
+    "anchor/random-59": null,
+    "anchor/random-60": null,
+    "anchor/random-61": null,
+    "anchor/random-62": null,
+    "anchor/random-63": null,
+    "anchor/same-mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6003
+        }
+      ]
+    },
+    "anchor/short-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "anchor/slippage": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6005
+        }
+      ]
+    },
+    "anchor/small-swap": null,
+    "anchor/token-length": {
+      "InstructionError": [
+        0,
+        "InvalidAccountData"
+      ]
+    },
+    "anchor/token-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3007
+        }
+      ]
+    },
+    "anchor/token-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2000
+        }
+      ]
+    },
+    "anchor/uninitialized": {
+      "InstructionError": [
+        0,
+        "UninitializedAccount"
+      ]
+    },
+    "anchor/user-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2015
+        }
+      ]
+    },
+    "anchor/vault-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2015
+        }
+      ]
+    },
+    "anchor/vault-substitute": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 2001
+        }
+      ]
+    },
+    "anchor/wide-swap": null,
+    "anchor/zero-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    },
+    "go/account-limit": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 1001
+        }
+      ]
+    },
+    "go/alias": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 106
+        }
+      ]
+    },
+    "go/bump": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "go/counter-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 114
+        }
+      ]
+    },
+    "go/empty-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "go/extra-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "go/fake-program": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 105
+        }
+      ]
+    },
+    "go/fee-rounding-zero": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "go/input-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "go/input-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "go/instruction-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/insufficient-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "go/long-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/long-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/maximum-input": null,
+    "go/mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "go/missing-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "go/native-token": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "go/near-limit-reserve": null,
+    "go/no-accounts": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "go/no-signer": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 104
+        }
+      ]
+    },
+    "go/output-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "go/output-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "go/pda": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "go/pool-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/pool-length": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/pool-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "go/pool-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "go/random-00": null,
+    "go/random-01": null,
+    "go/random-02": null,
+    "go/random-03": null,
+    "go/random-04": null,
+    "go/random-05": null,
+    "go/random-06": null,
+    "go/random-07": null,
+    "go/random-08": null,
+    "go/random-09": null,
+    "go/random-10": null,
+    "go/random-11": null,
+    "go/random-12": null,
+    "go/random-13": null,
+    "go/random-14": null,
+    "go/random-15": null,
+    "go/random-16": null,
+    "go/random-17": null,
+    "go/random-18": null,
+    "go/random-19": null,
+    "go/random-20": null,
+    "go/random-21": null,
+    "go/random-22": null,
+    "go/random-23": null,
+    "go/random-24": null,
+    "go/random-25": null,
+    "go/random-26": null,
+    "go/random-27": null,
+    "go/random-28": null,
+    "go/random-29": null,
+    "go/random-30": null,
+    "go/random-31": null,
+    "go/random-32": null,
+    "go/random-33": null,
+    "go/random-34": null,
+    "go/random-35": null,
+    "go/random-36": null,
+    "go/random-37": null,
+    "go/random-38": null,
+    "go/random-39": null,
+    "go/random-40": null,
+    "go/random-41": null,
+    "go/random-42": null,
+    "go/random-43": null,
+    "go/random-44": null,
+    "go/random-45": null,
+    "go/random-46": null,
+    "go/random-47": null,
+    "go/random-48": null,
+    "go/random-49": null,
+    "go/random-50": null,
+    "go/random-51": null,
+    "go/random-52": null,
+    "go/random-53": null,
+    "go/random-54": null,
+    "go/random-55": null,
+    "go/random-56": null,
+    "go/random-57": null,
+    "go/random-58": null,
+    "go/random-59": null,
+    "go/random-60": null,
+    "go/random-61": null,
+    "go/random-62": null,
+    "go/random-63": null,
+    "go/same-mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "go/short-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "go/slippage": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "go/small-swap": null,
+    "go/token-length": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "go/token-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "go/token-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "go/uninitialized": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "go/user-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "go/vault-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "go/vault-substitute": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 107
+        }
+      ]
+    },
+    "go/wide-swap": null,
+    "go/zero-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "lean-rust/account-limit": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 1001
+        }
+      ]
+    },
+    "lean-rust/alias": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 106
+        }
+      ]
+    },
+    "lean-rust/bump": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "lean-rust/counter-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 114
+        }
+      ]
+    },
+    "lean-rust/empty-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "lean-rust/extra-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "lean-rust/fake-program": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 105
+        }
+      ]
+    },
+    "lean-rust/fee-rounding-zero": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "lean-rust/input-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "lean-rust/input-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "lean-rust/instruction-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/insufficient-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    },
+    "lean-rust/long-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/long-pool": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/maximum-input": null,
+    "lean-rust/mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "lean-rust/missing-account": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "lean-rust/native-token": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "lean-rust/near-limit-reserve": null,
+    "lean-rust/no-accounts": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "lean-rust/no-signer": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 104
+        }
+      ]
+    },
+    "lean-rust/output-frozen": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 17
+        }
+      ]
+    },
+    "lean-rust/output-overflow": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "lean-rust/pda": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "lean-rust/pool-discriminator": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/pool-length": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/pool-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "lean-rust/pool-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "lean-rust/random-00": null,
+    "lean-rust/random-01": null,
+    "lean-rust/random-02": null,
+    "lean-rust/random-03": null,
+    "lean-rust/random-04": null,
+    "lean-rust/random-05": null,
+    "lean-rust/random-06": null,
+    "lean-rust/random-07": null,
+    "lean-rust/random-08": null,
+    "lean-rust/random-09": null,
+    "lean-rust/random-10": null,
+    "lean-rust/random-11": null,
+    "lean-rust/random-12": null,
+    "lean-rust/random-13": null,
+    "lean-rust/random-14": null,
+    "lean-rust/random-15": null,
+    "lean-rust/random-16": null,
+    "lean-rust/random-17": null,
+    "lean-rust/random-18": null,
+    "lean-rust/random-19": null,
+    "lean-rust/random-20": null,
+    "lean-rust/random-21": null,
+    "lean-rust/random-22": null,
+    "lean-rust/random-23": null,
+    "lean-rust/random-24": null,
+    "lean-rust/random-25": null,
+    "lean-rust/random-26": null,
+    "lean-rust/random-27": null,
+    "lean-rust/random-28": null,
+    "lean-rust/random-29": null,
+    "lean-rust/random-30": null,
+    "lean-rust/random-31": null,
+    "lean-rust/random-32": null,
+    "lean-rust/random-33": null,
+    "lean-rust/random-34": null,
+    "lean-rust/random-35": null,
+    "lean-rust/random-36": null,
+    "lean-rust/random-37": null,
+    "lean-rust/random-38": null,
+    "lean-rust/random-39": null,
+    "lean-rust/random-40": null,
+    "lean-rust/random-41": null,
+    "lean-rust/random-42": null,
+    "lean-rust/random-43": null,
+    "lean-rust/random-44": null,
+    "lean-rust/random-45": null,
+    "lean-rust/random-46": null,
+    "lean-rust/random-47": null,
+    "lean-rust/random-48": null,
+    "lean-rust/random-49": null,
+    "lean-rust/random-50": null,
+    "lean-rust/random-51": null,
+    "lean-rust/random-52": null,
+    "lean-rust/random-53": null,
+    "lean-rust/random-54": null,
+    "lean-rust/random-55": null,
+    "lean-rust/random-56": null,
+    "lean-rust/random-57": null,
+    "lean-rust/random-58": null,
+    "lean-rust/random-59": null,
+    "lean-rust/random-60": null,
+    "lean-rust/random-61": null,
+    "lean-rust/random-62": null,
+    "lean-rust/random-63": null,
+    "lean-rust/same-mint": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "lean-rust/short-ix": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "lean-rust/slippage": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 113
+        }
+      ]
+    },
+    "lean-rust/small-swap": null,
+    "lean-rust/token-length": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "lean-rust/token-owner": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "lean-rust/token-readonly": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "lean-rust/uninitialized": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "lean-rust/user-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "lean-rust/vault-authority": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "lean-rust/vault-substitute": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 107
+        }
+      ]
+    },
+    "lean-rust/wide-swap": null,
+    "lean-rust/zero-input": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 112
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "name": "wide-swap",
+      "backend": "go",
+      "cu": 20329,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "no-accounts",
+      "backend": "go",
+      "cu": 20,
+      "code": 101
+    },
+    {
+      "name": "missing-account",
+      "backend": "go",
+      "cu": 369,
+      "code": 101
+    },
+    {
+      "name": "extra-account",
+      "backend": "go",
+      "cu": 881,
+      "code": 101
+    },
+    {
+      "name": "account-limit",
+      "backend": "go",
+      "cu": 6,
+      "code": 1001
+    },
+    {
+      "name": "long-pool",
+      "backend": "go",
+      "cu": 422,
+      "code": 102
+    },
+    {
+      "name": "pool-discriminator",
+      "backend": "go",
+      "cu": 427,
+      "code": 102
+    },
+    {
+      "name": "instruction-discriminator",
+      "backend": "go",
+      "cu": 431,
+      "code": 102
+    },
+    {
+      "name": "pool-owner",
+      "backend": "go",
+      "cu": 441,
+      "code": 103
+    },
+    {
+      "name": "pool-readonly",
+      "backend": "go",
+      "cu": 725,
+      "code": 103
+    },
+    {
+      "name": "pool-length",
+      "backend": "go",
+      "cu": 422,
+      "code": 102
+    },
+    {
+      "name": "no-signer",
+      "backend": "go",
+      "cu": 730,
+      "code": 104
+    },
+    {
+      "name": "fake-program",
+      "backend": "go",
+      "cu": 735,
+      "code": 105
+    },
+    {
+      "name": "alias",
+      "backend": "go",
+      "cu": 2107,
+      "code": 106
+    },
+    {
+      "name": "vault-substitute",
+      "backend": "go",
+      "cu": 1665,
+      "code": 107
+    },
+    {
+      "name": "token-owner",
+      "backend": "go",
+      "cu": 2242,
+      "code": 108
+    },
+    {
+      "name": "token-length",
+      "backend": "go",
+      "cu": 3143,
+      "code": 108
+    },
+    {
+      "name": "token-readonly",
+      "backend": "go",
+      "cu": 2839,
+      "code": 108
+    },
+    {
+      "name": "uninitialized",
+      "backend": "go",
+      "cu": 2527,
+      "code": 108
+    },
+    {
+      "name": "native-token",
+      "backend": "go",
+      "cu": 2530,
+      "code": 108
+    },
+    {
+      "name": "mint",
+      "backend": "go",
+      "cu": 4331,
+      "code": 109
+    },
+    {
+      "name": "same-mint",
+      "backend": "go",
+      "cu": 3674,
+      "code": 109
+    },
+    {
+      "name": "user-authority",
+      "backend": "go",
+      "cu": 4621,
+      "code": 110
+    },
+    {
+      "name": "vault-authority",
+      "backend": "go",
+      "cu": 5489,
+      "code": 110
+    },
+    {
+      "name": "pda",
+      "backend": "go",
+      "cu": 7322,
+      "code": 111
+    },
+    {
+      "name": "bump",
+      "backend": "go",
+      "cu": 7306,
+      "code": 111
+    },
+    {
+      "name": "input-frozen",
+      "backend": "go",
+      "cu": 13840,
+      "code": 17,
+      "token_cu": 4294
+    },
+    {
+      "name": "output-frozen",
+      "backend": "go",
+      "cu": 19932,
+      "code": 17,
+      "token_cu": 8941
+    },
+    {
+      "name": "short-ix",
+      "backend": "go",
+      "cu": 420,
+      "code": 102
+    },
+    {
+      "name": "long-ix",
+      "backend": "go",
+      "cu": 420,
+      "code": 102
+    },
+    {
+      "name": "zero-input",
+      "backend": "go",
+      "cu": 7834,
+      "code": 112
+    },
+    {
+      "name": "empty-pool",
+      "backend": "go",
+      "cu": 7836,
+      "code": 112
+    },
+    {
+      "name": "input-overflow",
+      "backend": "go",
+      "cu": 7841,
+      "code": 112
+    },
+    {
+      "name": "insufficient-input",
+      "backend": "go",
+      "cu": 7864,
+      "code": 112
+    },
+    {
+      "name": "fee-rounding-zero",
+      "backend": "go",
+      "cu": 7904,
+      "code": 113
+    },
+    {
+      "name": "slippage",
+      "backend": "go",
+      "cu": 8040,
+      "code": 113
+    },
+    {
+      "name": "output-overflow",
+      "backend": "go",
+      "cu": 8065,
+      "code": 113
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "go",
+      "cu": 8092,
+      "code": 114
+    },
+    {
+      "name": "maximum-input",
+      "backend": "go",
+      "cu": 20311,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "near-limit-reserve",
+      "backend": "go",
+      "cu": 20307,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "small-swap",
+      "backend": "go",
+      "cu": 20241,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-00",
+      "backend": "go",
+      "cu": 20332,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-01",
+      "backend": "go",
+      "cu": 20338,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-02",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-03",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-04",
+      "backend": "go",
+      "cu": 20337,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-05",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-06",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-07",
+      "backend": "go",
+      "cu": 20329,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-08",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-09",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-10",
+      "backend": "go",
+      "cu": 20341,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-11",
+      "backend": "go",
+      "cu": 20328,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-12",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-13",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-14",
+      "backend": "go",
+      "cu": 20328,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-15",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-16",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-17",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-18",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-19",
+      "backend": "go",
+      "cu": 20325,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-20",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-21",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-22",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-23",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-24",
+      "backend": "go",
+      "cu": 20337,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-25",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-26",
+      "backend": "go",
+      "cu": 20354,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-27",
+      "backend": "go",
+      "cu": 20340,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-28",
+      "backend": "go",
+      "cu": 20321,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-29",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-30",
+      "backend": "go",
+      "cu": 20321,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-31",
+      "backend": "go",
+      "cu": 20338,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-32",
+      "backend": "go",
+      "cu": 20324,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-33",
+      "backend": "go",
+      "cu": 20336,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-34",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-35",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-36",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-37",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-38",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-39",
+      "backend": "go",
+      "cu": 20317,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-40",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-41",
+      "backend": "go",
+      "cu": 20324,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-42",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-43",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-44",
+      "backend": "go",
+      "cu": 20345,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-45",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-46",
+      "backend": "go",
+      "cu": 20326,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-47",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-48",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-49",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-50",
+      "backend": "go",
+      "cu": 20329,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-51",
+      "backend": "go",
+      "cu": 20312,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-52",
+      "backend": "go",
+      "cu": 20328,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-53",
+      "backend": "go",
+      "cu": 20320,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-54",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-55",
+      "backend": "go",
+      "cu": 20330,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-56",
+      "backend": "go",
+      "cu": 20324,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-57",
+      "backend": "go",
+      "cu": 20328,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-58",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-59",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-60",
+      "backend": "go",
+      "cu": 20344,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-61",
+      "backend": "go",
+      "cu": 20316,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-62",
+      "backend": "go",
+      "cu": 20326,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-63",
+      "backend": "go",
+      "cu": 20324,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "wide-swap",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "no-accounts",
+      "backend": "lean-rust",
+      "cu": 49,
+      "code": 101
+    },
+    {
+      "name": "missing-account",
+      "backend": "lean-rust",
+      "cu": 362,
+      "code": 101
+    },
+    {
+      "name": "extra-account",
+      "backend": "lean-rust",
+      "cu": 439,
+      "code": 101
+    },
+    {
+      "name": "account-limit",
+      "backend": "lean-rust",
+      "cu": 6,
+      "code": 1001
+    },
+    {
+      "name": "long-pool",
+      "backend": "lean-rust",
+      "cu": 410,
+      "code": 102
+    },
+    {
+      "name": "pool-discriminator",
+      "backend": "lean-rust",
+      "cu": 415,
+      "code": 102
+    },
+    {
+      "name": "instruction-discriminator",
+      "backend": "lean-rust",
+      "cu": 419,
+      "code": 102
+    },
+    {
+      "name": "pool-owner",
+      "backend": "lean-rust",
+      "cu": 434,
+      "code": 103
+    },
+    {
+      "name": "pool-readonly",
+      "backend": "lean-rust",
+      "cu": 716,
+      "code": 103
+    },
+    {
+      "name": "pool-length",
+      "backend": "lean-rust",
+      "cu": 410,
+      "code": 102
+    },
+    {
+      "name": "no-signer",
+      "backend": "lean-rust",
+      "cu": 721,
+      "code": 104
+    },
+    {
+      "name": "fake-program",
+      "backend": "lean-rust",
+      "cu": 726,
+      "code": 105
+    },
+    {
+      "name": "alias",
+      "backend": "lean-rust",
+      "cu": 1607,
+      "code": 106
+    },
+    {
+      "name": "vault-substitute",
+      "backend": "lean-rust",
+      "cu": 1651,
+      "code": 107
+    },
+    {
+      "name": "token-owner",
+      "backend": "lean-rust",
+      "cu": 2236,
+      "code": 108
+    },
+    {
+      "name": "token-length",
+      "backend": "lean-rust",
+      "cu": 3142,
+      "code": 108
+    },
+    {
+      "name": "token-readonly",
+      "backend": "lean-rust",
+      "cu": 2837,
+      "code": 108
+    },
+    {
+      "name": "uninitialized",
+      "backend": "lean-rust",
+      "cu": 2520,
+      "code": 108
+    },
+    {
+      "name": "native-token",
+      "backend": "lean-rust",
+      "cu": 2524,
+      "code": 108
+    },
+    {
+      "name": "mint",
+      "backend": "lean-rust",
+      "cu": 4351,
+      "code": 109
+    },
+    {
+      "name": "same-mint",
+      "backend": "lean-rust",
+      "cu": 3679,
+      "code": 109
+    },
+    {
+      "name": "user-authority",
+      "backend": "lean-rust",
+      "cu": 4637,
+      "code": 110
+    },
+    {
+      "name": "vault-authority",
+      "backend": "lean-rust",
+      "cu": 5518,
+      "code": 110
+    },
+    {
+      "name": "pda",
+      "backend": "lean-rust",
+      "cu": 7347,
+      "code": 111
+    },
+    {
+      "name": "bump",
+      "backend": "lean-rust",
+      "cu": 7331,
+      "code": 111
+    },
+    {
+      "name": "input-frozen",
+      "backend": "lean-rust",
+      "cu": 14005,
+      "code": 17,
+      "token_cu": 4294
+    },
+    {
+      "name": "output-frozen",
+      "backend": "lean-rust",
+      "cu": 20036,
+      "code": 17,
+      "token_cu": 8941
+    },
+    {
+      "name": "short-ix",
+      "backend": "lean-rust",
+      "cu": 408,
+      "code": 102
+    },
+    {
+      "name": "long-ix",
+      "backend": "lean-rust",
+      "cu": 408,
+      "code": 102
+    },
+    {
+      "name": "zero-input",
+      "backend": "lean-rust",
+      "cu": 7680,
+      "code": 112
+    },
+    {
+      "name": "empty-pool",
+      "backend": "lean-rust",
+      "cu": 7669,
+      "code": 112
+    },
+    {
+      "name": "input-overflow",
+      "backend": "lean-rust",
+      "cu": 7665,
+      "code": 112
+    },
+    {
+      "name": "insufficient-input",
+      "backend": "lean-rust",
+      "cu": 7675,
+      "code": 112
+    },
+    {
+      "name": "fee-rounding-zero",
+      "backend": "lean-rust",
+      "cu": 7839,
+      "code": 113
+    },
+    {
+      "name": "slippage",
+      "backend": "lean-rust",
+      "cu": 8318,
+      "code": 113
+    },
+    {
+      "name": "output-overflow",
+      "backend": "lean-rust",
+      "cu": 8323,
+      "code": 113
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "lean-rust",
+      "cu": 8337,
+      "code": 114
+    },
+    {
+      "name": "maximum-input",
+      "backend": "lean-rust",
+      "cu": 20480,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "near-limit-reserve",
+      "backend": "lean-rust",
+      "cu": 20150,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "small-swap",
+      "backend": "lean-rust",
+      "cu": 20041,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-00",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-01",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-02",
+      "backend": "lean-rust",
+      "cu": 20430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-03",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-04",
+      "backend": "lean-rust",
+      "cu": 20401,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-05",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-06",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-07",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-08",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-09",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-10",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-11",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-12",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-13",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-14",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-15",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-16",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-17",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-18",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-19",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-20",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-21",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-22",
+      "backend": "lean-rust",
+      "cu": 20427,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-23",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-24",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-25",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-26",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-27",
+      "backend": "lean-rust",
+      "cu": 20429,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-28",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-29",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-30",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-31",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-32",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-33",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-34",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-35",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-36",
+      "backend": "lean-rust",
+      "cu": 20419,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-37",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-38",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-39",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-40",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-41",
+      "backend": "lean-rust",
+      "cu": 20400,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-42",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-43",
+      "backend": "lean-rust",
+      "cu": 20419,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-44",
+      "backend": "lean-rust",
+      "cu": 20419,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-45",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-46",
+      "backend": "lean-rust",
+      "cu": 20418,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-47",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-48",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-49",
+      "backend": "lean-rust",
+      "cu": 20419,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-50",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-51",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-52",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-53",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-54",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-55",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-56",
+      "backend": "lean-rust",
+      "cu": 20503,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-57",
+      "backend": "lean-rust",
+      "cu": 20399,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-58",
+      "backend": "lean-rust",
+      "cu": 20421,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-59",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-60",
+      "backend": "lean-rust",
+      "cu": 20391,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-61",
+      "backend": "lean-rust",
+      "cu": 20392,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-62",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-63",
+      "backend": "lean-rust",
+      "cu": 20420,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "wide-swap",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "no-accounts",
+      "backend": "anchor",
+      "cu": 53,
+      "code": 101
+    },
+    {
+      "name": "missing-account",
+      "backend": "anchor",
+      "cu": 1156,
+      "code": 101
+    },
+    {
+      "name": "extra-account",
+      "backend": "anchor",
+      "cu": 1380,
+      "code": 101
+    },
+    {
+      "name": "account-limit",
+      "backend": "anchor",
+      "cu": 1948,
+      "code": 1001
+    },
+    {
+      "name": "long-pool",
+      "backend": "anchor",
+      "cu": 4160,
+      "code": 102
+    },
+    {
+      "name": "pool-discriminator",
+      "backend": "anchor",
+      "cu": 2923,
+      "code": 102
+    },
+    {
+      "name": "instruction-discriminator",
+      "backend": "anchor",
+      "cu": 2389,
+      "code": 102
+    },
+    {
+      "name": "pool-owner",
+      "backend": "anchor",
+      "cu": 3339,
+      "code": 103
+    },
+    {
+      "name": "pool-readonly",
+      "backend": "anchor",
+      "cu": 4131,
+      "code": 103
+    },
+    {
+      "name": "pool-length",
+      "backend": "anchor",
+      "cu": 2899,
+      "code": 102
+    },
+    {
+      "name": "no-signer",
+      "backend": "anchor",
+      "cu": 2983,
+      "code": 104
+    },
+    {
+      "name": "fake-program",
+      "backend": "anchor",
+      "cu": 4586,
+      "code": 105
+    },
+    {
+      "name": "alias",
+      "backend": "anchor",
+      "cu": 4721,
+      "code": 106
+    },
+    {
+      "name": "vault-substitute",
+      "backend": "anchor",
+      "cu": 4654,
+      "code": 107
+    },
+    {
+      "name": "token-owner",
+      "backend": "anchor",
+      "cu": 3640,
+      "code": 108
+    },
+    {
+      "name": "token-length",
+      "backend": "anchor",
+      "cu": 3710,
+      "code": 108
+    },
+    {
+      "name": "token-readonly",
+      "backend": "anchor",
+      "cu": 4693,
+      "code": 108
+    },
+    {
+      "name": "uninitialized",
+      "backend": "anchor",
+      "cu": 3094,
+      "code": 108
+    },
+    {
+      "name": "native-token",
+      "backend": "anchor",
+      "cu": 4390,
+      "code": 108
+    },
+    {
+      "name": "mint",
+      "backend": "anchor",
+      "cu": 4803,
+      "code": 109
+    },
+    {
+      "name": "same-mint",
+      "backend": "anchor",
+      "cu": 4229,
+      "code": 109
+    },
+    {
+      "name": "user-authority",
+      "backend": "anchor",
+      "cu": 4300,
+      "code": 110
+    },
+    {
+      "name": "vault-authority",
+      "backend": "anchor",
+      "cu": 4623,
+      "code": 110
+    },
+    {
+      "name": "pda",
+      "backend": "anchor",
+      "cu": 7105,
+      "code": 111
+    },
+    {
+      "name": "bump",
+      "backend": "anchor",
+      "cu": 6565,
+      "code": 111
+    },
+    {
+      "name": "input-frozen",
+      "backend": "anchor",
+      "cu": 12052,
+      "code": 17,
+      "token_cu": 4294
+    },
+    {
+      "name": "output-frozen",
+      "backend": "anchor",
+      "cu": 18360,
+      "code": 17,
+      "token_cu": 8941
+    },
+    {
+      "name": "short-ix",
+      "backend": "anchor",
+      "cu": 1317,
+      "code": 102
+    },
+    {
+      "name": "long-ix",
+      "backend": "anchor",
+      "cu": 1317,
+      "code": 102
+    },
+    {
+      "name": "zero-input",
+      "backend": "anchor",
+      "cu": 7101,
+      "code": 112
+    },
+    {
+      "name": "empty-pool",
+      "backend": "anchor",
+      "cu": 7102,
+      "code": 112
+    },
+    {
+      "name": "input-overflow",
+      "backend": "anchor",
+      "cu": 7099,
+      "code": 112
+    },
+    {
+      "name": "insufficient-input",
+      "backend": "anchor",
+      "cu": 7108,
+      "code": 112
+    },
+    {
+      "name": "fee-rounding-zero",
+      "backend": "anchor",
+      "cu": 7399,
+      "code": 113
+    },
+    {
+      "name": "slippage",
+      "backend": "anchor",
+      "cu": 7738,
+      "code": 113
+    },
+    {
+      "name": "output-overflow",
+      "backend": "anchor",
+      "cu": 7741,
+      "code": 113
+    },
+    {
+      "name": "counter-overflow",
+      "backend": "anchor",
+      "cu": 7741,
+      "code": 114
+    },
+    {
+      "name": "maximum-input",
+      "backend": "anchor",
+      "cu": 19519,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "near-limit-reserve",
+      "backend": "anchor",
+      "cu": 19189,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "small-swap",
+      "backend": "anchor",
+      "cu": 19080,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-00",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-01",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-02",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-03",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-04",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-05",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-06",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-07",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-08",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-09",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-10",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-11",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-12",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-13",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-14",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-15",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-16",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-17",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-18",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-19",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-20",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-21",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-22",
+      "backend": "anchor",
+      "cu": 19457,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-23",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-24",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-25",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-26",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-27",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-28",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-29",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-30",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-31",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-32",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-33",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-34",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-35",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-36",
+      "backend": "anchor",
+      "cu": 19458,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-37",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-38",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-39",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-40",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-41",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-42",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-43",
+      "backend": "anchor",
+      "cu": 19458,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-44",
+      "backend": "anchor",
+      "cu": 19458,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-45",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-46",
+      "backend": "anchor",
+      "cu": 19457,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-47",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-48",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-49",
+      "backend": "anchor",
+      "cu": 19458,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-50",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-51",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-52",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-53",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-54",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-55",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-56",
+      "backend": "anchor",
+      "cu": 19542,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-57",
+      "backend": "anchor",
+      "cu": 19429,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-58",
+      "backend": "anchor",
+      "cu": 19460,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-59",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-60",
+      "backend": "anchor",
+      "cu": 19430,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-61",
+      "backend": "anchor",
+      "cu": 19431,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-62",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    },
+    {
+      "name": "random-63",
+      "backend": "anchor",
+      "cu": 19459,
+      "code": 0,
+      "token_cu": 9290
+    }
+  ],
+  "target": "sBPF v3",
+  "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "token_program_elf_sha256": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+  "vectors_per_backend": 105
+}

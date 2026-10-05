@@ -1,0 +1,163 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "scope": "Installed compilers/crate downloads warm; cold project outputs; 4 build jobs; debug ProgramTest; 12 test binaries; one cold sample, three cached edits/noops; no public network or Basanos builds",
+  "measurements": {
+    "frontend-installed-build": {
+      "wall_seconds": 2.454627875238657,
+      "cpu_seconds": 1.149143,
+      "exit_code": 0,
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-ldflags=-s -w",
+        "-o",
+        "build/gosvm",
+        "./cmd/gosvm"
+      ],
+      "log": "build/protocol/frontend-installed-build.log"
+    },
+    "go-contract-cold": {
+      "wall_seconds": 2.4665755829773843,
+      "cpu_seconds": 0.6357279999999998,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-cold.log"
+    },
+    "go-contract-edit-0": {
+      "wall_seconds": 1.48860670812428,
+      "cpu_seconds": 0.4672360000000002,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-0.log"
+    },
+    "go-contract-noop-0": {
+      "wall_seconds": 0.023783166892826557,
+      "cpu_seconds": 0.010664000000000007,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-0.log"
+    },
+    "go-contract-edit-1": {
+      "wall_seconds": 1.8230263753794134,
+      "cpu_seconds": 0.46899299999999977,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-1.log"
+    },
+    "go-contract-noop-1": {
+      "wall_seconds": 0.026209124829620123,
+      "cpu_seconds": 0.00963700000000034,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-1.log"
+    },
+    "go-contract-edit-2": {
+      "wall_seconds": 1.5971589582040906,
+      "cpu_seconds": 0.45588899999999977,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-edit-2.log"
+    },
+    "go-contract-noop-2": {
+      "wall_seconds": 0.029617042280733585,
+      "cpu_seconds": 0.010011000000000436,
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/protocol_go.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/protocol/protocol.go"
+      ],
+      "log": "build/protocol/go-contract-noop-2.log"
+    },
+    "rust-contract-cold": {
+      "wall_seconds": 2.0254233749583364,
+      "cpu_seconds": 0.6186759999999993,
+      "exit_code": 1,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust/Cargo.toml",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-out",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ],
+      "log": "build/protocol/rust-contract-cold.log"
+    }
+  },
+  "disk": {},
+  "versions": {
+    "go": "go version go1.22.0 darwin/arm64",
+    "host_rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "sbf_rustc": "rustc 1.84.1-dev",
+    "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+    "platform_tools": "v1.51"
+  }
+}

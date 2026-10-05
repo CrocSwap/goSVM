@@ -1,0 +1,77 @@
+
+// Solana's C CPI ABI. These functions marshal runtime data only; swap logic and
+// wide arithmetic remain in the compiled Go program.
+typedef struct {
+    u8 *key; u64 *lamports; u64 data_len; u8 *data; u8 *owner;
+    u64 rent_epoch; boolean signer, writable, executable;
+} AccountInfo;
+typedef struct { AccountInfo accounts[16]; u64 count; slice instruction, program; } Context;
+typedef struct { u8 *key; boolean writable, signer; } AccountMeta;
+typedef struct { u8 *program; AccountMeta *metas; u64 count; u8 *data; u64 len; } Instruction;
+typedef struct { u8 *ptr; u64 len; } Seed;
+typedef struct { Seed *ptr; u64 len; } Seeds;
+_Static_assert(sizeof(AccountInfo)==56, "C account ABI");
+_Static_assert(sizeof(AccountMeta)==16, "C meta ABI");
+_Static_assert(sizeof(Instruction)==40, "C instruction ABI");
+static u64 sol_read64(const u8 *p) {u64 v=0;for(u64 i=0;i<8;i++) v|=(u64)p[i]<<(i*8);return v;}
+static AccountInfo *sol_account(Context *c,u64 i) {if(i>=c->count) abort();return &c->accounts[i];}
+static u64 sol_Count(Context *c) {return c->count;}
+static slice sol_Data(Context *c,u64 i) {AccountInfo *a=sol_account(c,i);return (slice){a->data,a->data_len};}
+static slice sol_Key(Context *c,u64 i) {return (slice){sol_account(c,i)->key,32};}
+static slice sol_Owner(Context *c,u64 i) {return (slice){sol_account(c,i)->owner,32};}
+static boolean sol_Signer(Context *c,u64 i) {return sol_account(c,i)->signer;}
+static boolean sol_Writable(Context *c,u64 i) {return sol_account(c,i)->writable;}
+static boolean sol_Executable(Context *c,u64 i) {return sol_account(c,i)->executable;}
+static slice sol_Instruction(Context *c) {return c->instruction;}
+static slice sol_ProgramID(Context *c) {return c->program;}
+static boolean sol_IsTokenProgram(Context *c,u64 i) {
+    static const u8 id[32]={6,221,246,225,215,101,161,147,217,203,225,70,206,235,121,172,28,180,133,237,95,91,55,145,58,140,245,133,126,255,0,169};
+    AccountInfo *a=sol_account(c,i);if(!a->executable) return 0;
+    for(u64 j=0;j<32;j++) if(a->key[j]!=id[j]) return 0;
+    return 1;
+}
+#ifdef GOSVM_SBF_V3
+#define sol_create_pda ((u64 (*)(Seed *,u64,u8 *,u8 *))2474062396ULL)
+#define sol_invoke_c ((u64 (*)(Instruction *,AccountInfo *,u64,Seeds *,u64))2720767109ULL)
+#define sol_hash ((u64 (*)(Seed *,u64,u8 *))0x11f49d86ULL)
+#else
+extern u64 sol_create_program_address(Seed *,u64,u8 *,u8 *);
+extern u64 sol_invoke_signed_c(Instruction *,AccountInfo *,u64,Seeds *,u64);
+extern u64 sol_sha256(Seed *,u64,u8 *);
+#define sol_create_pda sol_create_program_address
+#define sol_invoke_c sol_invoke_signed_c
+#define sol_hash sol_sha256
+#endif
+static __attribute__((always_inline)) inline u64 sol_SHA256(Context *c,slice input,u64 offset,u64 length,slice output,u64 out_offset) {
+    if(offset>input.len || length>input.len-offset || out_offset>output.len || output.len-out_offset<32) return 2003;
+    Seed data={input.ptr+offset,length};
+    return sol_hash(&data,1,output.ptr+out_offset);
+}
+static boolean sol_IsPDA(Context *c,u64 i,slice seed,u8 bump) {
+    if(seed.len>32) return 0;
+    u8 address[32];Seed seeds[2]={{seed.ptr,seed.len},{&bump,1}};
+    if(sol_create_pda(seeds,2,c->program.ptr,address)!=0) return 0;
+    u8 *key=sol_account(c,i)->key;
+    for(u64 j=0;j<32;j++) if(key[j]!=address[j]) return 0;
+    return 1;
+}
+static __attribute__((always_inline)) inline u64 sol_transfer(
+    Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount,
+    slice seed,u8 bump,boolean signed_pda) {
+    if(!sol_IsTokenProgram(c,program)) return 2001;
+    AccountInfo *src=sol_account(c,source),*dst=sol_account(c,destination),*auth=sol_account(c,authority);
+    u8 data[9];data[0]=3; // SPL Token Transfer, little-endian amount.
+    for(u64 i=0;i<8;i++) data[1+i]=(u8)(amount>>(i*8));
+    AccountMeta metas[3]={{src->key,1,0},{dst->key,1,0},{auth->key,0,1}};
+    Instruction ix={sol_account(c,program)->key,metas,3,data,9};
+    Seed seed_parts[2]={{seed.ptr,seed.len},{&bump,1}};
+    Seeds seeds={seed_parts,2};
+    if(signed_pda&&seed.len>32) return 2002;
+    return sol_invoke_c(&ix,c->accounts,c->count,&seeds,signed_pda?1:0);
+}
+static __attribute__((always_inline)) inline u64 sol_Transfer(Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount) {
+    return sol_transfer(c,program,source,destination,authority,amount,(slice){0,0},0,0);
+}
+static __attribute__((always_inline)) inline u64 sol_TransferSigned(Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount,slice seed,u8 bump) {
+    return sol_transfer(c,program,source,destination,authority,amount,seed,bump,1);
+}

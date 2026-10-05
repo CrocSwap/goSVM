@@ -1,0 +1,22 @@
+#ifndef GOSVM_CONTEXT_ENTRY
+// One writable, program-owned account. Solana's aligned loader ABI supplies the
+// trusted serialized envelope; instruction bytes and account contents are untrusted.
+static u64 read64(const u8 *p) {
+    u64 n=0;
+    for (u64 i=0;i<8;i++) n |= (u64)p[i] << (i*8);
+    return n;
+}
+u64 entrypoint(u8 *input) {
+    if (read64(input) != 1) return 10;
+    if (input[8] != 255 || input[10] == 0 || input[11] != 0) return 11;
+    u64 size = read64(input+88);
+    if (size != 24) return 12;
+    // account header(96), data(24), permitted growth(10240), rent epoch(8).
+    u8 *tail = input + 96 + 24 + 10240 + 8;
+    u64 instruction_size = read64(tail);
+    if (instruction_size != 16) return 13;
+    u8 *program_id = tail + 8 + instruction_size;
+    for (u64 i=0;i<32;i++) if (input[48+i] != program_id[i]) return 14;
+    return go_Process((slice){input+96,24}, (slice){tail+8,16});
+}
+#endif

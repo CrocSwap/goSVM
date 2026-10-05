@@ -1,0 +1,36 @@
+[package]
+name = "anchor-token-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = "=0.32.2"
+anchor-spl = { version = "=0.32.2", default-features = false, features = ["token"] }
+# Keep the exact same platform-tools v1.51 compiler as the Go/lean Rust tests.
+indexmap = "=2.13.0"
+blake3 = "=1.8.2"
+proc-macro-crate = "=3.3.0"
+zeroize = "=1.8.1"
+unicode-segmentation = "=1.12.0"
+
+[profile.release]
+opt-level = 2
+lto = true
+codegen-units = 1
+panic = "abort"
+overflow-checks = false

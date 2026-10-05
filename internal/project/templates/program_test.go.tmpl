@@ -1,0 +1,89 @@
+package program_test
+
+import (
+	program "MODULE"
+	"MODULE/client"
+	"bytes"
+	"gosvm/solana"
+	"math/big"
+	"math/rand"
+	"testing"
+)
+
+func contextFor(p program.Pool, a program.SwapArgs) solana.Context {
+	id := bytes.Repeat([]byte{7}, 32)
+	return solana.Context{ID: id, Accounts: []solana.Account{{Owner: append([]byte(nil), id...), Data: client.EncodePool(p), Writable: true}}, InstructionData: client.EncodeSwapArgs(a)}
+}
+
+func TestSwapReference(t *testing.T) {
+	rng := rand.New(rand.NewSource(42))
+	for i := 0; i < 1000; i++ {
+		p := program.Pool{ReserveX: 1 + uint64(rng.Int63n(900000000)), ReserveY: 1 + uint64(rng.Int63n(1000000000)), SwapCount: uint64(i)}
+		a := program.SwapArgs{AmountIn: 1 + uint64(rng.Int63n(1000000))}
+		c := contextFor(p, a)
+		before := append([]byte(nil), c.Accounts[0].Data...)
+		// Independent arbitrary-precision arithmetic, not a second call to Swap.
+		effective := new(big.Int).Mul(new(big.Int).SetUint64(a.AmountIn), big.NewInt(9970))
+		numerator := new(big.Int).Mul(new(big.Int).SetUint64(p.ReserveY), effective)
+		denominator := new(big.Int).Add(new(big.Int).Mul(new(big.Int).SetUint64(p.ReserveX), big.NewInt(10000)), effective)
+		out := new(big.Int).Quo(numerator, denominator).Uint64()
+		code := program.Process(c)
+		if out == 0 {
+			if code != program.ErrSlippage || !bytes.Equal(before, c.Accounts[0].Data) {
+				t.Fatalf("zero output %d", i)
+			}
+			continue
+		}
+		want := program.Pool{ReserveX: p.ReserveX + a.AmountIn, ReserveY: p.ReserveY - out, SwapCount: p.SwapCount + 1}
+		got, err := client.DecodePool(c.Accounts[0].Data)
+		if code != 0 || err != nil || got != want {
+			t.Fatalf("case %d: code=%d got=%+v want=%+v err=%v", i, code, got, want, err)
+		}
+		if p.SwapCount != uint64(i) {
+			t.Fatal("handler mutated caller value")
+		}
+	}
+}
+
+func TestConstraintsAndNoWritesOnFailure(t *testing.T) {
+	cases := []struct {
+		name string
+		code uint64
+		edit func(*solana.Context)
+	}{
+		{"no accounts", 6000, func(c *solana.Context) { c.Accounts = nil }},
+		{"extra account", 6000, func(c *solana.Context) { c.Accounts = append(c.Accounts, c.Accounts[0]) }},
+		{"readonly", 6001, func(c *solana.Context) { c.Accounts[0].Writable = false }},
+		{"executable", 6001, func(c *solana.Context) { c.Accounts[0].Executable = true }},
+		{"owner", 6002, func(c *solana.Context) { c.Accounts[0].Owner[31] ^= 1 }},
+		{"short state", 6003, func(c *solana.Context) { c.Accounts[0].Data = c.Accounts[0].Data[:20] }},
+		{"long state", 6003, func(c *solana.Context) { c.Accounts[0].Data = append(c.Accounts[0].Data, 0) }},
+		{"state tag", 6003, func(c *solana.Context) { c.Accounts[0].Data[0] ^= 1 }},
+		{"instruction tag", 6004, func(c *solana.Context) { c.InstructionData[0] ^= 1 }},
+		{"short instruction", 6004, func(c *solana.Context) { c.InstructionData = c.InstructionData[:8] }},
+		{"long instruction", 6004, func(c *solana.Context) { c.InstructionData = append(c.InstructionData, 0) }},
+		{"zero amount", program.ErrInvalidAmount, func(c *solana.Context) { c.InstructionData = client.EncodeSwapArgs(program.SwapArgs{}) }},
+		{"slippage", program.ErrSlippage, func(c *solana.Context) {
+			c.InstructionData = client.EncodeSwapArgs(program.SwapArgs{AmountIn: 1000, MinAmountOut: 999999})
+		}},
+		{"counter", program.ErrCounterOverflow, func(c *solana.Context) {
+			c.Accounts[0].Data = client.EncodePool(program.Pool{ReserveX: 1000000, ReserveY: 2000000, SwapCount: ^uint64(0)})
+		}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			c := contextFor(program.Pool{ReserveX: 1000000, ReserveY: 2000000}, program.SwapArgs{AmountIn: 1000})
+			tc.edit(&c)
+			var before []byte
+			if len(c.Accounts) > 0 {
+				before = append([]byte(nil), c.Accounts[0].Data...)
+			}
+			if code := program.Process(c); code != tc.code {
+				t.Fatalf("code=%d want=%d", code, tc.code)
+			}
+			if len(c.Accounts) > 0 && !bytes.Equal(before, c.Accounts[0].Data) {
+				t.Fatal("failed instruction changed state")
+			}
+		})
+	}
+}

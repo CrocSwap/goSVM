@@ -1,0 +1,1527 @@
+{
+  "target": "sBPF v3",
+  "anchor": "0.32.2",
+  "platform_tools": "v1.51",
+  "measurements": {
+    "frontend-setup": {
+      "seconds": 4.677303540986031,
+      "cpu_seconds": 2.5351600000000003,
+      "load_before": [
+        11.287109375,
+        14.333984375,
+        14.71044921875
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm"
+      ]
+    },
+    "bounded-go-cold": {
+      "seconds": 1.4405887918546796,
+      "cpu_seconds": 0.3233759999999999,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-edit-0": {
+      "seconds": 0.20898108277469873,
+      "cpu_seconds": 0.15401199999999982,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-noop-0": {
+      "seconds": 0.0364982089959085,
+      "cpu_seconds": 0.02403299999999997,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-edit-1": {
+      "seconds": 0.24476074986159801,
+      "cpu_seconds": 0.16100400000000015,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-noop-1": {
+      "seconds": 0.04533241596072912,
+      "cpu_seconds": 0.029555999999999916,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-edit-2": {
+      "seconds": 0.2437665411271155,
+      "cpu_seconds": 0.16434300000000013,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-noop-2": {
+      "seconds": 0.0328078749589622,
+      "cpu_seconds": 0.024494000000000016,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-go-restore": {
+      "seconds": 0.23983587510883808,
+      "cpu_seconds": 0.15572099999999978,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap"
+      ]
+    },
+    "bounded-lean-cold": {
+      "seconds": 2.7060568751767278,
+      "cpu_seconds": 0.9135390000000005,
+      "load_before": [
+        11.263671875,
+        14.2783203125,
+        14.6884765625
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-edit-0": {
+      "seconds": 0.6570834158919752,
+      "cpu_seconds": 0.40243099999999954,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-noop-0": {
+      "seconds": 0.1439172080717981,
+      "cpu_seconds": 0.10777400000000004,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-edit-1": {
+      "seconds": 0.5377479582093656,
+      "cpu_seconds": 0.37714699999999945,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-noop-1": {
+      "seconds": 0.18470104224979877,
+      "cpu_seconds": 0.11775499999999983,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-edit-2": {
+      "seconds": 0.6716536656022072,
+      "cpu_seconds": 0.3884940000000001,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-noop-2": {
+      "seconds": 0.34890299988910556,
+      "cpu_seconds": 0.12166100000000046,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-lean-restore": {
+      "seconds": 0.5800698329694569,
+      "cpu_seconds": 0.39180399999999915,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-cold": {
+      "seconds": 159.01706795906648,
+      "cpu_seconds": 218.465839,
+      "load_before": [
+        11.482421875,
+        14.2734375,
+        14.68408203125
+      ],
+      "load_after": [
+        20.49365234375,
+        17.583984375,
+        16.0029296875
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-edit-0": {
+      "seconds": 6.58396220812574,
+      "cpu_seconds": 3.979928000000001,
+      "load_before": [
+        20.49365234375,
+        17.583984375,
+        16.0029296875
+      ],
+      "load_after": [
+        20.8544921875,
+        17.70703125,
+        16.05517578125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-noop-0": {
+      "seconds": 1.351872666273266,
+      "cpu_seconds": 0.6250149999999834,
+      "load_before": [
+        20.8544921875,
+        17.70703125,
+        16.05517578125
+      ],
+      "load_after": [
+        21.34619140625,
+        17.86083984375,
+        16.119140625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-edit-1": {
+      "seconds": 10.00056966720149,
+      "cpu_seconds": 4.350481000000016,
+      "load_before": [
+        21.34619140625,
+        17.86083984375,
+        16.119140625
+      ],
+      "load_after": [
+        21.1708984375,
+        17.93212890625,
+        16.1640625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-noop-1": {
+      "seconds": 1.4482080419547856,
+      "cpu_seconds": 0.6469610000000046,
+      "load_before": [
+        21.1708984375,
+        17.93212890625,
+        16.1640625
+      ],
+      "load_after": [
+        21.1708984375,
+        17.93212890625,
+        16.1640625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-edit-2": {
+      "seconds": 9.09468554193154,
+      "cpu_seconds": 4.4102109999999755,
+      "load_before": [
+        21.1708984375,
+        17.93212890625,
+        16.1640625
+      ],
+      "load_after": [
+        21.630859375,
+        18.1328125,
+        16.25537109375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-noop-2": {
+      "seconds": 1.4372894586995244,
+      "cpu_seconds": 0.6379410000000121,
+      "load_before": [
+        21.630859375,
+        18.1328125,
+        16.25537109375
+      ],
+      "load_after": [
+        21.630859375,
+        18.1328125,
+        16.25537109375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "bounded-anchor-restore": {
+      "seconds": 9.495108959265053,
+      "cpu_seconds": 4.581164000000001,
+      "load_before": [
+        21.630859375,
+        18.1328125,
+        16.25537109375
+      ],
+      "load_after": [
+        20.42529296875,
+        17.9951171875,
+        16.22802734375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/bounded/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-bounded-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-go-cold": {
+      "seconds": 2.60615950031206,
+      "cpu_seconds": 0.602626000000015,
+      "load_before": [
+        20.42529296875,
+        17.9951171875,
+        16.22802734375
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-edit-0": {
+      "seconds": 0.58630166715011,
+      "cpu_seconds": 0.3572669999999789,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-noop-0": {
+      "seconds": 0.037158749997615814,
+      "cpu_seconds": 0.026798000000013644,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-edit-1": {
+      "seconds": 0.6734909587539732,
+      "cpu_seconds": 0.38717599999998953,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-noop-1": {
+      "seconds": 0.06006470788270235,
+      "cpu_seconds": 0.02892600000000556,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-edit-2": {
+      "seconds": 0.5686300001107156,
+      "cpu_seconds": 0.35034100000001445,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-noop-2": {
+      "seconds": 0.047255124896764755,
+      "cpu_seconds": 0.027190999999987753,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-go-restore": {
+      "seconds": 0.5029009999707341,
+      "cpu_seconds": 0.32042099999997475,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-go-out/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ]
+    },
+    "token-lean-cold": {
+      "seconds": 1.9208128340542316,
+      "cpu_seconds": 0.9522939999999949,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-edit-0": {
+      "seconds": 1.0057718749158084,
+      "cpu_seconds": 0.6487620000000192,
+      "load_before": [
+        19.67041015625,
+        17.87890625,
+        16.197265625
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-noop-0": {
+      "seconds": 0.20776195917278528,
+      "cpu_seconds": 0.13450400000000684,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-edit-1": {
+      "seconds": 0.9226600001566112,
+      "cpu_seconds": 0.6254990000000049,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-noop-1": {
+      "seconds": 0.20251125004142523,
+      "cpu_seconds": 0.136232000000021,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-edit-2": {
+      "seconds": 0.9366962499916553,
+      "cpu_seconds": 0.6150830000000056,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-noop-2": {
+      "seconds": 0.16454937495291233,
+      "cpu_seconds": 0.11111800000000471,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-lean-restore": {
+      "seconds": 1.1540868747979403,
+      "cpu_seconds": 0.6255200000000087,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/lean-token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-lean-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-cold": {
+      "seconds": 155.7417236668989,
+      "cpu_seconds": 228.65573500000002,
+      "load_before": [
+        18.89599609375,
+        17.748046875,
+        16.16064453125
+      ],
+      "load_after": [
+        19.7490234375,
+        19.5546875,
+        17.20947265625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-edit-0": {
+      "seconds": 2.473875833209604,
+      "cpu_seconds": 2.2891079999999846,
+      "load_before": [
+        19.7490234375,
+        19.5546875,
+        17.20947265625
+      ],
+      "load_after": [
+        18.72802734375,
+        19.34619140625,
+        17.1494140625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-noop-0": {
+      "seconds": 0.3153070001862943,
+      "cpu_seconds": 0.29646699999993587,
+      "load_before": [
+        18.72802734375,
+        19.34619140625,
+        17.1494140625
+      ],
+      "load_after": [
+        18.72802734375,
+        19.34619140625,
+        17.1494140625
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-edit-1": {
+      "seconds": 2.461749415844679,
+      "cpu_seconds": 2.3756600000000105,
+      "load_before": [
+        18.72802734375,
+        19.34619140625,
+        17.1494140625
+      ],
+      "load_after": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-noop-1": {
+      "seconds": 0.44606287498027086,
+      "cpu_seconds": 0.35915100000003974,
+      "load_before": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "load_after": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-edit-2": {
+      "seconds": 2.5333210001699626,
+      "cpu_seconds": 2.470724999999973,
+      "load_before": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "load_after": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-noop-2": {
+      "seconds": 0.32515545934438705,
+      "cpu_seconds": 0.3072710000000285,
+      "load_before": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "load_after": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    },
+    "token-anchor-restore": {
+      "seconds": 2.6906207920983434,
+      "cpu_seconds": 2.603090000000023,
+      "load_before": [
+        17.78857421875,
+        19.14111328125,
+        17.08984375
+      ],
+      "load_after": [
+        17.00439453125,
+        18.9560546875,
+        17.0361328125
+      ],
+      "exit_code": 0,
+      "command": [
+        "cargo-build-sbf",
+        "--manifest-path",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/token/Cargo.toml",
+        "--sbf-out-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/bench-token-anchor-out",
+        "--tools-version",
+        "v1.51",
+        "--arch",
+        "v3",
+        "--offline",
+        "--no-rustup-override",
+        "--",
+        "--locked",
+        "--timings"
+      ]
+    }
+  },
+  "cases": {
+    "bounded-go": {
+      "cold_seconds": 1.4405887918546796,
+      "edit_seconds": [
+        0.20898108277469873,
+        0.24476074986159801,
+        0.2437665411271155
+      ],
+      "noop_seconds": [
+        0.0364982089959085,
+        0.04533241596072912,
+        0.0328078749589622
+      ],
+      "edit_median_seconds": 0.2437665411271155,
+      "noop_median_seconds": 0.0364982089959085,
+      "cold_artifact_bytes": 3369,
+      "retained_artifact_bytes": 3369,
+      "elf_bytes": 3216,
+      "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7"
+    },
+    "bounded-lean": {
+      "cold_seconds": 2.7060568751767278,
+      "edit_seconds": [
+        0.6570834158919752,
+        0.5377479582093656,
+        0.6716536656022072
+      ],
+      "noop_seconds": [
+        0.1439172080717981,
+        0.18470104224979877,
+        0.34890299988910556
+      ],
+      "edit_median_seconds": 0.6570834158919752,
+      "noop_median_seconds": 0.18470104224979877,
+      "cold_artifact_bytes": 55029,
+      "retained_artifact_bytes": 118406,
+      "elf_bytes": 1784,
+      "elf_sha256": "a2b586edef444d66f7b00f0c12e67b4364ea6929cd8b3bc4df4f1d9bb628c1f9",
+      "locked_packages": 1
+    },
+    "bounded-anchor": {
+      "cold_seconds": 159.01706795906648,
+      "edit_seconds": [
+        6.58396220812574,
+        10.00056966720149,
+        9.09468554193154
+      ],
+      "noop_seconds": [
+        1.351872666273266,
+        1.4482080419547856,
+        1.4372894586995244
+      ],
+      "edit_median_seconds": 9.09468554193154,
+      "noop_median_seconds": 1.4372894586995244,
+      "cold_artifact_bytes": 289727978,
+      "retained_artifact_bytes": 289748972,
+      "elf_bytes": 154344,
+      "elf_sha256": "924f4e2d16b39bfbbed13b5b711bc398229757caf2f3e09682f7e46b30756fa3",
+      "locked_packages": 162
+    },
+    "token-go": {
+      "cold_seconds": 2.60615950031206,
+      "edit_seconds": [
+        0.58630166715011,
+        0.6734909587539732,
+        0.5686300001107156
+      ],
+      "noop_seconds": [
+        0.037158749997615814,
+        0.06006470788270235,
+        0.047255124896764755
+      ],
+      "edit_median_seconds": 0.58630166715011,
+      "noop_median_seconds": 0.047255124896764755,
+      "cold_artifact_bytes": 8217,
+      "retained_artifact_bytes": 8217,
+      "elf_bytes": 8064,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+    },
+    "token-lean": {
+      "cold_seconds": 1.9208128340542316,
+      "edit_seconds": [
+        1.0057718749158084,
+        0.9226600001566112,
+        0.9366962499916553
+      ],
+      "noop_seconds": [
+        0.20776195917278528,
+        0.20251125004142523,
+        0.16454937495291233
+      ],
+      "edit_median_seconds": 0.9366962499916553,
+      "noop_median_seconds": 0.20251125004142523,
+      "cold_artifact_bytes": 88347,
+      "retained_artifact_bytes": 173799,
+      "elf_bytes": 12288,
+      "elf_sha256": "f70487227385f97513922fb77f2e82d7c3b7cfd80fc9bd7c62057b103bf87b98",
+      "locked_packages": 1
+    },
+    "token-anchor": {
+      "cold_seconds": 155.7417236668989,
+      "edit_seconds": [
+        2.473875833209604,
+        2.461749415844679,
+        2.5333210001699626
+      ],
+      "noop_seconds": [
+        0.3153070001862943,
+        0.44606287498027086,
+        0.32515545934438705
+      ],
+      "edit_median_seconds": 2.473875833209604,
+      "noop_median_seconds": 0.32515545934438705,
+      "cold_artifact_bytes": 310338473,
+      "retained_artifact_bytes": 310326848,
+      "elf_bytes": 188768,
+      "elf_sha256": "fca6bb6931d5eaaf5e04550053b3693ac5f88b1ecb0da32a84d59c12951fb283",
+      "locked_packages": 169
+    }
+  },
+  "sources": {
+    "benchmarks/anchor/README.md": "2db1d9a3c252660083521d8dd8bbaca41d26ef1e5d92ebdb3adf3b3ced524af7",
+    "benchmarks/anchor/bounded/Cargo.lock": "f6c7ddd1e2f9060ed32c2d02993a687e8651ca1bdb47fa4c9f7113f61bb016ee",
+    "benchmarks/anchor/bounded/Cargo.toml": "e56476a9083cf05a5780891d4307fd764deec8179063527f7265e74d97f6c663",
+    "benchmarks/anchor/bounded/src/lib.rs": "25d573c3dab54b924dcf2b36ee54a8cd0d2d8276dfc27d762faf2fbe67bc3bf7",
+    "benchmarks/anchor/go-token/swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0",
+    "benchmarks/anchor/lean-bounded/Cargo.lock": "a8d58e1dbf3af3d016a45a5a8c9535e603b167cde4f15ad15865c753c37e7a89",
+    "benchmarks/anchor/lean-bounded/Cargo.toml": "81ab2770979dad27c22810e4b901abd5c0e2e2eaae7c904c7a51227681676b02",
+    "benchmarks/anchor/lean-bounded/src/lib.rs": "acb578b2781009b915b6af343440290ba0957af3c64d13ea8477abb6ada85bab",
+    "benchmarks/anchor/lean-token/Cargo.lock": "f2a13d489d4f1b63a209516b028784974bc294c228bd99217be72724e409a8ca",
+    "benchmarks/anchor/lean-token/Cargo.toml": "d193675ced35b0d65a74391c96297d7e1e71ff31be25325d6e35a238ef184c6b",
+    "benchmarks/anchor/lean-token/src/lib.rs": "ca35c42bf573473d6260b703cd1a43fe277a7957bb39a1850056af8db68c3fb2",
+    "benchmarks/anchor/token/Cargo.lock": "c7d2dd5da9798647ed15bf8e3d326d0ef92b37c5cbf1c9aa9ab180cd3f242fc7",
+    "benchmarks/anchor/token/Cargo.toml": "6a2a1286075dc46eca25c788d20270745212735743b019319ec048a25e09b81f",
+    "benchmarks/anchor/token/src/lib.rs": "9bf6c36c1a54ac85d32594abca29d5dc778c5addb51daeb58dd77f8bc62a3411"
+  },
+  "go": "go version go1.22.0 darwin/arm64",
+  "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+  "sbf_rust": "rustc 1.84.1-dev",
+  "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)\nTarget: aarch64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin"
+}

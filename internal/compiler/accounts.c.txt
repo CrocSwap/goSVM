@@ -1,0 +1,32 @@
+
+// Aligned loader envelope is supplied by the VM. Account contents and instruction
+// data remain untrusted. Duplicate descriptors preserve aliasing so the program
+// can apply its own account-identity constraints.
+u64 entrypoint(u8 *input) {
+    Context c;
+    c.count=sol_read64(input);
+    if(c.count>16) return 1001;
+    u8 *p=input+8;
+    for(u64 i=0;i<c.count;i++) {
+        if(p[0]!=255) {
+            if(p[0]>=i) return 1002;
+            // Volatile byte copy avoids an implicit libc memcpy dependency.
+            volatile u8 *dst=(volatile u8 *)&c.accounts[i];
+            const u8 *src=(const u8 *)&c.accounts[p[0]];
+            for(u64 j=0;j<sizeof(AccountInfo);j++) dst[j]=src[j];
+            p+=8;
+        } else {
+            AccountInfo *a=&c.accounts[i];
+            a->signer=p[1]!=0;a->writable=p[2]!=0;a->executable=p[3]!=0;
+            a->key=p+8;a->owner=p+40;a->lamports=(u64 *)(p+72);
+            a->data_len=sol_read64(p+80);a->data=p+88;
+            if(a->data_len>10485760) return 1003;
+            p=a->data+a->data_len+10240;
+            p=(u8 *)(((u64)p+7)&~7ULL);
+            a->rent_epoch=sol_read64(p);p+=8;
+        }
+    }
+    u64 n=sol_read64(p);if(n>10240) return 1004;
+    c.instruction=(slice){p+8,n};c.program=(slice){p+8+n,32};
+    return go_Process(&c);
+}

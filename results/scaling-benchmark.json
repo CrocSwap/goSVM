@@ -1,0 +1,1063 @@
+{
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "target": "sBPF v3",
+  "repeats": 5,
+  "go": "go version go1.22.0 darwin/arm64",
+  "rustc": "rustc 1.84.1-dev",
+  "clang": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+  "scope": "Synthetic 8-round dependent integer mixers, all observable; installed toolchains, warm OS/stdlib caches, serial builds; no forced inline/noinline; not representative package/dependency growth",
+  "rows": [
+    {
+      "functions": 1,
+      "rounds": 8,
+      "go_source_lines": 22,
+      "go_source_bytes": 627,
+      "rust_source_bytes": 1586,
+      "builds": {
+        "go_sbf": {
+          "project_clean": {
+            "median_ms": 111.559,
+            "min_ms": 94.114,
+            "max_ms": 130.411,
+            "samples_ms": [
+              94.114,
+              111.559,
+              103.069,
+              130.411,
+              114.447
+            ],
+            "cpu": {
+              "median_ms": 89.007,
+              "min_ms": 84.36,
+              "max_ms": 101.206,
+              "samples_ms": [
+                84.36,
+                89.007,
+                93.062,
+                85.789,
+                101.206
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 108.58,
+            "min_ms": 106.67,
+            "max_ms": 114.4,
+            "samples_ms": [
+              108.58,
+              114.4,
+              106.67,
+              106.768,
+              112.704
+            ],
+            "cpu": {
+              "median_ms": 94.446,
+              "min_ms": 90.087,
+              "max_ms": 98.733,
+              "samples_ms": [
+                94.446,
+                90.178,
+                98.717,
+                90.087,
+                98.733
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 15.881,
+            "min_ms": 14.631,
+            "max_ms": 20.441,
+            "samples_ms": [
+              16.561,
+              15.063,
+              15.881,
+              14.631,
+              20.441
+            ],
+            "cpu": {
+              "median_ms": 10.656,
+              "min_ms": 9.627,
+              "max_ms": 12.393,
+              "samples_ms": [
+                9.627,
+                11.641,
+                10.365,
+                10.656,
+                12.393
+              ]
+            }
+          }
+        },
+        "rust_sbf": {
+          "project_clean": {
+            "median_ms": 668.634,
+            "min_ms": 534.424,
+            "max_ms": 833.887,
+            "samples_ms": [
+              668.634,
+              833.887,
+              555.767,
+              534.424,
+              730.506
+            ],
+            "cpu": {
+              "median_ms": 456.365,
+              "min_ms": 438.975,
+              "max_ms": 495.647,
+              "samples_ms": [
+                495.647,
+                456.365,
+                440.475,
+                460.049,
+                438.975
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 390.018,
+            "min_ms": 386.273,
+            "max_ms": 482.965,
+            "samples_ms": [
+              482.965,
+              412.092,
+              390.018,
+              386.273,
+              389.447
+            ],
+            "cpu": {
+              "median_ms": 321.483,
+              "min_ms": 315.373,
+              "max_ms": 351.506,
+              "samples_ms": [
+                351.506,
+                341.14,
+                317.752,
+                321.483,
+                315.373
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 131.682,
+            "min_ms": 115.393,
+            "max_ms": 212.713,
+            "samples_ms": [
+              126.451,
+              115.393,
+              131.682,
+              212.713,
+              139.944
+            ],
+            "cpu": {
+              "median_ms": 92.098,
+              "min_ms": 92.034,
+              "max_ms": 103.148,
+              "samples_ms": [
+                103.148,
+                92.075,
+                92.034,
+                92.098,
+                102.61
+              ]
+            }
+          }
+        },
+        "go_native": {
+          "project_clean": {
+            "median_ms": 361.844,
+            "min_ms": 344.37,
+            "max_ms": 398.608,
+            "samples_ms": [
+              361.844,
+              345.42,
+              398.608,
+              363.865,
+              344.37
+            ],
+            "cpu": {
+              "median_ms": 406.581,
+              "min_ms": 379.989,
+              "max_ms": 417.668,
+              "samples_ms": [
+                379.989,
+                411.232,
+                417.668,
+                405.713,
+                406.581
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 346.923,
+            "min_ms": 319.4,
+            "max_ms": 435.146,
+            "samples_ms": [
+              346.923,
+              435.146,
+              332.225,
+              319.4,
+              408.073
+            ],
+            "cpu": {
+              "median_ms": 405.786,
+              "min_ms": 382.846,
+              "max_ms": 412.08,
+              "samples_ms": [
+                411.928,
+                391.598,
+                405.786,
+                412.08,
+                382.846
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 216.757,
+            "min_ms": 189.811,
+            "max_ms": 292.4,
+            "samples_ms": [
+              292.4,
+              189.811,
+              207.865,
+              216.757,
+              221.87
+            ],
+            "cpu": {
+              "median_ms": 238.882,
+              "min_ms": 236.638,
+              "max_ms": 248.359,
+              "samples_ms": [
+                238.14,
+                248.359,
+                236.638,
+                246.325,
+                238.882
+              ]
+            }
+          }
+        }
+      },
+      "sampling_order": "serial, backends interleaved with random seed 20261004 within each scenario",
+      "elf_bytes": {
+        "go": 1568,
+        "rust": 1416
+      },
+      "elf_sha256": {
+        "go": "6b32383f6c534fb78b88ad265b556a94e2e35b7e53c0ed3ddbf6f217a5cf657a",
+        "rust": "986867b18003ead2c51ef4ae98ef6f704343684d45a4913c17b83d2cdf803585"
+      },
+      "rust_target_and_deploy_bytes": 10517,
+      "vectors": [
+        {
+          "seed": 0,
+          "expected": 0
+        },
+        {
+          "seed": 1,
+          "expected": 5102115337681276661
+        },
+        {
+          "seed": 18446744073709551615,
+          "expected": 12606423018255057134
+        },
+        {
+          "seed": 1311768467463790320,
+          "expected": 17208273311487204359
+        },
+        {
+          "seed": 9223372036854775808,
+          "expected": 12768046302226661101
+        }
+      ]
+    },
+    {
+      "functions": 16,
+      "rounds": 128,
+      "go_source_lines": 202,
+      "go_source_bytes": 5515,
+      "rust_source_bytes": 8124,
+      "builds": {
+        "go_sbf": {
+          "project_clean": {
+            "median_ms": 182.22,
+            "min_ms": 158.64,
+            "max_ms": 186.907,
+            "samples_ms": [
+              171.305,
+              186.907,
+              186.182,
+              182.22,
+              158.64
+            ],
+            "cpu": {
+              "median_ms": 148.807,
+              "min_ms": 142.132,
+              "max_ms": 151.98,
+              "samples_ms": [
+                151.347,
+                143.464,
+                148.807,
+                151.98,
+                142.132
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 192.827,
+            "min_ms": 179.987,
+            "max_ms": 275.657,
+            "samples_ms": [
+              185.769,
+              179.987,
+              275.657,
+              204.484,
+              192.827
+            ],
+            "cpu": {
+              "median_ms": 152.63,
+              "min_ms": 143.311,
+              "max_ms": 168.419,
+              "samples_ms": [
+                164.366,
+                152.63,
+                168.419,
+                150.669,
+                143.311
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 17.768,
+            "min_ms": 17.394,
+            "max_ms": 21.629,
+            "samples_ms": [
+              17.394,
+              17.768,
+              17.639,
+              17.798,
+              21.629
+            ],
+            "cpu": {
+              "median_ms": 12.155,
+              "min_ms": 8.991,
+              "max_ms": 13.616,
+              "samples_ms": [
+                8.991,
+                12.155,
+                13.616,
+                12.607,
+                11.364
+              ]
+            }
+          }
+        },
+        "rust_sbf": {
+          "project_clean": {
+            "median_ms": 676.166,
+            "min_ms": 641.527,
+            "max_ms": 729.739,
+            "samples_ms": [
+              641.527,
+              676.166,
+              668.335,
+              709.129,
+              729.739
+            ],
+            "cpu": {
+              "median_ms": 529.262,
+              "min_ms": 514.905,
+              "max_ms": 585.435,
+              "samples_ms": [
+                530.74,
+                516.774,
+                529.262,
+                514.905,
+                585.435
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 538.526,
+            "min_ms": 492.069,
+            "max_ms": 600.004,
+            "samples_ms": [
+              600.004,
+              492.069,
+              595.02,
+              536.981,
+              538.526
+            ],
+            "cpu": {
+              "median_ms": 400.977,
+              "min_ms": 379.683,
+              "max_ms": 420.036,
+              "samples_ms": [
+                400.977,
+                388.908,
+                379.683,
+                420.036,
+                417.076
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 142.694,
+            "min_ms": 130.857,
+            "max_ms": 148.363,
+            "samples_ms": [
+              130.857,
+              132.414,
+              148.363,
+              142.694,
+              148.184
+            ],
+            "cpu": {
+              "median_ms": 98.842,
+              "min_ms": 88.633,
+              "max_ms": 112.943,
+              "samples_ms": [
+                98.842,
+                88.633,
+                112.943,
+                103.989,
+                94.746
+              ]
+            }
+          }
+        },
+        "go_native": {
+          "project_clean": {
+            "median_ms": 441.686,
+            "min_ms": 346.843,
+            "max_ms": 519.739,
+            "samples_ms": [
+              519.739,
+              488.161,
+              402.138,
+              441.686,
+              346.843
+            ],
+            "cpu": {
+              "median_ms": 422.319,
+              "min_ms": 415.562,
+              "max_ms": 473.177,
+              "samples_ms": [
+                422.319,
+                473.177,
+                415.562,
+                433.481,
+                420.669
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 407.893,
+            "min_ms": 350.507,
+            "max_ms": 500.389,
+            "samples_ms": [
+              350.507,
+              365.739,
+              407.893,
+              446.964,
+              500.389
+            ],
+            "cpu": {
+              "median_ms": 435.701,
+              "min_ms": 427.406,
+              "max_ms": 494.258,
+              "samples_ms": [
+                427.406,
+                435.701,
+                431.064,
+                467.468,
+                494.258
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 241.979,
+            "min_ms": 221.211,
+            "max_ms": 330.125,
+            "samples_ms": [
+              330.125,
+              221.211,
+              274.953,
+              241.979,
+              230.901
+            ],
+            "cpu": {
+              "median_ms": 257.711,
+              "min_ms": 232.927,
+              "max_ms": 289.558,
+              "samples_ms": [
+                257.711,
+                257.282,
+                289.558,
+                260.684,
+                232.927
+              ]
+            }
+          }
+        }
+      },
+      "sampling_order": "serial, backends interleaved with random seed 20261004 within each scenario",
+      "elf_bytes": {
+        "go": 7328,
+        "rust": 7176
+      },
+      "elf_sha256": {
+        "go": "987858972f38987e38172e6bcd8438c7d9bb2d3a71440c22d7e35045fc005728",
+        "rust": "00412b0cbda0644f795de6df55e458e5d4d8fd4edc900368c73e16314ccaeb2c"
+      },
+      "rust_target_and_deploy_bytes": 27802,
+      "vectors": [
+        {
+          "seed": 0,
+          "expected": 0
+        },
+        {
+          "seed": 1,
+          "expected": 16650056810004763756
+        },
+        {
+          "seed": 18446744073709551615,
+          "expected": 6308090480427378717
+        },
+        {
+          "seed": 1311768467463790320,
+          "expected": 6699449138282899966
+        },
+        {
+          "seed": 9223372036854775808,
+          "expected": 2241220075964615173
+        }
+      ]
+    },
+    {
+      "functions": 64,
+      "rounds": 512,
+      "go_source_lines": 778,
+      "go_source_bytes": 21222,
+      "rust_source_bytes": 29111,
+      "builds": {
+        "go_sbf": {
+          "project_clean": {
+            "median_ms": 364.765,
+            "min_ms": 335.573,
+            "max_ms": 451.165,
+            "samples_ms": [
+              335.573,
+              364.765,
+              353.737,
+              385.001,
+              451.165
+            ],
+            "cpu": {
+              "median_ms": 317.34,
+              "min_ms": 310.195,
+              "max_ms": 333.378,
+              "samples_ms": [
+                310.195,
+                331.074,
+                314.308,
+                317.34,
+                333.378
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 367.574,
+            "min_ms": 347.931,
+            "max_ms": 384.027,
+            "samples_ms": [
+              348.335,
+              384.027,
+              367.574,
+              347.931,
+              370.56
+            ],
+            "cpu": {
+              "median_ms": 314.949,
+              "min_ms": 309.582,
+              "max_ms": 326.098,
+              "samples_ms": [
+                312.281,
+                314.949,
+                326.098,
+                309.582,
+                325.903
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 12.892,
+            "min_ms": 11.375,
+            "max_ms": 17.638,
+            "samples_ms": [
+              12.775,
+              17.638,
+              12.892,
+              11.375,
+              16.578
+            ],
+            "cpu": {
+              "median_ms": 10.366,
+              "min_ms": 8.671,
+              "max_ms": 13.353,
+              "samples_ms": [
+                10.366,
+                13.353,
+                10.007,
+                8.671,
+                12.664
+              ]
+            }
+          }
+        },
+        "rust_sbf": {
+          "project_clean": {
+            "median_ms": 903.673,
+            "min_ms": 887.997,
+            "max_ms": 1036.982,
+            "samples_ms": [
+              903.673,
+              887.997,
+              897.734,
+              938.372,
+              1036.982
+            ],
+            "cpu": {
+              "median_ms": 747.181,
+              "min_ms": 708.388,
+              "max_ms": 773.884,
+              "samples_ms": [
+                721.032,
+                773.884,
+                708.388,
+                747.181,
+                747.354
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 740.534,
+            "min_ms": 712.688,
+            "max_ms": 766.127,
+            "samples_ms": [
+              766.127,
+              714.765,
+              748.352,
+              740.534,
+              712.688
+            ],
+            "cpu": {
+              "median_ms": 595.676,
+              "min_ms": 590.915,
+              "max_ms": 606.546,
+              "samples_ms": [
+                595.676,
+                590.915,
+                606.53,
+                594.505,
+                606.546
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 136.852,
+            "min_ms": 128.351,
+            "max_ms": 160.858,
+            "samples_ms": [
+              160.858,
+              134.438,
+              137.213,
+              136.852,
+              128.351
+            ],
+            "cpu": {
+              "median_ms": 98.924,
+              "min_ms": 95.619,
+              "max_ms": 106.109,
+              "samples_ms": [
+                106.109,
+                95.619,
+                106.021,
+                96.032,
+                98.924
+              ]
+            }
+          }
+        },
+        "go_native": {
+          "project_clean": {
+            "median_ms": 479.281,
+            "min_ms": 364.857,
+            "max_ms": 496.405,
+            "samples_ms": [
+              479.281,
+              364.857,
+              483.551,
+              496.405,
+              393.013
+            ],
+            "cpu": {
+              "median_ms": 463.622,
+              "min_ms": 451.385,
+              "max_ms": 469.209,
+              "samples_ms": [
+                458.103,
+                463.622,
+                451.385,
+                469.209,
+                465.339
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 383.857,
+            "min_ms": 354.195,
+            "max_ms": 432.712,
+            "samples_ms": [
+              383.857,
+              370.73,
+              354.195,
+              387.24,
+              432.712
+            ],
+            "cpu": {
+              "median_ms": 458.388,
+              "min_ms": 442.75,
+              "max_ms": 469.412,
+              "samples_ms": [
+                455.127,
+                460.312,
+                458.388,
+                469.412,
+                442.75
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 253.512,
+            "min_ms": 200.699,
+            "max_ms": 298.739,
+            "samples_ms": [
+              253.512,
+              298.739,
+              200.699,
+              263.01,
+              219.593
+            ],
+            "cpu": {
+              "median_ms": 239.628,
+              "min_ms": 220.991,
+              "max_ms": 266.708,
+              "samples_ms": [
+                220.991,
+                266.708,
+                250.985,
+                226.057,
+                239.628
+              ]
+            }
+          }
+        }
+      },
+      "sampling_order": "serial, backends interleaved with random seed 20261004 within each scenario",
+      "elf_bytes": {
+        "go": 25760,
+        "rust": 25608
+      },
+      "elf_sha256": {
+        "go": "f6f50609c6307ddf652cfff17f982f37bf751467f5c8ffe11abe0a7c26cf7010",
+        "rust": "80927633cd122c43ebe289989f3e797cdb69c78bebe29433a9e097ec7c496c6a"
+      },
+      "rust_target_and_deploy_bytes": 83098,
+      "vectors": [
+        {
+          "seed": 0,
+          "expected": 0
+        },
+        {
+          "seed": 1,
+          "expected": 8875944737402870936
+        },
+        {
+          "seed": 18446744073709551615,
+          "expected": 15858920247673725013
+        },
+        {
+          "seed": 1311768467463790320,
+          "expected": 1318380885706450508
+        },
+        {
+          "seed": 9223372036854775808,
+          "expected": 7757167796736038193
+        }
+      ]
+    },
+    {
+      "functions": 256,
+      "rounds": 2048,
+      "go_source_lines": 3082,
+      "go_source_bytes": 84352,
+      "rust_source_bytes": 113361,
+      "builds": {
+        "go_sbf": {
+          "project_clean": {
+            "median_ms": 1166.73,
+            "min_ms": 1133.896,
+            "max_ms": 1588.011,
+            "samples_ms": [
+              1588.011,
+              1369.152,
+              1166.73,
+              1140.39,
+              1133.896
+            ],
+            "cpu": {
+              "median_ms": 1017.152,
+              "min_ms": 1001.089,
+              "max_ms": 1046.18,
+              "samples_ms": [
+                1034.536,
+                1017.152,
+                1016.419,
+                1046.18,
+                1001.089
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 1166.092,
+            "min_ms": 1148.453,
+            "max_ms": 1280.48,
+            "samples_ms": [
+              1153.478,
+              1280.48,
+              1166.092,
+              1192.616,
+              1148.453
+            ],
+            "cpu": {
+              "median_ms": 992.172,
+              "min_ms": 983.374,
+              "max_ms": 1019.883,
+              "samples_ms": [
+                983.374,
+                988.249,
+                992.172,
+                1019.883,
+                1001.667
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 14.67,
+            "min_ms": 12.29,
+            "max_ms": 23.932,
+            "samples_ms": [
+              12.29,
+              23.932,
+              14.67,
+              15.289,
+              14.154
+            ],
+            "cpu": {
+              "median_ms": 11.29,
+              "min_ms": 9.833,
+              "max_ms": 12.338,
+              "samples_ms": [
+                9.833,
+                11.851,
+                12.338,
+                10.032,
+                11.29
+              ]
+            }
+          }
+        },
+        "rust_sbf": {
+          "project_clean": {
+            "median_ms": 1907.744,
+            "min_ms": 1791.846,
+            "max_ms": 2085.008,
+            "samples_ms": [
+              2085.008,
+              1907.744,
+              1791.846,
+              1836.094,
+              1969.009
+            ],
+            "cpu": {
+              "median_ms": 1605.302,
+              "min_ms": 1564.626,
+              "max_ms": 1747.913,
+              "samples_ms": [
+                1747.913,
+                1564.626,
+                1605.302,
+                1618.42,
+                1587.517
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 1807.748,
+            "min_ms": 1647.296,
+            "max_ms": 1839.85,
+            "samples_ms": [
+              1825.88,
+              1839.85,
+              1696.32,
+              1807.748,
+              1647.296
+            ],
+            "cpu": {
+              "median_ms": 1444.554,
+              "min_ms": 1425.878,
+              "max_ms": 1466.083,
+              "samples_ms": [
+                1425.878,
+                1437.66,
+                1462.78,
+                1466.083,
+                1444.554
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 127.909,
+            "min_ms": 110.602,
+            "max_ms": 149.193,
+            "samples_ms": [
+              120.325,
+              149.193,
+              138.056,
+              127.909,
+              110.602
+            ],
+            "cpu": {
+              "median_ms": 96.024,
+              "min_ms": 90.039,
+              "max_ms": 100.274,
+              "samples_ms": [
+                93.751,
+                90.039,
+                100.274,
+                96.211,
+                96.024
+              ]
+            }
+          }
+        },
+        "go_native": {
+          "project_clean": {
+            "median_ms": 637.467,
+            "min_ms": 513.487,
+            "max_ms": 685.14,
+            "samples_ms": [
+              685.14,
+              637.467,
+              513.487,
+              660.288,
+              585.211
+            ],
+            "cpu": {
+              "median_ms": 633.245,
+              "min_ms": 612.299,
+              "max_ms": 654.944,
+              "samples_ms": [
+                654.944,
+                612.299,
+                618.18,
+                633.245,
+                643.336
+              ]
+            }
+          },
+          "source_edit": {
+            "median_ms": 562.075,
+            "min_ms": 506.237,
+            "max_ms": 695.732,
+            "samples_ms": [
+              577.599,
+              562.075,
+              506.237,
+              540.027,
+              695.732
+            ],
+            "cpu": {
+              "median_ms": 622.821,
+              "min_ms": 592.296,
+              "max_ms": 632.393,
+              "samples_ms": [
+                632.393,
+                592.296,
+                622.821,
+                605.175,
+                630.534
+              ]
+            }
+          },
+          "no_op": {
+            "median_ms": 182.497,
+            "min_ms": 175.702,
+            "max_ms": 267.37,
+            "samples_ms": [
+              182.497,
+              267.37,
+              236.706,
+              175.702,
+              178.046
+            ],
+            "cpu": {
+              "median_ms": 232.318,
+              "min_ms": 228.0,
+              "max_ms": 250.204,
+              "samples_ms": [
+                232.318,
+                228.408,
+                250.204,
+                228.0,
+                236.888
+              ]
+            }
+          }
+        }
+      },
+      "sampling_order": "serial, backends interleaved with random seed 20261004 within each scenario",
+      "elf_bytes": {
+        "go": 99488,
+        "rust": 99336
+      },
+      "elf_sha256": {
+        "go": "3c0cc880664115fb03b3d4be9e2545fd4917523f3a1ba55a0a6a666a638d1ae3",
+        "rust": "5ce9ce55da7d803f514da45efae370485849e1f4ccba2b2c29deea5ae7d3c5ef"
+      },
+      "rust_target_and_deploy_bytes": 304279,
+      "vectors": [
+        {
+          "seed": 0,
+          "expected": 0
+        },
+        {
+          "seed": 1,
+          "expected": 11060256164431562823
+        },
+        {
+          "seed": 18446744073709551615,
+          "expected": 3935877983473902624
+        },
+        {
+          "seed": 1311768467463790320,
+          "expected": 12483383607071405951
+        },
+        {
+          "seed": 9223372036854775808,
+          "expected": 8749914611916738736
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+   Compiling protocol-test-harness v0.1.0 (/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/harness)
+error[E0308]: mismatched types
+  --> tests/support/mod.rs:73:50
+   |
+73 |         let mut pt=ProgramTest::new(name,id,Some(processor!(protocol_bench::process_instruction)));pt.prefer_bpf(false);
+   |                                             ---- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |                                             |    |
+   |                                             |    the found closure
+   |                                             |    expected fn pointer, found `Option<{closure@lib.rs:210:14}>`
+   |                                             arguments to this enum variant are incorrect
+   |
+   = note: expected fn pointer `for<'a> fn(*mut EbpfVm<'a, InvokeContext<'static>>, u64, u64, u64, u64, u64)`
+                    found enum `Option<{closure@/Users/colkitt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-test-2.3.9/src/lib.rs:210:14: 210:53}>`
+help: the type constructed contains `Option<{closure@/Users/colkitt/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/solana-program-test-2.3.9/src/lib.rs:210:14: 210:53}>` due to the type of the argument passed
+  --> tests/support/mod.rs:73:45
+   |
+73 |         let mut pt=ProgramTest::new(name,id,Some(processor!(protocol_bench::process_instruction)));pt.prefer_bpf(false);
+   |                                             ^^^^^-----------------------------------------------^
+   |                                                  |
+   |                                                  this argument influences the type of `Some`
+note: tuple variant defined here
+  --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/core/src/option.rs:606:4
+
+warning: use of deprecated associated function `solana_keypair::Keypair::from_bytes`: Use Keypair::try_from(&[u8]) instead
+  --> tests/support/mod.rs:37:14
+   |
+37 |     Keypair::from_bytes(&[seed,public].concat()).unwrap()
+   |              ^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+For more information about this error, try `rustc --explain E0308`.
+warning: `protocol-test-harness` (test "group02") generated 1 warning
+error: could not compile `protocol-test-harness` (test "group02") due to 1 previous error; 1 warning emitted
+warning: build failed, waiting for other jobs to finish...
+warning: `protocol-test-harness` (test "group03") generated 1 warning (1 duplicate)
+error: could not compile `protocol-test-harness` (test "group03") due to 1 previous error; 1 warning emitted
+warning: `protocol-test-harness` (test "group08") generated 1 warning (1 duplicate)
+error: could not compile `protocol-test-harness` (test "group08") due to 1 previous error; 1 warning emitted
+warning: `protocol-test-harness` (test "group06") generated 1 warning (1 duplicate)
+error: could not compile `protocol-test-harness` (test "group06") due to 1 previous error; 1 warning emitted
