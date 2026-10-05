@@ -1,8 +1,9 @@
 # goSVM agent orientation
 
-Start with [HANDOFF.md](HANDOFF.md), then [README.md](README.md). The handoff
-records the user's priorities, completed experiments, latest validation, and
-suggested next work. Its suggestions are not an active goal or scheduled task.
+Start with [HANDOFF.md](HANDOFF.md), then [README.md](README.md) and the draft
+[ROADMAP.md](ROADMAP.md). These record the user's priorities, completed
+experiments, validation, and proposed product milestones. Roadmap suggestions
+are not an active goal or scheduled task.
 
 Keep this project experimental. Preserve historical evidence under `results/`;
 use a new results directory for a changed experiment. Distinguish the bounded

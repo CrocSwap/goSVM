@@ -1,7 +1,8 @@
 # goSVM
 
 Returning to the project? Read [the session handoff](HANDOFF.md) for current
-status, evidence, environment details, and suggested next work.
+status, evidence, and environment details, and [the draft product roadmap](ROADMAP.md)
+for proposed milestones and release criteria.
 
 A working experimental compiler for a restricted Go subset targeting Solana SBF.
 Go code performs a full-width constant-product swap, validates eight accounts,

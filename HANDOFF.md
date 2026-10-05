@@ -3,7 +3,10 @@
 Session parked October 4, 2026 (America/New_York), at the user's request because
 of weekly Codex usage resets. This document lets a new director continue from
 the repository without the old chat. No experiment or goal loop is running.
-The latest requested work, a matched Anchor comparison, is complete.
+The matched Anchor comparison is complete. Subsequent discussion covered faster
+testing and feasible language support, and the user requested a product roadmap.
+That draft is saved in [ROADMAP.md](ROADMAP.md); implementation of its milestones
+has not started.
 
 ## User intent and decisions
 
@@ -190,30 +193,36 @@ scaling reproduction is documented in the README and Makefile. Validator tests
 use isolated local fixtures, never a real wallet or public cluster. Root tests
 do not discover the nested starter module; run its tests separately.
 
-## Suggested next decisions
+## Product planning after the checkpoint
 
-There is no user-approved next milestone beyond parking this session. Useful
-options for the next director to discuss or scope when work resumes:
+The user asked for a roadmap to a competitive end-user product. [ROADMAP.md](ROADMAP.md)
+now proposes five milestones: fast SVM testing, useful multi-account private
+alpha, accessible public alpha, dependable beta, and supported release. It records
+the language scope discussion, release evidence, competitive benchmarks, and
+remaining product decisions. It is a draft, not a committed schedule or an active
+implementation goal.
 
-1. Expand generated bindings to multiple accounts, signers, PDA and token
-   constraints, then migrate the full token example to that authoring model.
-   This would close the largest current ergonomics gap.
-2. Isolate CPI account-info marshaling cost with a new matched experiment;
-   retain the current baseline and failure/rollback coverage.
-3. Improve distribution and host coverage, or add reusable Go package support
-   and compiler diagnostics/fuzzing. These are prerequisites to wider adoption.
-4. Investigate LLVM compile-time cost as source grows without sacrificing CU;
-   the earlier O1 token experiment raised CU about 45%, so O2 remains the default.
+The recommended next slice is a lightweight prebuilt SVM runner compatibility
+spike and a design for generated multi-account bindings. Current native tests are
+fast, but full-validator integration still pays startup/RPC/confirmation costs;
+faster SVM execution has not yet been demonstrated. Candidate engines require
+checking against our SBFv3 artifacts, real token CPIs, and rollback behavior.
+
+Packages, arrays, methods, and constrained pointers are proposed product
+foundations. Bounded allocation and selected interfaces/standard-library
+functionality are later options, not fundamentally prohibited by SVM. Full Go
+runtime compatibility is not the goal. See the roadmap for detailed gates.
 
 Do not reinterpret the mixed CU results as Go beating Rust or Anchor in general.
 The demonstrated advantage is primarily the narrow build/dependency workflow.
 
 ## Repository persistence
 
-Before this parking step, all project files were untracked in an empty Git
-repository. This handoff and the source/evidence are being captured in the first
-local checkpoint commit; use `git log -1` and `git status` to inspect it. No remote
-is configured and nothing has been pushed. Local ignored `build/` outputs and
+Before the parking step, all project files were untracked in an empty Git
+repository. Checkpoint `6762db8` saved the handoff, source, tests, and evidence.
+The roadmap is a subsequent documentation change; use `git log` and `git status`
+to inspect current history. No remote is configured and nothing has been pushed.
+Local ignored `build/` outputs and
 external compiler/registry caches are disposable and are not part of the commit.
 The committed source, lockfiles, tests, and reports suffice to rebuild them after
 installing the documented prerequisites. Preserve or back up this checkout if
