@@ -1,2 +1,21 @@
-/build/
+build/
 __pycache__/
+
+# Temporary commit bundles/checkouts and Cargo outputs.
+/.commit-artifacts/
+target/
+
+# Large local evidence: retained on disk, indexed by SHA-256 in results.
+/results/compiler/2026-10-06-account-decoder32-final/phoenix-fixtures.json
+/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json
+/results/compiler/2026-10-06-compact-signer-canonical-supported/handler.json
+/results/compiler/2026-10-06-phoenix-dependencies-final/trading-fixtures.json
+/results/compiler/2026-10-06-phoenix-dependencies/trading-fixtures.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-go-0.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-go-1.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-go-2.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-0.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-1.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-2.json
+/results/compiler/2026-10-06-whirlpool-optimized-final/components.json
+/results/maintenance/2026-10-06-deep-build-cleanup/build-snapshots.tar.gz

@@ -1,4 +1,4 @@
-.PHONY: build test verify bench build-tokens verify-tokens bench-tokens scale verify-scale protocol-prepare bench-protocol verify-protocol
+.PHONY: build test verify bench build-tokens verify-tokens bench-tokens scale verify-scale protocol-prepare bench-protocol verify-protocol clean clean-deep
 
 build:
 	bash scripts/build.sh
@@ -35,3 +35,9 @@ bench-protocol: protocol-prepare
 
 verify-protocol:
 	bash scripts/verify.sh protocol
+
+clean:
+	python3 scripts/clean_build.py --apply
+
+clean-deep:
+	python3 scripts/clean_build.py --deep --apply
