@@ -4,6 +4,52 @@ Returning to the project? Read [the session handoff](HANDOFF.md) for current
 status, evidence, and environment details, and [the draft product roadmap](ROADMAP.md)
 for proposed milestones and release criteria.
 
+Phoenix's [compiler/SDK dependencies](docs/PHOENIX_DEPENDENCIES.md) now include
+verified v0 multiplication-helper linking, rejection of unknown unresolved
+symbols, and SDK-2 `SetReturnData`. The preserved 631-case trading corpus and
+return-byte/CPI proofs pass with separate new pins; historical baselines remain.
+
+Roadmap implementation has started with an opt-in LiteSVM testing spike. All
+existing matched bounded/token fixtures agreed with the validator in three
+repetitions, with substantially lower test overhead. See
+[results and compatibility limits](results/svm/2026-10-05-litesvm/README.md),
+[runner reproduction](benchmarks/svm-runner/README.md), and the
+[multi-account binding proposal](docs/MULTI_ACCOUNT_DESIGN.md). Validator testing
+remains the default; the runner is not yet a supported distribution. The
+[transport comparison](results/svm/2026-10-05-transports/README.md) selects ordered
+stdio batches, now available through `gosvm test --svm` with `-svm-run` fixture
+selection. See the [experimental protocol and workflow](docs/SVM_RUNNER_PROTOCOL.md).
+Runner 0.3.0 adds explicit Clock/Rent controls and restores the initial VM before
+each fast fixture. [Compiled-probe and fresh-validator evidence](results/svm/2026-10-05-controls-final/README.md)
+records the checks and remaining limits.
+Runner 0.4.0 adds [general multi-account fixtures](docs/SVM_FIXTURES.md),
+available through `gosvm svm-test` for a compiled ELF or `test --svm -svm-fixtures`
+for projects. [Full-token validation](results/svm/2026-10-05-general-complete/README.md)
+covers shared-state scenarios, overrides, exact CU/errors, and rollback.
+Runner 0.5.0 adds a documented LiteSVM rent-error precedence patch. The
+[lifecycle checks](results/svm/2026-10-05-lifecycle-verified/README.md) create and
+initialize token accounts, execute a Go swap, close/recreate accounts, and verify
+rollback; new-account `rent_epoch` metadata differs explicitly between engines.
+The [complete workflow experiment](results/svm/2026-10-05-workflow-complete/README.md)
+passed 60 measured runs: median source-edit/forced-native-test latency was 0.286 s
+for the bounded starter and 0.536 s for the manually wired full token swap.
+Bootstrap, caches and workload scope are recorded separately.
+The [pinned local runner package](docs/SVM_RUNNER_PACKAGING.md) installs with
+`gosvm runner install -archive <package.tar.gz>` and is verified by `runner status`.
+[Installation validation](results/svm/2026-10-05-runner-install-complete/README.md)
+passes bounded/token/lifecycle regressions without Cargo on the test PATH.
+Public runner downloads/signing and other supported hosts remain open.
+General fixture steps now support [ordered Clock/Rent controls](docs/SVM_FIXTURES.md),
+validated with real SBF syscall reads, reset isolation and rollback in the
+[stateful corpus](results/svm/2026-10-05-scenarios-complete/README.md). The
+[runtime matrix and bounded milestone 1 checklist](docs/SVM_RUNTIME_COVERAGE.md)
+record the tested subset and remaining acceptance gates.
+The [acceptance procedure](docs/MILESTONE1_ACCEPTANCE.md) and
+[current-host rehearsal](results/svm/2026-10-05-m1-acceptance-final/README.md)
+provide reproducible checks. Milestone 1 is closed by the user's October 5
+decision to skip the additional fresh-validator and clean-host checks; those
+checks are not claimed as passing. Milestone 2 language/framework work has started.
+
 A working experimental compiler for a restricted Go subset targeting Solana SBF.
 Go code performs a full-width constant-product swap, validates eight accounts,
 invokes the real SPL Token program twice, signs a vault transfer with a PDA, and
@@ -56,6 +102,9 @@ Commands find the project from subdirectories without crossing a separate Go
 module. Use `gosvm new -module example.org/my/swap my-swap` for a custom import
 path. Native Go test flags pass through after `--`, for example
 `gosvm test -- -run TestSwap -count=1`. Project commands reject irrelevant flags.
+`gosvm build -timings` and `gosvm test --svm -timings` print optional JSON phase
+durations. Diagnostics also report failed attempted phases; measure external
+command wall time separately to include CLI startup and teardown.
 
 An inspectable generated project lives in [examples/typed-swap](examples/typed-swap).
 The starter's business logic uses `Pool`, `SwapArgs`, `SwapResult`, and named
@@ -66,11 +115,55 @@ and `test` regenerate automatically. An embedded SDK snapshot gives the project
 normal offline Go tooling without a dependency on this checkout or an unpublished
 module. Commit the snapshot, generated files, manifest, and IDL.
 
-The binding format currently supports **one state account and one handler**, with
-flat unsigned wire fields. The compiler also supports nested value structs and
-multiple files in one package. Full Anchor compatibility, TypeScript clients,
-user packages, general account constraints, initialization, and deployment tooling
-remain future work. The starter README describes its exact restrictions and wire
+Schema 1 supports one state account/handler and flat unsigned wire fields.
+The experimental [schema-2 prototype](docs/SCHEMA2.md), selected by `gosvm new
+-schema 2`, adds multiple instructions/accounts, shared canonical types, packed
+array/nested-struct codecs, layout history, generated clients and account/key/alias
+validation. Its [ledger example](examples/multi-state/README.md) passes compiled
+SBF checks. Optional [SDK 2](docs/SDK2.md), selected with `new -schema 2 -sdk 2`,
+adds checked classic-token references/transfers, multi-seed PDA signing and
+generic CPI. Its [compiled-SBF proof](results/compiler/2026-10-05-checked-token-lifecycle-final/README.md)
+passes 117 scenarios in three runs. Generated token/PDA constraints and the
+[preloaded full swap](examples/full-swap/README.md) now pass all 108 preserved
+manual swap scenarios/110 transactions in three SBF runs. A separate
+[ordinary-Go service](examples/full-swap-service/README.md) imports its actual
+types, codecs and quote. The earlier generated swap-only module used 45,941 CU/21,536 ELF bytes,
+versus the manual baseline's 20,329 CU/8,064 bytes; framework overhead remains
+substantial. SDK-2 [rent/System/owned lifecycle operations](docs/SDK2.md) now pass
+35 scenarios/46 transactions in [three SBF runs](results/compiler/2026-10-05-lifecycle2-supported/README.md).
+Generated rent-funded initialization and authorized closing now pass the distinct
+[SOL escrow lifecycle proof](results/compiler/2026-10-05-escrow-supported/README.md):
+32 scenarios/42 transactions in three SBF runs. The [creator-managed swap lifecycle](results/compiler/2026-10-06-managed-swap-supported/README.md)
+now passes 29 scenarios/36 transactions × three, including pool/vault creation,
+deposits, swaps, drain/close/reuse and rollback. The expanded four-instruction
+program is 68,320 bytes; its legacy wide swap uses 46,016 CU, managed swap 47,858,
+create/deposits 86,742, and drain/close 61,869. The largest static frame is
+3,968 bytes. [The preserved corpus/service regression](results/compiler/2026-10-06-framework-swap-managed/README.md)
+passes all 108 scenarios/110 transactions × three, with both ordinary-Go service
+layout modes. [Repeated framework measurements](results/compiler/2026-10-06-milestone2-bench-supported/README.md)
+now pass 125 command samples: median edit build 0.917 seconds managed swap and
+0.520 escrow; forced native plus lifecycle SBF test 0.613 and 0.504 seconds.
+These are installed-tool, warm-cache local observations. The
+[independent developer trial](docs/MILESTONE2_TRIAL.md) is the only remaining
+milestone-2 gate; the concrete kit and outside-checkout maintainer rehearsal pass.
+Anchor compatibility, TypeScript clients and deployment tooling are later work.
+SDK 2 now also exposes the real runtime [Clock accessor](docs/SDK2.md#runtime-clock),
+with [native/C/SBF evidence](results/compiler/2026-10-05-clock2-supported/README.md)
+and passing swap/service and escrow regressions. Re-pin the frontend/SDK together
+when adopting it; SDK 1 remains unchanged.
+The optional [compact signer helper](docs/COMPACT_SIGNER_ADOPTION.md) now avoids
+the single-group seed copy through `cpi.SingleSigner` and `InvokeSingle`.
+Existing signer APIs remain available; adopt a matching complete SDK-2 snapshot.
+SDK-2 compilation now also optimizes a narrow [checked packed-store loop](docs/PACKED_STORE_OPTIMIZATION.md),
+with complete-handler and native/C/SBF bounds/rollback evidence. Other loop
+shapes retain their ordinary translation.
+A separate [Whirlpools application snapshot](docs/WHIRLPOOLS_133_TARGET.md) now
+meets the 1.33× CU target at **1.280853× scoped Rust**, median paired successful
+handler CU at O2. All 166 cases pass three times against Go and unchanged scoped/
+full Rust; 29,713 SBF arithmetic cases pass three runs in both languages. This
+event-omitting classic-token fixed-fee result uses bounded arithmetic and private
+validation reuse; it is separate from the starter and generated swap below.
+The starter README describes its exact restrictions and wire
 format. `test --sbf` uses temporary local keys/genesis and reports CU, persistence,
 and atomic rollback in `build/sbf-results.json`.
 
@@ -93,8 +186,9 @@ with two real SPL Token transfers, the wide-input case measures:
 | Anchor 0.32.2 | 19,431 | 155.74 s | 2.47 s | 188,768 B | 295.95 MiB |
 
 Go uses 4.6% more CU than Anchor on that token case, while building faster and
-retaining substantially fewer artifacts. The token Go program uses manual SDK
-validation; generated multi-account bindings are still future work. The starter
+retaining substantially fewer artifacts. The measured token Go baseline uses
+manual SDK validation. A separate [generated migration](examples/full-swap/README.md)
+now retains the same corpus with its framework costs recorded above. The starter
 comparison does use the generated Go framework. All three implementations pass
 the same behavioral fixtures, with explicit framework error mappings.
 
@@ -129,6 +223,11 @@ make verify         # Regress the original bounded arithmetic experiment
 python3 scripts/save-results.py  # Save matching results and source/tool hashes
 ```
 
+`make test` uses external linking on macOS for the pinned Go 1.22 loader
+workaround, including test executables that import the HTTP harness. The new
+transport comparison is another standalone Go module and needs its
+[focused tests](benchmarks/svm-transport/README.md).
+
 Verification uses an isolated local validator, deterministic keys and genesis
 fixtures. It removes its ledger and stops the validator on exit. It never uses a
 public cluster or wallet. On macOS the harness uses external linking and ad-hoc
@@ -147,6 +246,23 @@ paths/sizes/modification timestamps, and output content hash. Missing or damaged
 output is rebuilt. Deliberately replacing a backend while preserving its size and
 timestamp requires `-no-cache`. This is a whole-program cache, not incremental
 compilation. C/object intermediates are temporary.
+
+For local disk cleanup, `python3 scripts/clean_build.py` previews disposable
+Cargo intermediates and older acceptance-test Go/toolchain caches. `make clean`
+removes those caches while retaining linked binaries, source/SDK snapshots,
+`results/`, the current Go cache and the latest M1 acceptance toolchain. The
+next Rust build or old acceptance rerun may rebuild or reinstall its caches.
+
+For a complete reset, `python3 scripts/clean_build.py --deep` previews removal
+of all `build/` contents. `make clean-deep` first saves and verifies a compressed,
+deduplicated archive of non-cache source/artifact snapshots under a new
+`results/maintenance/` directory, then removes `build/`. Its report includes
+the archive inventory and hashes. All existing results and external tools stay
+intact; Go/Cargo caches, duplicate installed tools and test executables are
+discarded. Restore archived working snapshots with
+`tar -xzf results/maintenance/<cleanup>/build-snapshots.tar.gz` from the project
+root. Ordinary builds reconstruct their output; historical scripts that require
+an older frontend/module path may need the archive restored first.
 
 ## Implementation and workload
 
@@ -286,33 +402,60 @@ changing runtime code; it does not make source edits faster.
 ## Supported subset and remaining blockers
 
 One file or a directory of root-level non-test Go files in one package;
-`Process(solana.Context) uint64` with only `gosvm/solana` imported, or
-legacy `Process([]byte, []byte) uint64`. The SDK adapter supports up to 16 accounts;
+`Process(solana.Context) uint64` with the pinned SDK and restricted user packages, or
+legacy `Process([]byte, []byte) uint64`. The SDK adapter supports up to 16 incoming
+accounts in SDK 1 and [32 in SDK 2](docs/ACCOUNT_DECODER32.md);
 legacy ABI requires one owned writable 24-byte state and a 16-byte instruction.
 Only the original experiment additionally tests v0 (`SBF_ARCH=v0 make verify`).
 
 Supported: `uint8`/`byte`, `uint32`, `uint64`, `bool`, byte slices, constants, local
-zero values, direct functions with at most one result, indexing, `len`, unsigned
+zero values, direct functions with unnamed results, indexing, `len`, unsigned
 arithmetic/conversions, comparisons, `if`, conditional/three-clause `for`, unlabeled
-`break`, single `=`/`:=`, and variable `++`/`--`. Context is opaque in SBF: it can
+`break`/`continue`, single or multiple `=`/`:=`, expression `switch`, and variable
+`++`/`--`. See [return/assignment/control semantics](docs/GO_CONTROL.md). Context is opaque in SBF: it can
 be passed/copied, but not constructed, zero-initialized or accessed through fields.
 Native tests can construct it with callbacks.
 
 Also supported: named unsigned scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
-and returns. Struct fields are unsigned scalars, bools, or other value structs.
+and returns. Struct fields are unsigned scalars, bools, scalar arrays, or other value structs.
 Struct comparisons/conversions, embedding, aliases, and build constraints are
 rejected explicitly. Wire layout is generated independently of C or Go layout.
 
-Unsupported: other imports, arrays, pointers, signed variables
-and arithmetic, globals, `init`, allocation, append/slicing, interfaces, maps,
-strings, generics, closures/function values, recursion, multiple results/assignment,
-`range`, `continue`, `switch`, `defer`, goroutines and channels. Runtime bounds and
+Fixed-size scalar arrays, including named `[32]byte` key types, now support value
+copies, literals, indexed reads/writes, equality, `len`/`cap` and matching-underlying
+array conversions. Each array value is limited to 1,024 bytes. Nested arrays,
+struct elements and non-byte views remain unsupported; schema-1 generated codecs
+remain flat unsigned fields; schema 2 adds packed scalar-array codecs. See [semantics and validation](docs/GO_ARRAYS.md).
+
+Named, module-aware user imports now support shared types, constants, codecs and
+pure functions, including transitive packages and local replacements. Resolution
+is offline; imported on-chain packages must satisfy the same subset. A separate
+native service can use ordinary Go facilities outside that graph. See
+[shared-package semantics and validation](docs/GO_PACKAGES.md).
+
+Value/pointer methods and constrained pointers now support caller-owned scalar,
+struct and array storage, mutable aliases, returned caller borrows, direct method
+calls and method expressions. Local/block escapes, pointer fields/elements,
+pointers-to-pointers, named pointer types and method values are rejected. See
+[borrowing and verified semantics](docs/GO_POINTERS.md). Increment/decrement also
+supports fields, dereferences and indexed elements.
+
+Borrowed byte views now support two/three-index slicing, reslicing within
+capacity, slice len/cap and nil comparisons, caller-borrowing results and alias
+updates. SDK buffers have capacity equal to their supplied lengths. Local/block
+escapes are rejected; no allocation or append is provided. See
+[view semantics and SBF evidence](docs/GO_VIEWS.md).
+
+Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables
+and arithmetic, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
+strings, generics, closures/function values, recursion, named results, variadics,
+`range`, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds and
 division failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 
-Before supporting the project: reusable packages, richer data types, a larger real
+Before supporting the project: shared-package distribution, richer data types, a larger real
 protocol, semantic fuzzing and stack diagnostics, initialization/custody review,
 packaging, and explicit cluster/toolchain compatibility. To improve larger-build
 speed, investigate a smaller LLVM pass pipeline or incremental compilation while
