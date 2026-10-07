@@ -196,7 +196,9 @@ been requested or made.
 
 ## Read these first
 
-1. [Root README](README.md): setup, subset, architecture, original measurements.
+1. [Root README](README.md): public introduction and quickstart.
+   [Development reference](docs/DEVELOPMENT.md): detailed setup, subset,
+   architecture, reproduction, and historical measurements.
 2. [Latest Anchor results](results/anchor/README.md) and
    [methodology](benchmarks/anchor/README.md): the most recent completed work.
 3. [Installation polish](results/polish/README.md): current installer and workflow.
