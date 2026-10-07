@@ -22,13 +22,17 @@ func hostProgram(t *testing.T, source, driver string) string {
 }
 func hostSources(t *testing.T, sources []Source, driver string) string {
 	t.Helper()
-	cc, err := exec.LookPath("clang")
-	if err != nil {
-		t.Skip("host Clang is needed for differential compiler tests")
-	}
 	c, err := CompileSources(sources)
 	if err != nil {
 		t.Fatal(err)
+	}
+	return hostGenerated(t, c, driver)
+}
+func hostGenerated(t *testing.T, c []byte, driver string) string {
+	t.Helper()
+	cc, err := exec.LookPath("clang")
+	if err != nil {
+		t.Skip("host Clang is needed for differential compiler tests")
 	}
 	dir := t.TempDir()
 	file := filepath.Join(dir, "test.c")
@@ -87,8 +91,8 @@ func TestRejectUnsupported(t *testing.T) {
 		"init":               `func init(){};func Process(s,i []byte) uint64{return 0}`,
 		"bodyless":           `func f();func Process(s,i []byte) uint64{return 0}`,
 		"bad-entry":          `func Process(s []byte) uint64{return 0}`,
-		"continue":           `func Process(s,i []byte) uint64 {for j:=uint64(0);j<3;j++ {continue};return 0}`,
-		"multi-assign":       `func Process(s,i []byte) uint64 {a,b:=uint64(1),uint64(2);return a+b}`,
+		"labeled-continue":   `func Process(s,i []byte) uint64 {L:for j:=uint64(0);j<3;j++ {continue L};return 0}`,
+		"named-result":       `func f()(a,b uint64){return 1,2};func Process(s,i []byte)uint64{a,b:=f();return a+b}`,
 		"function-value":     `func f()uint64{return 1};func Process(s,i []byte) uint64 {f2:=f;return f2()}`,
 		"context-zero":       `import "gosvm/solana";func Process(c solana.Context)uint64 {var d solana.Context;return solana.Count(d)}`,
 		"context-literal":    `import "gosvm/solana";func Process(c solana.Context)uint64 {d:=solana.Context{};return solana.Count(d)}`,

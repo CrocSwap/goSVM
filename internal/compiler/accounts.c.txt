@@ -5,7 +5,7 @@
 u64 entrypoint(u8 *input) {
     Context c;
     c.count=sol_read64(input);
-    if(c.count>16) return 1001;
+    if(c.count>GOSVM_MAX_ACCOUNTS) return 1001;
     u8 *p=input+8;
     for(u64 i=0;i<c.count;i++) {
         if(p[0]!=255) {
@@ -21,12 +21,17 @@ u64 entrypoint(u8 *input) {
             a->key=p+8;a->owner=p+40;a->lamports=(u64 *)(p+72);
             a->data_len=sol_read64(p+80);a->data=p+88;
             if(a->data_len>10485760) return 1003;
+#ifdef GOSVM_SDK2
+            // Mirror the pinned SDK: original length occupies the padding
+            // immediately before the key and survives resize/CPI changes.
+            for(u64 j=0;j<4;j++) p[4+j]=(u8)(a->data_len>>(j*8));
+#endif
             p=a->data+a->data_len+10240;
             p=(u8 *)(((u64)p+7)&~7ULL);
             a->rent_epoch=sol_read64(p);p+=8;
         }
     }
     u64 n=sol_read64(p);if(n>10240) return 1004;
-    c.instruction=(slice){p+8,n};c.program=(slice){p+8+n,32};
+    c.instruction=GOSVM_SLICE(p+8,n);c.program=GOSVM_SLICE(p+8+n,32);
     return go_Process(&c);
 }

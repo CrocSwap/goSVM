@@ -17,7 +17,20 @@ var solanaRuntime string
 //go:embed accounts.c.txt
 var accountsABI string
 
-type sdkImporter struct{ pkg *types.Package }
+//go:embed cpi.c.txt
+var cpiRuntime string
+
+func sdkSource(version int) string {
+	if version == 1 {
+		return solana.LegacySource
+	}
+	return solana.Source
+}
+
+type sdkImporter struct {
+	pkg     *types.Package
+	version int
+}
 
 func (s *sdkImporter) Import(path string) (*types.Package, error) {
 	if path != "gosvm/solana" {
@@ -27,7 +40,7 @@ func (s *sdkImporter) Import(path string) (*types.Package, error) {
 		return s.pkg, nil
 	}
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, "solana/api.go", solana.Source, 0)
+	f, err := parser.ParseFile(fset, "solana/api.go", sdkSource(s.version), 0)
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +58,7 @@ func (g *generator) importedCall(call *ast.CallExpr, selector *ast.SelectorExpr)
 	if !ok || fn.Pkg() == nil || fn.Pkg().Path() != "gosvm/solana" {
 		g.fail(call, "only gosvm/solana direct calls are supported")
 	}
-	args := []string{}
-	for _, arg := range call.Args {
-		args = append(args, g.expr(arg))
-	}
+	args := g.callValues(call)
 	return g.temp(call, g.info.Types[call].Type, "sol_"+fn.Name()+"("+joinArgs(args)+")")
 }
 

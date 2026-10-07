@@ -6,3 +6,8 @@ import _ "embed"
 //
 //go:embed api.go
 var Source string
+
+// LegacySource preserves the exact schema-1/SDK-1 snapshot.
+//
+//go:embed api-v1.go.txt
+var LegacySource string

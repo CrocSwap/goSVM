@@ -23,7 +23,7 @@ func TestBuildReceiptInvalidation(t *testing.T) {
 		mustWrite(filepath.Join(llvm, "bin", name), "tool")
 	}
 	source, output := filepath.Join(dir, "input.go"), filepath.Join(dir, "program.so")
-	mustWrite(source, "source")
+	mustWrite(source, "package p; const Value uint64 = 1")
 	mustWrite(output, "ELF")
 	key, err := buildKey(source, llvm, "v3")
 	if err != nil {
@@ -43,7 +43,7 @@ func TestBuildReceiptInvalidation(t *testing.T) {
 		t.Fatal("accepted corrupted output")
 	}
 	mustWrite(output, "ELF")
-	mustWrite(source, "edited")
+	mustWrite(source, "package p; const Value uint64 = 2")
 	changed, err := buildKey(source, llvm, "v3")
 	if err != nil {
 		t.Fatal(err)
@@ -51,7 +51,7 @@ func TestBuildReceiptInvalidation(t *testing.T) {
 	if changed == key || cacheHit(output, changed) {
 		t.Fatal("accepted edited source")
 	}
-	mustWrite(source, "source")
+	mustWrite(source, "package p; const Value uint64 = 1")
 	v0, err := buildKey(source, llvm, "v0")
 	if err != nil || v0 == key {
 		t.Fatal("target not in cache key", err)

@@ -37,7 +37,7 @@ type Config struct {
 	SDKHash       string `json:"sdk_sha256"`
 }
 
-func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.Source))) }
+func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.LegacySource))) }
 
 var nameRE = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 var identRE = regexp.MustCompile(`^[A-Z][A-Za-z0-9]*$`)
@@ -71,7 +71,7 @@ func Load(dir string) (Config, error) {
 	if e != nil {
 		return c, e
 	}
-	if c.SDKHash != sdkHash() || !bytes.Equal(b, []byte(solana.Source)) {
+	if c.SDKHash != sdkHash() || !bytes.Equal(b, []byte(solana.LegacySource)) {
 		return c, fmt.Errorf("project SDK differs from this compiler; recreate with a matching compiler before building")
 	}
 	sdkDir := filepath.Join(dir, ".gosvm/sdk/solana")
@@ -148,7 +148,7 @@ func NewModule(path, module string) error {
 			return e
 		}
 	}
-	files := map[string][]byte{"go.mod": []byte("module " + c.Module + "\n\ngo 1.22\n\nrequire gosvm v0.0.0\n\nreplace gosvm => ./.gosvm/sdk\n"), ".gosvm/sdk/go.mod": []byte("module gosvm\n\ngo 1.22\n"), ".gosvm/sdk/solana/api.go": []byte(solana.Source), ".gitignore": []byte("/build/\n")}
+	files := map[string][]byte{"go.mod": []byte("module " + c.Module + "\n\ngo 1.22\n\nrequire gosvm v0.0.0\n\nreplace gosvm => ./.gosvm/sdk\n"), ".gosvm/sdk/go.mod": []byte("module gosvm\n\ngo 1.22\n"), ".gosvm/sdk/solana/api.go": []byte(solana.LegacySource), ".gitignore": []byte("/build/\n")}
 	config, _ := json.MarshalIndent(c, "", "  ")
 	files["gosvm.json"] = append(config, '\n')
 	for p, b := range files {

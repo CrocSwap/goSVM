@@ -1,0 +1,137 @@
+// Runtime copies these bytes synchronously; empty payload clears return data.
+#ifdef GOSVM_SBF_V3
+#define gosvm_set_return_data ((void (*)(const u8 *,u64))0xa226d3ebULL)
+#else
+extern void sol_set_return_data(const u8 *,u64);
+#define gosvm_set_return_data sol_set_return_data
+#endif
+static u64 sol_SetReturnData(Context *c,slice data) {
+    if(data.len>1024) return 2017;
+    gosvm_set_return_data(data.ptr,(u64)data.len);return 0;
+}
+
+// SDK 2 extends the boundary without changing the SDK-1 runtime or snapshots.
+static u64 sol_Lamports(Context *c,u64 i) {return *sol_account(c,i)->lamports;}
+
+// Signed Clock timestamps cross the boundary as two's-complement word bits.
+typedef struct {u64 words[5];} GosvmClock;
+_Static_assert(sizeof(GosvmClock)==40,"clock syscall ABI");
+#ifdef GOSVM_SBF_V3
+#define gosvm_get_clock ((u64 (*)(GosvmClock *))0xd56b5fe9ULL)
+#else
+extern u64 sol_get_clock_sysvar(GosvmClock *);
+#define gosvm_get_clock sol_get_clock_sysvar
+#endif
+static u64 sol_Clock(Context *c,slice output) {
+    if(output.len!=40) return 2016;
+    GosvmClock clock;u64 code=gosvm_get_clock(&clock);if(code) return code;
+    for(u64 i=0;i<5;i++) for(u64 j=0;j<8;j++) output.ptr[i*8+j]=(u8)(clock.words[i]>>(j*8));
+    return 0;
+}
+
+typedef struct {u64 rate,threshold_bits;u8 burn;} GosvmRent;
+_Static_assert(sizeof(GosvmRent)==24,"rent syscall ABI");
+#ifdef GOSVM_SBF_V3
+#define gosvm_get_rent ((u64 (*)(GosvmRent *))0xbf7188f6ULL)
+#else
+extern u64 sol_get_rent_sysvar(GosvmRent *);
+#define gosvm_get_rent sol_get_rent_sysvar
+#endif
+static u64 sol_Rent(Context *c,slice output) {
+    if(output.len!=17) return 2015;
+    GosvmRent rent;u64 code=gosvm_get_rent(&rent);if(code) return code;
+    for(u64 j=0;j<8;j++) {output.ptr[j]=(u8)(rent.rate>>(j*8));output.ptr[8+j]=(u8)(rent.threshold_bits>>(j*8));}
+    output.ptr[16]=rent.burn;return 0;
+}
+
+static u64 sol_owned_writable(Context *c,u64 index) {
+    if(index>=c->count) return 2005;
+    AccountInfo *a=&c->accounts[index];if(!a->writable || a->executable) return 2011;
+    if(c->program.len!=32) return 2012;
+    for(u64 j=0;j<32;j++) if(a->owner[j]!=c->program.ptr[j]) return 2012;
+    return 0;
+}
+static u64 sol_original_len(AccountInfo *a) {
+    u64 n=0;for(u64 j=0;j<4;j++) n|=(u64)(a->key-4)[j]<<(j*8);return n;
+}
+static void sol_set_data_len(Context *c,AccountInfo *a,u64 n) {
+    for(u64 j=0;j<8;j++) (a->data-8)[j]=(u8)(n>>(j*8));
+    for(u64 j=0;j<c->count;j++) if(c->accounts[j].data==a->data) c->accounts[j].data_len=n;
+}
+static u64 sol_ResizeAccount(Context *c,u64 index,u64 n) {
+    u64 code=sol_owned_writable(c,index);if(code) return code;
+    AccountInfo *a=&c->accounts[index];u64 original=sol_original_len(a);
+    if(original>10485760 || n>10485760 || n>original+10240) return 2010;
+    for(u64 j=a->data_len;j<n;j++) a->data[j]=0;
+    sol_set_data_len(c,a,n);return 0;
+}
+static u64 sol_CloseAccount(Context *c,u64 index,u64 destination) {
+    u64 code=sol_owned_writable(c,index);if(code) return code;
+    if(destination>=c->count) return 2005;
+    AccountInfo *a=&c->accounts[index],*b=&c->accounts[destination];
+    if(!b->writable || b->executable) return 2011;
+    boolean same=1;for(u64 j=0;j<32;j++) if(a->key[j]!=b->key[j]) same=0;
+    if(same) return 2013;
+    if(*a->lamports>~0ULL-*b->lamports) return 2014;
+    if(sol_original_len(a)>10485760) return 2010;
+    *b->lamports+=*a->lamports;*a->lamports=0;
+    sol_set_data_len(c,a,0);for(u64 j=0;j<32;j++) a->owner[j]=0;
+    return 0;
+}
+
+// Decode one length-prefixed seed group. Buffer cursors are checked before
+// reading lengths or payloads; syscall descriptors borrow the invocation buffer.
+static boolean sol_seed_group(slice b,u64 *offset,Seed *out,u64 *count) {
+    if(*offset>=(u64)b.len) return 0;
+    *count=b.ptr[(*offset)++];if(*count>16) return 0;
+    for(u64 j=0;j<*count;j++) {
+        if(*offset>=(u64)b.len) return 0;
+        u64 n=b.ptr[(*offset)++];if(n>32 || n>(u64)b.len-*offset) return 0;
+        out[j]=(Seed){b.ptr+*offset,n};*offset+=n;
+    }
+    return 1;
+}
+
+static u64 sol_CreateAddress(Context *c,slice b,slice program,slice output) {
+    if(program.len!=32 || output.len!=32 || b.len>529) return 2007;
+    Seed seeds[16];u64 off=0,count=0;
+    if(!sol_seed_group(b,&off,seeds,&count) || off!=(u64)b.len) return 2007;
+    u8 address[32];u64 code=sol_create_pda(seeds,count,program.ptr,address);
+    if(code) return code;
+    for(u64 j=0;j<32;j++) output.ptr[j]=address[j];
+    return 0;
+}
+
+static u64 sol_Invoke(Context *c,u64 program,slice metas,slice data,slice encoded) {
+    if(program>=c->count) return 2005;
+    AccountInfo *p=&c->accounts[program];if(!p->executable) return 2001;
+    // Slice lengths are nonnegative. Use unsigned remainder: legacy SBF has no
+    // signed-remainder instruction and otherwise emits an unrelated __moddi3.
+    if((u64)metas.len>16*9 || (u64)metas.len%9) return 2006;
+    AccountMeta accounts[16];u64 n=(u64)metas.len/9;
+    for(u64 j=0;j<n;j++) {
+        u64 index=sol_read64(metas.ptr+j*9);u8 flags=metas.ptr[j*9+8];
+        if(index>=c->count || flags>3) return 2006;
+        accounts[j]=(AccountMeta){c->accounts[index].key,(flags&1)!=0,(flags&2)!=0};
+    }
+    if(data.len>10240) return 2008;
+    Seed parts[32];Seeds groups[2];u64 group_count=0,offset=0;
+    if(encoded.len) {
+        if(encoded.len>1024) return 2007;
+        group_count=encoded.ptr[offset++];if(group_count>2) return 2007;
+        for(u64 j=0;j<group_count;j++) {
+            u64 count=0;
+            if(!sol_seed_group(encoded,&offset,parts+j*16,&count)) return 2007;
+            groups[j]=(Seeds){parts+j*16,count};
+        }
+        if(offset!=(u64)encoded.len) return 2007;
+    }
+    Instruction ix={p->key,accounts,n,data.ptr,(u64)data.len};
+    u64 code=sol_invoke_c(&ix,c->accounts,c->count,groups,group_count);
+    if(!code) {
+        // The serialized length word is shared by duplicate account descriptors.
+        // Refresh every descriptor after CPI; future Data reads see current size.
+        for(u64 j=0;j<c->count;j++) c->accounts[j].data_len=sol_read64(c->accounts[j].data-8);
+    }
+    return code;
+}

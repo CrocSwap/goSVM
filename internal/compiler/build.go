@@ -17,8 +17,15 @@ var linkerScript []byte
 //go:embed sbf-v3.ld
 var linkerScriptV3 []byte
 
-// Build invokes only Clang and LLD, with no Cargo, runtime, or external Go modules.
+// Build loads the restricted import graph and invokes Clang/LLD, with no Go runtime or Cargo.
 func Build(source, output, llvm, arch string) error {
+	program, err := ReadProgram(source)
+	if err != nil {
+		return err
+	}
+	return buildProgram(program, output, llvm, arch)
+}
+func buildProgram(program *Program, output, llvm, arch string) error {
 	cpu, script := "generic", linkerScript
 	switch arch {
 	case "v0":
@@ -27,11 +34,7 @@ func Build(source, output, llvm, arch string) error {
 	default:
 		return fmt.Errorf("unsupported SBF target %q", arch)
 	}
-	input, err := ReadSources(source)
-	if err != nil {
-		return err
-	}
-	c, err := CompileSources(input)
+	c, err := CompileProgram(program)
 	if err != nil {
 		return err
 	}
@@ -56,11 +59,44 @@ func Build(source, output, llvm, arch string) error {
 		steps[0] = append(steps[0], "-DGOSVM_SBF_V3=1")
 		steps[1] = append(steps[1], "--no-undefined")
 	}
-	for _, args := range steps {
+	run := func(args []string) error {
 		out, err := exec.Command(args[0], args[1:]...).CombinedOutput()
 		if err != nil {
 			return fmt.Errorf("%s: %w\n%s", args[0], err, out)
 		}
+		return nil
+	}
+	if err = run(steps[0]); err != nil {
+		return err
+	}
+	if arch == "v0" {
+		names, inspectErr := undefinedSymbols(filepath.Join(dir, "program.o"), false)
+		if inspectErr != nil {
+			return fmt.Errorf("inspect compiler helpers: %w", inspectErr)
+		}
+		for _, name := range names {
+			if name != "__multi3" {
+				continue
+			}
+			helper := filepath.Join(dir, "builtins.c")
+			object := filepath.Join(dir, "builtins.o")
+			if err = os.WriteFile(helper, compilerBuiltins, 0644); err != nil {
+				return err
+			}
+			args := append([]string(nil), steps[0]...)
+			args[len(args)-3], args[len(args)-1] = helper, object
+			if err = run(args); err != nil {
+				return err
+			}
+			steps[1] = append(steps[1], object)
+			break
+		}
+	}
+	if err = run(steps[1]); err != nil {
+		return err
+	}
+	if err = validateSBFImports(filepath.Join(dir, "program.so"), arch); err != nil {
+		return err
 	}
 	data, err := os.ReadFile(filepath.Join(dir, "program.so"))
 	if err != nil {

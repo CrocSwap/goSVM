@@ -1,0 +1,17 @@
+// Freestanding LLVM libcall for legacy SBF. Both operands and the result are
+// modulo 2^128; all arithmetic below is unsigned. Clang's SBF ABI passes the
+// result pointer followed by low/high words of each operand. No wide multiply,
+// allocation, libc dependency, or recursive compiler libcall is used here.
+typedef unsigned long long gosvm_builtin_u64;
+typedef unsigned __int128 gosvm_builtin_u128;
+__attribute__((visibility("hidden")))
+gosvm_builtin_u128 __multi3(gosvm_builtin_u128 a, gosvm_builtin_u128 b) {
+    gosvm_builtin_u64 al=(gosvm_builtin_u64)a, ah=(gosvm_builtin_u64)(a>>64);
+    gosvm_builtin_u64 bl=(gosvm_builtin_u64)b, bh=(gosvm_builtin_u64)(b>>64);
+    gosvm_builtin_u64 a0=(unsigned int)al,a1=al>>32,b0=(unsigned int)bl,b1=bl>>32;
+    gosvm_builtin_u64 w0=a0*b0,t=a1*b0+(w0>>32),w1=(unsigned int)t,w2=t>>32;
+    w1+=a0*b1;
+    gosvm_builtin_u64 lo=(w1<<32)+(unsigned int)w0;
+    gosvm_builtin_u64 hi=a1*b1+w2+(w1>>32)+al*bh+ah*bl;
+    return ((gosvm_builtin_u128)hi<<64)|lo;
+}

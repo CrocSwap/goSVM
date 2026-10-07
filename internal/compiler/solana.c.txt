@@ -5,7 +5,12 @@ typedef struct {
     u8 *key; u64 *lamports; u64 data_len; u8 *data; u8 *owner;
     u64 rent_epoch; boolean signer, writable, executable;
 } AccountInfo;
-typedef struct { AccountInfo accounts[16]; u64 count; slice instruction, program; } Context;
+#ifdef GOSVM_SDK2
+#define GOSVM_MAX_ACCOUNTS 32
+#else
+#define GOSVM_MAX_ACCOUNTS 16
+#endif
+typedef struct { AccountInfo accounts[GOSVM_MAX_ACCOUNTS]; u64 count; slice instruction, program; } Context;
 typedef struct { u8 *key; boolean writable, signer; } AccountMeta;
 typedef struct { u8 *program; AccountMeta *metas; u64 count; u8 *data; u64 len; } Instruction;
 typedef struct { u8 *ptr; u64 len; } Seed;
@@ -16,9 +21,9 @@ _Static_assert(sizeof(Instruction)==40, "C instruction ABI");
 static u64 sol_read64(const u8 *p) {u64 v=0;for(u64 i=0;i<8;i++) v|=(u64)p[i]<<(i*8);return v;}
 static AccountInfo *sol_account(Context *c,u64 i) {if(i>=c->count) abort();return &c->accounts[i];}
 static u64 sol_Count(Context *c) {return c->count;}
-static slice sol_Data(Context *c,u64 i) {AccountInfo *a=sol_account(c,i);return (slice){a->data,a->data_len};}
-static slice sol_Key(Context *c,u64 i) {return (slice){sol_account(c,i)->key,32};}
-static slice sol_Owner(Context *c,u64 i) {return (slice){sol_account(c,i)->owner,32};}
+static slice sol_Data(Context *c,u64 i) {AccountInfo *a=sol_account(c,i);return GOSVM_SLICE(a->data,a->data_len);}
+static slice sol_Key(Context *c,u64 i) {return GOSVM_SLICE(sol_account(c,i)->key,32);}
+static slice sol_Owner(Context *c,u64 i) {return GOSVM_SLICE(sol_account(c,i)->owner,32);}
 static boolean sol_Signer(Context *c,u64 i) {return sol_account(c,i)->signer;}
 static boolean sol_Writable(Context *c,u64 i) {return sol_account(c,i)->writable;}
 static boolean sol_Executable(Context *c,u64 i) {return sol_account(c,i)->executable;}
@@ -44,7 +49,7 @@ extern u64 sol_sha256(Seed *,u64,u8 *);
 #endif
 static __attribute__((always_inline)) inline u64 sol_SHA256(Context *c,slice input,u64 offset,u64 length,slice output,u64 out_offset) {
     if(offset>input.len || length>input.len-offset || out_offset>output.len || output.len-out_offset<32) return 2003;
-    Seed data={input.ptr+offset,length};
+    Seed data={input.ptr ? input.ptr+offset : 0,length};
     return sol_hash(&data,1,output.ptr+out_offset);
 }
 static boolean sol_IsPDA(Context *c,u64 i,slice seed,u8 bump) {
@@ -70,7 +75,7 @@ static __attribute__((always_inline)) inline u64 sol_transfer(
     return sol_invoke_c(&ix,c->accounts,c->count,&seeds,signed_pda?1:0);
 }
 static __attribute__((always_inline)) inline u64 sol_Transfer(Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount) {
-    return sol_transfer(c,program,source,destination,authority,amount,(slice){0,0},0,0);
+    return sol_transfer(c,program,source,destination,authority,amount,GOSVM_SLICE(0,0),0,0);
 }
 static __attribute__((always_inline)) inline u64 sol_TransferSigned(Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount,slice seed,u8 bump) {
     return sol_transfer(c,program,source,destination,authority,amount,seed,bump,1);

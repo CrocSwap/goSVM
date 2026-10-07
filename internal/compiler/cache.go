@@ -14,7 +14,11 @@ import (
 // timestamp-based build system). Use an uncached build after deliberately
 // replacing a tool while preserving its size and modification timestamp.
 func BuildCached(source, output, llvm, arch string) error {
-	key, err := buildKey(source, llvm, arch)
+	program, err := ReadProgram(source)
+	if err != nil {
+		return err
+	}
+	key, err := buildProgramKey(program, llvm, arch)
 	if err != nil {
 		return err
 	}
@@ -33,7 +37,7 @@ func BuildCached(source, output, llvm, arch string) error {
 		return err
 	}
 	defer os.Remove(temp)
-	if err = Build(source, temp, llvm, arch); err != nil {
+	if err = buildProgram(program, temp, llvm, arch); err != nil {
 		return err
 	}
 	// Hash our own output before publishing it. Concurrent builds may leave a
@@ -68,18 +72,28 @@ func fileHash(path string) (string, error) {
 }
 
 func buildKey(source, llvm, arch string) (string, error) {
+	program, err := ReadProgram(source)
+	if err != nil {
+		return "", err
+	}
+	return buildProgramKey(program, llvm, arch)
+}
+func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	compiler, err := os.Executable()
 	if err != nil {
 		return "", err
 	}
 	h := sha256.New()
-	fmt.Fprintf(h, "gosvm-receipt-v2\x00%s\x00", arch)
-	sources, err := ReadSources(source)
-	if err != nil {
-		return "", err
+	fmt.Fprintf(h, "gosvm-receipt-v3\x00%s\x00%s\x00", arch, program.Entry)
+	fmt.Fprintf(h, "sdk:%d\x00%x\n", program.SDK, sha256.Sum256([]byte(sdkSource(program.SDK))))
+	for _, unit := range program.Packages {
+		fmt.Fprintf(h, "package:%s\x00", unit.Path)
+		for _, src := range unit.Sources {
+			fmt.Fprintf(h, "%s\x00%x\n", filepath.Base(src.Name), sha256.Sum256(src.Data))
+		}
 	}
-	for _, src := range sources {
-		fmt.Fprintf(h, "%s\x00%x\n", filepath.Base(src.Name), sha256.Sum256(src.Data))
+	for _, src := range program.Metadata {
+		fmt.Fprintf(h, "module:%s\x00%x\n", src.Name, sha256.Sum256(src.Data))
 	}
 	for _, path := range []string{compiler} {
 		s, err := fileHash(path)

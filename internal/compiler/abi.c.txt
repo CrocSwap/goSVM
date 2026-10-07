@@ -17,6 +17,6 @@ u64 entrypoint(u8 *input) {
     if (instruction_size != 16) return 13;
     u8 *program_id = tail + 8 + instruction_size;
     for (u64 i=0;i<32;i++) if (input[48+i] != program_id[i]) return 14;
-    return go_Process((slice){input+96,24}, (slice){tail+8,16});
+    return go_Process(GOSVM_SLICE(input+96,24), GOSVM_SLICE(tail+8,16));
 }
 #endif
