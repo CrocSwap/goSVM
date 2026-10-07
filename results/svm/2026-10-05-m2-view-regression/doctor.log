@@ -1,6 +1,0 @@
-go version go1.22.0 darwin/arm64
-MISSING solana-test-validator (only needed for test --sbf)
-OK optional SVM runner: /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-view-regression/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner (gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch))
-OK LLVM 19.1.7: /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-view-regression/cache/toolchains/v1.51/darwin-arm64/llvm
-OK project manifest and SDK snapshot
-OK managed backend content hashes

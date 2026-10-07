@@ -1,4 +1,0 @@
-[2026-10-04T22:48:07.768402000Z WARN  cargo_build_sbf] Package 'protocol-bench' has two crate types defined: cdylib and lib. This setting precludes link-time optimizations (LTO). Use cdylib for programs to be deployed and rlib for packages to be imported by other programs as libraries.
-   Compiling protocol-bench v0.1.0 (/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/protocol/rust)
-      Timing report saved to /Users/colkitt/sith/toys/crypto/goSVM/build/protocol/sbf-target/cargo-timings/cargo-timing-20261004T224808Z.html
-    Finished `release` profile [optimized] target(s) in 5.50s

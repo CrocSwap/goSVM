@@ -1,2 +1,0 @@
-Built /Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/generated_swap_only/build/program.so (21536 bytes, 456ms)
-gosvm timings: {"schema":1,"command":"build","passed":true,"phase_seconds":{"backend_check":0.02141775,"generation":0.148625583,"manifest":0.001439,"sbf_build":0.28444},"total_seconds":0.456393667}

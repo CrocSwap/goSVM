@@ -1,3 +1,0 @@
-go: errors parsing go.mod:
-go.mod:5: usage: require module/path v1.2.3
-go.mod:6:2: unknown directive: gosvm

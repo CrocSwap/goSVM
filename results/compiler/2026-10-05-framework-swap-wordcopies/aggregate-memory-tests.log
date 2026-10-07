@@ -1,8 +1,0 @@
-=== RUN   TestSDK2InvokeBoundaryDifferential
---- PASS: TestSDK2InvokeBoundaryDifferential (0.40s)
-=== RUN   TestSDK2AggregateMemory
---- PASS: TestSDK2AggregateMemory (0.41s)
-=== RUN   TestSDK2ArrayValueSemantics
---- PASS: TestSDK2ArrayValueSemantics (0.41s)
-PASS
-ok  	gosvm/internal/compiler	1.246s

@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk1
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk1" && gosvm check && go test ./... && gosvm build

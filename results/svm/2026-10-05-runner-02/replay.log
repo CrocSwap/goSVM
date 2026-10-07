@@ -1,7 +1,0 @@
-PASS sample 1/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 2/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 3/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 4/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 5/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 6/7: all response bytes/state/CU/error/log assertions agree
-PASS sample 7/7: all response bytes/state/CU/error/log assertions agree

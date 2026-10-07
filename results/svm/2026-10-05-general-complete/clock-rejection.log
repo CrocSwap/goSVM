@@ -1,1 +1,0 @@
-gosvm: SVM protocol: {"message":"require exactly these fields: slot, epoch_start_timestamp, epoch, leader_schedule_epoch, unix_timestamp"}

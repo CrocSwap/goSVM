@@ -1,8 +1,0 @@
-Testing 7 compiled SBF scenarios with LiteSVM...
-PASS general-transfer step 1              6357 CU
-PASS compact-transfer step 1              4019 CU
-PASS compact-rollback step 1              4016 CU
-PASS general-bad-bump step 1              6175 CU
-PASS compact-bad-bump step 1              3830 CU
-PASS general-readonly-source step 1       6176 CU
-PASS compact-readonly-source step 1       3831 CU

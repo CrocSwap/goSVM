@@ -1,7 +1,0 @@
-Usage of gosvm build:
-  -dir string
-    	project directory (default ".")
-  -llvm string
-    	platform-tools/llvm directory (default "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm")
-  -no-cache
-    	force LLVM rebuild

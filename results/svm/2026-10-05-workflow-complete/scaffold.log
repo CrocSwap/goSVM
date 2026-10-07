@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/starter
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/starter" && gosvm check && go test ./... && gosvm build

@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/schema2/2026-10-05-schema2-prototype/multi-state
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/schema2/2026-10-05-schema2-prototype/multi-state" && gosvm check && go test ./... && gosvm build

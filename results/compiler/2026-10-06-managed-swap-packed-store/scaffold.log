@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/managed-swap/2026-10-06-managed-swap-packed-store/full-swap
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/managed-swap/2026-10-06-managed-swap-packed-store/full-swap" && gosvm check && go test ./... && gosvm build

@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-import-regression/starter
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-import-regression/starter" && gosvm check && go test ./... && gosvm build

@@ -253,6 +253,15 @@ removes those caches while retaining linked binaries, source/SDK snapshots,
 `results/`, the current Go cache and the latest M1 acceptance toolchain. The
 next Rust build or old acceptance rerun may rebuild or reinstall its caches.
 
+Heavy historical experiment outputs under `results/` are local artifacts rather
+than tracked source. Archives, compiled tools, dumps, logs and raw execution
+reports remain on disk; their checksums and derived CU/error tables are recorded
+in the [artifact tracking inventory](results/maintenance/2026-10-06-artifact-untracking/README.md).
+Small fixtures, summaries, source snapshots and reproduction scripts remain in
+Git. Older reports may link to local-only files; full historical reproduction
+requires restoring those artifacts. This tracking cleanup does not rewrite Git
+history, delete evidence or affect required vendored LiteSVM program assets.
+
 For a complete reset, `python3 scripts/clean_build.py --deep` previews removal
 of all `build/` contents. `make clean-deep` first saves and verifies a compressed,
 deduplicated archive of non-cache source/artifact snapshots under a new

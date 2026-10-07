@@ -1,4 +1,0 @@
-Testing 12 compiled SBF scenarios with LiteSVM...
-PASS actual-clock-reward-sequence step 1  955 CU
-gosvm: actual-clock-reward-sequence step 2 simulation: transaction error "AlreadyProcessed"; expected null
-

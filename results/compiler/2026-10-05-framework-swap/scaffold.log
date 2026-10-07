@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/framework-swap/2026-10-05-framework-swap/full-swap
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/framework-swap/2026-10-05-framework-swap/full-swap" && gosvm check && go test ./... && gosvm build

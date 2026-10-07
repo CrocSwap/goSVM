@@ -1,4 +1,0 @@
-?   	example.org/gosvm/escrow/client	[no test files]
-?   	example.org/gosvm/escrow/model	[no test files]
-ok  	example.org/gosvm/escrow	0.005s
-gosvm timings: {"schema":1,"command":"test","passed":true,"phase_seconds":{"generation":0.141139334,"manifest":0.000708333,"native_tests":0.145388042},"total_seconds":0.287384833}

@@ -1,2 +1,0 @@
-Created /var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap
-Next: cd /var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm-ergonomics-druzm5p6/typed-swap && gosvm check && go test ./... && gosvm build

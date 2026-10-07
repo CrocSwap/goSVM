@@ -1,3 +1,0 @@
-?   	example.com/typed-swap/client	[no test files]
-ok  	example.com/typed-swap	0.005s
-gosvm timings: {"schema":1,"command":"test","passed":true,"phase_seconds":{"generation":0.005612375,"manifest":0.0015545,"native_tests":0.563358958},"total_seconds":0.57116975}

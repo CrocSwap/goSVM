@@ -1,4 +1,0 @@
-?   	example.org/gosvm/full-swap/client	[no test files]
-ok  	example.org/gosvm/full-swap	0.005s
-ok  	example.org/gosvm/full-swap/model	0.044s
-gosvm timings: {"schema":1,"command":"test","passed":true,"phase_seconds":{"generation":0.181903708,"manifest":0.00094625,"native_tests":0.18843375},"total_seconds":0.371498958}

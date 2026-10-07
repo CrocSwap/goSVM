@@ -1,2 +1,0 @@
-Created /Users/colkitt/sith/toys/crypto/goSVM/build/escrow/2026-10-05-escrow/escrow
-Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/escrow/2026-10-05-escrow/escrow" && gosvm check && go test ./... && gosvm build

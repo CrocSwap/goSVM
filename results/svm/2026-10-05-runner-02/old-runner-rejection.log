@@ -1,6 +1,0 @@
-?   	example.com/typed-swap/client	[no test files]
-ok  	example.com/typed-swap	(cached)
-Built /Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap/build/program.so (3216 bytes, 1.209s)
-Testing 14 compiled SBF fixtures with LiteSVM...
-gosvm: require gosvm-svm-runner 0.2.0 (LiteSVM 0.8.2); found gosvm-svm-runner 0.1.0 (LiteSVM 0.8.2)
-

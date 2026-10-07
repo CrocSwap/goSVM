@@ -1,7 +1,0 @@
-?   	example.com/milestone1/acceptance/client	[no test files]
-ok  	example.com/milestone1/acceptance	0.005s
-Built /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m1-acceptance-final/starter/build/program.so (3216 bytes, 165ms)
-Testing 3 compiled SBF scenarios with LiteSVM...
-PASS swap step 1                          486 CU
-PASS zero amount step 1                   262 CU
-PASS atomic rollback step 1               765 CU

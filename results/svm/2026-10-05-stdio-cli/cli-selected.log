@@ -1,5 +1,0 @@
-?   	example.com/typed-swap/client	[no test files]
-ok  	example.com/typed-swap	(cached)
-Built /Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap/build/program.so (3216 bytes, 117ms)
-Testing 1 compiled SBF fixtures with LiteSVM...
-PASS atomic rollback              765 CU

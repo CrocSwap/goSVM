@@ -1,4 +1,0 @@
-?   	example.com/typed-swap/client	[no test files]
-ok  	example.com/typed-swap	(cached)
-gosvm timings: {"schema":1,"command":"test","passed":false,"phase_seconds":{"backend_check":0.000980167,"generation":0.0014195,"manifest":0.000271208,"native_tests":0.08624575},"total_seconds":0.089100667}
-gosvm: backend clang unavailable at /Users/colkitt/sith/toys/crypto/goSVM/build/workflow-timing-diagnostics/absent-llvm; run gosvm toolchain install (macOS arm64), or set SBF_LLVM to platform-tools v1.51: fork/exec /Users/colkitt/sith/toys/crypto/goSVM/build/workflow-timing-diagnostics/absent-llvm/bin/clang: no such file or directory

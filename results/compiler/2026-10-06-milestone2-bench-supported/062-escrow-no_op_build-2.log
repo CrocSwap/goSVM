@@ -1,2 +1,0 @@
-Built /Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/escrow/build/program.so (25280 bytes, 253ms)
-gosvm timings: {"schema":1,"command":"build","passed":true,"phase_seconds":{"backend_check":0.020795084,"generation":0.154350625,"manifest":0.000843166,"sbf_build":0.076635958},"total_seconds":0.252737666}

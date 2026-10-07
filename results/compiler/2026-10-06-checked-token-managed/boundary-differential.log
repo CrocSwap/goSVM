@@ -1,4 +1,0 @@
-=== RUN   TestSDK2InvokeBoundaryDifferential
---- PASS: TestSDK2InvokeBoundaryDifferential (0.36s)
-PASS
-ok  	gosvm/internal/compiler	0.374s

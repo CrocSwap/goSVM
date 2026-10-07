@@ -1,5 +1,0 @@
-Downloading official platform-tools v1.51 (448 MB); only Clang and LLD will be retained.
-Downloaded 219 / 448 MB
-Downloaded 352 / 448 MB
-Verifying SHA-256 and extracting the minimal backend...
-Installed verified SBF backend: /var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm polish i58vmqo9/cache/toolchains/v1.51/darwin-arm64/llvm

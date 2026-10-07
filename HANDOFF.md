@@ -9,6 +9,14 @@ developer acceptance remains the sole milestone-2 gate; see the
 [completion audit](docs/MILESTONE2_ACCEPTANCE.md).
 No scheduled task is implied.
 
+October 6: the user requested [artifact untracking](results/maintenance/2026-10-06-artifact-untracking/README.md).
+Generated archives/binaries, dumps, logs, large fixtures and raw execution
+reports remain unchanged locally, with checksums in the new inventory. Compact
+CU/error observations are retained alongside source, small fixtures and existing
+summaries. Old report links may require restoring local artifacts; historical
+Git blobs are preserved. The session's read-only `.git` requires applying the
+prepared cleanup bundle before this checkout's tracking changes take effect.
+
 October 6: the [Phoenix dependency proof](docs/PHOENIX_DEPENDENCIES.md) now passes
 freestanding v0 `__multi3` linking, rejection of unresolved non-syscall imports,
 and SDK-2 `SetReturnData` with a copying native callback. The 631-case matched

@@ -1,1 +1,0 @@
-gosvm: managed runner unavailable: managed runner member bin/gosvm-svm-runner SHA-256 mismatch; restore the pinned package; run gosvm runner install -archive <pinned-package>

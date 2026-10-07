@@ -1,5 +1,0 @@
-go version go1.22.0 darwin/arm64
-solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)
-OK LLVM 19.1.7: /var/folders/sd/yrr853rn73qdgdgdmps82gfh0000gn/T/gosvm polish i58vmqo9/cache/toolchains/v1.51/darwin-arm64/llvm
-OK project manifest and SDK snapshot
-OK managed backend content hashes

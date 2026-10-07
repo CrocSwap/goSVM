@@ -1,8 +1,0 @@
-bash scripts/verify.sh
-    Finished `release` profile [optimized] target(s) in 0.03s
-build/verify: replacing existing signature
-PASS: 162 AMM simulations, 3 runtime guard checks, 4 committed swaps, 2 atomic rollback checks
-go swap         351 CU
-go max-input    351 CU
-rust swap         338 CU
-rust max-input    338 CU
