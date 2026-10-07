@@ -1,0 +1,93 @@
+package program_test
+
+import (
+	"bytes"
+	"encoding/binary"
+	"math/rand"
+	"testing"
+	program "MODULE"
+	"MODULE/client"
+	"MODULE/model"
+	"gosvm/solana"
+)
+
+func contextFor() solana.Context {
+	id := bytes.Repeat([]byte{7},32)
+	var authority model.PublicKey
+	for i := range authority { authority[i] = 4 }
+	return solana.Context{ID:id, InstructionData:client.EncodeInstructionMove(model.MoveArgs{Amount:10}), Accounts:[]solana.Account{
+		{Key:bytes.Repeat([]byte{1},32),Owner:id,Data:client.EncodeAccountVault(model.Vault{Authority:authority,Audit:model.Audit{Tag:3,Epoch:0x12345678},Balance:100}),Writable:true},
+		{Key:bytes.Repeat([]byte{2},32),Owner:id,Data:client.EncodeAccountVault(model.Vault{Authority:authority,Balance:5}),Writable:true},
+		{Key:bytes.Repeat([]byte{3},32),Owner:id,Data:client.EncodeAccountPolicy(model.Policy{Authority:authority,Limit:50})},
+		{Key:append([]byte(nil),authority[:]...),Owner:bytes.Repeat([]byte{0},32),Signer:true},
+	}}
+}
+
+func TestMoveAndSetLimit(t *testing.T) {
+	c:=contextFor()
+	beforePolicy:=append([]byte(nil),c.Accounts[2].Data...)
+	if code:=program.Process(c);code!=0 { t.Fatalf("move: %d",code) }
+	source,err:=client.DecodeAccountVault(c.Accounts[0].Data)
+	if err!=nil || source.Balance!=90 || source.Moves!=1 || source.Audit.Epoch!=0x12345678 { t.Fatalf("source: %+v %v",source,err) }
+	destination,err:=client.DecodeAccountVault(c.Accounts[1].Data)
+	if err!=nil || destination.Balance!=15 || destination.Moves!=1 { t.Fatalf("destination: %+v %v",destination,err) }
+	if !bytes.Equal(beforePolicy,c.Accounts[2].Data) { t.Fatal("committed readonly policy result") }
+	// Transaction-wide writable privileges are allowed for a readonly declaration.
+	c.Accounts[2].Writable=true
+	if code:=program.Process(c);code!=0 { t.Fatalf("merged writable privilege: %d",code) }
+	c.InstructionData=client.EncodeInstructionSetLimit(model.SetLimitArgs{Limit:123})
+	c.Accounts=[]solana.Account{c.Accounts[2],c.Accounts[3]}
+	if code:=program.Process(c);code!=0 { t.Fatalf("set limit: %d",code) }
+	policy,err:=client.DecodeAccountPolicy(c.Accounts[0].Data)
+	if err!=nil || policy.Limit!=123 { t.Fatalf("policy: %+v %v",policy,err) }
+}
+
+func TestPackedCanonicalWire(t *testing.T) {
+	c:=contextFor()
+	b:=c.Accounts[0].Data
+	// Independent packed offsets: discriminator8, key32, tag1, epoch4, balances8+8.
+	if len(b)!=61 || b[40]!=3 || binary.LittleEndian.Uint32(b[41:45])!=0x12345678 || binary.LittleEndian.Uint64(b[45:53])!=100 { t.Fatalf("wire: %x",b) }
+	rng:=rand.New(rand.NewSource(206))
+	for i:=0;i<1000;i++ {
+		v:=model.Vault{Audit:model.Audit{Tag:byte(rng.Uint32()),Epoch:rng.Uint32()},Balance:rng.Uint64(),Moves:rng.Uint64()}
+		for j:=range v.Authority { v.Authority[j]=byte(rng.Uint32()) }
+		got,err:=client.DecodeAccountVault(client.EncodeAccountVault(v))
+		if err!=nil || got!=v { t.Fatalf("round trip %d: %v",i,err) }
+	}
+	for _,b:=range [][]byte{b[:60],append(append([]byte(nil),b...),0),bytes.Repeat([]byte{0},61)} { if _,err:=client.DecodeAccountVault(b);err==nil { t.Fatal("accepted invalid wire") } }
+}
+
+func TestValidationAndFailureWrites(t *testing.T) {
+	cases:=[]struct{name string; code uint64; edit func(*solana.Context)}{
+		{"count",6000,func(c *solana.Context){c.Accounts=c.Accounts[:3]}},
+		{"extra",6000,func(c *solana.Context){c.Accounts=append(c.Accounts,c.Accounts[3])}},
+		{"readonly source",6001,func(c *solana.Context){c.Accounts[0].Writable=false}},
+		{"readonly destination",6001,func(c *solana.Context){c.Accounts[1].Writable=false}},
+		{"executable state",6001,func(c *solana.Context){c.Accounts[2].Executable=true}},
+		{"unsigned",6001,func(c *solana.Context){c.Accounts[3].Signer=false}},
+		{"owner",6002,func(c *solana.Context){c.Accounts[1].Owner=bytes.Repeat([]byte{9},32)}},
+		{"short owner",6002,func(c *solana.Context){c.Accounts[0].Owner=c.Accounts[0].Owner[:31]}},
+		{"key",6005,func(c *solana.Context){c.Accounts[1].Key=c.Accounts[1].Key[:31]}},
+		{"alias",6006,func(c *solana.Context){c.Accounts[1].Key=c.Accounts[0].Key}},
+		{"short state",6003,func(c *solana.Context){c.Accounts[0].Data=c.Accounts[0].Data[:60]}},
+		{"long state",6003,func(c *solana.Context){c.Accounts[0].Data=append(c.Accounts[0].Data,0)}},
+		{"state tag",6003,func(c *solana.Context){c.Accounts[1].Data[0]^=1}},
+		{"instruction tag",6004,func(c *solana.Context){c.InstructionData[0]^=1}},
+		{"instruction short",6004,func(c *solana.Context){c.InstructionData=c.InstructionData[:7]}},
+		{"instruction long",6004,func(c *solana.Context){c.InstructionData=append(c.InstructionData,0)}},
+		{"authority",6007,func(c *solana.Context){c.Accounts[0].Data[8]^=1}},
+		{"destination authority",6007,func(c *solana.Context){c.Accounts[1].Data[8]^=1}},
+		{"zero",program.ErrMove,func(c *solana.Context){c.InstructionData=client.EncodeInstructionMove(model.MoveArgs{})}},
+		{"limit",program.ErrMove,func(c *solana.Context){c.InstructionData=client.EncodeInstructionMove(model.MoveArgs{Amount:51})}},
+		{"insufficient",program.ErrMove,func(c *solana.Context){binary.LittleEndian.PutUint64(c.Accounts[0].Data[45:53],9)}},
+		{"overflow",program.ErrMove,func(c *solana.Context){binary.LittleEndian.PutUint64(c.Accounts[1].Data[45:53],^uint64(0))}},
+		{"counter",program.ErrCounter,func(c *solana.Context){binary.LittleEndian.PutUint64(c.Accounts[0].Data[53:61],^uint64(0))}},
+		{"validation order",6004,func(c *solana.Context){c.InstructionData=nil;c.Accounts=nil}},
+	}
+	for _,tc:=range cases { t.Run(tc.name,func(t *testing.T){
+		c:=contextFor();tc.edit(&c)
+		before:=make([][]byte,len(c.Accounts));for i:=range before { before[i]=append([]byte(nil),c.Accounts[i].Data...) }
+		if code:=program.Process(c);code!=tc.code { t.Fatalf("got %d want %d",code,tc.code) }
+		for i:=range before { if !bytes.Equal(before[i],c.Accounts[i].Data) { t.Fatalf("failed instruction wrote account %d",i) } }
+	}) }
+}

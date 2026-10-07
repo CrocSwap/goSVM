@@ -1,0 +1,245 @@
+{
+  "format": "gosvm-2",
+  "name": "multi-state",
+  "accounts": [
+    {
+      "kind": "account",
+      "name": "Vault",
+      "type": "example.org/gosvm/multi-state/model.Vault",
+      "version": 1,
+      "discriminator": [
+        245,
+        188,
+        106,
+        229,
+        232,
+        89,
+        114,
+        30
+      ],
+      "size": 61,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/multi-state/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Audit",
+          "type": "example.org/gosvm/multi-state/model.Audit",
+          "offset": 40,
+          "size": 5,
+          "fields": [
+            {
+              "name": "Tag",
+              "type": "byte",
+              "offset": 40,
+              "size": 1
+            },
+            {
+              "name": "Epoch",
+              "type": "uint32",
+              "offset": 41,
+              "size": 4
+            }
+          ]
+        },
+        {
+          "name": "Balance",
+          "type": "uint64",
+          "offset": 45,
+          "size": 8
+        },
+        {
+          "name": "Moves",
+          "type": "uint64",
+          "offset": 53,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Policy",
+      "type": "example.org/gosvm/multi-state/model.Policy",
+      "version": 1,
+      "discriminator": [
+        110,
+        179,
+        69,
+        64,
+        154,
+        226,
+        155,
+        81
+      ],
+      "size": 48,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/multi-state/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        }
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "kind": "instruction",
+      "name": "Move",
+      "type": "example.org/gosvm/multi-state/model.MoveArgs",
+      "version": 1,
+      "discriminator": [
+        213,
+        149,
+        102,
+        219,
+        35,
+        164,
+        146,
+        236
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "SetLimit",
+      "type": "example.org/gosvm/multi-state/model.SetLimitArgs",
+      "version": 1,
+      "discriminator": [
+        254,
+        147,
+        165,
+        148,
+        69,
+        9,
+        30,
+        209
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Move",
+      "handler": "Move",
+      "args": "model.MoveArgs",
+      "bundle": "MoveAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Source",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Destination",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Policy",
+          "kind": "state",
+          "layout": "Policy",
+          "access": "read",
+          "owner": "program_id"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Source.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "Destination.Authority",
+          "account": "Authority"
+        }
+      ]
+    },
+    {
+      "name": "SetLimit",
+      "handler": "SetLimit",
+      "args": "model.SetLimitArgs",
+      "bundle": "SetLimitAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Policy",
+          "kind": "state",
+          "layout": "Policy",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Policy.Authority",
+          "account": "Authority"
+        }
+      ]
+    }
+  ],
+  "errors": {
+    "AccountAlias": 6006,
+    "AccountCount": 6000,
+    "AccountFlags": 6001,
+    "AccountIdentity": 6005,
+    "AccountOwner": 6002,
+    "AccountRelation": 6007,
+    "ErrCounter": 2,
+    "ErrMove": 1,
+    "InstructionLayout": 6004,
+    "StateLayout": 6003
+  },
+  "validation_order": [
+    "instruction_layout",
+    "account_count",
+    "privileges",
+    "identity_owner",
+    "alias_policy",
+    "state_layout",
+    "relations",
+    "handler",
+    "writable_state_commit"
+  ]
+}

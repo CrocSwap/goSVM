@@ -14,30 +14,54 @@ import (
 	"strconv"
 	"strings"
 
+	"gosvm/sdk"
 	"gosvm/solana"
 )
 
 const Schema = 1
+const MultiSchema = 2
 const Tools = "v1.51"
 const Validator = "3.0.15"
 
-//go:embed templates/*
+//go:embed templates/* schema2/*
 var templates embed.FS
 
 type Config struct {
-	Schema        int    `json:"schema"`
-	Name          string `json:"name"`
-	Module        string `json:"module"`
-	PlatformTools string `json:"platform_tools"`
-	SBF           string `json:"sbf"`
-	State         string `json:"state"`
-	Instruction   string `json:"instruction"`
-	Handler       string `json:"handler"`
-	Result        string `json:"result"`
-	SDKHash       string `json:"sdk_sha256"`
+	Schema        int                      `json:"schema"`
+	Name          string                   `json:"name"`
+	Module        string                   `json:"module"`
+	PlatformTools string                   `json:"platform_tools"`
+	SBF           string                   `json:"sbf"`
+	State         string                   `json:"state"`
+	Instruction   string                   `json:"instruction"`
+	Handler       string                   `json:"handler"`
+	Result        string                   `json:"result"`
+	SDKHash       string                   `json:"sdk_sha256"`
+	SDKVersion    int                      `json:"sdk_version,omitempty"`
+	Imports       map[string]string        `json:"imports,omitempty"`
+	Layouts       []WireDeclaration        `json:"layouts,omitempty"`
+	Instructions  []InstructionDeclaration `json:"instructions,omitempty"`
 }
 
 func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.LegacySource))) }
+
+func sdkFiles(version int) map[string][]byte {
+	source := solana.LegacySource
+	if version == 2 {
+		source = solana.Source
+	}
+	files := map[string][]byte{"solana/api.go": []byte(source)}
+	if version == 2 {
+		for _, path := range []string{"pda/pda.go", "cpi/cpi.go", "token/token.go", "token/lifecycle.go", "system/system.go", "system/rent.go"} {
+			b, err := sdk.Sources.ReadFile(path)
+			if err != nil {
+				panic(err)
+			}
+			files["sdk/"+path] = b
+		}
+	}
+	return files
+}
 
 var nameRE = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 var identRE = regexp.MustCompile(`^[A-Z][A-Za-z0-9]*$`)
@@ -56,33 +80,59 @@ func Load(dir string) (Config, error) {
 	if e = d.Decode(new(any)); e != io.EOF {
 		return c, fmt.Errorf("gosvm.json must contain exactly one JSON object")
 	}
-	if c.Schema != Schema || c.PlatformTools != Tools || c.SBF != "v3" {
-		return c, fmt.Errorf("unsupported project versions; require schema %d, platform-tools %s, SBF v3", Schema, Tools)
+	if (c.Schema != Schema && c.Schema != MultiSchema) || c.PlatformTools != Tools || c.SBF != "v3" {
+		return c, fmt.Errorf("unsupported project versions; require schema 1 or 2, platform-tools %s, SBF v3", Tools)
 	}
 	if !nameRE.MatchString(c.Name) || !validModule(c.Module) {
 		return c, fmt.Errorf("invalid project name or Go module import path")
 	}
-	for _, n := range []string{c.State, c.Instruction, c.Handler, c.Result} {
-		if !identRE.MatchString(n) {
-			return c, fmt.Errorf("invalid exported binding name %q", n)
-		}
+	if c.SDKVersion != 0 && c.SDKVersion != 1 && c.SDKVersion != 2 || c.Schema == Schema && c.SDKVersion == 2 {
+		return c, fmt.Errorf("SDK version 2 requires schema 2; supported SDK versions are 1 and 2")
 	}
-	b, e = os.ReadFile(filepath.Join(dir, ".gosvm/sdk/solana/api.go"))
-	if e != nil {
+	if c.Schema == Schema {
+		if len(c.Imports) != 0 || len(c.Layouts) != 0 || len(c.Instructions) != 0 {
+			return c, fmt.Errorf("schema 1 does not accept schema-2 declarations")
+		}
+		for _, n := range []string{c.State, c.Instruction, c.Handler, c.Result} {
+			if !identRE.MatchString(n) {
+				return c, fmt.Errorf("invalid exported binding name %q", n)
+			}
+		}
+	} else if e := validateMultiConfig(c); e != nil {
 		return c, e
 	}
-	if c.SDKHash != sdkHash() || !bytes.Equal(b, []byte(solana.LegacySource)) {
+	files := sdkFiles(c.SDKVersion)
+	if c.SDKHash != fmt.Sprintf("%x", sha256.Sum256(files["solana/api.go"])) {
 		return c, fmt.Errorf("project SDK differs from this compiler; recreate with a matching compiler before building")
 	}
-	sdkDir := filepath.Join(dir, ".gosvm/sdk/solana")
-	entries, e := os.ReadDir(sdkDir)
-	if e != nil {
-		return c, e
-	}
-	for _, entry := range entries {
-		if strings.HasSuffix(entry.Name(), ".go") && entry.Name() != "api.go" {
-			return c, fmt.Errorf("unexpected SDK source %s; SDK snapshot must match compiler", entry.Name())
+	for name, expected := range files {
+		b, e := os.ReadFile(filepath.Join(dir, ".gosvm/sdk", name))
+		if e != nil {
+			return c, e
 		}
+		if !bytes.Equal(b, expected) {
+			return c, fmt.Errorf("project SDK differs from this compiler: %s", name)
+		}
+	}
+	if e := filepath.WalkDir(filepath.Join(dir, ".gosvm/sdk"), func(path string, entry os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() {
+			return nil
+		}
+		if strings.HasSuffix(entry.Name(), ".go") {
+			rel, err := filepath.Rel(filepath.Join(dir, ".gosvm/sdk"), path)
+			if err != nil {
+				return err
+			}
+			if _, ok := files[filepath.ToSlash(rel)]; !ok {
+				return fmt.Errorf("unexpected SDK source %s; SDK snapshot must match compiler", rel)
+			}
+		}
+		return nil
+	}); e != nil {
+		return c, e
 	}
 	sdkMod, e := os.ReadFile(filepath.Join(dir, ".gosvm/sdk/go.mod"))
 	if e != nil {
@@ -105,6 +155,21 @@ func Load(dir string) (Config, error) {
 func New(path string) error { return NewModule(path, "") }
 
 func NewModule(path, module string) error {
+	return NewModuleSchema(path, module, Schema)
+}
+
+// NewModuleSchema explicitly selects a scaffold; the default remains schema 1.
+func NewModuleSchema(path, module string, schema int) error {
+	return NewModuleSDK(path, module, schema, 1)
+}
+
+func NewModuleSDK(path, module string, schema, sdkVersion int) error {
+	if schema != Schema && schema != MultiSchema {
+		return fmt.Errorf("unsupported scaffold schema %d", schema)
+	}
+	if sdkVersion != 1 && sdkVersion != 2 || schema == Schema && sdkVersion != 1 {
+		return fmt.Errorf("SDK version 2 requires schema 2; supported SDK versions are 1 and 2")
+	}
 	name := filepath.Base(filepath.Clean(path))
 	if !nameRE.MatchString(name) {
 		return fmt.Errorf("project name must match [a-z][a-z0-9-]*")
@@ -130,12 +195,35 @@ func NewModule(path, module string) error {
 	}
 	defer os.RemoveAll(tmp)
 	c := Config{Schema: Schema, Name: name, Module: module, PlatformTools: Tools, SBF: "v3", State: "Pool", Instruction: "SwapArgs", Handler: "Swap", Result: "SwapResult", SDKHash: sdkHash()}
-	entries, e := templates.ReadDir("templates")
+	if sdkVersion == 2 {
+		c.SDKVersion = 2
+		c.SDKHash = fmt.Sprintf("%x", sha256.Sum256([]byte(solana.Source)))
+	}
+	templateDir := "templates"
+	if schema == MultiSchema {
+		templateDir = "schema2"
+		c.Schema, c.State, c.Instruction, c.Handler, c.Result = MultiSchema, "", "", "", ""
+		c.Imports = map[string]string{"model": module + "/model"}
+		c.Layouts = []WireDeclaration{{Name: "Vault", Type: "model.Vault", Version: 1}, {Name: "Policy", Type: "model.Policy", Version: 1}}
+		c.Instructions = []InstructionDeclaration{
+			{Name: "Move", Handler: "Move", Args: "model.MoveArgs", Bundle: "MoveAccounts", Version: 1, Accounts: []AccountDeclaration{
+				{Name: "Source", Kind: "state", Layout: "Vault", Access: "write", Owner: "program_id"},
+				{Name: "Destination", Kind: "state", Layout: "Vault", Access: "write", Owner: "program_id"},
+				{Name: "Policy", Kind: "state", Layout: "Policy", Access: "read", Owner: "program_id"},
+				{Name: "Authority", Kind: "signer", Access: "read"},
+			}, Relations: []KeyRelation{{Field: "Source.Authority", Account: "Authority"}, {Field: "Destination.Authority", Account: "Authority"}}},
+			{Name: "SetLimit", Handler: "SetLimit", Args: "model.SetLimitArgs", Bundle: "SetLimitAccounts", Version: 1, Accounts: []AccountDeclaration{
+				{Name: "Policy", Kind: "state", Layout: "Policy", Access: "write", Owner: "program_id"},
+				{Name: "Authority", Kind: "signer", Access: "read"},
+			}, Relations: []KeyRelation{{Field: "Policy.Authority", Account: "Authority"}}},
+		}
+	}
+	entries, e := templates.ReadDir(templateDir)
 	if e != nil {
 		return e
 	}
 	for _, entry := range entries {
-		b, e := templates.ReadFile("templates/" + entry.Name())
+		b, e := templates.ReadFile(templateDir + "/" + entry.Name())
 		if e != nil {
 			return e
 		}
@@ -144,11 +232,17 @@ func NewModule(path, module string) error {
 		if out == "sbf.json" {
 			out = "testdata/sbf.json"
 		}
+		if templateDir == "schema2" && out == "model.go" {
+			out = "model/model.go"
+		}
 		if e = writeChanged(filepath.Join(tmp, out), b); e != nil {
 			return e
 		}
 	}
-	files := map[string][]byte{"go.mod": []byte("module " + c.Module + "\n\ngo 1.22\n\nrequire gosvm v0.0.0\n\nreplace gosvm => ./.gosvm/sdk\n"), ".gosvm/sdk/go.mod": []byte("module gosvm\n\ngo 1.22\n"), ".gosvm/sdk/solana/api.go": []byte(solana.LegacySource), ".gitignore": []byte("/build/\n")}
+	files := map[string][]byte{"go.mod": []byte("module " + c.Module + "\n\ngo 1.22\n\nrequire gosvm v0.0.0\n\nreplace gosvm => ./.gosvm/sdk\n"), ".gosvm/sdk/go.mod": []byte("module gosvm\n\ngo 1.22\n"), ".gitignore": []byte("/build/\n")}
+	for name, b := range sdkFiles(sdkVersion) {
+		files[".gosvm/sdk/"+name] = b
+	}
 	config, _ := json.MarshalIndent(c, "", "  ")
 	files["gosvm.json"] = append(config, '\n')
 	for p, b := range files {

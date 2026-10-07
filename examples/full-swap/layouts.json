@@ -1,0 +1,267 @@
+{
+  "format": "gosvm-layouts-2",
+  "layouts": [
+    {
+      "kind": "account",
+      "name": "ManagedPool",
+      "type": "example.org/gosvm/full-swap/model.ManagedPool",
+      "version": 1,
+      "discriminator": [
+        128,
+        44,
+        179,
+        82,
+        153,
+        197,
+        135,
+        102
+      ],
+      "size": 177,
+      "fields": [
+        {
+          "name": "Core",
+          "type": "example.org/gosvm/full-swap/model.Pool",
+          "offset": 8,
+          "size": 137,
+          "fields": [
+            {
+              "name": "VaultX",
+              "type": "example.org/gosvm/full-swap/model.PublicKey",
+              "offset": 8,
+              "size": 32,
+              "length": 32
+            },
+            {
+              "name": "VaultY",
+              "type": "example.org/gosvm/full-swap/model.PublicKey",
+              "offset": 40,
+              "size": 32,
+              "length": 32
+            },
+            {
+              "name": "MintX",
+              "type": "example.org/gosvm/full-swap/model.PublicKey",
+              "offset": 72,
+              "size": 32,
+              "length": 32
+            },
+            {
+              "name": "MintY",
+              "type": "example.org/gosvm/full-swap/model.PublicKey",
+              "offset": 104,
+              "size": 32,
+              "length": 32
+            },
+            {
+              "name": "Bump",
+              "type": "byte",
+              "offset": 136,
+              "size": 1
+            },
+            {
+              "name": "Swaps",
+              "type": "uint64",
+              "offset": 137,
+              "size": 8
+            }
+          ]
+        },
+        {
+          "name": "Creator",
+          "type": "example.org/gosvm/full-swap/model.PublicKey",
+          "offset": 145,
+          "size": 32,
+          "length": 32
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Pool",
+      "type": "example.org/gosvm/full-swap/model.Pool",
+      "version": 1,
+      "discriminator": [
+        241,
+        154,
+        109,
+        4,
+        17,
+        177,
+        109,
+        188
+      ],
+      "size": 145,
+      "fields": [
+        {
+          "name": "VaultX",
+          "type": "example.org/gosvm/full-swap/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "VaultY",
+          "type": "example.org/gosvm/full-swap/model.PublicKey",
+          "offset": 40,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "MintX",
+          "type": "example.org/gosvm/full-swap/model.PublicKey",
+          "offset": 72,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "MintY",
+          "type": "example.org/gosvm/full-swap/model.PublicKey",
+          "offset": 104,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 136,
+          "size": 1
+        },
+        {
+          "name": "Swaps",
+          "type": "uint64",
+          "offset": 137,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "ClosePool",
+      "type": "example.org/gosvm/full-swap/model.ClosePoolArgs",
+      "version": 1,
+      "discriminator": [
+        16,
+        90,
+        135,
+        243,
+        112,
+        50,
+        12,
+        109
+      ],
+      "size": 8,
+      "fields": null
+    },
+    {
+      "kind": "instruction",
+      "name": "CreatePool",
+      "type": "example.org/gosvm/full-swap/model.CreatePoolArgs",
+      "version": 1,
+      "discriminator": [
+        113,
+        8,
+        14,
+        247,
+        35,
+        178,
+        15,
+        197
+      ],
+      "size": 27,
+      "fields": [
+        {
+          "name": "ReserveX",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "ReserveY",
+          "type": "uint64",
+          "offset": 16,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 24,
+          "size": 1
+        },
+        {
+          "name": "XBump",
+          "type": "byte",
+          "offset": 25,
+          "size": 1
+        },
+        {
+          "name": "YBump",
+          "type": "byte",
+          "offset": 26,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "ManagedSwap",
+      "type": "example.org/gosvm/full-swap/model.SwapArgs",
+      "version": 1,
+      "discriminator": [
+        57,
+        233,
+        139,
+        177,
+        124,
+        228,
+        126,
+        78
+      ],
+      "size": 24,
+      "fields": [
+        {
+          "name": "AmountIn",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "MinOut",
+          "type": "uint64",
+          "offset": 16,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Swap",
+      "type": "example.org/gosvm/full-swap/model.SwapArgs",
+      "version": 1,
+      "discriminator": [
+        248,
+        198,
+        158,
+        145,
+        225,
+        117,
+        135,
+        200
+      ],
+      "size": 24,
+      "fields": [
+        {
+          "name": "AmountIn",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "MinOut",
+          "type": "uint64",
+          "offset": 16,
+          "size": 8
+        }
+      ]
+    }
+  ]
+}

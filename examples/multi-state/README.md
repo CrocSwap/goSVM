@@ -1,0 +1,31 @@
+# Experimental multi-state project
+
+This schema-2 prototype has two instructions and two packed state layouts.
+`Move` updates two owned ledgers using a readonly policy and a signer;
+`SetLimit` updates the policy. It performs no token transfers and accounts are
+preloaded by tests. Initialization, PDA checks and lifecycle helpers remain open.
+
+```sh
+gosvm check
+gosvm test
+gosvm build
+```
+
+`model/` defines canonical ordinary-Go types and `CanMove`; `client/` imports those
+same types and generates codecs without importing the handler or runtime SDK.
+`gosvm.json` declares layout versions, account order, minimum privileges and key
+relationships. `zz_gosvm.go` contains inspectable validation and adapters.
+`idl.json` records constraints and layouts. `layouts.json` retains layout history:
+changing a recorded layout requires an explicit higher version and a recorded
+`migration` policy. A version bump changes the default discriminator and does not migrate
+existing account data. Preserve both files in version control.
+
+Validation finishes before handler execution. Only declared writable state is
+committed on success; runtime SVM tests are required to prove transaction rollback.
+Readonly declarations accept merged writable transaction privileges. Duplicate
+keys are rejected unless a named alias pair with a reason is declared; conflicting
+mutable state aliases are rejected during generation.
+
+The SDK snapshot is local for on-chain/native handler use. Ordinary Go services
+can import `example.org/gosvm/multi-state/model` and `example.org/gosvm/multi-state/client` without the SDK when consuming this
+module through standard Go module distribution. No module has been published.

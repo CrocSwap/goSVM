@@ -1,0 +1,101 @@
+{
+  "schema": 2,
+  "name": "multi-state",
+  "module": "example.org/gosvm/multi-state",
+  "platform_tools": "v1.51",
+  "sbf": "v3",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+  "imports": {
+    "model": "example.org/gosvm/multi-state/model"
+  },
+  "layouts": [
+    {
+      "name": "Vault",
+      "type": "model.Vault",
+      "version": 1
+    },
+    {
+      "name": "Policy",
+      "type": "model.Policy",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Move",
+      "handler": "Move",
+      "args": "model.MoveArgs",
+      "bundle": "MoveAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Source",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Destination",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Policy",
+          "kind": "state",
+          "layout": "Policy",
+          "access": "read",
+          "owner": "program_id"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Source.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "Destination.Authority",
+          "account": "Authority"
+        }
+      ]
+    },
+    {
+      "name": "SetLimit",
+      "handler": "SetLimit",
+      "args": "model.SetLimitArgs",
+      "bundle": "SetLimitAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Policy",
+          "kind": "state",
+          "layout": "Policy",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Policy.Authority",
+          "account": "Authority"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "2HoXWo3sW3WZPbPvMStZJyuwQEruUsuruVJMb94BAbBN",
+  "payer_seed": "0e6556cc1d276c6c5524f81db49f52392f71c2afd004904f938bf88b0e7770f9",
+  "accounts": [
+    {
+      "name": "pool",
+      "address": "2L5Kf8dQR2utRixTeUxH4fXsNiYJb5kMK5ckr31pwVLK",
+      "initial": {
+        "data": "214125f28c448dc040420f000000000080841e00000000000000000000000000",
+        "owner": "2HoXWo3sW3WZPbPvMStZJyuwQEruUsuruVJMb94BAbBN",
+        "lamports": 10000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "swap",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "pool",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "b8a708f64160a717e8030000000000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "cu": 486,
+            "accounts": [
+              {
+                "account": "pool",
+                "state": {
+                  "data": "214125f28c448dc028460f0000000000b87c1e00000000000100000000000000",
+                  "owner": "2HoXWo3sW3WZPbPvMStZJyuwQEruUsuruVJMb94BAbBN",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "zero amount",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "pool",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "b8a708f64160a71700000000000000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3
+                }
+              ]
+            },
+            "cu": 262,
+            "accounts": [
+              {
+                "account": "pool",
+                "state": {
+                  "data": "214125f28c448dc040420f000000000080841e00000000000000000000000000",
+                  "owner": "2HoXWo3sW3WZPbPvMStZJyuwQEruUsuruVJMb94BAbBN",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "atomic rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "pool",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "b8a708f64160a717e8030000000000000000000000000000"
+            },
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "pool",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "b8a708f64160a717e8030000000000003f420f0000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                1,
+                {
+                  "Custom": 5
+                }
+              ]
+            },
+            "cu": 765,
+            "accounts": [
+              {
+                "account": "pool",
+                "state": {
+                  "data": "214125f28c448dc040420f000000000080841e00000000000000000000000000",
+                  "owner": "2HoXWo3sW3WZPbPvMStZJyuwQEruUsuruVJMb94BAbBN",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

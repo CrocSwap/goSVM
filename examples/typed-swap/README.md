@@ -36,6 +36,28 @@ changing the wire layout or business semantics. The fixture schema supports one
 state account and up to eight instructions per case, including atomic
 success-then-failure transactions with explicit expected final state.
 
+For experimental fast compiled-ELF tests, use `gosvm test --svm` with a separately
+built runner selected by `-svm-runner /absolute/path/gosvm-svm-runner`,
+`GOSVM_TEST_RUNNER`, or PATH. It runs these same fixtures through one local stdio
+session and checks CU, submitted state, and rollback. `-svm-run 'rollback$'`
+selects fixture names; empty/invalid selections fail. The initial VM checkpoint
+is restored before each fixture, including accounts, fees, and transaction history.
+`-svm-sysvars /absolute/path/sysvars.json` supplies explicit Clock/Rent values
+before that checkpoint is captured. Reports include the actual sysvars. The file
+contains `clock` and/or `rent` objects with every field present; see the runner's
+experimental protocol documentation for their JSON format. Reports are saved separately
+in `build/svm-results.json`. Choose either `--svm` or `--sbf`. The runner uses an
+observed local-validator feature snapshot, not a mainnet policy, and is not yet
+distributed as a verified download. Running an existing binary needs no Cargo;
+building the runner from source does. Neither mode uses a wallet or public cluster.
+
+This checkout also includes `testdata/svm.json`, a general-fixture example for
+`gosvm test --svm -svm-fixtures "$PWD/testdata/svm.json"` with runner 0.4.0.
+It checks a swap, exact failure, and atomic rollback. The general format supports
+named accounts/signers and ordered multi-transaction scenarios; see
+[format and limits](../../docs/SVM_FIXTURES.md). The default `sbf.json` fixtures
+remain the validator-compatible starter suite.
+
 `build/program.so` is the deployable-format SBF v3 artifact, not a declaration
 that this sample is safe to deploy. This sample exercises arithmetic only; state
 is preinitialized in tests. It has no token custody/transfers, initialization,

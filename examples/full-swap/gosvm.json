@@ -1,0 +1,504 @@
+{
+  "schema": 2,
+  "name": "full-swap",
+  "module": "example.org/gosvm/full-swap",
+  "platform_tools": "v1.51",
+  "sbf": "v3",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "c16d2232c17339649c0358ccf3919c20ec1dd1ac2972ec9816480af2d525dadd",
+  "sdk_version": 2,
+  "imports": {
+    "model": "example.org/gosvm/full-swap/model"
+  },
+  "layouts": [
+    {
+      "name": "Pool",
+      "type": "model.Pool",
+      "version": 1,
+      "discriminator": "f19a6d0411b16dbc"
+    },
+    {
+      "name": "ManagedPool",
+      "type": "model.ManagedPool",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Swap",
+      "handler": "Swap",
+      "args": "model.SwapArgs",
+      "bundle": "SwapAccounts",
+      "version": 1,
+      "discriminator": "f8c69e91e17587c8",
+      "accounts": [
+        {
+          "name": "Pool",
+          "kind": "state",
+          "layout": "Pool",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "PoolRef"
+        },
+        {
+          "name": "User",
+          "kind": "signer",
+          "access": "read"
+        },
+        {
+          "name": "UserX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "UserY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "Authority",
+          "kind": "account",
+          "access": "read",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "Pool.Bump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "TokenProgram",
+          "kind": "program",
+          "access": "read",
+          "address": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Pool.VaultX",
+          "account": "VaultX"
+        },
+        {
+          "field": "Pool.VaultY",
+          "account": "VaultY"
+        },
+        {
+          "field": "UserX.Mint",
+          "equals": "Pool.MintX"
+        },
+        {
+          "field": "VaultX.Mint",
+          "equals": "Pool.MintX"
+        },
+        {
+          "field": "VaultY.Mint",
+          "equals": "Pool.MintY"
+        },
+        {
+          "field": "UserY.Mint",
+          "equals": "Pool.MintY"
+        },
+        {
+          "field": "UserX.Authority",
+          "account": "User"
+        },
+        {
+          "field": "VaultX.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "VaultY.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "UserY.Authority",
+          "account": "User"
+        }
+      ]
+    },
+    {
+      "name": "CreatePool",
+      "handler": "CreatePool",
+      "args": "model.CreatePoolArgs",
+      "bundle": "CreatePoolAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Pool",
+          "kind": "state",
+          "layout": "ManagedPool",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "PoolRef",
+          "signer": true,
+          "init": {
+            "payer": "Creator",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Creator",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "CreatorX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultX",
+          "kind": "account",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "7661756c7478"
+              },
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "args.XBump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "VaultY",
+          "kind": "account",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "7661756c7479"
+              },
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "args.YBump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "CreatorY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "Authority",
+          "kind": "account",
+          "access": "read",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "TokenProgram",
+          "kind": "program",
+          "access": "read",
+          "address": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "MintX",
+          "kind": "account",
+          "access": "read",
+          "owner": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        },
+        {
+          "name": "MintY",
+          "kind": "account",
+          "access": "read",
+          "owner": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        }
+      ],
+      "relations": [
+        {
+          "field": "CreatorX.Mint",
+          "account": "MintX"
+        },
+        {
+          "field": "CreatorY.Mint",
+          "account": "MintY"
+        },
+        {
+          "field": "CreatorX.Authority",
+          "account": "Creator"
+        },
+        {
+          "field": "CreatorY.Authority",
+          "account": "Creator"
+        }
+      ]
+    },
+    {
+      "name": "ManagedSwap",
+      "handler": "ManagedSwap",
+      "args": "model.SwapArgs",
+      "bundle": "ManagedSwapAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Pool",
+          "kind": "state",
+          "layout": "ManagedPool",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "PoolRef"
+        },
+        {
+          "name": "User",
+          "kind": "signer",
+          "access": "read"
+        },
+        {
+          "name": "UserX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "UserY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "Authority",
+          "kind": "account",
+          "access": "read",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "Pool.Core.Bump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "TokenProgram",
+          "kind": "program",
+          "access": "read",
+          "address": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Pool.Core.VaultX",
+          "account": "VaultX"
+        },
+        {
+          "field": "Pool.Core.VaultY",
+          "account": "VaultY"
+        },
+        {
+          "field": "UserX.Mint",
+          "equals": "Pool.Core.MintX"
+        },
+        {
+          "field": "VaultX.Mint",
+          "equals": "Pool.Core.MintX"
+        },
+        {
+          "field": "VaultY.Mint",
+          "equals": "Pool.Core.MintY"
+        },
+        {
+          "field": "UserY.Mint",
+          "equals": "Pool.Core.MintY"
+        },
+        {
+          "field": "UserX.Authority",
+          "account": "User"
+        },
+        {
+          "field": "VaultX.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "VaultY.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "UserY.Authority",
+          "account": "User"
+        }
+      ]
+    },
+    {
+      "name": "ClosePool",
+      "handler": "ClosePool",
+      "args": "model.ClosePoolArgs",
+      "bundle": "ClosePoolAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Pool",
+          "kind": "state",
+          "layout": "ManagedPool",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "PoolRef",
+          "close": {
+            "to": "Creator",
+            "authority": "Creator",
+            "authority_field": "Pool.Creator"
+          }
+        },
+        {
+          "name": "Creator",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "CreatorX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultX",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "VaultY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "CreatorY",
+          "kind": "token",
+          "access": "write"
+        },
+        {
+          "name": "Authority",
+          "kind": "account",
+          "access": "read",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "key",
+                "account": "Pool"
+              },
+              {
+                "kind": "byte",
+                "field": "Pool.Core.Bump"
+              }
+            ]
+          }
+        },
+        {
+          "name": "TokenProgram",
+          "kind": "program",
+          "access": "read",
+          "address": "06ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a9"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Pool.Core.VaultX",
+          "account": "VaultX"
+        },
+        {
+          "field": "Pool.Core.VaultY",
+          "account": "VaultY"
+        },
+        {
+          "field": "CreatorX.Mint",
+          "equals": "Pool.Core.MintX"
+        },
+        {
+          "field": "VaultX.Mint",
+          "equals": "Pool.Core.MintX"
+        },
+        {
+          "field": "VaultY.Mint",
+          "equals": "Pool.Core.MintY"
+        },
+        {
+          "field": "CreatorY.Mint",
+          "equals": "Pool.Core.MintY"
+        },
+        {
+          "field": "CreatorX.Authority",
+          "account": "Creator"
+        },
+        {
+          "field": "VaultX.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "VaultY.Authority",
+          "account": "Authority"
+        },
+        {
+          "field": "CreatorY.Authority",
+          "account": "Creator"
+        }
+      ]
+    }
+  ]
+}

@@ -26,6 +26,10 @@ Handler error codes should stay below 6000. Wire layout is independent of Go
 struct alignment. Reordering fields changes the wire format: there is no automatic
 state migration. The JSON IDL is experimental gosvm-1, not Anchor-compatible.
 
+`gosvm test --svm -timings` prints optional JSON phase durations for generation,
+native tests, backend checks, SBF compilation and integration testing. Timings
+exclude initial CLI process startup; measure command wall time separately.
+
 `go test` runs normal Go; it does not establish SBF compatibility. `gosvm check`
 checks the restricted on-chain subset without LLVM. `gosvm test --sbf` builds the
 ELF and runs `testdata/sbf.json` fixtures on an isolated local validator. It checks
@@ -35,6 +39,32 @@ Test fixtures are independent expected bytes: update them deliberately after
 changing the wire layout or business semantics. The fixture schema supports one
 state account and up to eight instructions per case, including atomic
 success-then-failure transactions with explicit expected final state.
+
+For experimental fast compiled-ELF tests, use `gosvm test --svm` with a separately
+built runner selected by `-svm-runner /absolute/path/gosvm-svm-runner`,
+`GOSVM_TEST_RUNNER`, a verified managed installation, or PATH, in that order.
+On macOS arm64, `gosvm runner install -archive /path/to/pinned-package.tar.gz`
+installs the local experimental package without Cargo; `gosvm runner status`
+verifies its content against the frontend's embedded pin. No public download is
+configured yet. Normal tests never install tools. It runs these same fixtures through one local stdio
+session and checks CU, submitted state, and rollback. `-svm-run 'rollback$'`
+selects fixture names; empty/invalid selections fail. The initial VM checkpoint
+is restored before each fixture, including accounts, fees, and transaction history.
+`-svm-sysvars /absolute/path/sysvars.json` supplies explicit Clock/Rent values
+before that checkpoint is captured. Reports include the actual sysvars. The file
+contains `clock` and/or `rent` objects with every field present; see the runner's
+experimental protocol documentation for their JSON format. Reports are saved separately
+in `build/svm-results.json`. Choose either `--svm` or `--sbf`. The runner uses an
+observed local-validator feature snapshot, not a mainnet policy, and is not yet
+distributed as a public verified download. Running an existing binary needs no Cargo;
+building the runner from source does. Neither mode uses a wallet or public cluster.
+
+Runner 0.4.0 also supports general named-account/signer fixtures through
+`gosvm test --svm -svm-fixtures /absolute/path/fixtures.json`, or standalone
+`gosvm svm-test -elf build/program.so -fixtures /absolute/path/fixtures.json`.
+Each scenario starts from fresh checkpoint state; ordered steps share state.
+General fixtures use the separate `gosvm-svm-fixtures-v1` format documented by
+the runner. The generated `sbf.json` remains the default starter suite.
 
 `build/program.so` is the deployable-format SBF v3 artifact, not a declaration
 that this sample is safe to deploy. This sample exercises arithmetic only; state

@@ -53,6 +53,9 @@ func Generate(dir string) error {
 	if e != nil {
 		return e
 	}
+	if c.Schema == MultiSchema {
+		return generateMulti(dir, c)
+	}
 	sources, e := compiler.ReadSources(dir)
 	if e != nil {
 		return e
