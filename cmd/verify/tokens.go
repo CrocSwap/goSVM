@@ -13,12 +13,13 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"gosvm/internal/testvm"
 )
 
 const tokenAddress = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
@@ -279,7 +280,15 @@ func wideReference(x, y, amount uint64) uint64 {
 func runTokens() error { return runTokenComparison(false) }
 
 func runTokenComparison(anchor bool) error {
-	build, err := filepath.Abs("build")
+	started := time.Now()
+	version, err := testvm.Command("--version").CombinedOutput()
+	if err != nil {
+		return err
+	}
+	if err = testvm.CheckVersion(string(version)); err != nil {
+		return err
+	}
+	build, err := filepath.Abs(verificationBuild())
 	if err != nil {
 		return err
 	}
@@ -418,7 +427,8 @@ func runTokenComparison(anchor bool) error {
 	for i, program := range programs {
 		validatorArgs = append(validatorArgs, "--bpf-program", b58(program), filepath.Join(build, files[i]))
 	}
-	cmd := exec.Command("solana-test-validator", validatorArgs...)
+	startup := time.Now()
+	cmd := testvm.Command(validatorArgs...)
 	cmd.Stdout, cmd.Stderr = log, log
 	if err = cmd.Start(); err != nil {
 		return err
@@ -445,11 +455,13 @@ func runTokenComparison(anchor bool) error {
 			ready = true
 			break
 		}
-		time.Sleep(200 * time.Millisecond)
+		time.Sleep(testvm.ReadyPoll())
 	}
 	if !ready {
 		return fmt.Errorf("validator startup timeout; see build/token-validator-detail.log")
 	}
+	startupSeconds := time.Since(startup).Seconds()
+	execution := time.Now()
 	var token struct{ Value *account }
 	must(c.call("getAccountInfo", []any{tokenAddress, map[string]any{"encoding": "base64", "commitment": "confirmed"}}, &token))
 	if token.Value == nil || !token.Value.Executable {
@@ -478,6 +490,11 @@ func runTokenComparison(anchor bool) error {
 		return fmt.Errorf("SPL Token program data is not an ELF")
 	}
 	tokenHash := fmt.Sprintf("%x", sha256.Sum256(tokenBytes))
+	if path := os.Getenv("GOSVM_CAPTURE_TOKEN_ELF"); path != "" && !testvm.IsRunner() {
+		if err = os.WriteFile(path, tokenBytes, 0644); err != nil {
+			return err
+		}
+	}
 	var latest struct{ Value struct{ Blockhash string } }
 	must(c.call("getLatestBlockhash", []any{map[string]any{"commitment": "confirmed"}}, &latest))
 	hash := un58(latest.Value.Blockhash)
@@ -659,8 +676,43 @@ func runTokenComparison(anchor bool) error {
 			}
 		}
 	}
-	version, _ := exec.Command("solana-test-validator", "--version").Output()
-	report := map[string]any{"validator": string(bytes.TrimSpace(version)), "target": "sBPF v3", "deactivated_features": []string{}, "elf_sha256": hashes, "token_program": tokenAddress, "token_program_elf_sha256": tokenHash, "cpi_logs_verified": true, "vectors_per_backend": len(vectors), "committed_swaps_per_backend": 2, "failed_second_cpi_rollback_per_backend": true, "failed_second_instruction_rollback_per_backend": true, "results": rows, "observed_errors": observedErrors}
+	report := map[string]any{"runtime_engine": testvm.Engine(), "runtime_version": string(bytes.TrimSpace(version)), "target": "sBPF v3", "deactivated_features": []string{}, "elf_sha256": hashes, "token_program": tokenAddress, "token_program_elf_sha256": tokenHash, "cpi_logs_verified": true, "vectors_per_backend": len(vectors), "committed_swaps_per_backend": 2, "failed_second_cpi_rollback_per_backend": true, "failed_second_instruction_rollback_per_backend": true, "results": rows, "observed_errors": observedErrors,
+		"startup_seconds": startupSeconds, "fixture_seconds": time.Since(execution).Seconds(), "total_seconds": time.Since(started).Seconds()}
+	if path := os.Getenv("GOSVM_EXPORT_SVM_FIXTURES"); path != "" {
+		if err = exportTokenFixtures(path, dir, anchor, programs[0], fixtures[0], vectors, rows, observedErrors, tokenBytes); err != nil {
+			return err
+		}
+	}
+	if testvm.IsRunner() {
+		var info any
+		if err = c.call("gosvmRuntimeInfo", []any{}, &info); err != nil {
+			return err
+		}
+		report["runner"] = info
+	} else {
+		report["validator"] = string(bytes.TrimSpace(version))
+		var features []struct {
+			Pubkey  string  `json:"pubkey"`
+			Account account `json:"account"`
+		}
+		if err = c.call("getProgramAccounts", []any{"Feature111111111111111111111111111111111111", map[string]any{"encoding": "base64", "commitment": "confirmed"}}, &features); err != nil {
+			return err
+		}
+		active := []string{}
+		for _, f := range features {
+			data, e := base64.StdEncoding.DecodeString(f.Account.Data[0])
+			if e != nil {
+				return e
+			}
+			// Feature account data is bincode Option<u64>: a one-byte tag
+			// followed by the activation slot, not a four-byte enum tag.
+			if len(data) >= 9 && data[0] == 1 {
+				active = append(active, f.Pubkey)
+			}
+		}
+		sort.Strings(active)
+		report["active_features"] = active
+	}
 	b, _ := json.MarshalIndent(report, "", "  ")
 	must(os.WriteFile(filepath.Join(build, "tokenswap-verification.json"), append(b, '\n'), 0644))
 	fmt.Printf("PASS: %d token-swap simulations, %d committed swaps, %d rollback checks\n", len(rows), 2*len(programs), 2*len(programs))

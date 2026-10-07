@@ -1,5 +1,13 @@
 The mulDiv implementation in examples/tokenswap/swap.go is adapted from the
-Go standard library's math/bits Mul64 and Div64 implementations.
+Go standard library's math/bits Mul64 and Div64 implementations. The two-limb
+product in sdk/system/rent.go and the generated full-swap SDK snapshot is also
+adapted from Mul64.
 
 Copyright 2017 The Go Authors. All rights reserved.
 Redistributed under the BSD 3-Clause license in third_party/Go-LICENSE.
+
+third_party/litesvm-0.8.2 contains LiteSVM 0.8.2 (Apache License 2.0), with a
+local rent-error precedence patch described in GOSVM_PATCH.md. Upstream authors,
+revision, original file hashes, and archive checksum are recorded in
+GOSVM_PROVENANCE.json; the license is in LICENSE-APACHE. Original source notices
+and bundled program/test artifacts are retained.

@@ -15,10 +15,11 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"gosvm/internal/testvm"
 )
 
 const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -233,16 +234,17 @@ func pause(ctx context.Context, d time.Duration) error {
 // Run never contacts a remote cluster. All transaction keys are deterministic test
 // keys, and all state is seeded into a new temporary validator ledger.
 func Run(ctx context.Context, dir, elf string, out io.Writer) error {
+	started := time.Now()
 	suite, e := Load(filepath.Join(dir, "testdata/sbf.json"))
 	if e != nil {
 		return e
 	}
-	version, e := exec.Command("solana-test-validator", "--version").CombinedOutput()
+	version, e := testvm.Command("--version").CombinedOutput()
 	if e != nil {
-		return fmt.Errorf("install Solana test-validator 3.0.15 for SBF tests: %w", e)
+		return fmt.Errorf("cannot start %s for SBF tests: %w", testvm.Engine(), e)
 	}
-	if !strings.Contains(string(version), " 3.0.15 ") && !strings.HasSuffix(strings.TrimSpace(string(version)), " 3.0.15") {
-		return fmt.Errorf("require validator 3.0.15; found %s", version)
+	if e = testvm.CheckVersion(string(version)); e != nil {
+		return e
 	}
 	elf, e = filepath.Abs(elf)
 	if e != nil {
@@ -303,7 +305,8 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 		return e
 	}
 	defer log.Close()
-	cmd := exec.Command("solana-test-validator", "--ledger", filepath.Join(tmp, "ledger"), "--rpc-port", fmt.Sprint(port), "--faucet-port", "0", "--bind-address", "127.0.0.1", "--mint", b58(payer.Public().(ed25519.PublicKey)), "--account-dir", accounts, "--bpf-program", b58(program), elf, "--quiet")
+	startup := time.Now()
+	cmd := testvm.Command("--ledger", filepath.Join(tmp, "ledger"), "--rpc-port", fmt.Sprint(port), "--faucet-port", "0", "--bind-address", "127.0.0.1", "--mint", b58(payer.Public().(ed25519.PublicKey)), "--account-dir", accounts, "--bpf-program", b58(program), elf, "--quiet")
 	cmd.Stdout, cmd.Stderr = log, log
 	if e = cmd.Start(); e != nil {
 		return e
@@ -324,20 +327,22 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 	}()
 	rpc := rpcClient{ctx: ctx, url: fmt.Sprintf("http://127.0.0.1:%d", port), client: http.Client{Timeout: 3 * time.Second}}
 	ready := false
-	fmt.Fprintln(out, "Starting isolated local validator...")
+	fmt.Fprintf(out, "Starting isolated local %s...\n", testvm.Engine())
 	for deadline := time.Now().Add(50 * time.Second); time.Now().Before(deadline); {
 		var slot uint64
 		if rpc.call("getSlot", []any{map[string]any{"commitment": "confirmed"}}, &slot) == nil && slot >= 2 {
 			ready = true
 			break
 		}
-		if e = pause(ctx, 200*time.Millisecond); e != nil {
+		if e = pause(ctx, testvm.ReadyPoll()); e != nil {
 			return e
 		}
 	}
 	if !ready {
 		return fmt.Errorf("validator startup failed; see build/validator-detail.log")
 	}
+	startupSeconds := time.Since(startup).Seconds()
+	execution := time.Now()
 	var results []Result
 	for i, c := range suite.Cases {
 		var h struct{ Value struct{ Blockhash string } }
@@ -423,7 +428,18 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 	if e != nil {
 		return e
 	}
-	report, e := json.MarshalIndent(map[string]any{"schema": 1, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "validator": strings.TrimSpace(string(version)), "cases": results}, "", "  ")
+	metadata := map[string]any{"schema": 1, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "runtime_engine": testvm.Engine(), "runtime_version": strings.TrimSpace(string(version)), "cases": results,
+		"startup_seconds": startupSeconds, "fixture_seconds": time.Since(execution).Seconds(), "total_seconds": time.Since(started).Seconds()}
+	if testvm.IsRunner() {
+		var info any
+		if e = rpc.call("gosvmRuntimeInfo", []any{}, &info); e != nil {
+			return e
+		}
+		metadata["runner"] = info
+	} else {
+		metadata["validator"] = strings.TrimSpace(string(version))
+	}
+	report, e := json.MarshalIndent(metadata, "", "  ")
 	if e != nil {
 		return e
 	}

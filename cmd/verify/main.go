@@ -162,6 +162,13 @@ func transaction(payer ed25519.PrivateKey, pool, program, hash []byte, v vector,
 }
 
 func main() {
+	if len(os.Args) == 2 && os.Args[1] == "lifecycle" {
+		if err := runLifecycle(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if len(os.Args) == 2 && os.Args[1] == "anchor-bounded" {
 		must(runAnchorBounded())
 		return

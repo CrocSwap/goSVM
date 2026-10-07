@@ -16,7 +16,7 @@ func main() {
 	}
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
-		case "toolchain", "new", "generate", "check", "build", "test", "doctor", "help", "version":
+		case "toolchain", "runner", "new", "generate", "check", "build", "test", "svm-test", "doctor", "help", "version":
 			if err := projectCommand(os.Args[1:]); err != nil {
 				fmt.Fprintln(os.Stderr, "gosvm:", err)
 				os.Exit(1)
@@ -55,10 +55,10 @@ func legacy() {
 	var err error
 	if *emit {
 		var out []byte
-		var src []compiler.Source
-		src, err = compiler.ReadSources(flag.Arg(0))
+		var src *compiler.Program
+		src, err = compiler.ReadProgram(flag.Arg(0))
 		if err == nil {
-			out, err = compiler.CompileSources(src)
+			out, err = compiler.CompileProgram(src)
 		}
 		if err == nil {
 			err = os.MkdirAll(filepath.Dir(*output), 0755)

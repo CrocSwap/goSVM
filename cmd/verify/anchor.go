@@ -9,6 +9,13 @@ import (
 	"path/filepath"
 )
 
+func verificationBuild() string {
+	if dir := os.Getenv("GOSVM_VERIFY_BUILD_DIR"); dir != "" {
+		return dir
+	}
+	return "build"
+}
+
 func runAnchorBounded() error {
 	data, e := os.ReadFile("examples/typed-swap/testdata/sbf.json")
 	if e != nil {
@@ -27,7 +34,7 @@ func runAnchorBounded() error {
 				}
 			}
 		}
-		dir := filepath.Join("build/anchor", "bounded-"+backend.name)
+		dir := filepath.Join(verificationBuild(), "anchor", "bounded-"+backend.name)
 		if e = os.MkdirAll(filepath.Join(dir, "testdata"), 0755); e != nil {
 			return e
 		}
@@ -36,7 +43,7 @@ func runAnchorBounded() error {
 			return e
 		}
 		fmt.Println("Bounded framework comparison:", backend.name)
-		if e = sbftest.Run(context.Background(), dir, filepath.Join("build/anchor", backend.elf), os.Stdout); e != nil {
+		if e = sbftest.Run(context.Background(), dir, filepath.Join(verificationBuild(), "anchor", backend.elf), os.Stdout); e != nil {
 			return e
 		}
 	}
