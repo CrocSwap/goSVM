@@ -1,0 +1,749 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+  "payer_seed": "e10cadc06d142e99ea6265a4a305b4958cbbed569a829599b003b12f98f51ff9",
+  "sysvars": {
+    "clock": {
+      "slot": 9007199254740993,
+      "epoch_start_timestamp": -23,
+      "epoch": 7,
+      "leader_schedule_epoch": 9,
+      "unix_timestamp": 1000
+    }
+  },
+  "accounts": [
+    {
+      "name": "state",
+      "address": "7EqpmBUpmcJ7n8BPDtWS1uoWsr17nFoPkWfiEUkSzt8W",
+      "initial": {
+        "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+        "lamports": 10000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "actual-clock-reward-sequence",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000e803000000000000e803000000000000581b000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1010
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000f203000000000000f2030000000000004600000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "fresh_blockhash": true
+        },
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1010
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000f203000000000000f2030000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "fresh_blockhash": true
+        },
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1020
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000fc03000000000000fc030000000000004600000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "fresh_blockhash": true
+        }
+      ]
+    },
+    {
+      "name": "negative-timestamp-minus-one",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": -1
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6021
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "negative-timestamp-min-int64",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": -9223372036854775808
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6021
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "maximum-positive-timestamp",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 9223372036854775807
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000100000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000ffffffffffffff7fffffffffffffff7fffffffffffffff7f",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "zero-timestamp",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 0
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "word-extremes",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 18446744073709551615,
+              "epoch_start_timestamp": -9223372036854775808,
+              "epoch": 18446744073709551615,
+              "leader_schedule_epoch": 18446744073709551615,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff0000000000000080ffffffffffffffffffffffffffffffffe803000000000000e803000000000000581b000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "time-regression",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6022
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000f203000000000000cd81010000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000f203000000000000cd81010000000000",
+            "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "uint64-reward-multiply-overflow",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "00ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000e803000000000000e8030000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "read-then-fail-rolls-back",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "010700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6099
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "output-length-39",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "020700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2016
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "output-length-41",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "030700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2016
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "atomic-later-instruction-rollback",
+      "steps": [
+        {
+          "sysvars": {
+            "clock": {
+              "slot": 9007199254740993,
+              "epoch_start_timestamp": -23,
+              "epoch": 7,
+              "leader_schedule_epoch": 9,
+              "unix_timestamp": 1000
+            }
+          },
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "000700000000000000"
+            },
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "010700000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                1,
+                {
+                  "Custom": 6099
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "owner": "4h6CAoX7PQy1QwdTFYi1UAPXet4sZFuv6eppGNvCZVxW",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

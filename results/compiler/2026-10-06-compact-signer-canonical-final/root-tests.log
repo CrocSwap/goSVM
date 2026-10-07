@@ -1,0 +1,29 @@
+?   	gosvm/benchmarks/anchor/go-token	[no test files]
+?   	gosvm/cmd/verify	[no test files]
+?   	gosvm/examples/array-capacity	[no test files]
+?   	gosvm/examples/array-values	[no test files]
+?   	gosvm/examples/checked-token	[no test files]
+?   	gosvm/examples/clock2	[no test files]
+?   	gosvm/examples/control-values	[no test files]
+?   	gosvm/examples/lifecycle2	[no test files]
+?   	gosvm/examples/pointer-values	[no test files]
+?   	gosvm/examples/pointer-values/model	[no test files]
+?   	gosvm/examples/slice-views	[no test files]
+ok  	gosvm/cmd/gosvm	0.113s
+ok  	gosvm/examples/amm	(cached)
+ok  	gosvm/examples/protocol	(cached)
+?   	gosvm/examples/slice-views/context	[no test files]
+?   	gosvm/examples/slice-views/model	[no test files]
+ok  	gosvm/examples/tokenswap	(cached)
+?   	gosvm/sdk	[no test files]
+ok  	gosvm/internal/compiler	48.217s
+ok  	gosvm/internal/project	80.124s
+ok  	gosvm/internal/runner	(cached)
+ok  	gosvm/internal/sbftest	(cached)
+ok  	gosvm/internal/testvm	(cached)
+ok  	gosvm/internal/toolchain	(cached)
+ok  	gosvm/sdk/cpi	0.236s
+ok  	gosvm/sdk/pda	(cached)
+ok  	gosvm/sdk/system	0.142s
+ok  	gosvm/sdk/token	0.059s
+ok  	gosvm/solana	(cached)

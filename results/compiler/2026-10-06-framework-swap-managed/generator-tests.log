@@ -1,0 +1,54 @@
+=== RUN   TestSchema2CheckedTokenAndPDAGeneration
+--- PASS: TestSchema2CheckedTokenAndPDAGeneration (4.31s)
+=== RUN   TestSchema2PDAAdapterOnlyImport
+--- PASS: TestSchema2PDAAdapterOnlyImport (0.54s)
+=== RUN   TestSchema2CheckedConstraintDiagnostics
+=== RUN   TestSchema2CheckedConstraintDiagnostics/legacy_token
+=== RUN   TestSchema2CheckedConstraintDiagnostics/token_owner_override
+=== RUN   TestSchema2CheckedConstraintDiagnostics/token_layout
+=== RUN   TestSchema2CheckedConstraintDiagnostics/token_signer
+=== RUN   TestSchema2CheckedConstraintDiagnostics/reference_collision
+=== RUN   TestSchema2CheckedConstraintDiagnostics/duplicate_reference
+=== RUN   TestSchema2CheckedConstraintDiagnostics/raw_reference_field
+=== RUN   TestSchema2CheckedConstraintDiagnostics/PDA_signer
+=== RUN   TestSchema2CheckedConstraintDiagnostics/PDA_program
+=== RUN   TestSchema2CheckedConstraintDiagnostics/many_seeds
+=== RUN   TestSchema2CheckedConstraintDiagnostics/unknown_seed
+=== RUN   TestSchema2CheckedConstraintDiagnostics/unknown_key
+=== RUN   TestSchema2CheckedConstraintDiagnostics/oversized_seed
+=== RUN   TestSchema2CheckedConstraintDiagnostics/bad_hex
+=== RUN   TestSchema2CheckedConstraintDiagnostics/unknown_scalar
+=== RUN   TestSchema2CheckedConstraintDiagnostics/wrong_scalar_width
+=== RUN   TestSchema2CheckedConstraintDiagnostics/bad_scalar_selector
+=== RUN   TestSchema2CheckedConstraintDiagnostics/mixed_seed_inputs
+=== RUN   TestSchema2CheckedConstraintDiagnostics/both_relation_targets
+=== RUN   TestSchema2CheckedConstraintDiagnostics/missing_relation_target
+=== RUN   TestSchema2CheckedConstraintDiagnostics/wrong_token_field
+=== RUN   TestSchema2CheckedConstraintDiagnostics/scalar_token_relation
+=== RUN   TestSchema2CheckedConstraintDiagnostics/scalar_target
+--- PASS: TestSchema2CheckedConstraintDiagnostics (2.82s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/legacy_token (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/token_owner_override (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/token_layout (0.04s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/token_signer (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/reference_collision (0.04s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/duplicate_reference (0.05s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/raw_reference_field (0.06s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/PDA_signer (0.12s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/PDA_program (0.02s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/many_seeds (0.05s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/unknown_seed (0.04s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/unknown_key (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/oversized_seed (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/bad_hex (0.04s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/unknown_scalar (0.39s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/wrong_scalar_width (0.50s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/bad_scalar_selector (0.03s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/mixed_seed_inputs (0.07s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/both_relation_targets (0.02s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/missing_relation_target (0.04s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/wrong_token_field (0.45s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/scalar_token_relation (0.30s)
+    --- PASS: TestSchema2CheckedConstraintDiagnostics/scalar_target (0.39s)
+PASS
+ok  	gosvm/internal/project	7.691s

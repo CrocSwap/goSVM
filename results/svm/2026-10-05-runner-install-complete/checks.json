@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "command": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+      "exit_code": 0,
+      "log": "go-tests.log"
+    },
+    {
+      "command": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+      "exit_code": 0,
+      "log": "go-vet.log"
+    },
+    {
+      "command": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test ./...",
+      "cwd": "examples/typed-swap",
+      "exit_code": 0
+    },
+    {
+      "check": "two final package builds produce identical archive/pin",
+      "archive_sha256": "a73c0b01a4c6f6655b305567b0e7c294f53e4e3b0082f3825c8299334be4ee0f",
+      "passed": true
+    },
+    {
+      "check": "installer and package provenance source hashes match checkout",
+      "passed": true
+    },
+    {
+      "check": "local documentation links resolve",
+      "passed": true
+    }
+  ]
+}

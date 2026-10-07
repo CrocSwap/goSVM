@@ -1,0 +1,8 @@
+=== RUN   TestClockCurrentWordsAndFailedOutput
+--- PASS: TestClockCurrentWordsAndFailedOutput (0.00s)
+PASS
+ok  	gosvm/solana	0.009s
+=== RUN   TestSDK2ClockNativeCDifferential
+--- PASS: TestSDK2ClockNativeCDifferential (0.20s)
+PASS
+ok  	gosvm/internal/compiler	0.208s

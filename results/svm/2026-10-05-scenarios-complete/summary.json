@@ -1,0 +1,389 @@
+{
+  "schema": 1,
+  "passed": true,
+  "checks": [
+    {
+      "check": "cli-build",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 1.132606000173837,
+      "expected": 0
+    },
+    {
+      "check": "runner-install",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.23796137468889356,
+      "expected": 0
+    },
+    {
+      "check": "probe-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-c",
+        "benchmarks/svm-controls/probe.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/probe.o"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.29253224981948733,
+      "expected": 0
+    },
+    {
+      "check": "probe-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/probe.o"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.08497000019997358,
+      "expected": 0
+    },
+    {
+      "check": "ordered-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.04623808339238167,
+      "expected": 0
+    },
+    {
+      "check": "ordered-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.048732582945376635,
+      "expected": 0
+    },
+    {
+      "check": "ordered-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.046251832973212004,
+      "expected": 0
+    },
+    {
+      "check": "cu-pinned",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.04711183300241828,
+      "expected": 0
+    },
+    {
+      "check": "selected",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json",
+        "-run",
+        "^reset-after-updates$"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.045113333966583014,
+      "expected": 0
+    },
+    {
+      "check": "reversed",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/reversed.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.045671333093196154,
+      "expected": 0
+    },
+    {
+      "check": "duplicate-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/duplicate-clock.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.03438683319836855,
+      "expected": 1
+    },
+    {
+      "check": "incomplete-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/incomplete.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json",
+        "-run",
+        "^reset-after-updates$"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.008069083094596863,
+      "expected": 1
+    },
+    {
+      "check": "empty-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/empty.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json",
+        "-run",
+        "^reset-after-updates$"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.007900166790932417,
+      "expected": 1
+    },
+    {
+      "check": "null-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/null.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json",
+        "-run",
+        "^reset-after-updates$"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.00859204214066267,
+      "expected": 1
+    },
+    {
+      "check": "bad-rent-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/bad-rent.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json",
+        "-run",
+        "^reset-after-updates$"
+      ],
+      "exit_code": 1,
+      "wall_seconds": 0.009271000046283007,
+      "expected": 1
+    },
+    {
+      "check": "full-token",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/anchor/go-token.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.15313174994662404,
+      "expected": 0
+    },
+    {
+      "check": "lifecycle",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-lifecycle-verified/go-token.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-lifecycle-verified/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.08516716584563255,
+      "expected": 0
+    },
+    {
+      "check": "scaffold",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "new",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/starter"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.00980745768174529,
+      "expected": 0
+    },
+    {
+      "check": "starter",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/starter",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.3745017908513546,
+      "expected": 0
+    },
+    {
+      "check": "restored",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/probe.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/results.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.06568874977529049,
+      "expected": 0
+    }
+  ],
+  "samples": 3,
+  "scenarios": 6,
+  "transactions": 15,
+  "initial_fixture_sha256": "3a14257136070a56248f449f57ba816903ee926410e80df938afc1a23fa372f7",
+  "source_sha256": {
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "cmd/gosvm/project.go": "ae5720b29756fdbe07ff460d08182a7c4121b5e1d51d4fcb220dbe1b853e5f1b",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/main.go": "49020919b1839c7e9d2603f375b9d06e009598cdcf296d6b7d63d0b08c55c29c",
+    "internal/project/generate.go": "0f530b48bdd6714899556bf219010fa0a8924d2d4b26f4b652f2d7ef06e732da",
+    "internal/project/project.go": "3fb68c81c29ab7be3b7d8a07741127525bce6b356cec0961bafb5f2e28958f17",
+    "internal/project/project_test.go": "7eb37aea4a335da660fb9f8523fe140832780e4cddde9e23fee4a4c6349443ec",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/README.md.tmpl": "f583eaf29e0cb54ec9f8bff4950803a928a59494374d8cfc18a96ac0275fc95e",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "scripts/svm_scenarios.py": "826f75c86f7e7759ce13335f8861754dd010384f9d33b43720448ddfcd4bbc36",
+    "benchmarks/svm-controls/probe.c": "e332e8b88dd707ece362ace868585614c4d85cd30dda584a331b712ba7c96092",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892"
+  },
+  "probe_sha256": "ca78ed54ef51ded4165bc1993d15d300f19502850c0c66662b73907985ac7a19",
+  "probe_bytes": 1664,
+  "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+  "cli_sha256": "0bd9976b5e0f72e611ff76dd94994e131f8819dbabbb1260986c39e553d38196",
+  "fixture_sha256": "c79b9410a5d4f91c19d9217fc7c6b78dacb87b8c19c33e7805a62d05e8e8b145",
+  "validator": {
+    "rpc_bind_allowed": false,
+    "fresh_validator_run": false,
+    "error": "[Errno 1] Operation not permitted"
+  },
+  "limitations": [
+    "C runtime probe; Go SDK sysvar authoring remains open",
+    "Clock/Rent controls do not advance consensus/SlotHashes/history or reset blockhash",
+    "CU calibrated after independent state/error validation; no new validator CU oracle",
+    "macOS arm64, local installed tools; no performance ranking or dependency-heavy protocol measurement"
+  ]
+}

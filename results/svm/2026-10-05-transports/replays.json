@@ -1,0 +1,1688 @@
+{
+  "equivalence_passed": true,
+  "samples": 7,
+  "schema": 1,
+  "scope": "same pinned LiteSVM core; full recorded RPC responses; init plus fixtures; shutdown excluded; embedded library dlopen excluded",
+  "timings": [
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.075186208,
+      "fixture_seconds": 0.023863125,
+      "total_seconds": 0.099050208
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013871208,
+      "fixture_seconds": 0.009124042,
+      "total_seconds": 0.022996125
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.009734083,
+      "fixture_seconds": 0.009233833,
+      "total_seconds": 0.018968291
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.026781917,
+      "fixture_seconds": 0.438416958,
+      "total_seconds": 0.465199417
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.015672583,
+      "fixture_seconds": 0.004432958,
+      "total_seconds": 0.02010575
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01900225,
+      "fixture_seconds": 0.019414625,
+      "total_seconds": 0.038417375
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.019994833,
+      "fixture_seconds": 0.011245417,
+      "total_seconds": 0.031240458
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.054645375,
+      "fixture_seconds": 0.213525542,
+      "total_seconds": 0.268171166
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.021398,
+      "fixture_seconds": 0.00404725,
+      "total_seconds": 0.025445583
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.004928792,
+      "fixture_seconds": 0.002601042,
+      "total_seconds": 0.007530084
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.005387708,
+      "fixture_seconds": 0.002699334,
+      "total_seconds": 0.008087416
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.016856542,
+      "fixture_seconds": 0.144889833,
+      "total_seconds": 0.161746875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.015233708,
+      "fixture_seconds": 0.005761417,
+      "total_seconds": 0.020996208
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.014040833,
+      "fixture_seconds": 0.008664041,
+      "total_seconds": 0.022705875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.015031333,
+      "fixture_seconds": 0.008116667,
+      "total_seconds": 0.023148583
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.0304855,
+      "fixture_seconds": 0.182664041,
+      "total_seconds": 0.213150542
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010228708,
+      "fixture_seconds": 0.006222334,
+      "total_seconds": 0.016451917
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007301667,
+      "fixture_seconds": 0.004709125,
+      "total_seconds": 0.012011125
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.005843958,
+      "fixture_seconds": 0.007920125,
+      "total_seconds": 0.013764458
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.017478917,
+      "fixture_seconds": 0.187908834,
+      "total_seconds": 0.205388709
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.031505,
+      "fixture_seconds": 0.030366417,
+      "total_seconds": 0.061871625
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.018597208,
+      "fixture_seconds": 0.021380417,
+      "total_seconds": 0.039977958
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.015688166,
+      "fixture_seconds": 0.019014083,
+      "total_seconds": 0.034702583
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.031670584,
+      "fixture_seconds": 0.43382775,
+      "total_seconds": 0.465498584
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.015224583,
+      "fixture_seconds": 0.010712417,
+      "total_seconds": 0.025937417
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01452825,
+      "fixture_seconds": 0.010784542,
+      "total_seconds": 0.025313334
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.014663542,
+      "fixture_seconds": 0.01012625,
+      "total_seconds": 0.024790333
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.028876667,
+      "fixture_seconds": 0.290387375,
+      "total_seconds": 0.319265417
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.019959375,
+      "fixture_seconds": 0.022135334,
+      "total_seconds": 0.042095083
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.017198333,
+      "fixture_seconds": 0.018213042,
+      "total_seconds": 0.035411708
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.016471709,
+      "fixture_seconds": 0.019572709,
+      "total_seconds": 0.036044709
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.026844125,
+      "fixture_seconds": 0.390196083,
+      "total_seconds": 0.417040541
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013536042,
+      "fixture_seconds": 0.005467292,
+      "total_seconds": 0.019003709
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008758958,
+      "fixture_seconds": 0.003490209,
+      "total_seconds": 0.012249791
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.007972333,
+      "fixture_seconds": 0.004645416,
+      "total_seconds": 0.012618583
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.027399792,
+      "fixture_seconds": 0.239581708,
+      "total_seconds": 0.266981917
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.021505125,
+      "fixture_seconds": 0.008560208,
+      "total_seconds": 0.030065584
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.019346333,
+      "fixture_seconds": 0.007607459,
+      "total_seconds": 0.026954083
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.014873584,
+      "fixture_seconds": 0.007406667,
+      "total_seconds": 0.0222805
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.032988792,
+      "fixture_seconds": 0.224063708,
+      "total_seconds": 0.257053
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.072347667,
+      "fixture_seconds": 0.01847525,
+      "total_seconds": 0.090823708
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01868975,
+      "fixture_seconds": 0.007094417,
+      "total_seconds": 0.025785084
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013599583,
+      "fixture_seconds": 0.006304458,
+      "total_seconds": 0.019905042
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.0331135,
+      "fixture_seconds": 0.186645834,
+      "total_seconds": 0.219760291
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.012151083,
+      "fixture_seconds": 0.004416792,
+      "total_seconds": 0.016568708
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006736083,
+      "fixture_seconds": 0.008912542,
+      "total_seconds": 0.015649167
+    },
+    {
+      "sample": 1,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.014918833,
+      "fixture_seconds": 0.007641208,
+      "total_seconds": 0.022560792
+    },
+    {
+      "sample": 1,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.017086833,
+      "fixture_seconds": 0.179801833,
+      "total_seconds": 0.196889042
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.026838209,
+      "fixture_seconds": 0.016173417,
+      "total_seconds": 0.043011917
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.026345333,
+      "fixture_seconds": 0.013482375,
+      "total_seconds": 0.039828042
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.016672791,
+      "fixture_seconds": 0.007121958,
+      "total_seconds": 0.023795083
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.033419916,
+      "fixture_seconds": 0.182464458,
+      "total_seconds": 0.21588475
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.019603708,
+      "fixture_seconds": 0.008268209,
+      "total_seconds": 0.027872917
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.015166208,
+      "fixture_seconds": 0.007641417,
+      "total_seconds": 0.022808166
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.014686042,
+      "fixture_seconds": 0.007201084,
+      "total_seconds": 0.021887834
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.026995792,
+      "fixture_seconds": 0.174809792,
+      "total_seconds": 0.201806084
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.015623083,
+      "fixture_seconds": 0.01136475,
+      "total_seconds": 0.026988
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013170083,
+      "fixture_seconds": 0.028500292,
+      "total_seconds": 0.041670667
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.019390958,
+      "fixture_seconds": 0.012280125,
+      "total_seconds": 0.031671208
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.023034542,
+      "fixture_seconds": 0.247946542,
+      "total_seconds": 0.270981333
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.009670417,
+      "fixture_seconds": 0.005623166,
+      "total_seconds": 0.015293792
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00677075,
+      "fixture_seconds": 0.005791333,
+      "total_seconds": 0.012562458
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006494791,
+      "fixture_seconds": 0.004336459,
+      "total_seconds": 0.010832041
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.01807125,
+      "fixture_seconds": 0.139857166,
+      "total_seconds": 0.157928833
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008549792,
+      "fixture_seconds": 0.004033333,
+      "total_seconds": 0.012583375
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006391375,
+      "fixture_seconds": 0.003252541,
+      "total_seconds": 0.0096445
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006220084,
+      "fixture_seconds": 0.003134084,
+      "total_seconds": 0.009354375
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.015530791,
+      "fixture_seconds": 0.14291725,
+      "total_seconds": 0.158448541
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01386375,
+      "fixture_seconds": 0.009918583,
+      "total_seconds": 0.023783042
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013614583,
+      "fixture_seconds": 0.009123125,
+      "total_seconds": 0.02273825
+    },
+    {
+      "sample": 2,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011594125,
+      "fixture_seconds": 0.008802583,
+      "total_seconds": 0.020397209
+    },
+    {
+      "sample": 2,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.023354292,
+      "fixture_seconds": 0.146547083,
+      "total_seconds": 0.169902084
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01453425,
+      "fixture_seconds": 0.01164025,
+      "total_seconds": 0.026174625
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01320625,
+      "fixture_seconds": 0.010918125,
+      "total_seconds": 0.024124583
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.014321375,
+      "fixture_seconds": 0.011879625,
+      "total_seconds": 0.026201208
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.029186458,
+      "fixture_seconds": 0.215163584,
+      "total_seconds": 0.24435025
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01217625,
+      "fixture_seconds": 0.004731625,
+      "total_seconds": 0.016908209
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007009333,
+      "fixture_seconds": 0.003917708,
+      "total_seconds": 0.010927375
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007047583,
+      "fixture_seconds": 0.004339583,
+      "total_seconds": 0.011387458
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.01844,
+      "fixture_seconds": 0.14440425,
+      "total_seconds": 0.162844875
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01503325,
+      "fixture_seconds": 0.004579084,
+      "total_seconds": 0.019612541
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.012084875,
+      "fixture_seconds": 0.0037575,
+      "total_seconds": 0.015842542
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01223475,
+      "fixture_seconds": 0.004084042,
+      "total_seconds": 0.016318958
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.022328375,
+      "fixture_seconds": 0.135170792,
+      "total_seconds": 0.1574995
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008750125,
+      "fixture_seconds": 0.004612708,
+      "total_seconds": 0.013363209
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006324,
+      "fixture_seconds": 0.003165791,
+      "total_seconds": 0.009490125
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006734458,
+      "fixture_seconds": 0.003325958,
+      "total_seconds": 0.010060667
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.016836041,
+      "fixture_seconds": 0.131846708,
+      "total_seconds": 0.148683083
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.0122405,
+      "fixture_seconds": 0.005688208,
+      "total_seconds": 0.017929125
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010780542,
+      "fixture_seconds": 0.005127042,
+      "total_seconds": 0.015908083
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011515916,
+      "fixture_seconds": 0.005278958,
+      "total_seconds": 0.0167955
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.01989875,
+      "fixture_seconds": 0.139835667,
+      "total_seconds": 0.159734916
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011583083,
+      "fixture_seconds": 0.004097208,
+      "total_seconds": 0.01568075
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.010009042,
+      "fixture_seconds": 0.003987,
+      "total_seconds": 0.013996333
+    },
+    {
+      "sample": 3,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.009594709,
+      "fixture_seconds": 0.003331125,
+      "total_seconds": 0.012926084
+    },
+    {
+      "sample": 3,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.017957458,
+      "fixture_seconds": 0.120757375,
+      "total_seconds": 0.138715417
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011324708,
+      "fixture_seconds": 0.005788375,
+      "total_seconds": 0.017113541
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010080416,
+      "fixture_seconds": 0.004671916,
+      "total_seconds": 0.014752916
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.009693833,
+      "fixture_seconds": 0.004703709,
+      "total_seconds": 0.014398
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.01895875,
+      "fixture_seconds": 0.131391208,
+      "total_seconds": 0.150350625
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013658083,
+      "fixture_seconds": 0.004632458,
+      "total_seconds": 0.018290708
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013218833,
+      "fixture_seconds": 0.00398875,
+      "total_seconds": 0.017207833
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.012421667,
+      "fixture_seconds": 0.004000834,
+      "total_seconds": 0.016422625
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.022696542,
+      "fixture_seconds": 0.135007542,
+      "total_seconds": 0.15770425
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.012044417,
+      "fixture_seconds": 0.005154667,
+      "total_seconds": 0.017199542
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011470167,
+      "fixture_seconds": 0.004841625,
+      "total_seconds": 0.016312334
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011053667,
+      "fixture_seconds": 0.003875042,
+      "total_seconds": 0.014929334
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.021310959,
+      "fixture_seconds": 0.135903375,
+      "total_seconds": 0.15721475
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.008736709,
+      "fixture_seconds": 0.004662125,
+      "total_seconds": 0.013399209
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006206084,
+      "fixture_seconds": 0.003630042,
+      "total_seconds": 0.009836459
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006472708,
+      "fixture_seconds": 0.003535208,
+      "total_seconds": 0.010008208
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.016601916,
+      "fixture_seconds": 0.1346985,
+      "total_seconds": 0.151300875
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.015012708,
+      "fixture_seconds": 0.011424625,
+      "total_seconds": 0.026437625
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01256125,
+      "fixture_seconds": 0.010698625,
+      "total_seconds": 0.023259917
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013232625,
+      "fixture_seconds": 0.01091075,
+      "total_seconds": 0.024143542
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.022703959,
+      "fixture_seconds": 0.179023291,
+      "total_seconds": 0.201727417
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008592041,
+      "fixture_seconds": 0.004188167,
+      "total_seconds": 0.012780416
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006199959,
+      "fixture_seconds": 0.003104625,
+      "total_seconds": 0.009304792
+    },
+    {
+      "sample": 4,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006105041,
+      "fixture_seconds": 0.003284917,
+      "total_seconds": 0.009390208
+    },
+    {
+      "sample": 4,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.016043375,
+      "fixture_seconds": 0.131785583,
+      "total_seconds": 0.147829333
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.007915541,
+      "fixture_seconds": 0.003667208,
+      "total_seconds": 0.011583083
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006237125,
+      "fixture_seconds": 0.0031835,
+      "total_seconds": 0.009420958
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006179709,
+      "fixture_seconds": 0.003121375,
+      "total_seconds": 0.009301375
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.015174625,
+      "fixture_seconds": 0.130656167,
+      "total_seconds": 0.145831208
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013845125,
+      "fixture_seconds": 0.004882708,
+      "total_seconds": 0.018728416
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011470791,
+      "fixture_seconds": 0.004497208,
+      "total_seconds": 0.0159685
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01151725,
+      "fixture_seconds": 0.004065625,
+      "total_seconds": 0.0155835
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.0211175,
+      "fixture_seconds": 0.131961292,
+      "total_seconds": 0.153079208
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011451584,
+      "fixture_seconds": 0.005825541,
+      "total_seconds": 0.017277417
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010428709,
+      "fixture_seconds": 0.005881292,
+      "total_seconds": 0.016310417
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011108958,
+      "fixture_seconds": 0.004930083,
+      "total_seconds": 0.016039292
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.019335708,
+      "fixture_seconds": 0.151830792,
+      "total_seconds": 0.171166833
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00907425,
+      "fixture_seconds": 0.0044095,
+      "total_seconds": 0.013484125
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00674025,
+      "fixture_seconds": 0.0037655,
+      "total_seconds": 0.010506084
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006703083,
+      "fixture_seconds": 0.003678333,
+      "total_seconds": 0.010381625
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.016751708,
+      "fixture_seconds": 0.138084083,
+      "total_seconds": 0.154836083
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.014740125,
+      "fixture_seconds": 0.004334834,
+      "total_seconds": 0.019075167
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011718042,
+      "fixture_seconds": 0.004122792,
+      "total_seconds": 0.015841
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011495291,
+      "fixture_seconds": 0.003744375,
+      "total_seconds": 0.015239833
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.021790042,
+      "fixture_seconds": 0.130685459,
+      "total_seconds": 0.152475708
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.0139625,
+      "fixture_seconds": 0.01089,
+      "total_seconds": 0.024852666
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.012058542,
+      "fixture_seconds": 0.010391834,
+      "total_seconds": 0.0224505
+    },
+    {
+      "sample": 5,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.012202375,
+      "fixture_seconds": 0.010694166,
+      "total_seconds": 0.02289675
+    },
+    {
+      "sample": 5,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.024373417,
+      "fixture_seconds": 0.197582417,
+      "total_seconds": 0.221956042
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013279333,
+      "fixture_seconds": 0.006639584,
+      "total_seconds": 0.019919208
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.011265083,
+      "fixture_seconds": 0.005582334,
+      "total_seconds": 0.016847791
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010956917,
+      "fixture_seconds": 0.005297125,
+      "total_seconds": 0.016254375
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.020688959,
+      "fixture_seconds": 0.150144625,
+      "total_seconds": 0.170834167
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.015242209,
+      "fixture_seconds": 0.011365041,
+      "total_seconds": 0.026607417
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.012900166,
+      "fixture_seconds": 0.010955375,
+      "total_seconds": 0.02385575
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.01343625,
+      "fixture_seconds": 0.010907667,
+      "total_seconds": 0.024344125
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.024248625,
+      "fixture_seconds": 0.190273584,
+      "total_seconds": 0.214522375
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.008962083,
+      "fixture_seconds": 0.004427542,
+      "total_seconds": 0.013389958
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006663084,
+      "fixture_seconds": 0.003776708,
+      "total_seconds": 0.010439959
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006583416,
+      "fixture_seconds": 0.003702125,
+      "total_seconds": 0.01028575
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.016728041,
+      "fixture_seconds": 0.141062583,
+      "total_seconds": 0.157790833
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008215625,
+      "fixture_seconds": 0.003896583,
+      "total_seconds": 0.012112625
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006547,
+      "fixture_seconds": 0.003375,
+      "total_seconds": 0.00992225
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.006564334,
+      "fixture_seconds": 0.003636291,
+      "total_seconds": 0.010200917
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.015966458,
+      "fixture_seconds": 0.140206417,
+      "total_seconds": 0.156173208
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013307083,
+      "fixture_seconds": 0.00518425,
+      "total_seconds": 0.018491542
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011650375,
+      "fixture_seconds": 0.004300542,
+      "total_seconds": 0.015951459
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.012372792,
+      "fixture_seconds": 0.004432458,
+      "total_seconds": 0.016805834
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.023935583,
+      "fixture_seconds": 0.147856542,
+      "total_seconds": 0.171792833
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.015437958,
+      "fixture_seconds": 0.004853041,
+      "total_seconds": 0.020291125
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.013241375,
+      "fixture_seconds": 0.004037375,
+      "total_seconds": 0.017278958
+    },
+    {
+      "sample": 6,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01332,
+      "fixture_seconds": 0.004884167,
+      "total_seconds": 0.018204416
+    },
+    {
+      "sample": 6,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.024911083,
+      "fixture_seconds": 0.14591175,
+      "total_seconds": 0.170823
+    }
+  ]
+}

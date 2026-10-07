@@ -1,0 +1,304 @@
+{
+  "format": "gosvm-layouts-2",
+  "layouts": [
+    {
+      "kind": "account",
+      "name": "Escrow",
+      "type": "example.org/gosvm/escrow/model.Escrow",
+      "version": 1,
+      "discriminator": [
+        27,
+        132,
+        55,
+        51,
+        5,
+        192,
+        66,
+        236
+      ],
+      "size": 121,
+      "fields": [
+        {
+          "name": "Creator",
+          "type": "example.org/gosvm/escrow/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/escrow/model.PublicKey",
+          "offset": 40,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Commitment",
+          "type": "[32]byte",
+          "offset": 72,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 104,
+          "size": 8
+        },
+        {
+          "name": "Nonce",
+          "type": "uint64",
+          "offset": 112,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 120,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Policy",
+      "type": "example.org/gosvm/escrow/model.Policy",
+      "version": 1,
+      "discriminator": [
+        110,
+        179,
+        69,
+        64,
+        154,
+        226,
+        155,
+        81
+      ],
+      "size": 48,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/escrow/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Vault",
+      "type": "example.org/gosvm/escrow/model.Vault",
+      "version": 1,
+      "discriminator": [
+        245,
+        188,
+        106,
+        229,
+        232,
+        89,
+        114,
+        30
+      ],
+      "size": 61,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/escrow/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Audit",
+          "type": "example.org/gosvm/escrow/model.Audit",
+          "offset": 40,
+          "size": 5,
+          "fields": [
+            {
+              "name": "Tag",
+              "type": "byte",
+              "offset": 40,
+              "size": 1
+            },
+            {
+              "name": "Epoch",
+              "type": "uint32",
+              "offset": 41,
+              "size": 4
+            }
+          ]
+        },
+        {
+          "name": "Balance",
+          "type": "uint64",
+          "offset": 45,
+          "size": 8
+        },
+        {
+          "name": "Moves",
+          "type": "uint64",
+          "offset": 53,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Cancel",
+      "type": "example.org/gosvm/escrow/model.CancelArgs",
+      "version": 1,
+      "discriminator": [
+        13,
+        250,
+        241,
+        144,
+        120,
+        86,
+        233,
+        202
+      ],
+      "size": 8,
+      "fields": null
+    },
+    {
+      "kind": "instruction",
+      "name": "Claim",
+      "type": "example.org/gosvm/escrow/model.ClaimArgs",
+      "version": 1,
+      "discriminator": [
+        168,
+        114,
+        114,
+        189,
+        158,
+        31,
+        213,
+        198
+      ],
+      "size": 48,
+      "fields": [
+        {
+          "name": "Preimage",
+          "type": "[32]byte",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Nonce",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Move",
+      "type": "example.org/gosvm/escrow/model.MoveArgs",
+      "version": 1,
+      "discriminator": [
+        213,
+        149,
+        102,
+        219,
+        35,
+        164,
+        146,
+        236
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Open",
+      "type": "example.org/gosvm/escrow/model.OpenArgs",
+      "version": 1,
+      "discriminator": [
+        243,
+        158,
+        83,
+        216,
+        64,
+        191,
+        165,
+        65
+      ],
+      "size": 89,
+      "fields": [
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/escrow/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Commitment",
+          "type": "[32]byte",
+          "offset": 40,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 72,
+          "size": 8
+        },
+        {
+          "name": "Nonce",
+          "type": "uint64",
+          "offset": 80,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 88,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "SetLimit",
+      "type": "example.org/gosvm/escrow/model.SetLimitArgs",
+      "version": 1,
+      "discriminator": [
+        254,
+        147,
+        165,
+        148,
+        69,
+        9,
+        30,
+        209
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    }
+  ]
+}

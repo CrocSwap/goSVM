@@ -1,0 +1,16 @@
+results/compiler/2026-10-05-framework-swap-clock2/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:48:memset	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:3687:entrypoint	3456	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1316:v121	64	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1393:v127	128	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:3604:v176	1024	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1786:v157	640	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1203:v117	64	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:789:v74	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:417:v61	64	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:782:v71	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1540:v153	1344	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:938:v96	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1099:v109	128	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:1010:v101	0	static
+results/compiler/2026-10-05-framework-swap-clock2/program.c:230:sol_Invoke	960	static

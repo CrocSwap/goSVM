@@ -1,0 +1,469 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-whirlpool-decoder32/handler"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8107555001042783
+    },
+    {
+      "name": "compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.o"
+      ],
+      "exit_code": 0,
+      "seconds": 5.841774333734065
+    },
+    {
+      "name": "link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.20215716632083058
+    },
+    {
+      "name": "go-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/go-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 9.181328583043069
+    },
+    {
+      "name": "go-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/go-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 8.777335624676198
+    },
+    {
+      "name": "go-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/handler.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/go-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.453200084157288
+    },
+    {
+      "name": "rust-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/rust/whirlpool_handler_probe.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/rust-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.5291907503269613
+    },
+    {
+      "name": "rust-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/rust/whirlpool_handler_probe.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/rust-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3584652082063258
+    },
+    {
+      "name": "rust-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/rust/whirlpool_handler_probe.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/rust-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.736118500120938
+    },
+    {
+      "name": "upstream-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/upstream/whirlpool.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/upstream-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.930768665857613
+    },
+    {
+      "name": "upstream-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/upstream/whirlpool.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/upstream-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.660810708999634
+    },
+    {
+      "name": "upstream-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/upstream/whirlpool.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-decoder32/upstream-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2995257498696446
+    }
+  ],
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/account_decoder_whirlpool_verify.py": "fabdde8523cdbae0ab6861fde3cb45575baa81ac8cd856ed51540971eff28bee",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-final/gosvm": "ba8d8dcb38e0acafad25c44ad5ad812e83cc7434a32bda6b5cb31bb965d6bbd1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/summary.json": "6fcc377c166f9963176282447dead3a81f442df1f1a9a319ac6d6986361ce697",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/zz_gosvm.go": "1225f43e89bb66ded5fdd4d927eb0e923e3b78ed33dfc83462c1cf072ea7661b",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/go.mod": "4801e83c977d1975dd907e0f3bd508b7ec01e857f4e8ccc7d6b98ba50e00610f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/program_test.go": "25c699925ebae6f71a69e68ad4033e41970426c9572ba19ba15be805724d1c61",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/gosvm.json": "0a8c62db826bc5ead05423f939039fec69da0e3dbb2c074c9cb1ffa55ef9255e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/idl.json": "f46c33fcce1601597d4f7e27d3faa18b1667784983c799e5664a6d3d83fc763d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/program.go": "fa2e167e76230005a87ffc55a4932d7a2bb3b6e002445fd1d413f7edc7e46cab",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/README.md": "91a1f0c89fc6539a548afbdd018ed73bafa5b87f601f35b4cc01dfbefb823e4d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/layouts.json": "463ef653480cc61aca6d549ce34abef605862a9b1a996add5d66dc30b77e8cc1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/math.json": "49694017e132533e0ed1f9a619d7821363ba898c3b70e43bd6f0df247802b97e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/wide_optimization.json": "53153d3a35040bf2c11552fd8b3242066136181de72085f81d3bf048a61d5fa1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/swap.provenance.json": "9f064976a478efa957ebd94e146ce40955fcac86f687f2bea117c147350e2cd1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/wide_optimization.provenance.json": "00896dc57dce5029bde72eb0da003b25c9464976094b2a11722869be1f914e7d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/optimization.provenance.json": "48265e72e8f35ff8501def055d0268eff2e957e0dd1e9d408d74a597d4c0e11d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/math.provenance.json": "475605efc9d5934521733f9c14a2df8306422819b7b066e2dc1ed450c1237789",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/swap.json.gz": "00d41fac1a6c6d58104c1003314489dcbadf5cfe06c68bf27d853fad4895554a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/testdata/optimization.json": "3917a45826a320995393a0826a1baa902b118e9092483662b0ea62968f004e2e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/wire/wire_test.go": "495cdc69ecc05b0130566e035b167e99e8706c10cba40ddfc286c782b5669ee6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/wire/wire.go": "9958fda8b2b9a3a78a9059662d37ba743e0e224a28dcbc6685037c238e7c67b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/swap/handler.go": "2cc67943d4f6f8caeb39af291974fa48a8a9725e1df2fd844c9b40c0f63fa940",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/swap/reference_test.go": "714e7b5ffdbf30c62f642215eaace3c03ad536b173552e3b0a268bbf914f1c93",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/swap/swap.go": "f80a0876ea02152add9567ab47689251dc5f7d1da93b6d0446f395f0ec271edb",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/swap/checked_apply_test.go": "061dd27f0a35cbd9c02c0da116f2262dcac6e25e39082c15b7e8f6317aed10fd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/optimized_muldiv_test.go": "09c7d323f235b32bc342a79dd291b81b225fd85fc729545e43bb94f20aabc49f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/swap_step.go": "6e2950dfe5705daa002ddff2007b2fef0a58585bdd04775e05a6befa7bb46a99",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/reference_test.go": "1936780d945b2f53a0c9f9a7a50f483da7465335e4df38b2c2a866f1eaf33ff6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/tick.go": "6320aff670654155a77d2c66743dd3c9e18543b29e354c5c2b6f0f2b2e51330d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/wide_test.go": "217c5eeb38c6e76957387b1e57e8ecc6613591a63a52245312d7707e249b13d0",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/math/wide.go": "b796068fc6e5ce4caf02aa1fecb48f2a1ae55a26065f18069f4e122940bdae7f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/model/model.go": "185b71c6f5a6dd4b30bab61d95d7e7f9a777c7f5154ac012421a684d7644f1a6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/client/zz_gosvm.go": "80b8c5ca05a5588dc8351bb1eab05ffe3fc7054760b1591da3f2a089447e955e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/probe/program.go": "0914c979c5db37f497bc1663b1c7eb03b14c3382bb3150f94ef3a8ea55a74202",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/go/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/go.mod": "ba95da041c0d7277b7a5e8897108e6105081cc09960c494d9cba4c6bdf80b437",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/compact_test.go": "c318d920050d55b3dd4c9701d9900bbd56cd528029a5fc22a2edf2505931fe66",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/program.go": "ddbb3b890295daa004b474064ca1f9e8bebc4e522b58cd8d24ef2305dc171ecc",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/README.md": "66a73cbab0ffdd4034623503d78fa2289e4dc57151c2f948d432171612512804",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/compact-probe/program.go": "a20c566cb78be6c6885035448f1c3d57e99a3bb1dd4e7cc7b64fcb87b0350b30",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/profile/program.go": "c21b2a407774f710a5248a86b39a2a1bcabea6f38254e8b7a05542287eafb615",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final/handler/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/handler.so": "15fc075e82d857a5eca89f71fdf0a55154ca3bc3809497b2ac2d3f78c9673398",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker": "90aaa70bea6c032155dd1827a0fef1bf52daabc3bfb375c58fb0cc9e79b27e64",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/go-0.json": "0d6be5b1a9a357964172cbd8f8736c3df741a4c628ccd7e5294a031b8c3bebb5",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/go-1.json": "178d0c41176ace79d50c2f34c658ebf13b52b0fd0147436249526922b0261cf9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/go-2.json": "5f10f1b4b6417845aeb4ce7a3e9d24cd3172fd0575363a7b067ab60a4049dab9",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/rust/whirlpool_handler_probe.so": "b22477fb6702c32d54d9692ec22ad3ff72f2f08f3c4ca1767c5c00394fdb752d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/rust-0.json": "7a1074947922ba102b6a30df50f9690602cc87bdd759a48202902ad28d318e02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/rust-1.json": "acb11b5f39786d5e930f53ae49ccd17e71e6c48c960bbe1a3ecee1a11337abd5",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/rust-2.json": "d92f74190859f6bcbb088ad203e9468c4f0ef048c83939f2742c4320707f57bd",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/upstream/whirlpool.so": "1bae13c4ccd088372a3334a3b93a038b7b26c2287559ec770db18ecd97a47c7d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/upstream-0.json": "aa38b80e4ce157713e2708ac5506a1803cdc9a19d2ce73129fa82dd50e601920",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/upstream-1.json": "50943c40393a2d6da506aca6847566023bcca9cb56ade8eda9bd0fbf3b32cb56",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-final/upstream-2.json": "026b7ce73ccc621ece92b59474bdfa27b388d4202c99215c6272b6b8fb63a8e7"
+  },
+  "scenarios": 166,
+  "repetitions": 3,
+  "median_paired_ratio": 1.2808531366340767,
+  "cu_delta_min": 0,
+  "cu_delta_max": 0,
+  "elf_sha256": "f4b7cdf0c18addc7de5d22ad3aa7c8cbdcc25ca5de1b9499a20a1e60173c7c34",
+  "elf_bytes": 83424,
+  "max_static_frame": 2368,
+  "frames": [
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:36:memcpy",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:48:memset",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:9972:entrypoint",
+      "bytes": 2368,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:7619:v471",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:7686:v473",
+      "bytes": 896,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:155:sol_Clock",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4155:v222",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4354:v253",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:7748:v476",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:9032:v521",
+      "bytes": 1152,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:7880:v483",
+      "bytes": 256,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:7918:v488",
+      "bytes": 576,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:3064:v198",
+      "bytes": 192,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4321:v246",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:1269:v133",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:1009:v128",
+      "bytes": 704,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4458:v256",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:2294:v156",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4533:v260",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:1925:v135",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4261:v238",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:638:v97",
+      "bytes": 256,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:711:v102",
+      "bytes": 128,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:3338:v208",
+      "bytes": 128,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:3175:v205",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:4852:v291",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "results/compiler/2026-10-06-whirlpool-decoder32/handler.c:235:sol_Invoke",
+      "bytes": 960,
+      "kind": "static"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "root_make_test": "passed (workspace-local Go cache)",
+  "root_go_vet": "passed",
+  "generated_starter_go_test": "passed, separate module",
+  "transport_go_test_and_vet": "passed, separate module",
+  "rust_session_tests": 5,
+  "lifecycle_scenarios": 6,
+  "transactions_per_repetition": 26,
+  "expected_failures_per_repetition": 10,
+  "runner_repetitions": 3,
+  "old_general_scenarios": 108,
+  "schema1_starter_cases": 14,
+  "project_general_cases": 3,
+  "source_hashes": "all match",
+  "validator": "captured 3.0.15 oracle, exact ELF/token/features; final new validator blocked by restricted loopback binding",
+  "known_metadata_difference": {
+    "field": "rent_epoch",
+    "new_account_litesvm": 0,
+    "new_account_validator": 18446744073709551615
+  },
+  "basanos": "untouched"
+}

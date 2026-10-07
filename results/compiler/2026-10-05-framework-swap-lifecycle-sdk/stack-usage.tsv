@@ -1,0 +1,16 @@
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:48:memset	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:3671:entrypoint	3456	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1300:v121	64	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1377:v127	128	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:3588:v176	1024	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1770:v157	640	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1187:v117	64	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:773:v74	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:401:v61	64	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:766:v71	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1524:v153	1344	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:922:v96	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:1083:v109	128	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:994:v101	0	static
+results/compiler/2026-10-05-framework-swap-lifecycle-sdk/program.c:214:sol_Invoke	960	static

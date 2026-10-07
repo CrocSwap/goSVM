@@ -1,0 +1,48 @@
+=== RUN   TestSchema2StandaloneCanonicalLayouts
+--- PASS: TestSchema2StandaloneCanonicalLayouts (1.50s)
+=== RUN   TestSchema2LayoutVersionsAreGuarded
+--- PASS: TestSchema2LayoutVersionsAreGuarded (0.41s)
+=== RUN   TestSchema2InvalidDeclarations
+=== RUN   TestSchema2InvalidDeclarations/legacy
+=== RUN   TestSchema2InvalidDeclarations/unknown_layout
+=== RUN   TestSchema2InvalidDeclarations/owner
+=== RUN   TestSchema2InvalidDeclarations/unknown_access
+=== RUN   TestSchema2InvalidDeclarations/unknown_kind
+=== RUN   TestSchema2InvalidDeclarations/zero_version
+=== RUN   TestSchema2InvalidDeclarations/collision
+=== RUN   TestSchema2InvalidDeclarations/alias_absent
+=== RUN   TestSchema2InvalidDeclarations/alias_reason
+=== RUN   TestSchema2InvalidDeclarations/mutable_alias
+=== RUN   TestSchema2InvalidDeclarations/relation_account
+=== RUN   TestSchema2InvalidDeclarations/relation_field
+=== RUN   TestSchema2InvalidDeclarations/relation_type
+=== RUN   TestSchema2InvalidDeclarations/handler
+=== RUN   TestSchema2InvalidDeclarations/signature
+=== RUN   TestSchema2InvalidDeclarations/ref
+--- PASS: TestSchema2InvalidDeclarations (2.15s)
+    --- PASS: TestSchema2InvalidDeclarations/legacy (0.09s)
+    --- PASS: TestSchema2InvalidDeclarations/unknown_layout (0.10s)
+    --- PASS: TestSchema2InvalidDeclarations/owner (0.11s)
+    --- PASS: TestSchema2InvalidDeclarations/unknown_access (0.09s)
+    --- PASS: TestSchema2InvalidDeclarations/unknown_kind (0.09s)
+    --- PASS: TestSchema2InvalidDeclarations/zero_version (0.12s)
+    --- PASS: TestSchema2InvalidDeclarations/collision (0.18s)
+    --- PASS: TestSchema2InvalidDeclarations/alias_absent (0.09s)
+    --- PASS: TestSchema2InvalidDeclarations/alias_reason (0.09s)
+    --- PASS: TestSchema2InvalidDeclarations/mutable_alias (0.23s)
+    --- PASS: TestSchema2InvalidDeclarations/relation_account (0.14s)
+    --- PASS: TestSchema2InvalidDeclarations/relation_field (0.18s)
+    --- PASS: TestSchema2InvalidDeclarations/relation_type (0.20s)
+    --- PASS: TestSchema2InvalidDeclarations/handler (0.15s)
+    --- PASS: TestSchema2InvalidDeclarations/signature (0.17s)
+    --- PASS: TestSchema2InvalidDeclarations/ref (0.12s)
+=== RUN   TestSchema2SourceDiagnosticsBeforePublication
+=== RUN   TestSchema2SourceDiagnosticsBeforePublication/global
+=== RUN   TestSchema2SourceDiagnosticsBeforePublication/reserved_error
+=== RUN   TestSchema2SourceDiagnosticsBeforePublication/evaluated_error
+--- PASS: TestSchema2SourceDiagnosticsBeforePublication (0.60s)
+    --- PASS: TestSchema2SourceDiagnosticsBeforePublication/global (0.18s)
+    --- PASS: TestSchema2SourceDiagnosticsBeforePublication/reserved_error (0.20s)
+    --- PASS: TestSchema2SourceDiagnosticsBeforePublication/evaluated_error (0.22s)
+PASS
+ok  	gosvm/internal/project	4.677s

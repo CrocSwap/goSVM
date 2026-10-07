@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/starter
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-scenarios/2026-10-05-scenarios-complete/starter" && gosvm check && go test ./... && gosvm build

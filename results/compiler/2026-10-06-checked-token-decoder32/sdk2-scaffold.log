@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/checked-token/2026-10-06-checked-token-decoder32/sdk-two
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/checked-token/2026-10-06-checked-token-decoder32/sdk-two" && gosvm check && go test ./... && gosvm build

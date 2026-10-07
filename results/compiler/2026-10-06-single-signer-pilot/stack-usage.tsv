@@ -1,0 +1,11 @@
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:36:memcpy	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:48:memset	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:5704:entrypoint	2816	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:4691:v260	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:5078:v299	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:4763:v265	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:5114:v302	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:4885:v276	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:4193:v222	64	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:4449:v232	0	static
+results/compiler/2026-10-06-single-signer-pilot/prototype.c:230:sol_Invoke	960	static

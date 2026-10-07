@@ -1,0 +1,44 @@
+=== RUN   TestScalarArraysDifferential
+--- PASS: TestScalarArraysDifferential (0.27s)
+=== RUN   TestArrayDeclarationOrder
+--- PASS: TestArrayDeclarationOrder (0.07s)
+=== RUN   TestArrayRejections
+=== RUN   TestArrayRejections/oversize_byte
+=== RUN   TestArrayRejections/signed_element
+=== RUN   TestArrayRejections/array_pointer
+=== RUN   TestArrayRejections/oversize_word
+=== RUN   TestArrayRejections/huge_length
+=== RUN   TestArrayRejections/nested_array
+=== RUN   TestArrayRejections/struct_element
+=== RUN   TestArrayRejections/context_element
+=== RUN   TestArrayRejections/slice_element
+=== RUN   TestArrayRejections/slice_conversion
+=== RUN   TestArrayRejections/array_slice
+=== RUN   TestArrayRejections/array_range
+--- PASS: TestArrayRejections (0.00s)
+    --- PASS: TestArrayRejections/oversize_byte (0.00s)
+    --- PASS: TestArrayRejections/signed_element (0.00s)
+    --- PASS: TestArrayRejections/array_pointer (0.00s)
+    --- PASS: TestArrayRejections/oversize_word (0.00s)
+    --- PASS: TestArrayRejections/huge_length (0.00s)
+    --- PASS: TestArrayRejections/nested_array (0.00s)
+    --- PASS: TestArrayRejections/struct_element (0.00s)
+    --- PASS: TestArrayRejections/context_element (0.00s)
+    --- PASS: TestArrayRejections/slice_element (0.00s)
+    --- PASS: TestArrayRejections/slice_conversion (0.00s)
+    --- PASS: TestArrayRejections/array_slice (0.00s)
+    --- PASS: TestArrayRejections/array_range (0.00s)
+=== RUN   TestArrayStorageLimit
+--- PASS: TestArrayStorageLimit (0.00s)
+=== RUN   TestArrayCapacityMemory
+=== RUN   TestArrayCapacityMemory/bytes
+=== RUN   TestArrayCapacityMemory/words
+=== RUN   TestArrayCapacityMemory/smallWords
+=== RUN   TestArrayCapacityMemory/flags
+--- PASS: TestArrayCapacityMemory (0.85s)
+    --- PASS: TestArrayCapacityMemory/bytes (0.17s)
+    --- PASS: TestArrayCapacityMemory/words (0.21s)
+    --- PASS: TestArrayCapacityMemory/smallWords (0.20s)
+    --- PASS: TestArrayCapacityMemory/flags (0.26s)
+PASS
+ok  	gosvm/internal/compiler	1.200s

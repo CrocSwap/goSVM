@@ -1,0 +1,47 @@
+?   	example.org/gosvm/escrow/client	[no test files]
+?   	example.org/gosvm/escrow/model	[no test files]
+ok  	example.org/gosvm/escrow	0.015s
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/escrow/2026-10-05-escrow-clock2/escrow/build/program.so (25280 bytes, 2.514s)
+Testing 32 compiled SBF scenarios with LiteSVM...
+PASS open-claim-reuse step 1              20508 CU
+PASS open-claim-reuse step 2              8356 CU
+PASS open-claim-reuse step 3              20508 CU
+PASS open-claim-reuse step 4              6756 CU
+PASS open-cancel-reuse step 1             20508 CU
+PASS open-cancel-reuse step 2             6756 CU
+PASS open-cancel-reuse step 3             20508 CU
+PASS open-cancel-reuse step 4             8356 CU
+PASS zero-deposit-rollback step 1         16692 CU
+PASS deposit-cpi-failure-rollback step 1  18683 CU
+PASS target-already-funded step 1         618 CU
+PASS target-already-owned step 1          615 CU
+PASS target-has-data step 1               615 CU
+PASS bad-pda-bump step 1                  6643 CU
+PASS bad-nonce-pda step 1                 6304 CU
+PASS bad-beneficiary-args step 1          3081 CU
+PASS beneficiary-substitution step 1      3081 CU
+PASS creator-unsigned step 1              351 CU
+PASS creator-readonly step 1              349 CU
+PASS target-readonly step 1               345 CU
+PASS System-substitution step 1           491 CU
+PASS duplicate-recipient step 1           1262 CU
+PASS claim-wrong-secret step 1            7118 CU
+PASS claim-wrong-nonce step 1             6981 CU
+PASS claim-beneficiary-unsigned step 1    271 CU
+PASS claim-beneficiary-substitute step 1  2763 CU
+PASS claim-creator-substitute step 1      2442 CU
+PASS cancel-creator-unsigned step 1       196 CU
+PASS cancel-creator-substitute step 1     1961 CU
+PASS close-refund-overflow step 1         8239 CU
+PASS close-owner-mismatch step 1          208 CU
+PASS close-wrong-layout step 1            707 CU
+PASS close-unallocated step 1             208 CU
+PASS atomic-open-bad-claim-rollback step 1 27622 CU
+PASS atomic-close-bad-open-rollback step 1 23448 CU
+PASS current-rent-lifecycle-0 step 1      20496 CU
+PASS current-rent-lifecycle-0 step 2      6756 CU
+PASS current-rent-lifecycle-1 step 1      20015 CU
+PASS current-rent-lifecycle-1 step 2      6756 CU
+PASS failed-claim-then-success step 1     20508 CU
+PASS failed-claim-then-success step 2     7118 CU
+PASS failed-claim-then-success step 3     8356 CU

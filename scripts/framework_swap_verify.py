@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""Verify the generated full swap against the preserved matched token corpus."""
+import argparse
+import copy
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import shutil
+import struct
+import subprocess
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+TOKEN = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
+MAX = (1 << 64)-1
+
+
+def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def load(p): return json.loads(p.read_text())
+def save(p,v): p.write_text(json.dumps(v,indent=2)+'\n')
+def require(ok,message):
+    if not ok: raise RuntimeError(message)
+
+
+def decode58(s):
+    n=0
+    for c in s: n=n*58+ALPHABET.index(c)
+    return bytes(len(s)-len(s.lstrip('1')))+(n.to_bytes((n.bit_length()+7)//8,'big') if n else b'')
+
+
+# Fixed mappings derived from each existing case's violated policy. Application
+# math and downstream SPL codes stay unchanged; framework checks have their own
+# documented categories. Expected state/log assertions are never weakened.
+CODES = {
+    'no-accounts':6000,'missing-account':6000,'extra-account':6000,'account-limit':6000,
+    'long-pool':6003,'pool-discriminator':6003,'instruction-discriminator':6004,
+    'pool-owner':6002,'pool-readonly':6001,'pool-length':6003,'no-signer':6001,
+    'fake-program':6001,'alias':6006,'vault-substitute':6007,'token-owner':3010,
+    'token-length':3010,'token-readonly':6001,'uninitialized':3010,'native-token':3010,
+    'mint':6007,'same-mint':6007,'user-authority':6007,'vault-authority':6007,
+    'pda':6008,'bump':6008,'short-ix':6004,'long-ix':6004,'override-foreign-owner':6002,
+}
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',required=True,type=Path)
+    parser.add_argument('--llvm',type=Path,default=Path.home()/'.cache/solana/v1.51/platform-tools/llvm')
+    args=parser.parse_args();out=args.output.resolve();stage=ROOT/'build/framework-swap'/out.name
+    require(not out.exists() and not stage.exists(),'choose new evidence/staging directories')
+    out.mkdir(parents=True);stage.mkdir(parents=True)
+    example=ROOT/'examples/full-swap';oracle=ROOT/'results/svm/2026-10-05-general-complete/token-fixtures.json'
+    paths=[Path(__file__).resolve(),ROOT/'scripts/framework_swap_native.go.txt',oracle]
+    for folder in ('internal/compiler','internal/project','internal/testvm','internal/sbftest','internal/runner','cmd/gosvm','sdk','solana','examples/full-swap','examples/full-swap-service'):
+        paths.extend(p for p in (ROOT/folder).rglob('*') if p.is_file() and p.suffix!='.md' and 'build' not in p.relative_to(ROOT/folder).parts)
+    paths=sorted(set(paths));hashes={str(p.relative_to(ROOT)):digest(p) for p in paths}
+    summary={'schema':1,'passed':False,'machine':platform.platform(),'source_sha256':hashes,'checks':[],
+             'limitations':['Preloaded full swap migration; initialization/rent/closing and escrow gates remain open',
+                            'Preserved validator oracle replayed in LiteSVM; no fresh-validator or clean-host claim',
+                            'Ordinary Go service uses actual types/codecs/math; no external developer trial',
+                            'Single build observations are not repeated competitive build benchmarks']}
+    env=dict(os.environ,GOCACHE=str(ROOT/'build/lifecycle-go-cache'),GOSVM_CACHE=str(stage/'cache'),GOPROXY='off',GOSUMDB='off',GOWORK='off',GOTOOLCHAIN='local')
+    for name in ('GOFLAGS','GOSVM_TEST_RUNNER','GOSVM_TEST_FEATURES','SBF_LLVM'):env.pop(name,None)
+
+    def run(label,cmd,*,cwd=ROOT,input_data=None):
+        cmd=[str(x) for x in cmd];start=time.perf_counter()
+        with (out/(label+'.log')).open('wb') as log:
+            result=subprocess.run(cmd,cwd=cwd,env=env,input=input_data,stdout=log,stderr=subprocess.STDOUT,timeout=240)
+        summary['checks'].append({'check':label,'command':cmd,'cwd':str(cwd),'exit_code':result.returncode,'wall_seconds':time.perf_counter()-start,'log':label+'.log'})
+        require(result.returncode==0,f'{label}: see {out/(label+".log")}');print(label+': PASS',flush=True)
+
+    try:
+        run('generator-tests',['go','test','./internal/project','-run','TestSchema2Checked|TestSchema2PDAAdapter','-count=1','-v'])
+        run('aggregate-memory-tests',['go','test','./internal/compiler','-run','TestSDK2','-count=1','-v'])
+        run('helper-native-tests',['go','test','./sdk/...','-count=1','-v'])
+        cli=stage/'gosvm';run('cli-build',['bash','scripts/build-cli.sh',cli])
+        run('runner-install',[cli,'runner','install','-archive',ROOT/'results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz'])
+        project=stage/'full-swap';run('scaffold',[cli,'new','-schema','2','-sdk','2','-module','example.org/gosvm/full-swap',project])
+        # The fresh demonstration schema is not a deployed application/history.
+        for p in ('zz_gosvm.go','layouts.json','client/zz_gosvm.go','program_test.go'):(project/p).unlink()
+        for p in ('gosvm.json','program.go','lifecycle.go','lifecycle_test.go','model/model.go','model/quote.go','model/quote_test.go','testdata/svm.json'):
+            (project/p).parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(example/p,project/p)
+        run('check',[cli,'check','-dir',project]);run('native-tests',[cli,'test','-dir',project])
+        for p in ('zz_gosvm.go','client/zz_gosvm.go','idl.json','layouts.json'):
+            require((project/p).read_bytes()==(example/p).read_bytes(),f'generated example differs: {p}')
+        service=stage/'service';service.mkdir()
+        for p in ('main.go','main_test.go'):shutil.copyfile(ROOT/'examples/full-swap-service'/p,service/p)
+        (service/'go.mod').write_text('module independent.example/full-swap-service\n\ngo 1.22\n\nrequire example.org/gosvm/full-swap v0.0.0\nreplace example.org/gosvm/full-swap => '+str(project)+'\n')
+        run('independent-service-tests',['go','test','./...','-count=1'],cwd=service)
+        run('independent-service-deps',['go','list','-deps','./...'],cwd=service)
+        deps=(out/'independent-service-deps.log').read_text().splitlines()
+        require(not any(p.startswith('gosvm/') for p in deps),'service pulled compiler/runtime SDK')
+        native_dir=stage/'native';native_dir.mkdir()
+        shutil.copyfile(ROOT/'scripts/framework_swap_native.go.txt',native_dir/'main.go')
+        shutil.copyfile(native_dir/'main.go',out/'native-driver.go.txt')
+        (native_dir/'go.mod').write_text('module independent.example/full-swap-driver\n\ngo 1.22\n\nrequire (\n example.org/gosvm/full-swap v0.0.0\n gosvm v0.0.0\n)\nreplace example.org/gosvm/full-swap => '+str(project)+'\nreplace gosvm => '+str(project/'.gosvm/sdk')+'\n')
+        native=native_dir/'native';run('native-build',['go','build','-ldflags=-linkmode=external','-o',native,'.'],cwd=native_dir);run('native-sign',['codesign','--force','--sign','-',native])
+        suite=copy.deepcopy(load(oracle));mappings=[]
+        token_artifact=oracle.parent/'spl-token.so';require(digest(token_artifact)==suite['programs'][0]['sha256'],'token oracle artifact drifted')
+        shutil.copyfile(token_artifact,out/'spl-token.so')
+        suite['programs'][0]['elf']='spl-token.so'
+        initial={a['name']:a.get('initial',{'data':'','owner':'11111111111111111111111111111111','lamports':10000000,'executable':True,'rent_epoch':0}) for a in suite['accounts']}
+        addresses={a['name']:decode58(a['address']) for a in suite['accounts']}
+        for p in suite['programs']:
+            addresses[p['name']]=decode58(p['address']);initial[p['name']]={'data':'','owner':'11111111111111111111111111111111','lamports':10000000,'executable':True,'rent_epoch':0}
+        rows=[];expectations=[]
+        for c in suite['cases']:
+            states=copy.deepcopy(initial)
+            for o in c.get('overrides',[]):states[o['name']]=copy.deepcopy(o['state'])
+            for step in c['steps']:
+                old=step['expect'].get('error')
+                if c['name'] in CODES:
+                    require(old is not None,'mapping must apply to an expected error')
+                    mapped=copy.deepcopy(old);mapped['InstructionError'][1]['Custom']=CODES[c['name']]
+                    mappings.append({'case':c['name'],'baseline':old,'framework':mapped});step['expect']['error']=mapped
+                step['expect'].pop('cu',None)
+                # SDK 2 admits this historical 17-account case; the generated
+                # handler still rejects it by its exact account-count policy.
+                # Compound atomicity is proven by SBF, not native callbacks.
+                if len(c['steps'])==1 and len(step['instructions'])==1:
+                    ix=step['instructions'][0];meta=ix['accounts'];merged={}
+                    for a in meta:
+                        n=a['account'];s,w=merged.get(n,(False,False));merged[n]=(s or a['signer'],w or a['writable'])
+                    rows.append({'Name':c['name'],'ID':decode58(suite['program_id']).hex(),'Instruction':ix['data'],
+                                 'Accounts':[{'Key':addresses[a['account']].hex(),'Owner':decode58(states[a['account']]['owner']).hex(),
+                                              'Data':states[a['account']]['data'],'Signer':merged[a['account']][0],'Writable':merged[a['account']][1],
+                                              'Executable':states[a['account']]['executable'],'Lamports':states[a['account']]['lamports']} for a in meta]})
+                    error=step['expect'].get('error');code=0 if error is None else error['InstructionError'][1]['Custom'];after=copy.deepcopy(states)
+                    if not code:
+                        # Compute balances/counter using independent arbitrary
+                        # precision math; require the captured oracle agrees.
+                        require(len(meta)==8,'success account count')
+                        names=[a['account'] for a in meta];amount,minimum=struct.unpack('<QQ',bytes.fromhex(ix['data'])[8:])
+                        ux,vx,vy,uy=[struct.unpack_from('<Q',bytes.fromhex(states[n]['data']),64)[0] for n in names[2:6]]
+                        net=amount-(amount*30+9999)//10000;quoted=vy*net//(vx+net)
+                        require(quoted>=minimum and 0<quoted<=vy and ux>=amount and vx+amount<=MAX and uy+quoted<=MAX,'independent swap bounds')
+                        for n,value in zip(names[2:6],[ux-amount,vx+amount,vy-quoted,uy+quoted]):
+                            b=bytearray.fromhex(after[n]['data']);struct.pack_into('<Q',b,64,value);after[n]['data']=b.hex()
+                        b=bytearray.fromhex(after[names[0]]['data']);counter=struct.unpack_from('<Q',b,137)[0];struct.pack_into('<Q',b,137,counter+1);after[names[0]]['data']=b.hex()
+                        for assertion in step['expect']['accounts']:require(after[assertion['account']]==assertion['state'],'captured state differs from independent quote')
+                    elif c['name']=='output-frozen':
+                        # Direct native calls preserve the successful first CPI;
+                        # SBF must roll that transfer back with the transaction.
+                        amount=struct.unpack_from('<Q',bytes.fromhex(ix['data']),8)[0]
+                        for j,sign in ((2,-1),(3,1)):
+                            n=meta[j]['account'];b=bytearray.fromhex(after[n]['data']);v=struct.unpack_from('<Q',b,64)[0];struct.pack_into('<Q',b,64,v+sign*amount);after[n]['data']=b.hex()
+                    expectations.append({'Name':c['name'],'Code':code,'Data':[after[a['account']]['data'] for a in meta],
+                                         'Lamports':[after[a['account']]['lamports'] for a in meta],
+                                         'Calls':2 if code==0 or c['name']=='output-frozen' else 1 if c['name']=='input-frozen' else 0})
+                if step['expect'].get('error') is None:
+                    for a in step['expect'].get('accounts',[]):states[a['account']]=copy.deepcopy(a['state'])
+        save(out/'error-mapping.json',mappings);save(out/'native-input.json',rows);save(out/'independent-expectations.json',expectations)
+        run('native-vectors',[native],input_data=json.dumps(rows).encode());actual=load(out/'native-vectors.log')
+        require(actual==expectations,'native status/state/CPI effects differ from independent expectations');save(out/'native-expectations.json',actual)
+        fixture=out/'fixtures.json';save(fixture,suite)
+        first=load(oracle)['cases'][0]['steps'][0]['instructions'][0]
+        pool=initial[first['accounts'][0]['account']]['data']
+        run('independent-service-run',['go','run','-ldflags=-linkmode=external','.', '-pool',pool,'-x','1000000','-y','2000000','-amount','1000'],cwd=service)
+        service_result=load(out/'independent-service-run.log');require(service_result['Quote']==1992 and service_result['Instruction']=='f8c69e91e17587c8'+struct.pack('<QQ',1000,0).hex(),'service client/math mismatch')
+        managed_disc=hashlib.sha256(b'gosvm:account:ManagedPool:v1').digest()[:8]
+        managed=(managed_disc+bytes.fromhex(pool)[8:]+bytes(range(32))).hex()
+        run('independent-managed-service-run',['go','run','-ldflags=-linkmode=external','.', '-managed','-pool',managed,'-x','1000000','-y','2000000','-amount','1000'],cwd=service)
+        managed_result=load(out/'independent-managed-service-run.log')
+        managed_ix=hashlib.sha256(b'gosvm:instruction:ManagedSwap:v1').digest()[:8].hex()+struct.pack('<QQ',1000,0).hex()
+        require(managed_result['Quote']==1992 and managed_result['Instruction']==managed_ix and managed_result['ManagedPool']['Creator']==list(range(32)),'managed service types/client/math mismatch')
+        llvm=args.llvm.resolve();elf=out/'program.so'
+        run('sbf-build',[cli,'build','-dir',project,'-llvm',llvm]);shutil.copyfile(project/'build/program.so',elf)
+        run('emit-c',[cli,'-emit-c','-arch','v3','-o',out/'program.c',project])
+        run('stack-compile',[llvm/'bin/clang','-target','sbf','-mcpu=v3','-O2','-fno-builtin','-fPIC','-fno-stack-protector','-std=c11','-Werror','-DGOSVM_SBF_V3=1','-fstack-usage','-c',out/'program.c','-o',stage/'stack.o'])
+        run('stack-link',[llvm/'bin/ld.lld','-z','notext','-shared','--Bdynamic','--strip-all','--entry','entrypoint','--script',ROOT/'internal/compiler/sbf-v3.ld','--no-undefined','-o',stage/'stack.so',stage/'stack.o'])
+        require(digest(elf)==digest(stage/'stack.so'),'stack instrumentation changed ELF');shutil.copyfile(stage/'stack.su',out/'stack-usage.tsv')
+        frames=[{'function':p[0].rsplit(':',1)[-1],'bytes':int(p[1]),'kind':p[2]} for p in (line.split('\t') for line in (out/'stack-usage.tsv').read_text().splitlines())]
+        require(frames and all(f['kind']=='static' and f['bytes']<=4096 for f in frames),'SBF frame budget exceeded')
+        run('project-core-svm',[cli,'test','-dir',project,'--svm','-llvm',llvm,'-svm-fixtures',project/'testdata/svm.json'])
+        require(digest(project/'build/program.so')==digest(elf),'project workflow executed a different ELF')
+        shutil.copyfile(project/'build/svm-results.json',out/'project-core.json')
+        for sample in range(3):
+            report=out/f'svm-{sample}.json';run(f'svm-{sample}',[cli,'svm-test','-elf',elf,'-fixtures',fixture,'-report',report]);actual=load(report)
+            require(actual['elf_sha256']==digest(elf),'runner ELF mismatch')
+            if sample:require(actual['cases']==load(out/'svm-0.json')['cases'],'state/error/log/CU results changed between repetitions')
+        require(hashes=={str(p.relative_to(ROOT)):digest(p) for p in paths},'sources changed during proof')
+        summary.update(passed=True,native_vectors=len(rows),scenarios=len(suite['cases']),transactions=sum(len(c['steps']) for c in suite['cases']),samples=3,
+                       elf_bytes=elf.stat().st_size,elf_sha256=digest(elf),stack_frames=frames,runner_sha256=actual['runner_sha256'],runtime_version=actual['runtime_version'])
+        print(f'PASS: {len(suite["cases"])} generated full-swap scenarios in three repetitions. {out}',flush=True)
+    except Exception as error:summary['failure']=str(error);raise
+    finally:save(out/'summary.json',summary)
+
+
+if __name__=='__main__':main()

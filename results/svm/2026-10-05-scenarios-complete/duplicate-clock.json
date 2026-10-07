@@ -1,0 +1,156 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "2yyWsBx9iDmgm9HtiUrDsnZ7BEzFBQeN2hD4ktj7XB6T",
+  "payer_seed": "233834b17ee9851a8052cd2dd4a206619cdf8aab884917ac35ad5864f514cfb7",
+  "sysvars": {
+    "clock": {
+      "slot": 9007199254740993,
+      "epoch_start_timestamp": -23,
+      "epoch": 7,
+      "leader_schedule_epoch": 9,
+      "unix_timestamp": -123456
+    },
+    "rent": {
+      "lamports_per_byte_year": 777,
+      "exemption_threshold": 1.5,
+      "burn_percent": 17
+    }
+  },
+  "accounts": [
+    {
+      "name": "state",
+      "address": "9znBkmmcvLhFFgqHYsUvJziDLnXHpJMEsuF6YmZCeYU6",
+      "initial": {
+        "data": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "owner": "2yyWsBx9iDmgm9HtiUrDsnZ7BEzFBQeN2hD4ktj7XB6T",
+        "lamports": 10000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "clock",
+      "address": "SysvarC1ock11111111111111111111111111111111"
+    },
+    {
+      "name": "rent",
+      "address": "SysvarRent111111111111111111111111111111111"
+    }
+  ],
+  "cases": [
+    {
+      "name": "duplicate-clock",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "00"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000c01dfeffffffffff0903000000000000000000000000f83f11000000000000000100000000000000",
+                  "owner": "2yyWsBx9iDmgm9HtiUrDsnZ7BEzFBQeN2hD4ktj7XB6T",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "clock",
+                "state": {
+                  "data": "0100000000002000e9ffffffffffffff07000000000000000900000000000000c01dfeffffffffff",
+                  "owner": "Sysvar1111111111111111111111111111111111111",
+                  "lamports": 1,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "rent",
+                "state": {
+                  "data": "0903000000000000000000000000f83f11",
+                  "owner": "Sysvar1111111111111111111111111111111111111",
+                  "lamports": 1,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "00"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff00000000000000800b000000000000000c00000000000000ffffffffffffff7f0903000000000000000000000000f83f11000000000000000200000000000000",
+                  "owner": "2yyWsBx9iDmgm9HtiUrDsnZ7BEzFBQeN2hD4ktj7XB6T",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "clock",
+                "state": {
+                  "data": "ffffffffffffffff00000000000000800b000000000000000c00000000000000ffffffffffffff7f",
+                  "owner": "Sysvar1111111111111111111111111111111111111",
+                  "lamports": 1,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "rent",
+                "state": {
+                  "data": "0903000000000000000000000000f83f11",
+                  "owner": "Sysvar1111111111111111111111111111111111111",
+                  "lamports": 1,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "sysvars": {
+            "clock": {
+              "slot": 18446744073709551615,
+              "epoch_start_timestamp": -9223372036854775808,
+              "epoch": 11,
+              "leader_schedule_epoch": 12,
+              "unix_timestamp": 9223372036854775807
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

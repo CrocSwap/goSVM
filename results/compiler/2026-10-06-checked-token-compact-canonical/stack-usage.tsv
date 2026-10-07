@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:35:memcpy	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:41:memset	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:3879:entrypoint	3648	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:2895:v213	64	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:2972:v219	128	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:3393:v252	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:510:v48	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:527:v54	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:553:v57	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:517:v51	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:603:v68	448	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:738:v78	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:666:v73	0	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:827:v86	128	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:2782:v209	64	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:3119:v245	1344	static
+results/compiler/2026-10-06-checked-token-compact-canonical/program.c:215:sol_Invoke	960	static

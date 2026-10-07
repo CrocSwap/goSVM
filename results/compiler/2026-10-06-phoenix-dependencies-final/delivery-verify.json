@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "frontend_sha256": "bb1c3b28e05cb8f1862cd7dddbb4a4ef508e4a957089934e51eda9e132d28294",
+  "frontend_archive_sha256": "37fcbe26a0d4fbcf744809abb7e194463c03aab96c7729acaceac31fbf42b3c1",
+  "frontend_files_verified": 121,
+  "frontend_executable": true,
+  "runner_executable": true,
+  "runner_sha256": "bee1c54736539e973be42c6e76ccd37c9d8c54898830a666e2c49c4f78674479",
+  "runner_source_archive_sha256": "266c3136f2d59ab69999c96138cfb369e6763a99aa87ed1b79cf9a77107c338c",
+  "runner_source_files": 50,
+  "extracted_cli_probe_rebuild_sha256": "0c547b424edd13d34ed373c3e141f32aa990465f6a1276f14bb45899f83e8c99",
+  "source_cli_probe_rebuild_sha256": "0c547b424edd13d34ed373c3e141f32aa990465f6a1276f14bb45899f83e8c99",
+  "source_cli_multiply_rebuild_sha256": "a32ed2a73418e53fe6f692fd269adb1aba47e40e041f1cab8916ea09f6bf17b2",
+  "source_cli_sha256": "7ec15ddff2a9fd4a9b36278024ccffdb1803ff2ce7eeed4c25bf1318852897f9",
+  "source_cli_bytes_exact": false
+}

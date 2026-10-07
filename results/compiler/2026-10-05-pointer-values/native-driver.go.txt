@@ -1,0 +1,25 @@
+package main
+import (
+ "encoding/hex"
+ "encoding/json"
+ "os"
+ arrays "gosvm/examples/pointer-values"
+)
+type Input struct {Name, State, Instruction string}
+type Result struct {Name string; Code uint64; Panicked bool; Data string}
+func invoke(s,i []byte)(code uint64,panicked bool){
+ defer func(){if recover()!=nil{panicked=true}}()
+ code=arrays.Process(s,i);return
+}
+func main(){
+ var rows []Input
+ if err:=json.NewDecoder(os.Stdin).Decode(&rows);err!=nil{panic(err)}
+ results:=[]Result{}
+ for _,row:=range rows{
+  state,err:=hex.DecodeString(row.State);if err!=nil{panic(err)}
+  instruction,err:=hex.DecodeString(row.Instruction);if err!=nil{panic(err)}
+  code,panicked:=invoke(state,instruction)
+  results=append(results,Result{row.Name,code,panicked,hex.EncodeToString(state)})
+ }
+ if err:=json.NewEncoder(os.Stdout).Encode(results);err!=nil{panic(err)}
+}

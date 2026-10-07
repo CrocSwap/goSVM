@@ -1,0 +1,15 @@
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:48:memset	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:3491:entrypoint	3456	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:1128:v116	128	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:1267:v119	256	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:3408:v165	1024	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:1583:v146	960	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:714:v73	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:342:v60	64	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:707:v70	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:1385:v142	1536	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:863:v95	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:1024:v108	128	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:935:v100	0	static
+results/compiler/2026-10-05-framework-swap-wordcopies/program.c:162:sol_Invoke	960	static

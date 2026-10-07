@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "label": "imports",
+      "cmd": "python3 scripts/import_verify.py --output results/compiler/2026-10-05-shared-imports-final",
+      "chunk_id": "b40b17",
+      "wall_time_seconds": 0.000008584,
+      "session_id": 73889,
+      "original_token_count": 143,
+      "output": "compiler-tests: PASS\napplication-tests: PASS\ncli-build: PASS\nrunner-install: PASS\nisolated-service: PASS\nisolated-dependencies: PASS\nnative-build: PASS\nnative-sign: PASS\nnative-expectations: PASS\nsbf-build: PASS\nemit-c: PASS\nstack-compile: PASS\nstack-link: PASS\nsvm-0: PASS\nsvm-1: PASS\nsvm-2: PASS\ncache-first: PASS\ncache-noop: PASS\ncache-helper-edit: PASS\ncache-restored: PASS\nPASS: 142 shared-package SBF scenarios, three repetitions, isolated native client and dependency cache. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-shared-imports-final\n",
+      "exit_code": 0
+    },
+    {
+      "label": "arrays",
+      "cmd": "python3 scripts/array_verify.py --output results/compiler/2026-10-05-import-array-regression",
+      "chunk_id": "192f27",
+      "wall_time_seconds": 0.000006084,
+      "session_id": 97178,
+      "original_token_count": 100,
+      "output": "differential-tests: PASS\ncli-build: PASS\nrunner-install: PASS\nnative-build: PASS\nnative-sign: PASS\nnative-expectations: PASS\nsbf-build: PASS\nemit-c: PASS\nstack-compile: PASS\nstack-link: PASS\nsvm-0: PASS\nsvm-1: PASS\nsvm-2: PASS\nPASS: 147 array scenarios, native-Go/SBF bytes and failures, three repetitions. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-import-array-regression\n",
+      "exit_code": 0
+    },
+    {
+      "label": "capacity",
+      "cmd": "python3 scripts/array_capacity_verify.py --output results/compiler/2026-10-05-import-capacity-regression",
+      "chunk_id": "03a0c9",
+      "wall_time_seconds": 0.000003708,
+      "session_id": 55223,
+      "original_token_count": 214,
+      "output": "cli-build: PASS\nrunner-install: PASS\nnative-build: PASS\nnative-sign: PASS\nbyte-native: PASS\nbyte-build: PASS\nbyte-emit-c: PASS\nbyte-stack: PASS\nbyte-stack-link: PASS\nbyte-svm-0: PASS\nbyte-svm-1: PASS\nbyte-svm-2: PASS\nuint64-native: PASS\nuint64-build: PASS\nuint64-emit-c: PASS\nuint64-stack: PASS\nuint64-stack-link: PASS\nuint64-svm-0: PASS\nuint64-svm-1: PASS\nuint64-svm-2: PASS\nuint32-native: PASS\nuint32-build: PASS\nuint32-emit-c: PASS\nuint32-stack: PASS\nuint32-stack-link: PASS\nuint32-svm-0: PASS\nuint32-svm-1: PASS\nuint32-svm-2: PASS\nbool-native: PASS\nbool-build: PASS\nbool-emit-c: PASS\nbool-stack: PASS\nbool-stack-link: PASS\nbool-svm-0: PASS\nbool-svm-1: PASS\nbool-svm-2: PASS\nPASS: 60 capacity scenarios across four scalar kinds, three real-SBF repetitions. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-import-capacity-regression\n",
+      "exit_code": 0
+    },
+    {
+      "label": "workloads",
+      "cmd": "python3 scripts/milestone1_acceptance.py --output results/svm/2026-10-05-m2-import-regression --runner-archive results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz --existing-backend build/polish/cache/toolchains/v1.51/darwin-arm64 --host-note 'Existing development host; current-source import regression with copied backend and empty Go/project caches. Fresh host and fresh validator remain explicitly skipped by user for milestone 1.'",
+      "chunk_id": "8646d3",
+      "wall_time_seconds": 0.000003333,
+      "session_id": 72431,
+      "original_token_count": 127,
+      "output": "source-install: PASS\nbackend-status: PASS\nrunner-install: PASS\nrunner-status: PASS\nrunner-idempotent: PASS\nscaffold: PASS\ndoctor: PASS\nstarter: PASS\nproject-general: PASS\nfull-token-build: PASS\nfull-token: PASS\nlifecycle-build: PASS\nlifecycle: PASS\nprobe-compile: PASS\nprobe-link: PASS\nsysvars: PASS\nmetadata-rejection: PASS\nPASS: installation/workflows; this script does not certify host cleanliness or a fresh validator. /Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-import-regression\n",
+      "exit_code": 0
+    },
+    {
+      "label": "root-tests",
+      "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+      "chunk_id": "345b4d",
+      "wall_time_seconds": 0.000002875,
+      "session_id": 45274,
+      "original_token_count": 131,
+      "output": "?   \tgosvm/cmd/verify\t[no test files]\n?   \tgosvm/examples/array-capacity\t[no test files]\n?   \tgosvm/examples/array-values\t[no test files]\nok  \tgosvm/cmd/gosvm\t0.030s\nok  \tgosvm/examples/amm\t(cached)\nok  \tgosvm/examples/protocol\t(cached)\nok  \tgosvm/examples/tokenswap\t(cached)\nok  \tgosvm/internal/compiler\t5.627s\nok  \tgosvm/internal/project\t1.182s\nok  \tgosvm/internal/runner\t(cached)\nok  \tgosvm/internal/sbftest\t(cached)\nok  \tgosvm/internal/testvm\t(cached)\nok  \tgosvm/internal/toolchain\t(cached)\nok  \tgosvm/solana\t(cached)\n",
+      "exit_code": 0
+    },
+    {
+      "label": "root-vet",
+      "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+      "chunk_id": "086ed6",
+      "wall_time_seconds": 0.00001575,
+      "session_id": 71838,
+      "original_token_count": 0,
+      "output": "",
+      "exit_code": 0
+    },
+    {
+      "label": "starter",
+      "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test ./... -count=1",
+      "chunk_id": "c78f76",
+      "wall_time_seconds": 0.973939041,
+      "exit_code": 0,
+      "original_token_count": 22,
+      "output": "?   \texample.com/typed-swap/client\t[no test files]\nok  \texample.com/typed-swap\t0.015s\n"
+    },
+    {
+      "label": "transport",
+      "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test -ldflags=-linkmode=external ./... -count=1",
+      "chunk_id": "5d6659",
+      "wall_time_seconds": 0.000003083,
+      "session_id": 69125,
+      "original_token_count": 11,
+      "output": "ok  \tgosvm-svm-transport-experiment\t0.015s\n",
+      "exit_code": 0
+    }
+  ]
+}

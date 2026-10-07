@@ -1,0 +1,17 @@
+Testing 1 compiled SBF scenarios with LiteSVM...
+PASS create-mint-swap-drain-close-recreate step 1 2929 CU
+PASS create-mint-swap-drain-close-recreate step 2 2929 CU
+PASS create-mint-swap-drain-close-recreate step 3 4363 CU
+PASS create-mint-swap-drain-close-recreate step 4 4363 CU
+PASS create-mint-swap-drain-close-recreate step 5 4363 CU
+PASS create-mint-swap-drain-close-recreate step 6 4363 CU
+PASS create-mint-swap-drain-close-recreate step 7 150 CU
+PASS create-mint-swap-drain-close-recreate step 8 2061 CU
+PASS create-mint-swap-drain-close-recreate step 9 4253 CU
+PASS create-mint-swap-drain-close-recreate step 10 13476 CU
+PASS create-mint-swap-drain-close-recreate step 11 20233 CU
+PASS create-mint-swap-drain-close-recreate step 12 2776 CU
+PASS create-mint-swap-drain-close-recreate step 13 4645 CU
+PASS create-mint-swap-drain-close-recreate step 14 2958 CU
+PASS create-mint-swap-drain-close-recreate step 15 4286 CU
+gosvm: create-mint-swap-drain-close-recreate step 16 account flow_uy: simulated metadata got owner=11111111111111111111111111111111 lamports=0 executable=false rent_epoch=0; want owner=H36bGb8d9RMNqL3pDDkojDhFKPp8Cs8dZEPyTyef3PsW lamports=0 executable=false rent_epoch=0

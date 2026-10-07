@@ -1,0 +1,5 @@
+?   	example.com/typed-swap/client	[no test files]
+ok  	example.com/typed-swap	(cached)
+Built /Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap/build/program.so (3216 bytes, 132ms)
+Testing 14 compiled SBF fixtures with LiteSVM...
+gosvm: SVM protocol: {"message":"require exactly these fields: slot, epoch_start_timestamp, epoch, leader_schedule_epoch, unix_timestamp"}

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "noop_kept_output_mtime": true,
+  "original": {
+    "Input": "d085c0802f36ef8cfe79eebb4ab2791cec72ffd6a8e6c7feff3ed82ba97f0088",
+    "Output": "f43f2ad0ce33659afb94bc8b5c3addfcdc2699c1a03e87f28c403e7e411007af"
+  },
+  "edited": {
+    "Input": "6642d1e86c5afc1acafb18e5cde595ed00dbaa9da3b7920e6ac4904b0ec8f9f8",
+    "Output": "f1b2252df24d607e43e63ae64eed74e3280f5891090c1ff171e670d4f4d98bd8"
+  },
+  "restored": {
+    "Input": "d085c0802f36ef8cfe79eebb4ab2791cec72ffd6a8e6c7feff3ed82ba97f0088",
+    "Output": "f43f2ad0ce33659afb94bc8b5c3addfcdc2699c1a03e87f28c403e7e411007af"
+  }
+}

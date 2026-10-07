@@ -1,0 +1,436 @@
+{
+  "schema": 2,
+  "passed": true,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "host_note": "Existing macOS arm64 development host; verified backend copied with empty Go/project caches. Fresh host and fresh validator explicitly skipped by user when closing milestone 1. Regression rehearsal only.",
+  "checks": [
+    {
+      "check": "go-version",
+      "command": [
+        "/usr/local/go/bin/go",
+        "version"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.017816165927797556,
+      "log": "go-version.log"
+    },
+    {
+      "check": "source-install",
+      "command": [
+        "bash",
+        "scripts/install.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 7.329295250121504,
+      "log": "source-install.log"
+    },
+    {
+      "check": "backend-status",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "toolchain",
+        "status"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.1360369580797851,
+      "log": "backend-status.log"
+    },
+    {
+      "check": "runner-install",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.13475774973630905,
+      "log": "runner-install.log"
+    },
+    {
+      "check": "runner-status",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "runner",
+        "status"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.0404615830630064,
+      "log": "runner-status.log"
+    },
+    {
+      "check": "runner-idempotent",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "runner",
+        "install"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.021723417099565268,
+      "log": "runner-idempotent.log"
+    },
+    {
+      "check": "scaffold",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "new",
+        "-module",
+        "example.com/milestone1/acceptance",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/starter"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.01035658409819007,
+      "log": "scaffold.log"
+    },
+    {
+      "check": "doctor",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "doctor",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/starter"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.18852808326482773,
+      "log": "doctor.log"
+    },
+    {
+      "check": "starter",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/starter",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 2.8884577499702573,
+      "log": "starter.log"
+    },
+    {
+      "check": "project-general",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/starter",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/starter/testdata/svm.json",
+        "--",
+        "-count=1"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.23609841708093882,
+      "log": "project-general.log"
+    },
+    {
+      "check": "full-token-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "-arch",
+        "v3",
+        "-no-cache",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/full-token.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/anchor/go-token/swap.go"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.12972466740757227,
+      "log": "full-token-build.log"
+    },
+    {
+      "check": "full-token",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/full-token.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/full-token.json"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.18933145888149738,
+      "log": "full-token.log"
+    },
+    {
+      "check": "lifecycle-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "-arch",
+        "v3",
+        "-no-cache",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/lifecycle.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/tokenswap/swap.go"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.13024158403277397,
+      "log": "lifecycle-build.log"
+    },
+    {
+      "check": "lifecycle",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/lifecycle.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-lifecycle-verified/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/lifecycle.json"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.07467574998736382,
+      "log": "lifecycle.log"
+    },
+    {
+      "check": "probe-compile",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/cache/toolchains/v1.51/darwin-arm64/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/svm-controls/probe.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/probe.o"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.025723834056407213,
+      "log": "probe-compile.log"
+    },
+    {
+      "check": "probe-link",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/cache/toolchains/v1.51/darwin-arm64/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/sysvars.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/probe.o"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.024621332995593548,
+      "log": "probe-link.log"
+    },
+    {
+      "check": "sysvars",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/sysvars.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-scenarios-complete/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/sysvars.json"
+      ],
+      "exit_code": 0,
+      "expected": 0,
+      "wall_seconds": 0.07730904221534729,
+      "log": "sysvars.log"
+    },
+    {
+      "check": "metadata-rejection",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m2-arrays-regression-final/bin/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/lifecycle.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-lifecycle-verified/validator-fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final/metadata-rejection.json"
+      ],
+      "exit_code": 1,
+      "expected": 1,
+      "wall_seconds": 0.07752550020813942,
+      "log": "metadata-rejection.log"
+    }
+  ],
+  "source_sha256": {
+    "benchmarks/anchor/go-token/swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0",
+    "benchmarks/svm-controls/probe.c": "e332e8b88dd707ece362ace868585614c4d85cd30dda584a331b712ba7c96092",
+    "cmd/gosvm/main.go": "49020919b1839c7e9d2603f375b9d06e009598cdcf296d6b7d63d0b08c55c29c",
+    "cmd/gosvm/project.go": "ae5720b29756fdbe07ff460d08182a7c4121b5e1d51d4fcb220dbe1b853e5f1b",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "examples/tokenswap/swap.go": "219b28248670fff4d29894dd7af7746d43950e43cc6a6c769d4f979ebf22a6c0",
+    "go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/arrays.go": "80e3b4639d5eef0d93dbb96a941c8a87d45cb1193221fdd38535db22eebdae86",
+    "internal/compiler/arrays_test.go": "cff7c2ae6890513cd74717214caa907f1cc3348d89d46996019e3c14bd5ceabc",
+    "internal/compiler/build.go": "8e8b0c59aff8980e482776b58bccd4052377a7e3905afe53d15f3371a357bcf2",
+    "internal/compiler/cache.go": "2430443b181104660100ffc5fd55f68fbc1d8f48ea02bd3dc5460abe2b3b6bd0",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "d98b1bfa8cc3245c190af2e5e923c16db48859a0b74eb8a3e7d393916c19720a",
+    "internal/compiler/compiler_test.go": "7db5a1a0e80cd309d72881b14cf0c99d1eeefbbeab6434dff7e76532d3808c3c",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "internal/project/generate.go": "0f530b48bdd6714899556bf219010fa0a8924d2d4b26f4b652f2d7ef06e732da",
+    "internal/project/project.go": "3fb68c81c29ab7be3b7d8a07741127525bce6b356cec0961bafb5f2e28958f17",
+    "internal/project/project_test.go": "7eb37aea4a335da660fb9f8523fe140832780e4cddde9e23fee4a4c6349443ec",
+    "internal/project/templates/README.md.tmpl": "f583eaf29e0cb54ec9f8bff4950803a928a59494374d8cfc18a96ac0275fc95e",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "internal/toolchain/install.go": "b9e4954cb72fecea76b3caf770171de6ebc1929c17cc83f41363fbe217e80493",
+    "internal/toolchain/install_test.go": "094e6e4cdf497ce9e3172ada3193968a4c32a3160be4bcb1c5a4765d256f9998",
+    "scripts/build-cli.sh": "14334eed5948e43dbaa16e00c577bda09fbc706b7822e98d7c428932b5a8cb98",
+    "scripts/install.sh": "113acc48e0e7a0d3a37168d5f4f5317280a6216422ec5eded4484d35c619ffa4",
+    "scripts/milestone1_acceptance.py": "775ae90e9a8701e8c4bbd61eadff721418468f42b84ce6b135acb3613dff9f48",
+    "solana/api.go": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/source.go": "83eeb25914c4abcb566e44bebbfe2b0caa9e5efb4ad1db6352f3a3c68f3fc418"
+  },
+  "evidence_sha256": {
+    "results/svm/2026-10-05-workflow-complete/bounded-restored-0-results.json": "dd4ff7d4a3ac00db523415b0e292fd7dee815a61032d4bfeabbf321528e44201",
+    "examples/typed-swap/testdata/svm.json": "ddbdb83c6d556b51b8a6d0c93330cf568340bf8950089da12a415d659158f37e",
+    "results/svm/2026-10-05-general-complete/project-general.json": "42c1a83870615842015f50e6b7f2cbb5331891fd9037fe0cef4caabcbadcbec9",
+    "results/svm/2026-10-05-general-complete/general-0.json": "5833d1adf83588748c8ce8039e53b79a4420dcdcccbc22c67ebc60fed3f077b5",
+    "results/svm/2026-10-05-general-complete/token-fixtures.json": "5f14d46720a56d0d3116171d39b79bbe647675a81a43a3c596c067ab1c5a7128",
+    "results/svm/2026-10-05-general-complete/validator-features.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "results/svm/2026-10-05-lifecycle-verified/runner-results.json": "a4874c82ba011ef1bcebb3b0680c0dad915acb22e56a7f1ce217de098a01485a",
+    "results/svm/2026-10-05-lifecycle-verified/fixtures.json": "e08f8dae3b97d965707a9fbacc166b92ec07687970b1e364e55397692f4d0bb2",
+    "results/svm/2026-10-05-lifecycle-verified/validator-features.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "results/svm/2026-10-05-scenarios-complete/ordered-results.json": "cd0e1cc5dc8405eb5ad6ac2a5be1ff8ae3e5ce5fa6eab3f28d24f685b0cab1ac",
+    "results/svm/2026-10-05-scenarios-complete/fixtures.json": "c79b9410a5d4f91c19d9217fc7c6b78dacb87b8c19c33e7805a62d05e8e8b145"
+  },
+  "artifacts": {
+    "starter.json": {
+      "sha256": "4694c6454f02c3b48a3518db57284cf9f48265bfa8995852a0b41d46d9648fb7",
+      "bytes": 15539
+    },
+    "program.so": {
+      "sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+      "bytes": 3216
+    },
+    "project-general.json": {
+      "sha256": "21efc9154c58ee6a9a3fc19779ca527a163e9cfcc35c2342852d9af2773482ef",
+      "bytes": 16156
+    },
+    "full-token.json": {
+      "sha256": "f3d8c7022b55549c70fe2e150786df77a62e293915cc9218fa59e86140ba6026",
+      "bytes": 116343
+    },
+    "full-token.so": {
+      "sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "bytes": 8064
+    },
+    "lifecycle.json": {
+      "sha256": "fa34c3f69c89e36b981d62cd29b27745a4eb2ee8fd4a745fbafe67cd881934b7",
+      "bytes": 30348
+    },
+    "lifecycle.so": {
+      "sha256": "fff341a09455901553f95a518f4765b382730a93744700c2130740af73d9c1c8",
+      "bytes": 8000
+    },
+    "sysvars.json": {
+      "sha256": "ea67288eb17f9f59f8d4bbf3942b994a386b1783f7efbaf1cd4fb2ee60baa81d",
+      "bytes": 27487
+    },
+    "sysvars.so": {
+      "sha256": "ca78ed54ef51ded4165bc1993d15d300f19502850c0c66662b73907985ac7a19",
+      "bytes": 1664
+    }
+  },
+  "runner_archive_sha256": "a73c0b01a4c6f6655b305567b0e7c294f53e4e3b0082f3825c8299334be4ee0f",
+  "backend_mode": "existing managed copy (rehearsal)",
+  "acceptance_gates": {
+    "clean_host": "not eligible: copied an existing backend",
+    "final_fresh_validator": "not executed by this script"
+  },
+  "scope": "Installation/workflow evidence only; milestone status is recorded in ROADMAP.md",
+  "limitations": [
+    "Current-host rehearsal is not clean-machine verification",
+    "Historical expected cases are replayed; no fresh validator oracle here",
+    "Public release/signing/licenses and wider hosts are separate milestone 3 work",
+    "Bounded starter and classic-token programs only; dependency-heavy protocol not run"
+  ],
+  "test_path_programs": [
+    "go"
+  ],
+  "cli_sha256": "7327b918764335d1c0681cb560b1af58bc402ac8e078f056b9373da95163ac63",
+  "fixture_counts": {
+    "bounded": 14,
+    "full-token": {
+      "scenarios": 108,
+      "transactions": 110
+    },
+    "lifecycle": {
+      "scenarios": 6,
+      "transactions": 26
+    },
+    "sysvars": {
+      "scenarios": 6,
+      "transactions": 15
+    }
+  },
+  "local_rpc_bind": {
+    "allowed": false,
+    "error": "[Errno 1] Operation not permitted",
+    "fresh_validator_executed": false
+  }
+}

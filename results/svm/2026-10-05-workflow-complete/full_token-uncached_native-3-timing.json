@@ -1,0 +1,98 @@
+{
+  "workload": "full_token",
+  "scenario": "uncached_native",
+  "sample": 3,
+  "wall_seconds": 0.4171860427595675,
+  "cpu_seconds": 0.5901360000000082,
+  "phases_seconds": {
+    "native_tests": 0.2213065419346094,
+    "sbf_build_command": 0.020304583944380283,
+    "svm_test_command": 0.1755749168805778
+  },
+  "native_test_result_cached": false,
+  "svm_startup_seconds": 0.010749209,
+  "svm_fixture_seconds": 0.092369333,
+  "svm_total_seconds": 0.129892875,
+  "vm_execution_seconds": 0.051253,
+  "before": {
+    "elf_exists": true,
+    "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+    "elf_mtime_ns": 1791237228305896322,
+    "receipt": {
+      "Input": "017af7d7481a1b4fe6434c3488e90c37dbfdc96ea03e922342cd53f6c90e2273",
+      "Output": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+    }
+  },
+  "after": {
+    "elf_exists": true,
+    "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+    "elf_mtime_ns": 1791237228305896322,
+    "receipt": {
+      "Input": "017af7d7481a1b4fe6434c3488e90c37dbfdc96ea03e922342cd53f6c90e2273",
+      "Output": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+    }
+  },
+  "commands": [
+    {
+      "wall_seconds": 0.2213065419346094,
+      "cpu_seconds": 0.4395030000000091,
+      "load_average_before": [
+        11.1611328125,
+        7.3271484375,
+        6.013671875
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/full_token-uncached_native-3-native.log",
+      "command": [
+        "go",
+        "test",
+        "./original",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token"
+    },
+    {
+      "wall_seconds": 0.020304583944380283,
+      "cpu_seconds": 0.009063000000001153,
+      "load_average_before": [
+        11.1611328125,
+        7.3271484375,
+        6.013671875
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/full_token-uncached_native-3-build.log",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/token.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/contract"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    },
+    {
+      "wall_seconds": 0.1755749168805778,
+      "cpu_seconds": 0.14156999999999798,
+      "load_average_before": [
+        11.1611328125,
+        7.3271484375,
+        6.013671875
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/full_token-uncached_native-3-svm.log",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/token.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-fixtures-target/release/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/svm-results.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    }
+  ]
+}

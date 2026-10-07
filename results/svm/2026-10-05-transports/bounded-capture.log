@@ -1,0 +1,48 @@
+Bounded framework comparison: go
+Starting isolated local litesvm...
+PASS swap                         486 CU
+PASS zero amount                  262 CU
+PASS slippage                     279 CU
+PASS invalid reserves             255 CU
+PASS counter overflow             268 CU
+PASS owner                        87 CU
+PASS readonly                     81 CU
+PASS missing account              21 CU
+PASS short state                  99 CU
+PASS state discriminator          104 CU
+PASS instruction discriminator    135 CU
+PASS long instruction             106 CU
+PASS two swaps                    972 CU
+PASS atomic rollback              765 CU
+Bounded framework comparison: lean-rust
+Starting isolated local litesvm...
+PASS swap                         348 CU
+PASS zero amount                  277 CU
+PASS slippage                     292 CU
+PASS invalid reserves             268 CU
+PASS counter overflow             283 CU
+PASS owner                        29 CU
+PASS readonly                     11 CU
+PASS missing account              6 CU
+PASS short state                  16 CU
+PASS state discriminator          251 CU
+PASS instruction discriminator    256 CU
+PASS long instruction             19 CU
+PASS two swaps                    696 CU
+PASS atomic rollback              640 CU
+Bounded framework comparison: anchor
+Starting isolated local litesvm...
+PASS swap                         768 CU
+PASS zero amount                  1855 CU
+PASS slippage                     1887 CU
+PASS invalid reserves             1847 CU
+PASS counter overflow             1878 CU
+PASS owner                        2283 CU
+PASS readonly                     1683 CU
+PASS missing account              53 CU
+PASS short state                  1794 CU
+PASS state discriminator          1848 CU
+PASS instruction discriminator    1317 CU
+PASS long instruction             245 CU
+PASS two swaps                    1536 CU
+PASS atomic rollback              2655 CU

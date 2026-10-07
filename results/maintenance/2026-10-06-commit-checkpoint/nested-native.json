@@ -1,0 +1,30 @@
+[
+  {
+    "module": "examples/escrow",
+    "passed": true
+  },
+  {
+    "module": "examples/full-swap",
+    "passed": true
+  },
+  {
+    "module": "examples/full-swap-service",
+    "passed": true
+  },
+  {
+    "module": "examples/multi-state",
+    "passed": true
+  },
+  {
+    "module": "examples/shared-packages",
+    "passed": true
+  },
+  {
+    "module": "examples/shared-packages/service",
+    "passed": true
+  },
+  {
+    "module": "examples/typed-swap",
+    "passed": true
+  }
+]

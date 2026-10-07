@@ -1,0 +1,2 @@
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/workflow-timing-diagnostics/build/program.so (3216 bytes, 163ms)
+gosvm timings: {"schema":1,"command":"build","passed":true,"phase_seconds":{"backend_check":0.151987708,"generation":0.001364792,"manifest":0.000243542,"sbf_build":0.008861625},"total_seconds":0.16258925}

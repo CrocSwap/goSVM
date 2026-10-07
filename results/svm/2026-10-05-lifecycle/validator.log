@@ -1,0 +1,27 @@
+PASS create-mint-swap-drain-close-recreate step 1     2929 CU
+PASS create-mint-swap-drain-close-recreate step 2     2929 CU
+PASS create-mint-swap-drain-close-recreate step 3     4363 CU
+PASS create-mint-swap-drain-close-recreate step 4     4363 CU
+PASS create-mint-swap-drain-close-recreate step 5     4363 CU
+PASS create-mint-swap-drain-close-recreate step 6     4363 CU
+PASS create-mint-swap-drain-close-recreate step 7     150 CU
+PASS create-mint-swap-drain-close-recreate step 8     2061 CU
+PASS create-mint-swap-drain-close-recreate step 9     4253 CU
+PASS create-mint-swap-drain-close-recreate step 10    13476 CU
+PASS create-mint-swap-drain-close-recreate step 11    20233 CU
+PASS create-mint-swap-drain-close-recreate step 12    2776 CU
+PASS create-mint-swap-drain-close-recreate step 13    4645 CU
+PASS create-mint-swap-drain-close-recreate step 14    2958 CU
+PASS create-mint-swap-drain-close-recreate step 15    4286 CU
+PASS create-mint-swap-drain-close-recreate step 16    3015 CU
+PASS create-mint-swap-drain-close-recreate step 17    4363 CU
+PASS badsize step 1                                   2929 CU
+PASS badsize step 2                                   1431 CU
+PASS badinitrent step 1                               2929 CU
+PASS badinitrent step 2                               2680 CU
+PASS badrent step 1                                   150 CU
+PASS nosigner step 1                                  150 CU
+PASS split step 1                                     150 CU
+PASS split step 2                                     150 CU
+PASS split step 3                                     150 CU
+PASS: 6 lifecycle scenarios; fresh validator simulation, committed state and rollback checked.

@@ -1,0 +1,46 @@
+{
+  "passed": false,
+  "scope": "Lowered-C diagnostics on compact handler; compiler/SDK/benchmark unchanged",
+  "checks": [
+    {
+      "name": "emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3134948331862688
+    },
+    {
+      "name": "baseline-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native"
+      ],
+      "exit_code": 1,
+      "seconds": 0.09973762463778257
+    }
+  ],
+  "variants": {},
+  "generated_c_sha256": "6a6268772eb35ec1f9a9ede9a576183c0549b2db349ee11c35bc8c9f12899914",
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm": "90ebc1d0a9221241ef2fa764b5fbf7380829859ad493a24cf25530907b96ea26",
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/packed_codegen_experiment.py": "91482a9d1194e9568128aae009e7fc745e8387d9e2dd38ef02e39c15f15a1292",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/program.go": "0185e3e7c69b3cba7cfe8e08ca7f3e8a9f3b4adaa84aae78c82bcb045b317db9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/wire/wire.go": "9958fda8b2b9a3a78a9059662d37ba743e0e224a28dcbc6685037c238e7c67b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/canonical-0.json": "a79f5ae7c94d3e4cc621d9f8d7551060f3050a88fc54d6f10d2ffe3ffc509c13",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py": "ffc001495b9226770c4396cd71b275eba2877d4b7fb6b7055cc11ff4cda485a4",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228"
+  },
+  "native_vectors": 12000
+}

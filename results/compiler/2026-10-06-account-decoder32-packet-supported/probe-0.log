@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py", line 122, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py", line 101, in main
+    for check,value in zip(checks,sim['accounts']):compare(value,check['state'],case['name']+' simulation '+check['account'])
+                                                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py", line 24, in compare
+    assert actual[key]==expected[key],label+': '+key
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: signed-cpi-4-3 simulation authority: lamports

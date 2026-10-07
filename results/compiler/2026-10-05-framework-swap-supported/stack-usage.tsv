@@ -1,0 +1,15 @@
+results/compiler/2026-10-05-framework-swap-supported/program.c:35:memcpy	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:41:memset	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:3478:entrypoint	3456	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:1115:v116	128	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:1254:v119	256	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:3395:v165	1024	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:1570:v146	960	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:701:v73	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:329:v60	64	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:694:v70	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:1372:v142	1536	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:850:v95	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:1011:v108	128	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:922:v100	0	static
+results/compiler/2026-10-05-framework-swap-supported/program.c:149:sol_Invoke	960	static

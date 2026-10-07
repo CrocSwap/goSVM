@@ -1,0 +1,84 @@
+=== RUN   TestTokenCreateCurrentStorageAndCPIEncoding
+--- PASS: TestTokenCreateCurrentStorageAndCPIEncoding (0.00s)
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/token-program
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/mint-owner
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/mint-size
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/mint-uninitialized
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/mint-coption
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/native-mint
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/target-funded
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/target-unsigned
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/payer-unsigned
+=== RUN   TestTokenCreatePreconditionsAndDownstreamFailures/payer-aliased-target
+--- PASS: TestTokenCreatePreconditionsAndDownstreamFailures (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/token-program (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/mint-owner (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/mint-size (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/mint-uninitialized (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/mint-coption (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/native-mint (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/target-funded (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/target-unsigned (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/payer-unsigned (0.00s)
+    --- PASS: TestTokenCreatePreconditionsAndDownstreamFailures/payer-aliased-target (0.00s)
+=== RUN   TestTokenCloseAuthorityAndCurrentReference
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/refund-readonly
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/refund-source-alias
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/refund-executable
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/authority-unsigned
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/close-authority-mismatch
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/close-coption
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/system-owned-authority
+=== RUN   TestTokenCloseAuthorityAndCurrentReference/source-identity
+--- PASS: TestTokenCloseAuthorityAndCurrentReference (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/refund-readonly (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/refund-source-alias (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/refund-executable (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/authority-unsigned (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/close-authority-mismatch (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/close-coption (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/system-owned-authority (0.00s)
+    --- PASS: TestTokenCloseAuthorityAndCurrentReference/source-identity (0.00s)
+=== RUN   TestCheckedTransferAndCurrentReads
+--- PASS: TestCheckedTransferAndCurrentReads (0.00s)
+=== RUN   TestCheckedBalanceRevalidation
+=== RUN   TestCheckedBalanceRevalidation/owner
+=== RUN   TestCheckedBalanceRevalidation/layout
+=== RUN   TestCheckedBalanceRevalidation/privilege
+=== RUN   TestCheckedBalanceRevalidation/identity
+=== RUN   TestCheckedBalanceRevalidation/uninitialized
+=== RUN   TestCheckedBalanceRevalidation/native
+=== RUN   TestCheckedBalanceRevalidation/executable
+--- PASS: TestCheckedBalanceRevalidation (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/owner (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/layout (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/privilege (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/identity (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/uninitialized (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/native (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/executable (0.00s)
+=== RUN   TestTokenRevalidationBeforeInvoke
+=== RUN   TestTokenRevalidationBeforeInvoke/owner
+=== RUN   TestTokenRevalidationBeforeInvoke/size
+=== RUN   TestTokenRevalidationBeforeInvoke/uninitialized
+=== RUN   TestTokenRevalidationBeforeInvoke/native
+=== RUN   TestTokenRevalidationBeforeInvoke/readonly
+=== RUN   TestTokenRevalidationBeforeInvoke/identity
+=== RUN   TestTokenRevalidationBeforeInvoke/mint
+=== RUN   TestTokenRevalidationBeforeInvoke/authority
+=== RUN   TestTokenRevalidationBeforeInvoke/unsigned
+=== RUN   TestTokenRevalidationBeforeInvoke/program
+--- PASS: TestTokenRevalidationBeforeInvoke (0.02s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/owner (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/size (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/uninitialized (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/native (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/readonly (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/identity (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/mint (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/authority (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/unsigned (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/program (0.00s)
+PASS
+ok  	gosvm/sdk/token	0.072s

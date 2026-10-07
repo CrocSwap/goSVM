@@ -1,0 +1,5 @@
+{
+  "passed": true,
+  "sha256": "f71170f762dade8111e0c54dc5f986378f8e3345280cefb914dd5bd0048c7242",
+  "baseline": "results/compiler/2026-10-06-account-decoder32-final/noop-sdk1.so"
+}

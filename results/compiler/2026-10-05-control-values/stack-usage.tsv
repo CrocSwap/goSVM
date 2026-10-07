@@ -1,0 +1,4 @@
+results/compiler/2026-10-05-control-values/program.c:21:memcpy	0	static
+results/compiler/2026-10-05-control-values/program.c:27:memset	0	static
+results/compiler/2026-10-05-control-values/program.c:576:entrypoint	64	static
+results/compiler/2026-10-05-control-values/program.c:126:go_Process	64	static

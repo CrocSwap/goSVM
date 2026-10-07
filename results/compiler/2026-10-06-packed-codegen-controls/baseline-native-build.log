@@ -1,0 +1,41 @@
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:16:1: error: use of undeclared identifier 'boolean'
+   16 | boolean t2516 = ((u64)t2515 < (u64)8ULL);
+      | ^~~~~~~
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:17:7: error: use of undeclared identifier 't2516'; did you mean 't2515'?
+   17 | if (!(t2516)) break;
+      |       ^~~~~
+      |       t2515
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:15:5: note: 't2515' declared here
+   15 | u64 t2515 = v2514;
+      |     ^
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:44:1: error: use of undeclared identifier 'boolean'
+   44 | boolean t2532 = ((u64)t2531 < (u64)4ULL);
+      | ^~~~~~~
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:45:7: error: use of undeclared identifier 't2532'; did you mean 't2531'?
+   45 | if (!(t2532)) break;
+      |       ^~~~~
+      |       t2531
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:43:5: note: 't2531' declared here
+   43 | u64 t2531 = v2530;
+      |     ^
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:71:1: error: use of undeclared identifier 'boolean'
+   71 | boolean t2577 = ((u64)t2576 < (u64)8ULL);
+      | ^~~~~~~
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:72:7: error: use of undeclared identifier 't2577'; did you mean 't2576'?
+   72 | if (!(t2577)) break;
+      |       ^~~~~
+      |       t2576
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:70:5: note: 't2576' declared here
+   70 | u64 t2576 = v2575;
+      |     ^
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:94:1: error: use of undeclared identifier 'boolean'
+   94 | boolean t2589 = ((u64)t2588 < (u64)4ULL);
+      | ^~~~~~~
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:95:7: error: use of undeclared identifier 't2589'; did you mean 't2588'?
+   95 | if (!(t2589)) break;
+      |       ^~~~~
+      |       t2588
+/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls/baseline-native.c:93:5: note: 't2588' declared here
+   93 | u64 t2588 = v2587;
+      |     ^
+8 errors generated.

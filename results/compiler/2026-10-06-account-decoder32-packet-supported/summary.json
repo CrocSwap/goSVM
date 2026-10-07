@@ -1,0 +1,657 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "name": "native-decoder",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./internal/compiler",
+        "-run",
+        "TestSDKAccountDecoderCapacityAndAliases",
+        "-count=1",
+        "-v"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 3.8088592081330717
+    },
+    {
+      "name": "cli-build",
+      "command": [
+        "bash",
+        "/Users/colkitt/sith/toys/crypto/goSVM/scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 3.265808249823749
+    },
+    {
+      "name": "scaffold-sdk1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm",
+        "new",
+        "-schema",
+        "2",
+        "-sdk",
+        "1",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.4838074999861419
+    },
+    {
+      "name": "noop-sdk1-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk1/noop"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.026444457937031984
+    },
+    {
+      "name": "noop-sdk1-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.5327327502891421
+    },
+    {
+      "name": "noop-sdk1-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.288522457703948
+    },
+    {
+      "name": "scaffold-sdk2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm",
+        "new",
+        "-schema",
+        "2",
+        "-sdk",
+        "2",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk2"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.2945921253412962
+    },
+    {
+      "name": "noop-sdk2-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk2/noop"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.018621124792844057
+    },
+    {
+      "name": "noop-sdk2-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.0883582909591496
+    },
+    {
+      "name": "noop-sdk2-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.06071970798075199
+    },
+    {
+      "name": "noop-sdk1-old-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk1/noop"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.055996332783252
+    },
+    {
+      "name": "noop-sdk1-old-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.11251308303326368
+    },
+    {
+      "name": "noop-sdk1-old-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.06943116709589958
+    },
+    {
+      "name": "probe-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/account-decoder/2026-10-06-account-decoder32-packet-supported/sdk2/probe"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.04534041602164507
+    },
+    {
+      "name": "probe-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.4083410417661071
+    },
+    {
+      "name": "probe-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.04885804187506437
+    },
+    {
+      "name": "noop-sdk2-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.5110138752497733
+    },
+    {
+      "name": "noop-sdk2-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.7081805421039462
+    },
+    {
+      "name": "noop-sdk2-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.4012592090293765
+    },
+    {
+      "name": "noop-sdk1-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.32244562497362494
+    },
+    {
+      "name": "noop-sdk1-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.2946470412425697
+    },
+    {
+      "name": "noop-sdk1-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.503699959255755
+    },
+    {
+      "name": "probe-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe-fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-account-decoder32-packet-supported/probe-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 1,
+      "seconds": 0.3549136659130454
+    }
+  ],
+  "source_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/account_decoder_verify.py": "4ca295f2213755a9089eb1045f79b8f228b742c25b7ee7a2c12dc3c92b537ae8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm": "e4dae52c37cd0088edfb6889f50b9bef9f7937c11bdf156f80faa34dac61aa9e",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/results/phoenix-v1/2026-10-06-word-keys/summary.json": "0dfa3c7bdb6616a2cb46b4126b456ec460c3e7c4c50e694476446176657da8fc",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/results/phoenix-v1/2026-10-06-word-keys/fixtures.json.gz": "c44e3a53a63aa3dc130aa3aa3e11db3abc667ebbb66d00092784f51736e100d8",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py": "47b82ac715987ce511f8c404ee2d5e9bb15e7539421d443a7c3bc3a2bb6fbb94",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/results/phoenix-v1/2026-10-06-extra-metas-v2/fixture-rust.json": "fbe5d0f87981415b618d4e7d27a6b7d2e2c7ef9350211958b40c266edcfb2840",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker": "f778f7dd7b9d3676eb7462f6070f68d5971cc1e75be333cdd911504697699722",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/anchor.go": "1a59b18af1046683387c92ea2dd17340ad28275f6cc891818d2625e8419d4856",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/tokens.go": "417d9ee98599c9b6c911ec09edd4896b3234db98dbfe192f50f762c8ff7c5d81",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/protocol.go": "fa54ff62afe392559191ae4371ccedd03fee4aca0ee864050db8d60c62b20bbc",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/lifecycle.go": "32e6d4d80d337c428e286952d51c931cf68e3f1e113f1efd38078e6a3847c9b8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/svm_fixtures.go": "443965ca63b6740c67ed78100095d323f256c06c9398ac61cb1caed83215a9b6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/verify/main.go": "f771d724048dbaaf901c6c63355a036b3f882e01333d627ffc1ea76c0463eb3c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/project.go": "4974ce04e1d274305f1de5a1420959cfbb0b4406538c03ce4e8308fefdcf4568",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/cmd/gosvm/main.go": "9213073218582b930be40cbed45c8e028371c5380fa9c44c00e6e1f5009a01a6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/generate.go": "7551dc4cc4921bef1d08fc3390fe9c75688b57136b4123f53241e2d0cdd64e77",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/lifecycle2_test.go": "5a7568fe0df1fac83b19cd9be3e19afe24b77d79123566f373238abd6d9f2223",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/generate2.go": "541a98b09d06ea7837c8993f5745d4e6c31255905d8835eedec868958bdfb622",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/constraints2_test.go": "3053dcfa090a898a427e76b7011a2d7b8154d50698664316e4c0c955820c0612",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/constraints2.go": "d426c2b8f47befe37fd70e25a6ca57bb81bdf971117608244d34141754c1ccc9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/lifecycle2.go": "b7c23a2c4eb56f56fd3e3c3406ad817ea4eb5680db03f30a195648e62b5d5608",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2_test.go": "580aad9542fb291125b9801b5656d37d7e76c0a8ecfe738962656808f2517d2f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/project.go": "ec835a06a633f0b67cc665a19ab59020874e6a547cf80e0802057e674c9686c8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/sdk_test.go": "1e8646d779faf94dd333b1e1f2b72ed695ed026222df5d2d6ff6db47c27a05ab",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/project_test.go": "7eb37aea4a335da660fb9f8523fe140832780e4cddde9e23fee4a4c6349443ec",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2.go": "3633ac00746b860b563807622d263de5975b8a82798773c7179c3a60d05b69eb",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/results.go": "d210943c96bfb699c74b550e5ed4c60a7d7a5d634abf186a414d87de797ad39a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/pointers.go": "35a88517929368b894e04b96d7924bd903cab297cc5110e4465605e81adb265c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/compiler.go": "dd4cdc3a56cd98caba263543d4bef89cbf978764dcb5cc1d97538abd32b60b26",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/arrays_test.go": "0488a5ef332e3477807be7e0300899f727f27fd6fa0ee66a628a850f472d90d5",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/packed.go": "b3e5464a8459403eeb35440afc89c0ce51ac1af8bae7a46c36e26dc9198aa37c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/compiler_test.go": "f896df42a5160888533b613d8b3e62696120db7b607b9dac5d67a00e19e71ac5",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/cache_test.go": "a4e0737fe34cbdf2c0e6e0a72fdb643869668b51ae69f864e3d12a680af97053",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/views_test.go": "5fc480aab57e112b3458fb5ceaca6b0a9fa0c9dabb458a1c31c730166205169c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/arrays.go": "fcd18ba1946fa29d80537e7c56e633008da4c859c7e7cc81a0113a97a05e4750",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/build.go": "7c3aa3ecf06e84021121f1ca5673247bd4d40e3feba91cadff93b7105861f473",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/control_test.go": "d1bdb57f9efa40e5b0b5cdd581b3cf02ccad0ba28d681f5136b630a4a8ff4462",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/types_test.go": "797f551222fc0a5506808353c836edd4d924e3af98751f57ef17b3faf50b99ac",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/types.go": "8a62730a61fa56bc7efb98f8db7d6a0774ca1bb2c4592ba18c0ff6caf8bf6764",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/packed_test.go": "9a2d594fd664c149b14473fc2cb559b6599fefd5abe8c6e2d0d89dfb26e7ad1b",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/packages.go": "5bd99937282c724e6ee5abe4d572e05a47e30ddeb45a4f33bf4c02ed0ef37731",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/cache.go": "c11912e137672dc29beea72da4366b46286b98fb0ca0ffa062a0e69446475fe8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/cpi_test.go": "ceca81980ee8c945b6862fb9760265fc183493058a85a2b4bca2a32d32eeb481",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/control.go": "ce320d3157ff0cf393f6738412f9de65f4e6b11f7f951d872fc56b940b6fffdd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/solana.go": "da52aaee5ade2ac2044f064d2016223ebb9815e02821b42c3b3c920af3f9af6a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/accounts_test.go": "1a0adb8529819f6e230062e6c48a784b199bdd2dbecb0ebf15c2e9db68ce92b1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/solana.c.txt": "a9f69e062878e95103cd89b435d050fec87150fe4edf7e496a48fc897dd071fd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/pointers_test.go": "d87e23f7e23d9f764a4a2772a3eeb1e2fa3baf359d6a594ab1f039e3d8ac8f22",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/cpi.c.txt": "7884d6f545f3d92fbc6b920f9de139ff312c3c7b41863a6fd7816003dc112f1b",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/packages_test.go": "73b971ad661ccdf662a2fa01e162ba74d6819461a9336b8dd005b56cdf62e453",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/abi.c.txt": "ddfff3c1a2db9a9992661643c941a0c17c19e9dccc02aa58fdef660b1c3ab73e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/accounts.c.txt": "5fc9b37e410b3b90b12015886481b7b54b82cf52daffad608b80fc0591b965fb",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/memory_test.go": "cc9fea4f73065187e1ba06ce26ed376feb47865944deca359735c1d75baa35c4",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/views.go": "7550a84ca182315ee290f92cdebe1ec6043fce4a14839ff04005784f264f3c68",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/lifecycle_test.go": "78df81a83809c8efc7ace9f5cdf5c5c2da080efaff71adcd1773e3f9ab6dc815",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/clock_test.go": "89dda731fb27bf03d8df26e598005d744c7cf0deb27294651e34cd4e8b3f7880",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/toolchain/install_test.go": "094e6e4cdf497ce9e3172ada3193968a4c32a3160be4bcb1c5a4765d256f9998",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/toolchain/install.go": "b9e4954cb72fecea76b3caf770171de6ebc1929c17cc83f41363fbe217e80493",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/templates/README.md.tmpl": "f583eaf29e0cb54ec9f8bff4950803a928a59494374d8cfc18a96ac0275fc95e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2/model.go.tmpl": "0a435490eac091aab2fbc321d80203f1905a89107caa66dc1481c08b7e982fe8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2/program.go.tmpl": "d04242b5296e0dbe2afeeab051970d9cd696eef54606c27e5054398170790093",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2/README.md.tmpl": "5fd8a11c6e32b91986d1d91b53d36560acb712bfbaa599bc663440a17d63f797",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/project/schema2/program_test.go.tmpl": "6cce6b3ac8d85d542e963982ce82c1ea3edf6e7756d511b6b860e5fe18e4c168",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/bundle.go": "a905b0dbaef563a53881394a57d9b65e11e32f4285bb9e316185b8a37b6cfbcc",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/token/token_test.go": "a86c57f63377cd7caa42585fe7a366e3229e79a7bffdfa7bc1438cfe32bff7ab",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/token/lifecycle_test.go": "0fc4b441449f8dc025b863930b1ca920703051e6ad97436dcc4cbecb06355317",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/cpi/cpi_test.go": "258d422b8f376d8c2c6ddb492fc7653aa1f812c8c54e5551b06d68c7493eb223",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/cpi/single_test.go": "9a2cd52abf5fbe30add4517fe3b114466b1dc604341b77144990289f884b061a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/pda/pda_test.go": "a701fffe6e49c7ff4c1da7145ef7f09690714b4ac3ba9868f5be70471d773b9d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/system/rent_test.go": "de49cb262f817e474ebc1b217ed22d2543845b89ebfe1f21da8a78f58f9bb75e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM/sdk/system/system_test.go": "97f7cbb1aba3e5454fb8934c35bc4a0c6fe36d8fe7370e395965f79c9131724e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/api-v1.go.txt": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/source.go": "cd805f22c14dac83d1d82d3376ff7cc523d673536c18fc7842a3121cf8a1c708",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/lifecycle_test.go": "b68ae6b892d82ebb3708066a9efce6557f919ff922b634aa40b0a68d717a8598",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "/Users/colkitt/sith/toys/crypto/goSVM/solana/clock_test.go": "82f2af700ba77116fe28425e7b85aa39c85c130d4de260479aaa747bc639d986",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/go.mod": "5abcadacf13678ac212daa38bb66b56fb2ec0e406e40dfee7e1290140e196def",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/program_test.go": "06a138204af833586c2ce169668212258194dccb08f841e401a5b7d9c9dab869",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/tree.go": "86769b5ec7222fa5c092d4a780502ab91622c1d79a055d852c64ac46fd571a5f",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/keys.go": "b3cd9c0237e2dbe9a4397d5081c7770787cf12a9138c001c53486fbb1bde5919",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/program.go": "0bfebd7f7233123c8df5fc1624380d4aad2d997184fd9c56a8223a8f3843eadc",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/wire.go": "9d87b75aeff3bfbe60f4fdfc60a40192090f496541d81191dc20c69cb6b621c6",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/testdata/oracle.json.gz": "ab45d7116e05258df137bfb814ecaec7e8479f3cd4a4fe9eb3b76f80c4781e5f",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/phoenix-v1/go/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/verification/2026-10-06-word-keys/rust/phoenix.so": "60f46803e91be89cdbfee8ae9f10a2b3e32ca109c57ac40638dc6b27f56a0255",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/verification/2026-10-06-word-keys/upstream/phoenix.so": "17a51b1269c07dfcfbf256a12e1bc29a3cf73ee834fd4617894f97acd4774dad"
+  },
+  "scope": "SDK-2 incoming accounts up to 32; SDK-1 16 and outgoing CPI meta/schema declared-account bounds preserved",
+  "artifacts": {
+    "noop-sdk1": {
+      "bytes": 1432,
+      "sha256": "f71170f762dade8111e0c54dc5f986378f8e3345280cefb914dd5bd0048c7242",
+      "max_static_frame": 960,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1.c:118:entrypoint",
+          "bytes": 960,
+          "kind": "static"
+        }
+      ]
+    },
+    "noop-sdk2": {
+      "bytes": 1616,
+      "sha256": "50ff80d108ce0806f9c692aa94f60711c0f8dc97e293aa948739dc8f18afdf0b",
+      "max_static_frame": 1856,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk2.c:243:entrypoint",
+          "bytes": 1856,
+          "kind": "static"
+        }
+      ]
+    },
+    "noop-sdk1-old": {
+      "bytes": 1432,
+      "sha256": "f71170f762dade8111e0c54dc5f986378f8e3345280cefb914dd5bd0048c7242",
+      "max_static_frame": 960,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/noop-sdk1-old.c:113:entrypoint",
+          "bytes": 960,
+          "kind": "static"
+        }
+      ]
+    },
+    "probe": {
+      "bytes": 5576,
+      "sha256": "e2f36e4550fc54c512f42e00646b37a96a8214d567f2444401c9ae51626b5a7b",
+      "max_static_frame": 2112,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:36:memcpy",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:48:memset",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:645:entrypoint",
+          "bytes": 2112,
+          "kind": "static"
+        },
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:309:v9",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:281:v5",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "function": "results/compiler/2026-10-06-account-decoder32-packet-supported/probe.c:235:sol_Invoke",
+          "bytes": 960,
+          "kind": "static"
+        }
+      ]
+    }
+  }
+}

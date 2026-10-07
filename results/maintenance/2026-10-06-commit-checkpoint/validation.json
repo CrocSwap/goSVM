@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "root_make_test": true,
+  "root_go_vet": true,
+  "exported_compiler_sdk_tree_root_tests": true,
+  "exported_framework_and_examples_tree_root_tests": true,
+  "exported_runtime_tree_make_test": true,
+  "exported_runtime_tree_go_vet": true,
+  "standalone_example_modules": 7,
+  "standalone_native_tests": true,
+  "new_sbf_runs": false,
+  "sbf_evidence": "Existing frozen results/compiler and results/svm runs are preserved. This commit grouping changes no compiler/runtime source.",
+  "go_environment": {
+    "GOCACHE": "/private/tmp/gosvm-commit-go-cache",
+    "GOWORK": "off",
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "off",
+    "GOSUMDB": "off"
+  }
+}

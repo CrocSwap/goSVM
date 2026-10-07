@@ -1,0 +1,42 @@
+package main
+
+import (
+	"crypto/ed25519"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"os"
+	program "example.org/gosvm/multi-state"
+	"gosvm/solana"
+)
+
+type account struct {
+	Key, Owner, Data string
+	Signer, Writable, Executable bool
+}
+type row struct {
+	Name, ID, Instruction string
+	Accounts []account
+}
+type result struct {
+	Name string
+	Code uint64
+	Data []string
+}
+func decode(s string) []byte { b,e:=hex.DecodeString(s);if e!=nil {panic(e)};return b[:len(b):len(b)] }
+func main() {
+	if len(os.Args)==3 && os.Args[1]=="--key" {
+		seed:=decode(os.Args[2]);fmt.Printf("%x\n",ed25519.NewKeyFromSeed(seed).Public().(ed25519.PublicKey));return
+	}
+	var rows []row
+	if e:=json.NewDecoder(os.Stdin).Decode(&rows);e!=nil {panic(e)}
+	var results []result
+	for _,r:=range rows {
+		c:=solana.Context{ID:decode(r.ID),InstructionData:decode(r.Instruction)}
+		for _,a:=range r.Accounts {c.Accounts=append(c.Accounts,solana.Account{Key:decode(a.Key),Owner:decode(a.Owner),Data:decode(a.Data),Signer:a.Signer,Writable:a.Writable,Executable:a.Executable})}
+		out:=result{Name:r.Name,Code:program.Process(c),Data:[]string{}}
+		for _,a:=range c.Accounts {out.Data=append(out.Data,hex.EncodeToString(a.Data))}
+		results=append(results,out)
+	}
+	if e:=json.NewEncoder(os.Stdout).Encode(results);e!=nil {panic(e)}
+}

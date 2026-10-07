@@ -1,0 +1,749 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+  "payer_seed": "ecce25bd4e175167f3374038b5b73a4a84b6e7aca84efccf87bcb419e22da1ed",
+  "accounts": [
+    {
+      "name": "state",
+      "address": "3tUZtVE8dugdJfeenU41Jd3vRCr6PoWh6QFgBKnNZGBz",
+      "initial": {
+        "data": "000000000000000000000000000000000000000000000000",
+        "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+        "lamports": 10000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "index-0-probe-0-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "fd2ce95fb99b772a4d18ac561a0f60c11d46cb38f910a88c",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01000000110000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000001000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-0-probe-0-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "6112ce13e0ef8303c0c0c73955fd15d6dcedf58bf1bb9251",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "010000ff11000000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff0000000000000000ffffffffffffffff",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-127-probe-127-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "e8f830aeb03a2374a2fe42a1abd02299d9d318d6ef7da253",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "017f0000117f00000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000001000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-127-probe-127-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "22ceac693e58e5de69b3b2ac2f074ac0ce7aba8755a31413",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "017f00ff117f0000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff0000000000000000ffffffffffffffff",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-0-probe-127-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "584b3e30133765121c2e5e99bb942e6756794da3d2f13df9",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01000000117f00000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000001000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-0-probe-127-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "2e057334adfae733ed08c98b438ae9359c2231f085301bc8",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "010000ff117f0000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff00000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-127-probe-0-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "4f1a11a97bd41a7ffc2e1600842206f5094aea755b0452a7",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "017f0000110000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000001000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-127-probe-0-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "7749f96cc35be3a86a05376f44591886dc40f9fddc6a12bb",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "017f00ff11000000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff00000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-64-probe-64-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "8061f12a2544d75e287cbfc952375991a6d2dd46379db513",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01400000114000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000001000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-64-probe-64-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "35e1a48cc02f8e7854633510b723aa3d28805bf9c720d268",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "014000ff11400000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "ffffffffffffffff0000000000000000ffffffffffffffff",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-128-probe-0-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "104319616dd37d079e9a6b2a941d416687ebc11f6dd45003",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01800000110000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "104319616dd37d079e9a6b2a941d416687ebc11f6dd45003",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-128-probe-0-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "871b69b0107bcceb05fec872bf922c902cd578faaa69757f",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "018000ff11000000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "871b69b0107bcceb05fec872bf922c902cd578faaa69757f",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-0-probe-128-value-0",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "4111affc1c76dfa638246eec76b5b785073114e33a1f17bf",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01000000118000000000000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "4111affc1c76dfa638246eec76b5b785073114e33a1f17bf",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "index-0-probe-128-value-255",
+      "overrides": [
+        {
+          "name": "state",
+          "state": {
+            "data": "c2d261f9f34660228f0be6ead56eba4389a7f948a9702113",
+            "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "010000ff11800000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "c2d261f9f34660228f0be6ead56eba4389a7f948a9702113",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "copy-then-failing-index-rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "01000000110000000000000000000000"
+            },
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "state",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "010000ff11800000ffffffffffffffff"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                1,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "state",
+                "state": {
+                  "data": "000000000000000000000000000000000000000000000000",
+                  "owner": "7M5M359KvebT61eeb1nygtjB1oVnQykPWx11NtGmesou",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

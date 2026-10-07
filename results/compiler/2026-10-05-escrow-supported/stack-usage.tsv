@@ -1,0 +1,17 @@
+results/compiler/2026-10-05-escrow-supported/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:48:memset	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:5586:entrypoint	1984	static
+results/compiler/2026-10-05-escrow-supported/program.c:3603:v187	640	static
+results/compiler/2026-10-05-escrow-supported/program.c:3709:v192	576	static
+results/compiler/2026-10-05-escrow-supported/program.c:1843:v160	384	static
+results/compiler/2026-10-05-escrow-supported/program.c:558:v76	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:608:v87	448	static
+results/compiler/2026-10-05-escrow-supported/program.c:1513:v142	1408	static
+results/compiler/2026-10-05-escrow-supported/program.c:671:v92	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:832:v105	128	static
+results/compiler/2026-10-05-escrow-supported/program.c:743:v97	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:214:sol_Invoke	960	static
+results/compiler/2026-10-05-escrow-supported/program.c:4767:v198	640	static
+results/compiler/2026-10-05-escrow-supported/program.c:177:sol_CloseAccount	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:166:sol_set_data_len	0	static
+results/compiler/2026-10-05-escrow-supported/program.c:5472:v204	640	static

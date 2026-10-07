@@ -1,0 +1,60 @@
+{
+  "workload": "bounded",
+  "scenario": "project_clean",
+  "sample": 0,
+  "wall_seconds": 0.38467812491580844,
+  "cpu_seconds": 0.4665329999999974,
+  "phases_seconds": {
+    "backend_check": 0.024577166,
+    "generation": 0.005453833,
+    "manifest": 0.000311458,
+    "native_tests": 0.237590167,
+    "sbf_build": 0.0625705,
+    "svm_tests": 0.024028541
+  },
+  "native_test_result_cached": true,
+  "svm_startup_seconds": 0.010900416,
+  "svm_fixture_seconds": 0.004317416,
+  "svm_total_seconds": 0.022247292,
+  "vm_execution_seconds": 0.002069,
+  "before": {
+    "elf_exists": false,
+    "elf_sha256": null,
+    "elf_mtime_ns": null,
+    "receipt": null
+  },
+  "after": {
+    "elf_exists": true,
+    "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+    "elf_mtime_ns": 1791237214218171775,
+    "receipt": {
+      "Input": "ccd5e11e647f0449a3c35058423e413c7d81af974bff0f566c28676a0e747625",
+      "Output": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7"
+    }
+  },
+  "commands": [
+    {
+      "wall_seconds": 0.38467812491580844,
+      "cpu_seconds": 0.4665329999999974,
+      "load_average_before": [
+        8.3994140625,
+        6.451171875,
+        5.671875
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/bounded-project_clean-0.log",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/starter",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-fixtures-target/release/gosvm-svm-runner",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    }
+  ]
+}

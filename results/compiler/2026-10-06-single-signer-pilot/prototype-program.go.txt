@@ -1,0 +1,170 @@
+// Package isolation probes SDK serialization and the tick-array validator.
+// It performs no CPI and is not a production account/authority interface.
+package isolation
+
+import (
+	"example.org/gosvm-benchmarks/whirlpool/wire"
+	"gosvm/sdk/cpi"
+	"gosvm/sdk/pda"
+	"gosvm/solana"
+)
+
+func build(pool []byte, seeds *pda.Seeds) {
+	var prefix [9]byte
+	prefix[0] = 119
+	prefix[1] = 104
+	prefix[2] = 105
+	prefix[3] = 114
+	prefix[4] = 108
+	prefix[5] = 112
+	prefix[6] = 111
+	prefix[7] = 111
+	prefix[8] = 108
+	seeds.AddBytes(prefix[:])
+	seeds.AddBytes(pool[8:40])
+	seeds.AddBytes(pool[101:133])
+	seeds.AddBytes(pool[181:213])
+	seeds.AddBytes(pool[43:45])
+	seeds.AddByte(pool[40])
+}
+func buildCompact(pool []byte, seeds *cpi.SingleSigner) {
+	var prefix [9]byte
+	prefix[0] = 119
+	prefix[1] = 104
+	prefix[2] = 105
+	prefix[3] = 114
+	prefix[4] = 108
+	prefix[5] = 112
+	prefix[6] = 111
+	prefix[7] = 111
+	prefix[8] = 108
+	seeds.AddBytes(prefix[:])
+	seeds.AddBytes(pool[8:40])
+	seeds.AddBytes(pool[101:133])
+	seeds.AddBytes(pool[181:213])
+	seeds.AddBytes(pool[43:45])
+	seeds.AddByte(pool[40])
+}
+func Process(c solana.Context) uint64 {
+	d := solana.Instruction(c)
+	if len(d) == 1 && (d[0] == 20 || d[0] == 21 || d[0] == 22) {
+		if solana.Count(c) != 4 || len(solana.Data(c, 2)) != 653 { return 7310 }
+		var metas cpi.Metas
+		metas.Add(0, true, true)
+		metas.Add(1, true, false)
+		var data [12]byte
+		data[0] = 2
+		data[4] = 7
+		if d[0] == 20 {
+			var seeds pda.Seeds
+			build(solana.Data(c, 2), &seeds)
+			var signers cpi.Signers
+			if signers.Add(&seeds) != 0 { return 7311 }
+			return cpi.Invoke(c, 3, &metas, data[:], &signers)
+		}
+		var signer cpi.SingleSigner
+		buildCompact(solana.Data(c, 2), &signer)
+		code := cpi.InvokeSingle(c, 3, &metas, data[:], &signer)
+		if code != 0 { return code }
+		if d[0] == 22 { return 7312 }
+		return 0
+	}
+	if len(d) != 1 || solana.Count(c) != 3 || !solana.Writable(c, 0) {
+		return 7310
+	}
+	out, pool, array := solana.Data(c, 0), solana.Data(c, 1), solana.Data(c, 2)
+	if len(out) != 116 || len(pool) != 653 {
+		return 7310
+	}
+	if d[0] == 10 {
+		var signer cpi.SingleSigner
+		buildCompact(pool, &signer)
+		b := signer.Bytes()
+		for i := uint64(0); i < uint64(len(b)); i++ { out[i] = b[i] }
+		return 0
+	}
+	if d[0] == 11 { var s cpi.SingleSigner; return s.AddBytes(pool[:33]) }
+	if d[0] == 12 {
+		var s cpi.SingleSigner
+		for i := uint64(0); i < 16; i++ { if s.AddBytes(pool[:0]) != 0 { return 7311 } }
+		return s.AddBytes(pool[:0])
+	}
+	if d[0] == 13 { var m cpi.Metas; return cpi.InvokeSingle(c, 0, &m, nil, nil) }
+	if d[0] == 0 {
+		return 0
+	}
+	if d[0] == 3 || d[0] == 4 {
+		key := wire.ReadKey(solana.Key(c, 1), 0)
+		code := wire.CheckTickArray(array, key)
+		if code != 0 {
+			return code
+		}
+		if d[0] == 4 {
+			code = wire.CheckTickArray(array, key)
+			if code != 0 {
+				return code
+			}
+		}
+		out[0] = 1
+		return 0
+	}
+	if d[0] == 5 {
+		var seeds pda.Seeds
+		return seeds.AddBytes(pool[:33])
+	}
+	if d[0] == 6 {
+		var seeds pda.Seeds
+		for i := uint64(0); i < 16; i++ {
+			if seeds.AddBytes(pool[:0]) != 0 {
+				return 7311
+			}
+		}
+		return seeds.AddBytes(pool[:0])
+	}
+	if d[0] == 7 {
+		var signers cpi.Signers
+		return signers.Add(nil)
+	}
+	if d[0] == 9 {
+		var seeds pda.Seeds
+		for i := uint64(0); i < 16; i++ {
+			if seeds.AddBytes(pool[:32]) != 0 {
+				return 7311
+			}
+		}
+		var signers cpi.Signers
+		if signers.Add(&seeds) != 0 {
+			return 7311
+		}
+		return signers.Add(&seeds)
+	}
+	var seeds pda.Seeds
+	build(pool, &seeds)
+	if d[0] == 1 {
+		b := seeds.Bytes()
+		out[0] = 1
+		for i := uint64(0); i < uint64(len(b)); i++ {
+			out[1+i] = b[i]
+		}
+		return 0
+	}
+	var signers cpi.Signers
+	code := signers.Add(&seeds)
+	if code != 0 {
+		return code
+	}
+	if d[0] == 8 {
+		if signers.Add(&seeds) != 0 {
+			return 7311
+		}
+		return signers.Add(&seeds)
+	}
+	if d[0] != 2 {
+		return 7310
+	}
+	b := signers.Bytes()
+	for i := uint64(0); i < uint64(len(b)); i++ {
+		out[i] = b[i]
+	}
+	return 0
+}

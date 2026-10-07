@@ -1,0 +1,16 @@
+Testing 108 compiled SBF scenarios with LiteSVM...
+PASS wide-swap step 1                     46016 CU
+PASS no-accounts step 1                   43 CU
+PASS missing-account step 1               573 CU
+PASS extra-account step 1                 1110 CU
+gosvm: account-limit step 1 simulation: transaction error {"InstructionError":[0,{"Custom":6000}]}; expected {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 1001
+                }
+              ]
+            }
+Program H36bGb8d9RMNqL3pDDkojDhFKPp8Cs8dZEPyTyef3PsW invoke [1]
+Program H36bGb8d9RMNqL3pDDkojDhFKPp8Cs8dZEPyTyef3PsW consumed 4806 of 200000 compute units
+Program H36bGb8d9RMNqL3pDDkojDhFKPp8Cs8dZEPyTyef3PsW failed: custom program error: 0x1770

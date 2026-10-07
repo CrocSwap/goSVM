@@ -1,0 +1,10 @@
+{
+  "version": "v1.51",
+  "platform": "darwin-arm64",
+  "source": "https://github.com/anza-xyz/platform-tools/releases/download/v1.51/platform-tools-osx-aarch64.tar.bz2",
+  "archive_sha256": "a1e32b3137fe8199fa76da81c43ec0122bdbd27acf1279f38d8d265f7a6e6cb3",
+  "files": {
+    "llvm/bin/clang": "ec3fc09b50c81d5d7cd5925b6671ee69d340ae251949589ddfae4d66dfbde3ac",
+    "llvm/bin/ld.lld": "969e4ced1adfa882763460657b0cd817f02ec172c21799d9c068becbee26941b"
+  }
+}

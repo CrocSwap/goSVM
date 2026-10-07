@@ -1,0 +1,20 @@
+ok  	example.org/gosvm/full-swap	(cached)
+?   	example.org/gosvm/full-swap/client	[no test files]
+ok  	example.org/gosvm/full-swap/model	(cached)
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/framework-swap/2026-10-06-framework-swap-return-data/full-swap/build/program.so (68320 bytes, 1.275s)
+Testing 13 compiled SBF scenarios with LiteSVM...
+PASS wide-swap step 1                     46016 CU
+PASS pool-owner step 1                    695 CU
+PASS no-signer step 1                     656 CU
+PASS alias step 1                         1863 CU
+PASS vault-substitute step 1              13918 CU
+PASS token-owner step 1                   4107 CU
+PASS mint step 1                          15611 CU
+PASS pda step 1                           20254 CU
+PASS bump step 1                          19915 CU
+PASS input-frozen step 1                  32191 CU
+PASS output-frozen step 1                 43367 CU
+PASS input-overflow step 1                24684 CU
+PASS stateful-swaps-and-atomic-rollback step 1 46016 CU
+PASS stateful-swaps-and-atomic-rollback step 2 46011 CU
+PASS stateful-swaps-and-atomic-rollback step 3 70695 CU

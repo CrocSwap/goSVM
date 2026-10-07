@@ -1,0 +1,6 @@
+results/compiler/2026-10-06-account-decoder32/probe.c:36:memcpy	0	static
+results/compiler/2026-10-06-account-decoder32/probe.c:48:memset	0	static
+results/compiler/2026-10-06-account-decoder32/probe.c:645:entrypoint	2112	static
+results/compiler/2026-10-06-account-decoder32/probe.c:309:v9	0	static
+results/compiler/2026-10-06-account-decoder32/probe.c:281:v5	0	static
+results/compiler/2026-10-06-account-decoder32/probe.c:235:sol_Invoke	960	static

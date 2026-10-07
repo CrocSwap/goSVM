@@ -1,0 +1,11 @@
+package p
+import "gosvm/solana"
+func Store64(b []byte,o,v uint64){for j:=uint64(0);j<8;j++{b[o+j]=byte(v>>(8*j))}}
+func Store32(b []byte,o uint64,v uint32){for j:=uint64(0);j<4;j++{b[o+j]=byte(v>>(8*j))}}
+func read(b []byte,o uint64)uint64{v:=uint64(0);for j:=uint64(0);j<8;j++{v=v|uint64(b[o+j])<<(8*j)};return v}
+func Process(c solana.Context)uint64{
+ d:=solana.Instruction(c);if solana.Count(c)!=1||len(d)!=17{return 7330}
+ b:=solana.Data(c,0);o,v:=read(d,1),read(d,9)
+ if d[0]&1==0{Store64(b,o,v)}else{Store32(b,o,uint32(v))}
+ if d[0]>1{return 7331};return 0
+}

@@ -1,0 +1,289 @@
+{
+  "schema": 1,
+  "samples": 1,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "equivalence_passed": true,
+  "medians": [
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006321583,
+      "fixture_seconds": 0.003071584,
+      "total_seconds": 0.009393458
+    },
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01458125,
+      "fixture_seconds": 0.003520542,
+      "total_seconds": 0.018101875
+    },
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.012563625,
+      "fixture_seconds": 0.010061709,
+      "total_seconds": 0.022625458
+    },
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.010679167,
+      "fixture_seconds": 0.003515708,
+      "total_seconds": 0.014195
+    },
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007694584,
+      "fixture_seconds": 0.004783875,
+      "total_seconds": 0.01247875
+    },
+    {
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.009446834,
+      "fixture_seconds": 0.003765125,
+      "total_seconds": 0.013212167
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.004784084,
+      "fixture_seconds": 0.002951917,
+      "total_seconds": 0.007736375
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.004846625,
+      "fixture_seconds": 0.002297042,
+      "total_seconds": 0.007143792
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00939,
+      "fixture_seconds": 0.009319833,
+      "total_seconds": 0.018709958
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008378625,
+      "fixture_seconds": 0.00298825,
+      "total_seconds": 0.011367
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.006842166,
+      "fixture_seconds": 0.004354584,
+      "total_seconds": 0.011197083
+    },
+    {
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008139208,
+      "fixture_seconds": 0.002837208,
+      "total_seconds": 0.010976667
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.004421458,
+      "fixture_seconds": 0.002484625,
+      "total_seconds": 0.006906291
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.004634167,
+      "fixture_seconds": 0.002243666,
+      "total_seconds": 0.006877917
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.008989167,
+      "fixture_seconds": 0.008996208,
+      "total_seconds": 0.017985542
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008132792,
+      "fixture_seconds": 0.002856,
+      "total_seconds": 0.010988958
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007138875,
+      "fixture_seconds": 0.004984,
+      "total_seconds": 0.012123167
+    },
+    {
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008002792,
+      "fixture_seconds": 0.002710083,
+      "total_seconds": 0.010713125
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.011625292,
+      "fixture_seconds": 0.098928666,
+      "total_seconds": 0.110554333
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.011622083,
+      "fixture_seconds": 0.09313025,
+      "total_seconds": 0.104752708
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.01649975,
+      "fixture_seconds": 0.138980167,
+      "total_seconds": 0.155480042
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.015856375,
+      "fixture_seconds": 0.096078417,
+      "total_seconds": 0.111934959
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.013909292,
+      "fixture_seconds": 0.103512125,
+      "total_seconds": 0.11742175
+    },
+    {
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.014596,
+      "fixture_seconds": 0.099221458,
+      "total_seconds": 0.11381775
+    }
+  ],
+  "host_build_seconds": {
+    "rust_existing_target": 3.6264762082137167,
+    "verifier": 0.8978232918307185,
+    "cgo_driver": 0.6434056251309812
+  },
+  "build_state": "installed tools; existing Cargo target and Go caches",
+  "baseline": "2026-10-05-litesvm/sample-0/validator; reuse snapshot, no fresh validator run",
+  "baseline_summary_sha256": "6d8aaf815c9825a9a12241d14818ba174797aa685eca9217643a0bfabfb44ed6",
+  "artifacts": {
+    "gosvm-svm-runner": {
+      "bytes": 6886256,
+      "sha256": "5c3720cd2780abbb65c0a5c395387eef88f50c07442dc74de871987ecd33006c"
+    },
+    "libgosvm_svm_runner.dylib": {
+      "bytes": 6385904,
+      "sha256": "da07ddd9256967366ba11de8c40a4c34e62a4b13c1a43815cc77c9c1dce81ffb"
+    },
+    "compare": {
+      "bytes": 5448016,
+      "sha256": "6c4cf0c19079b3b641c778c1b7f51a6f74a626027aa01816033bb3b2df0278b1"
+    }
+  },
+  "source_sha256": {
+    "benchmarks/svm-runner/Cargo.lock": "dae253f6a57f2f1b08ec7c7322ec84c87e6101b38fd78a35d5931589eaee8e2a",
+    "benchmarks/svm-runner/Cargo.toml": "e9ece8b4867dcd7fda239fd341873439cce95e4af9a8a8cc3253787c9672ddf5",
+    "benchmarks/svm-runner/README.md": "e76d5423b3656809b3cca6b9111ac5aa6fb6394e30e0eb5dc027532673dac8c6",
+    "benchmarks/svm-runner/src/lib.rs": "7f11b2d97165e25a4a42d67a1f1a3d35f2794f1862ceaf199da8daa63a0225fb",
+    "benchmarks/svm-runner/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "benchmarks/svm-transport/README.md": "cd713aa46e19e700fc91a1fac8163923d9b9385b5b5c451ed489ffef6e5034c0",
+    "benchmarks/svm-transport/ffi.go": "9f2dd7305c0baba3e4368d767ddb8a223be48edae5a49cc27bc75f9688f00246",
+    "benchmarks/svm-transport/go.mod": "e98d11db5a77de65c3c6804736419cac291233e61eeaa56b5a832e58b4dcd70c",
+    "benchmarks/svm-transport/main.go": "094128dcfe4846d782de4d2f7a012ab802f777f8848e074a3a796d3e63fbd34c",
+    "benchmarks/svm-transport/main_test.go": "8232d5fa9b457e91b1d9daae53049ac316313f4959f555272d0d1972d3bfbc8d",
+    "cmd/gosvm/main.go": "0929ffa2df6122c9de7bb0db67ccdb0993869c0bdca8de54f3b86781babaed83",
+    "cmd/gosvm/project.go": "0e33a7a4f9956460296e9021c278e43e1bdc93ff921a3f008efddcc3213584a7",
+    "cmd/gosvm/project_test.go": "51a54decf90aa15c35b20b4949cd54132dbbe13607357b844a91172c64fa015a",
+    "cmd/verify/anchor.go": "1a59b18af1046683387c92ea2dd17340ad28275f6cc891818d2625e8419d4856",
+    "cmd/verify/main.go": "5d9c99beb61e26b0c43aaaae0d73b480373987cd721069fbf6aa241919b4cf8d",
+    "cmd/verify/protocol.go": "fa54ff62afe392559191ae4371ccedd03fee4aca0ee864050db8d60c62b20bbc",
+    "cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "cmd/verify/tokens.go": "83fa655e3fc3ef115e686e0166dbbb875b592d8c60c8159bf512e3b1b1c29a02",
+    "internal/sbftest/fast.go": "c5cf140cca8deeb2a1d51979f4a95e1ee8df7a531a04c59084c8536f8f9cc9e2",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "6f9a58e402842b5f2096bb01b31509d94666822d581a839e787d30b68191020d",
+    "internal/testvm/command_test.go": "5cc6d9f99a6297bbdae7993e387dae0d43c507fe5bcf6be40155680b86f3f839",
+    "internal/testvm/controls_integration_test.go": "98b91fa4dc848cf18f10afaa0e12fddd533ce0f274f2b549ab8fab61f889f316",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "6fdd95676251316c55ce32f3870d8d3857962a2e236bf92ffc4427fccb6d15ec",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "scripts/svm_transport.py": "bf2a8f3d644c505b7fbe76b12fb54c5732b0965ddf76c6e5895aa505b6c0bf79"
+  },
+  "trace_sha256": {
+    "bounded-anchor.jsonl": "145bb189f4a5ff6a254b431bc4485aaf645183d95eb24611eb393953ebbfaf55",
+    "bounded-go.jsonl": "fa068366c079d63cc3f8399265c512fab4c53a727c645eced55daf90734ec3a7",
+    "bounded-lean-rust.jsonl": "407db784821da2402c88ac40b72b03b69e174ecd76a5646560875a89c55068b3",
+    "token.jsonl": "33a83f2a37e92ed844a01c1c53a966188ef6a3e29c1fe957e558c2b84103c107"
+  },
+  "limitations": [
+    "1 seeded shuffled repetitions on a shared desktop; no isolated CPU/load",
+    "Replay includes response validation but excludes Go fixture/signature construction",
+    "Startup includes VM initialization; embedded dlopen and all shutdowns are excluded",
+    "Same pinned Rust core through an experimental C ABI, not the separate upstream pure-Go engine",
+    "Only bounded and token programs; dependency-heavy protocol not run"
+  ]
+}

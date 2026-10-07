@@ -1,0 +1,200 @@
+{
+  "schema": 2,
+  "name": "escrow",
+  "module": "example.org/gosvm/escrow",
+  "platform_tools": "v1.51",
+  "sbf": "v3",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+  "sdk_version": 2,
+  "imports": {
+    "model": "example.org/gosvm/escrow/model"
+  },
+  "layouts": [
+    {
+      "name": "Escrow",
+      "type": "model.Escrow",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Open",
+      "handler": "Open",
+      "args": "model.OpenArgs",
+      "bundle": "OpenAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Escrow",
+          "kind": "state",
+          "layout": "Escrow",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "EscrowRef",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "657363726f77"
+              },
+              {
+                "kind": "key",
+                "account": "Creator"
+              },
+              {
+                "kind": "uint64",
+                "field": "args.Nonce"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          },
+          "init": {
+            "payer": "Creator",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Creator",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "Beneficiary",
+          "kind": "account",
+          "access": "read",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relations": [
+        {
+          "field": "args.Beneficiary",
+          "account": "Beneficiary"
+        }
+      ]
+    },
+    {
+      "name": "Claim",
+      "handler": "Claim",
+      "args": "model.ClaimArgs",
+      "bundle": "ClaimAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Escrow",
+          "kind": "state",
+          "layout": "Escrow",
+          "owner": "program_id",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "657363726f77"
+              },
+              {
+                "kind": "key",
+                "account": "Creator"
+              },
+              {
+                "kind": "uint64",
+                "field": "Escrow.Nonce"
+              },
+              {
+                "kind": "byte",
+                "field": "Escrow.Bump"
+              }
+            ]
+          },
+          "close": {
+            "to": "Beneficiary",
+            "authority": "Beneficiary",
+            "authority_field": "Escrow.Beneficiary"
+          }
+        },
+        {
+          "name": "Creator",
+          "kind": "account",
+          "access": "read",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "Beneficiary",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Escrow.Creator",
+          "account": "Creator"
+        }
+      ]
+    },
+    {
+      "name": "Cancel",
+      "handler": "Cancel",
+      "args": "model.CancelArgs",
+      "bundle": "CancelAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Escrow",
+          "kind": "state",
+          "layout": "Escrow",
+          "owner": "program_id",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "657363726f77"
+              },
+              {
+                "kind": "key",
+                "account": "Creator"
+              },
+              {
+                "kind": "uint64",
+                "field": "Escrow.Nonce"
+              },
+              {
+                "kind": "byte",
+                "field": "Escrow.Bump"
+              }
+            ]
+          },
+          "close": {
+            "to": "Creator",
+            "authority": "Creator",
+            "authority_field": "Escrow.Creator"
+          }
+        },
+        {
+          "name": "Creator",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relations": []
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+package cpi
+
+import (
+	"bytes"
+	"encoding/binary"
+	"gosvm/sdk/pda"
+	"gosvm/solana"
+	"math/rand"
+	"testing"
+)
+
+func TestCompactSignerRandomEncodingAndFailedAdd(t *testing.T) {
+	rng := rand.New(rand.NewSource(918244))
+	for trial := 0; trial < 1000; trial++ {
+		var s SingleSigner
+		var seeds pda.Seeds
+		count := rng.Intn(17)
+		want := []byte{1, byte(count)}
+		for i := 0; i < count; i++ {
+			b := make([]byte, rng.Intn(33))
+			rng.Read(b)
+			if s.AddBytes(b) != 0 || seeds.AddBytes(b) != 0 { t.Fatal("valid seed") }
+			want = append(append(want, byte(len(b))), b...)
+		}
+		if !bytes.Equal(s.Bytes(), want) { t.Fatal("independent encoding", trial) }
+		var groups Signers
+		if groups.Add(&seeds) != 0 || !bytes.Equal(groups.Bytes(), want) { t.Fatal("general encoding", trial) }
+		before := bytes.Clone(s.Bytes())
+		if s.AddBytes(make([]byte, 33)) != pda.ErrSeeds || !bytes.Equal(before, s.Bytes()) { t.Fatal("failed add changed state") }
+	}
+	var s SingleSigner
+	for i := 0; i < 16; i++ { if s.AddKey([32]byte{byte(i)}) != 0 { t.Fatal(i) } }
+	before := bytes.Clone(s.Bytes())
+	if len(before) != 530 || s.AddBytes(nil) != pda.ErrSeeds || !bytes.Equal(before, s.Bytes()) { t.Fatal("full capacity") }
+}
+
+func TestCompactSignerScalarsAndInvokeGuards(t *testing.T) {
+	var s SingleSigner
+	key := [32]byte{9, 7}
+	s.AddKey(key); s.AddByte(42); s.AddUint32(0xfedcba98); s.AddUint64(0xfedcba9876543210)
+	want := append([]byte{1,4,32},key[:]...)
+	want = append(want,1,42,4,0x98,0xba,0xdc,0xfe,8,0x10,0x32,0x54,0x76,0x98,0xba,0xdc,0xfe)
+	if !bytes.Equal(want,s.Bytes()) { t.Fatal(s.Bytes()) }
+	calls := 0
+	c := solana.Context{Accounts: []solana.Account{{Executable:true}, {}}}
+	c.InvokeInstruction = func(program uint64, metas,data,seeds []byte) uint64 {
+		calls++
+		if program != 0 || len(metas)!=9 || binary.LittleEndian.Uint64(metas)!=1 || metas[8]!=3 || !bytes.Equal(data,[]byte{17}) || !bytes.Equal(seeds,want) { t.Fatal("invoke encoding") }
+		return 0x1200000000
+	}
+	var m Metas; m.Add(1,true,true)
+	if code:=InvokeSingle(c,0,&m,[]byte{17},&s); code!=0x1200000000 || calls!=1 { t.Fatal(code,calls) }
+	if InvokeSingle(c,0,nil,nil,&s)!=ErrMetas || InvokeSingle(c,0,&m,nil,nil)!=ErrSigners || InvokeSingle(c,2,&m,nil,&s)!=2005 || InvokeSingle(c,1,&m,nil,&s)!=2001 || InvokeSingle(c,0,&m,make([]byte,10241),&s)!=2008 || calls!=1 { t.Fatal("invoke guards") }
+}

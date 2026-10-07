@@ -1,0 +1,1496 @@
+[
+  {
+    "name": "s1-reward0-left1-input1-amount1",
+    "success": true,
+    "baseline_cu": 40980,
+    "go_cu": 40562,
+    "rust_cu": 28675,
+    "saving": 418,
+    "paired_ratio": 1.4145422842197035
+  },
+  {
+    "name": "s1-reward0-left1-input1-amount7",
+    "success": true,
+    "baseline_cu": 44129,
+    "go_cu": 43236,
+    "rust_cu": 32052,
+    "saving": 893,
+    "paired_ratio": 1.3489329839011606
+  },
+  {
+    "name": "s1-reward0-left1-input1-amount200",
+    "success": true,
+    "baseline_cu": 44660,
+    "go_cu": 43384,
+    "rust_cu": 32000,
+    "saving": 1276,
+    "paired_ratio": 1.35575
+  },
+  {
+    "name": "s1-reward0-left1-input1-amount1000",
+    "success": true,
+    "baseline_cu": 52161,
+    "go_cu": 49219,
+    "rust_cu": 34981,
+    "saving": 2942,
+    "paired_ratio": 1.4070209542322976
+  },
+  {
+    "name": "s1-reward0-left1-input1-amount6000",
+    "success": true,
+    "baseline_cu": 103907,
+    "go_cu": 87069,
+    "rust_cu": 56831,
+    "saving": 16838,
+    "paired_ratio": 1.5320687652865514
+  },
+  {
+    "name": "s1-reward0-left1-input1-amount50000",
+    "success": true,
+    "baseline_cu": 133678,
+    "go_cu": 106199,
+    "rust_cu": 66597,
+    "saving": 27479,
+    "paired_ratio": 1.5946514107242067
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount1",
+    "success": true,
+    "baseline_cu": 41187,
+    "go_cu": 40841,
+    "rust_cu": 29751,
+    "saving": 346,
+    "paired_ratio": 1.37276057947632
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount7",
+    "success": true,
+    "baseline_cu": 41604,
+    "go_cu": 41235,
+    "rust_cu": 29856,
+    "saving": 369,
+    "paired_ratio": 1.381129421221865
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount200",
+    "success": true,
+    "baseline_cu": 43179,
+    "go_cu": 42785,
+    "rust_cu": 28862,
+    "saving": 394,
+    "paired_ratio": 1.4823990021481532
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount1000",
+    "success": true,
+    "baseline_cu": 48154,
+    "go_cu": 46995,
+    "rust_cu": 32611,
+    "saving": 1159,
+    "paired_ratio": 1.4410781638097574
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount6000",
+    "success": true,
+    "baseline_cu": 89564,
+    "go_cu": 83809,
+    "rust_cu": 52866,
+    "saving": 5755,
+    "paired_ratio": 1.5853100291302538
+  },
+  {
+    "name": "s1-reward0-left1-input0-amount50000",
+    "success": true,
+    "baseline_cu": 112434,
+    "go_cu": 104424,
+    "rust_cu": 64540,
+    "saving": 8010,
+    "paired_ratio": 1.6179733498605515
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount1",
+    "success": true,
+    "baseline_cu": 40438,
+    "go_cu": 40086,
+    "rust_cu": 28201,
+    "saving": 352,
+    "paired_ratio": 1.4214389560653877
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount7",
+    "success": true,
+    "baseline_cu": 42464,
+    "go_cu": 41636,
+    "rust_cu": 30050,
+    "saving": 828,
+    "paired_ratio": 1.3855574043261232
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount200",
+    "success": true,
+    "baseline_cu": 43002,
+    "go_cu": 41791,
+    "rust_cu": 29993,
+    "saving": 1211,
+    "paired_ratio": 1.393358450305071
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount1000",
+    "success": true,
+    "baseline_cu": 43442,
+    "go_cu": 42011,
+    "rust_cu": 29938,
+    "saving": 1431,
+    "paired_ratio": 1.403266751285991
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount6000",
+    "success": true,
+    "baseline_cu": 95907,
+    "go_cu": 81211,
+    "rust_cu": 50620,
+    "saving": 14696,
+    "paired_ratio": 1.604326353220071
+  },
+  {
+    "name": "s1-reward0-left0-input1-amount50000",
+    "success": true,
+    "baseline_cu": 128990,
+    "go_cu": 103885,
+    "rust_cu": 62499,
+    "saving": 25105,
+    "paired_ratio": 1.6621865949855197
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount1",
+    "success": true,
+    "baseline_cu": 43891,
+    "go_cu": 43468,
+    "rust_cu": 32229,
+    "saving": 423,
+    "paired_ratio": 1.3487231996028421
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount7",
+    "success": true,
+    "baseline_cu": 44084,
+    "go_cu": 43640,
+    "rust_cu": 32332,
+    "saving": 444,
+    "paired_ratio": 1.349746381294074
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount200",
+    "success": true,
+    "baseline_cu": 44133,
+    "go_cu": 43679,
+    "rust_cu": 32277,
+    "saving": 454,
+    "paired_ratio": 1.3532546395265979
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount1000",
+    "success": true,
+    "baseline_cu": 44716,
+    "go_cu": 43823,
+    "rust_cu": 32220,
+    "saving": 893,
+    "paired_ratio": 1.3601179391682185
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount6000",
+    "success": true,
+    "baseline_cu": 87923,
+    "go_cu": 82710,
+    "rust_cu": 51932,
+    "saving": 5213,
+    "paired_ratio": 1.5926596318262343
+  },
+  {
+    "name": "s1-reward0-left0-input0-amount50000",
+    "success": true,
+    "baseline_cu": 109641,
+    "go_cu": 102195,
+    "rust_cu": 60497,
+    "saving": 7446,
+    "paired_ratio": 1.6892573185447213
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount1",
+    "success": true,
+    "baseline_cu": 51720,
+    "go_cu": 41006,
+    "rust_cu": 29215,
+    "saving": 10714,
+    "paired_ratio": 1.4035940441553996
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount7",
+    "success": true,
+    "baseline_cu": 54869,
+    "go_cu": 43680,
+    "rust_cu": 32592,
+    "saving": 11189,
+    "paired_ratio": 1.3402061855670102
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount200",
+    "success": true,
+    "baseline_cu": 55400,
+    "go_cu": 43828,
+    "rust_cu": 32540,
+    "saving": 11572,
+    "paired_ratio": 1.3468961278426552
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount1000",
+    "success": true,
+    "baseline_cu": 61908,
+    "go_cu": 48670,
+    "rust_cu": 35520,
+    "saving": 13238,
+    "paired_ratio": 1.3702139639639639
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount6000",
+    "success": true,
+    "baseline_cu": 106703,
+    "go_cu": 79569,
+    "rust_cu": 57360,
+    "saving": 27134,
+    "paired_ratio": 1.3871861924686193
+  },
+  {
+    "name": "s1-reward1-left1-input1-amount50000",
+    "success": true,
+    "baseline_cu": 132502,
+    "go_cu": 94727,
+    "rust_cu": 67119,
+    "saving": 37775,
+    "paired_ratio": 1.4113291318404624
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount1",
+    "success": true,
+    "baseline_cu": 51927,
+    "go_cu": 41285,
+    "rust_cu": 30291,
+    "saving": 10642,
+    "paired_ratio": 1.3629460895975702
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount7",
+    "success": true,
+    "baseline_cu": 52344,
+    "go_cu": 41679,
+    "rust_cu": 30396,
+    "saving": 10665,
+    "paired_ratio": 1.3712001579155153
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount200",
+    "success": true,
+    "baseline_cu": 52926,
+    "go_cu": 42236,
+    "rust_cu": 29401,
+    "saving": 10690,
+    "paired_ratio": 1.4365497772184619
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount1000",
+    "success": true,
+    "baseline_cu": 57901,
+    "go_cu": 46446,
+    "rust_cu": 33150,
+    "saving": 11455,
+    "paired_ratio": 1.4010859728506788
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount6000",
+    "success": true,
+    "baseline_cu": 92360,
+    "go_cu": 76309,
+    "rust_cu": 53395,
+    "saving": 16051,
+    "paired_ratio": 1.429141305365671
+  },
+  {
+    "name": "s1-reward1-left1-input0-amount50000",
+    "success": true,
+    "baseline_cu": 111258,
+    "go_cu": 92952,
+    "rust_cu": 65062,
+    "saving": 18306,
+    "paired_ratio": 1.4286680397159632
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount1",
+    "success": true,
+    "baseline_cu": 51178,
+    "go_cu": 40530,
+    "rust_cu": 28741,
+    "saving": 10648,
+    "paired_ratio": 1.4101805782679795
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount7",
+    "success": true,
+    "baseline_cu": 53204,
+    "go_cu": 42080,
+    "rust_cu": 30590,
+    "saving": 11124,
+    "paired_ratio": 1.3756129454069959
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount200",
+    "success": true,
+    "baseline_cu": 53742,
+    "go_cu": 42235,
+    "rust_cu": 30533,
+    "saving": 11507,
+    "paired_ratio": 1.383257459142567
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount1000",
+    "success": true,
+    "baseline_cu": 54182,
+    "go_cu": 42455,
+    "rust_cu": 30478,
+    "saving": 11727,
+    "paired_ratio": 1.3929719797887001
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount6000",
+    "success": true,
+    "baseline_cu": 99696,
+    "go_cu": 74704,
+    "rust_cu": 51150,
+    "saving": 24992,
+    "paired_ratio": 1.4604887585532746
+  },
+  {
+    "name": "s1-reward1-left0-input1-amount50000",
+    "success": true,
+    "baseline_cu": 128807,
+    "go_cu": 93406,
+    "rust_cu": 63022,
+    "saving": 35401,
+    "paired_ratio": 1.482117355843991
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount1",
+    "success": true,
+    "baseline_cu": 54631,
+    "go_cu": 43912,
+    "rust_cu": 32769,
+    "saving": 10719,
+    "paired_ratio": 1.3400469956361194
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount7",
+    "success": true,
+    "baseline_cu": 54824,
+    "go_cu": 44084,
+    "rust_cu": 32872,
+    "saving": 10740,
+    "paired_ratio": 1.3410805548795328
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount200",
+    "success": true,
+    "baseline_cu": 54873,
+    "go_cu": 44123,
+    "rust_cu": 32817,
+    "saving": 10750,
+    "paired_ratio": 1.344516561538227
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount1000",
+    "success": true,
+    "baseline_cu": 55456,
+    "go_cu": 44267,
+    "rust_cu": 32760,
+    "saving": 11189,
+    "paired_ratio": 1.3512515262515263
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount6000",
+    "success": true,
+    "baseline_cu": 91712,
+    "go_cu": 76203,
+    "rust_cu": 52462,
+    "saving": 15509,
+    "paired_ratio": 1.4525370744538904
+  },
+  {
+    "name": "s1-reward1-left0-input0-amount50000",
+    "success": true,
+    "baseline_cu": 109458,
+    "go_cu": 91716,
+    "rust_cu": 61020,
+    "saving": 17742,
+    "paired_ratio": 1.503048180924287
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount1",
+    "success": true,
+    "baseline_cu": 43538,
+    "go_cu": 43114,
+    "rust_cu": 30266,
+    "saving": 424,
+    "paired_ratio": 1.4245027423511532
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount7",
+    "success": true,
+    "baseline_cu": 46672,
+    "go_cu": 45773,
+    "rust_cu": 33621,
+    "saving": 899,
+    "paired_ratio": 1.3614407661877992
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount200",
+    "success": true,
+    "baseline_cu": 47495,
+    "go_cu": 46213,
+    "rust_cu": 33736,
+    "saving": 1282,
+    "paired_ratio": 1.36984230495613
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount1000",
+    "success": true,
+    "baseline_cu": 47820,
+    "go_cu": 46331,
+    "rust_cu": 33702,
+    "saving": 1489,
+    "paired_ratio": 1.3747255355765235
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount6000",
+    "success": true,
+    "baseline_cu": 56331,
+    "go_cu": 52180,
+    "rust_cu": 36673,
+    "saving": 4151,
+    "paired_ratio": 1.422845144929512
+  },
+  {
+    "name": "s8-reward0-left1-input1-amount50000",
+    "success": true,
+    "baseline_cu": 121586,
+    "go_cu": 96806,
+    "rust_cu": 61192,
+    "saving": 24780,
+    "paired_ratio": 1.5820041835534058
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount1",
+    "success": true,
+    "baseline_cu": 43637,
+    "go_cu": 43291,
+    "rust_cu": 31314,
+    "saving": 346,
+    "paired_ratio": 1.3824806795682443
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount7",
+    "success": true,
+    "baseline_cu": 44055,
+    "go_cu": 43686,
+    "rust_cu": 31419,
+    "saving": 369,
+    "paired_ratio": 1.3904325408192495
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount200",
+    "success": true,
+    "baseline_cu": 44460,
+    "go_cu": 44076,
+    "rust_cu": 31533,
+    "saving": 384,
+    "paired_ratio": 1.397773760821996
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount1000",
+    "success": true,
+    "baseline_cu": 45003,
+    "go_cu": 44238,
+    "rust_cu": 31492,
+    "saving": 765,
+    "paired_ratio": 1.4047377111647403
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount6000",
+    "success": true,
+    "baseline_cu": 51902,
+    "go_cu": 49878,
+    "rust_cu": 34308,
+    "saving": 2024,
+    "paired_ratio": 1.4538300104931794
+  },
+  {
+    "name": "s8-reward0-left1-input0-amount50000",
+    "success": true,
+    "baseline_cu": 116597,
+    "go_cu": 104077,
+    "rust_cu": 63326,
+    "saving": 12520,
+    "paired_ratio": 1.6435113539462465
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount1",
+    "success": true,
+    "baseline_cu": 42914,
+    "go_cu": 42562,
+    "rust_cu": 29776,
+    "saving": 352,
+    "paired_ratio": 1.4294062332079527
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount7",
+    "success": true,
+    "baseline_cu": 44943,
+    "go_cu": 44115,
+    "rust_cu": 31627,
+    "saving": 828,
+    "paired_ratio": 1.3948524994466753
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount200",
+    "success": true,
+    "baseline_cu": 45547,
+    "go_cu": 44346,
+    "rust_cu": 31666,
+    "saving": 1201,
+    "paired_ratio": 1.400429482725952
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount1000",
+    "success": true,
+    "baseline_cu": 46050,
+    "go_cu": 44639,
+    "rust_cu": 31703,
+    "saving": 1411,
+    "paired_ratio": 1.4080370942812983
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount6000",
+    "success": true,
+    "baseline_cu": 46917,
+    "go_cu": 44928,
+    "rust_cu": 31719,
+    "saving": 1989,
+    "paired_ratio": 1.4164380970396293
+  },
+  {
+    "name": "s8-reward0-left0-input1-amount50000",
+    "success": true,
+    "baseline_cu": 106468,
+    "go_cu": 86268,
+    "rust_cu": 52573,
+    "saving": 20200,
+    "paired_ratio": 1.6409183421147737
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount1",
+    "success": true,
+    "baseline_cu": 46801,
+    "go_cu": 46342,
+    "rust_cu": 33806,
+    "saving": 459,
+    "paired_ratio": 1.3708217476187659
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount7",
+    "success": true,
+    "baseline_cu": 46993,
+    "go_cu": 46513,
+    "rust_cu": 33907,
+    "saving": 480,
+    "paired_ratio": 1.3717816380098504
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount200",
+    "success": true,
+    "baseline_cu": 47227,
+    "go_cu": 46737,
+    "rust_cu": 33949,
+    "saving": 490,
+    "paired_ratio": 1.3766826710654216
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount1000",
+    "success": true,
+    "baseline_cu": 48030,
+    "go_cu": 47099,
+    "rust_cu": 33992,
+    "saving": 931,
+    "paired_ratio": 1.3855907272299364
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount6000",
+    "success": true,
+    "baseline_cu": 48706,
+    "go_cu": 47329,
+    "rust_cu": 34041,
+    "saving": 1377,
+    "paired_ratio": 1.3903528098469493
+  },
+  {
+    "name": "s8-reward0-left0-input0-amount50000",
+    "success": true,
+    "baseline_cu": 97858,
+    "go_cu": 87842,
+    "rust_cu": 53807,
+    "saving": 10016,
+    "paired_ratio": 1.632538517293289
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount1",
+    "success": true,
+    "baseline_cu": 54278,
+    "go_cu": 43558,
+    "rust_cu": 30806,
+    "saving": 10720,
+    "paired_ratio": 1.4139453353242875
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount7",
+    "success": true,
+    "baseline_cu": 57412,
+    "go_cu": 46217,
+    "rust_cu": 34161,
+    "saving": 11195,
+    "paired_ratio": 1.3529170691724481
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount200",
+    "success": true,
+    "baseline_cu": 58235,
+    "go_cu": 46657,
+    "rust_cu": 34276,
+    "saving": 11578,
+    "paired_ratio": 1.3612148442058583
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount1000",
+    "success": true,
+    "baseline_cu": 58560,
+    "go_cu": 46775,
+    "rust_cu": 34242,
+    "saving": 11785,
+    "paired_ratio": 1.3660124992699025
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount6000",
+    "success": true,
+    "baseline_cu": 66078,
+    "go_cu": 51631,
+    "rust_cu": 37212,
+    "saving": 14447,
+    "paired_ratio": 1.3874825325163926
+  },
+  {
+    "name": "s8-reward1-left1-input1-amount50000",
+    "success": true,
+    "baseline_cu": 123389,
+    "go_cu": 88313,
+    "rust_cu": 61720,
+    "saving": 35076,
+    "paired_ratio": 1.4308651976668827
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount1",
+    "success": true,
+    "baseline_cu": 54377,
+    "go_cu": 43735,
+    "rust_cu": 31854,
+    "saving": 10642,
+    "paired_ratio": 1.3729829848684623
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount7",
+    "success": true,
+    "baseline_cu": 54795,
+    "go_cu": 44130,
+    "rust_cu": 31959,
+    "saving": 10665,
+    "paired_ratio": 1.3808316906035858
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount200",
+    "success": true,
+    "baseline_cu": 55200,
+    "go_cu": 44520,
+    "rust_cu": 32073,
+    "saving": 10680,
+    "paired_ratio": 1.3880834346646713
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount1000",
+    "success": true,
+    "baseline_cu": 55743,
+    "go_cu": 44682,
+    "rust_cu": 32032,
+    "saving": 11061,
+    "paired_ratio": 1.3949175824175823
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount6000",
+    "success": true,
+    "baseline_cu": 61649,
+    "go_cu": 49329,
+    "rust_cu": 34847,
+    "saving": 12320,
+    "paired_ratio": 1.415588142451287
+  },
+  {
+    "name": "s8-reward1-left1-input0-amount50000",
+    "success": true,
+    "baseline_cu": 116414,
+    "go_cu": 93598,
+    "rust_cu": 63849,
+    "saving": 22816,
+    "paired_ratio": 1.4659274225124903
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount1",
+    "success": true,
+    "baseline_cu": 53654,
+    "go_cu": 43006,
+    "rust_cu": 30316,
+    "saving": 10648,
+    "paired_ratio": 1.418590843119145
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount7",
+    "success": true,
+    "baseline_cu": 55683,
+    "go_cu": 44559,
+    "rust_cu": 32167,
+    "saving": 11124,
+    "paired_ratio": 1.385239531196568
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount200",
+    "success": true,
+    "baseline_cu": 56287,
+    "go_cu": 44790,
+    "rust_cu": 32206,
+    "saving": 11497,
+    "paired_ratio": 1.390734645718189
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount1000",
+    "success": true,
+    "baseline_cu": 56790,
+    "go_cu": 45083,
+    "rust_cu": 32243,
+    "saving": 11707,
+    "paired_ratio": 1.398225971528704
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount6000",
+    "success": true,
+    "baseline_cu": 57657,
+    "go_cu": 45372,
+    "rust_cu": 32259,
+    "saving": 12285,
+    "paired_ratio": 1.4064912117548591
+  },
+  {
+    "name": "s8-reward1-left0-input1-amount50000",
+    "success": true,
+    "baseline_cu": 110257,
+    "go_cu": 79761,
+    "rust_cu": 53103,
+    "saving": 30496,
+    "paired_ratio": 1.5020055364103724
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount1",
+    "success": true,
+    "baseline_cu": 57541,
+    "go_cu": 46786,
+    "rust_cu": 34346,
+    "saving": 10755,
+    "paired_ratio": 1.3621964712047983
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount7",
+    "success": true,
+    "baseline_cu": 57733,
+    "go_cu": 46957,
+    "rust_cu": 34447,
+    "saving": 10776,
+    "paired_ratio": 1.3631666037681076
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount200",
+    "success": true,
+    "baseline_cu": 57967,
+    "go_cu": 47181,
+    "rust_cu": 34489,
+    "saving": 10786,
+    "paired_ratio": 1.3680013917480935
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount1000",
+    "success": true,
+    "baseline_cu": 58770,
+    "go_cu": 47543,
+    "rust_cu": 34532,
+    "saving": 11227,
+    "paired_ratio": 1.3767809567936986
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount6000",
+    "success": true,
+    "baseline_cu": 59446,
+    "go_cu": 47773,
+    "rust_cu": 34581,
+    "saving": 11673,
+    "paired_ratio": 1.3814811601746624
+  },
+  {
+    "name": "s8-reward1-left0-input0-amount50000",
+    "success": true,
+    "baseline_cu": 101647,
+    "go_cu": 81335,
+    "rust_cu": 54337,
+    "saving": 20312,
+    "paired_ratio": 1.496862174945249
+  },
+  {
+    "name": "zero-amount",
+    "success": false,
+    "baseline_cu": 20511,
+    "go_cu": 20511,
+    "rust_cu": 11271,
+    "saving": 0,
+    "paired_ratio": 1.8198030343359064
+  },
+  {
+    "name": "old-clock",
+    "success": false,
+    "baseline_cu": 20532,
+    "go_cu": 20532,
+    "rust_cu": 11301,
+    "saving": 0,
+    "paired_ratio": 1.8168303689938943
+  },
+  {
+    "name": "slippage-after-crossing",
+    "success": false,
+    "baseline_cu": 89247,
+    "go_cu": 72409,
+    "rust_cu": 42311,
+    "saving": 16838,
+    "paired_ratio": 1.7113516579612866
+  },
+  {
+    "name": "price-too-low",
+    "success": false,
+    "baseline_cu": 20490,
+    "go_cu": 20490,
+    "rust_cu": 11252,
+    "saving": 0,
+    "paired_ratio": 1.8210095982936367
+  },
+  {
+    "name": "wrong-direction",
+    "success": false,
+    "baseline_cu": 20512,
+    "go_cu": 20512,
+    "rust_cu": 11277,
+    "saving": 0,
+    "paired_ratio": 1.8189234725547574
+  },
+  {
+    "name": "exact-output-max-input",
+    "success": false,
+    "baseline_cu": 74911,
+    "go_cu": 69156,
+    "rust_cu": 38343,
+    "saving": 5755,
+    "paired_ratio": 1.8036147406306235
+  },
+  {
+    "name": "no-price-limit",
+    "success": true,
+    "baseline_cu": 44116,
+    "go_cu": 43223,
+    "rust_cu": 32032,
+    "saving": 893,
+    "paired_ratio": 1.3493693806193807
+  },
+  {
+    "name": "exhausted-arrays",
+    "success": false,
+    "baseline_cu": 197253,
+    "go_cu": 111978,
+    "rust_cu": 61330,
+    "saving": 85275,
+    "paired_ratio": 1.8258274906244905
+  },
+  {
+    "name": "unchanged-clock-left0",
+    "success": true,
+    "baseline_cu": 87916,
+    "go_cu": 73220,
+    "rust_cu": 50510,
+    "saving": 14696,
+    "paired_ratio": 1.4496139378340922
+  },
+  {
+    "name": "reward-emission-overflow-left0",
+    "success": true,
+    "baseline_cu": 96099,
+    "go_cu": 74506,
+    "rust_cu": 50986,
+    "saving": 21593,
+    "paired_ratio": 1.4613031028125367
+  },
+  {
+    "name": "unchanged-clock-left1",
+    "success": true,
+    "baseline_cu": 94920,
+    "go_cu": 78082,
+    "rust_cu": 56717,
+    "saving": 16838,
+    "paired_ratio": 1.3766948181321297
+  },
+  {
+    "name": "reward-emission-overflow-left1",
+    "success": true,
+    "baseline_cu": 103105,
+    "go_cu": 79370,
+    "rust_cu": 57195,
+    "saving": 23735,
+    "paired_ratio": 1.3877087157968353
+  },
+  {
+    "name": "authority-not-signer-left0",
+    "success": false,
+    "baseline_cu": 1442,
+    "go_cu": 1442,
+    "rust_cu": 3005,
+    "saving": 0,
+    "paired_ratio": 0.4798668885191348
+  },
+  {
+    "name": "input-owner-mismatch-left0",
+    "success": false,
+    "baseline_cu": 87458,
+    "go_cu": 72762,
+    "rust_cu": 41365,
+    "saving": 14696,
+    "paired_ratio": 1.759023328901245
+  },
+  {
+    "name": "vault-owner-mismatch-left0",
+    "success": false,
+    "baseline_cu": 95656,
+    "go_cu": 80960,
+    "rust_cu": 47943,
+    "saving": 14696,
+    "paired_ratio": 1.6886719646246584
+  },
+  {
+    "name": "input-insufficient-left0",
+    "success": false,
+    "baseline_cu": 87287,
+    "go_cu": 72591,
+    "rust_cu": 41194,
+    "saving": 14696,
+    "paired_ratio": 1.7621741030247124
+  },
+  {
+    "name": "output-insufficient-after-deposit-left0",
+    "success": false,
+    "baseline_cu": 95485,
+    "go_cu": 80789,
+    "rust_cu": 47772,
+    "saving": 14696,
+    "paired_ratio": 1.691137067738424
+  },
+  {
+    "name": "input-frozen-left0",
+    "success": false,
+    "baseline_cu": 87281,
+    "go_cu": 72585,
+    "rust_cu": 41188,
+    "saving": 14696,
+    "paired_ratio": 1.7622851315917258
+  },
+  {
+    "name": "output-frozen-after-deposit-left0",
+    "success": false,
+    "baseline_cu": 95479,
+    "go_cu": 80783,
+    "rust_cu": 47766,
+    "saving": 14696,
+    "paired_ratio": 1.6912238830967634
+  },
+  {
+    "name": "deposit-vault-mint-mismatch-left0",
+    "success": false,
+    "baseline_cu": 87335,
+    "go_cu": 72639,
+    "rust_cu": 41242,
+    "saving": 14696,
+    "paired_ratio": 1.7612870374860579
+  },
+  {
+    "name": "withdraw-vault-mint-mismatch-left0",
+    "success": false,
+    "baseline_cu": 95533,
+    "go_cu": 80837,
+    "rust_cu": 47820,
+    "saving": 14696,
+    "paired_ratio": 1.6904433291509828
+  },
+  {
+    "name": "owner-token-mint-mismatch-left0",
+    "success": false,
+    "baseline_cu": 4353,
+    "go_cu": 4353,
+    "rust_cu": 6048,
+    "saving": 0,
+    "paired_ratio": 0.7197420634920635
+  },
+  {
+    "name": "pool-owner-mismatch-left0",
+    "success": false,
+    "baseline_cu": 1688,
+    "go_cu": 1688,
+    "rust_cu": 3142,
+    "saving": 0,
+    "paired_ratio": 0.5372374283895608
+  },
+  {
+    "name": "token-owner-program-mismatch-left0",
+    "success": false,
+    "baseline_cu": 2762,
+    "go_cu": 2762,
+    "rust_cu": 5150,
+    "saving": 0,
+    "paired_ratio": 0.5363106796116505
+  },
+  {
+    "name": "tick-owner-mismatch-left0",
+    "success": false,
+    "baseline_cu": 11335,
+    "go_cu": 11335,
+    "rust_cu": 9897,
+    "saving": 0,
+    "paired_ratio": 1.1452965545114682
+  },
+  {
+    "name": "tick-discriminator-mismatch-left0",
+    "success": false,
+    "baseline_cu": 11682,
+    "go_cu": 11682,
+    "rust_cu": 9912,
+    "saving": 0,
+    "paired_ratio": 1.1785714285714286
+  },
+  {
+    "name": "tick-pool-mismatch-left0",
+    "success": false,
+    "baseline_cu": 12035,
+    "go_cu": 12035,
+    "rust_cu": 9915,
+    "saving": 0,
+    "paired_ratio": 1.2138174483106405
+  },
+  {
+    "name": "oracle-owner-mismatch-left0",
+    "success": false,
+    "baseline_cu": 16449,
+    "go_cu": 16449,
+    "rust_cu": 11166,
+    "saving": 0,
+    "paired_ratio": 1.4731327243417518
+  },
+  {
+    "name": "oracle-discriminator-missing-left0",
+    "success": false,
+    "baseline_cu": 16778,
+    "go_cu": 16778,
+    "rust_cu": 11132,
+    "saving": 0,
+    "paired_ratio": 1.507186489399928
+  },
+  {
+    "name": "oracle-discriminator-mismatch-left0",
+    "success": false,
+    "baseline_cu": 16782,
+    "go_cu": 16782,
+    "rust_cu": 11136,
+    "saving": 0,
+    "paired_ratio": 1.5070043103448276
+  },
+  {
+    "name": "oracle-trade-disabled-left0",
+    "success": false,
+    "baseline_cu": 17180,
+    "go_cu": 17180,
+    "rust_cu": 11216,
+    "saving": 0,
+    "paired_ratio": 1.531740370898716
+  },
+  {
+    "name": "oracle-pda-mismatch-left0",
+    "success": false,
+    "baseline_cu": 10322,
+    "go_cu": 10322,
+    "rust_cu": 9261,
+    "saving": 0,
+    "paired_ratio": 1.114566461505237
+  },
+  {
+    "name": "negative-runtime-clock-left0",
+    "success": false,
+    "baseline_cu": 10998,
+    "go_cu": 10998,
+    "rust_cu": 9346,
+    "saving": 0,
+    "paired_ratio": 1.1767601112775519
+  },
+  {
+    "name": "regressed-runtime-clock-left0",
+    "success": false,
+    "baseline_cu": 20540,
+    "go_cu": 20540,
+    "rust_cu": 11306,
+    "saving": 0,
+    "paired_ratio": 1.8167344772687068
+  },
+  {
+    "name": "pool-readonly-left0",
+    "success": false,
+    "baseline_cu": 3606,
+    "go_cu": 3606,
+    "rust_cu": 5987,
+    "saving": 0,
+    "paired_ratio": 0.6023049941540003
+  },
+  {
+    "name": "token-readonly-left0",
+    "success": false,
+    "baseline_cu": 3609,
+    "go_cu": 3609,
+    "rust_cu": 5990,
+    "saving": 0,
+    "paired_ratio": 0.6025041736227045
+  },
+  {
+    "name": "tick-readonly-left0",
+    "success": false,
+    "baseline_cu": 3621,
+    "go_cu": 3621,
+    "rust_cu": 6103,
+    "saving": 0,
+    "paired_ratio": 0.5933147632311978
+  },
+  {
+    "name": "wrong-pool-signing-bump-left0",
+    "success": false,
+    "baseline_cu": 91183,
+    "go_cu": 76487,
+    "rust_cu": 43470,
+    "saving": 14696,
+    "paired_ratio": 1.7595353117092247
+  },
+  {
+    "name": "invalid-wire-boolean-left0",
+    "success": false,
+    "baseline_cu": 1023,
+    "go_cu": 1023,
+    "rust_cu": 3246,
+    "saving": 0,
+    "paired_ratio": 0.31515711645101663
+  },
+  {
+    "name": "reordered-arrays-left0",
+    "success": true,
+    "baseline_cu": 95907,
+    "go_cu": 81211,
+    "rust_cu": 50746,
+    "saving": 14696,
+    "paired_ratio": 1.6003428841682104
+  },
+  {
+    "name": "rollback-success-then-bad-instruction-left0",
+    "success": false,
+    "baseline_cu": 95934,
+    "go_cu": 81238,
+    "rust_cu": 51152,
+    "saving": 14696,
+    "paired_ratio": 1.588168595558336
+  },
+  {
+    "name": "authority-not-signer-left1",
+    "success": false,
+    "baseline_cu": 1442,
+    "go_cu": 1442,
+    "rust_cu": 3005,
+    "saving": 0,
+    "paired_ratio": 0.4798668885191348
+  },
+  {
+    "name": "input-owner-mismatch-left1",
+    "success": false,
+    "baseline_cu": 95457,
+    "go_cu": 78619,
+    "rust_cu": 47580,
+    "saving": 16838,
+    "paired_ratio": 1.6523539302227828
+  },
+  {
+    "name": "vault-owner-mismatch-left1",
+    "success": false,
+    "baseline_cu": 103656,
+    "go_cu": 86818,
+    "rust_cu": 54154,
+    "saving": 16838,
+    "paired_ratio": 1.603168740997895
+  },
+  {
+    "name": "input-insufficient-left1",
+    "success": false,
+    "baseline_cu": 95286,
+    "go_cu": 78448,
+    "rust_cu": 47409,
+    "saving": 16838,
+    "paired_ratio": 1.6547069121896687
+  },
+  {
+    "name": "output-insufficient-after-deposit-left1",
+    "success": false,
+    "baseline_cu": 103485,
+    "go_cu": 86647,
+    "rust_cu": 53983,
+    "saving": 16838,
+    "paired_ratio": 1.6050793768408573
+  },
+  {
+    "name": "input-frozen-left1",
+    "success": false,
+    "baseline_cu": 95280,
+    "go_cu": 78442,
+    "rust_cu": 47403,
+    "saving": 16838,
+    "paired_ratio": 1.6547897812374743
+  },
+  {
+    "name": "output-frozen-after-deposit-left1",
+    "success": false,
+    "baseline_cu": 103479,
+    "go_cu": 86641,
+    "rust_cu": 53977,
+    "saving": 16838,
+    "paired_ratio": 1.6051466365303741
+  },
+  {
+    "name": "deposit-vault-mint-mismatch-left1",
+    "success": false,
+    "baseline_cu": 95334,
+    "go_cu": 78496,
+    "rust_cu": 47457,
+    "saving": 16838,
+    "paired_ratio": 1.6540447141622943
+  },
+  {
+    "name": "withdraw-vault-mint-mismatch-left1",
+    "success": false,
+    "baseline_cu": 103533,
+    "go_cu": 86695,
+    "rust_cu": 54031,
+    "saving": 16838,
+    "paired_ratio": 1.6045418370935205
+  },
+  {
+    "name": "owner-token-mint-mismatch-left1",
+    "success": false,
+    "baseline_cu": 3645,
+    "go_cu": 3645,
+    "rust_cu": 5993,
+    "saving": 0,
+    "paired_ratio": 0.6082095778408143
+  },
+  {
+    "name": "pool-owner-mismatch-left1",
+    "success": false,
+    "baseline_cu": 1688,
+    "go_cu": 1688,
+    "rust_cu": 3142,
+    "saving": 0,
+    "paired_ratio": 0.5372374283895608
+  },
+  {
+    "name": "token-owner-program-mismatch-left1",
+    "success": false,
+    "baseline_cu": 1882,
+    "go_cu": 1882,
+    "rust_cu": 4211,
+    "saving": 0,
+    "paired_ratio": 0.446924720968891
+  },
+  {
+    "name": "tick-owner-mismatch-left1",
+    "success": false,
+    "baseline_cu": 11335,
+    "go_cu": 11335,
+    "rust_cu": 9897,
+    "saving": 0,
+    "paired_ratio": 1.1452965545114682
+  },
+  {
+    "name": "tick-discriminator-mismatch-left1",
+    "success": false,
+    "baseline_cu": 11682,
+    "go_cu": 11682,
+    "rust_cu": 9912,
+    "saving": 0,
+    "paired_ratio": 1.1785714285714286
+  },
+  {
+    "name": "tick-pool-mismatch-left1",
+    "success": false,
+    "baseline_cu": 12035,
+    "go_cu": 12035,
+    "rust_cu": 9915,
+    "saving": 0,
+    "paired_ratio": 1.2138174483106405
+  },
+  {
+    "name": "oracle-owner-mismatch-left1",
+    "success": false,
+    "baseline_cu": 16445,
+    "go_cu": 16445,
+    "rust_cu": 11159,
+    "saving": 0,
+    "paired_ratio": 1.4736983600681064
+  },
+  {
+    "name": "oracle-discriminator-missing-left1",
+    "success": false,
+    "baseline_cu": 16774,
+    "go_cu": 16774,
+    "rust_cu": 11125,
+    "saving": 0,
+    "paired_ratio": 1.5077752808988765
+  },
+  {
+    "name": "oracle-discriminator-mismatch-left1",
+    "success": false,
+    "baseline_cu": 16778,
+    "go_cu": 16778,
+    "rust_cu": 11129,
+    "saving": 0,
+    "paired_ratio": 1.5075927756312337
+  },
+  {
+    "name": "oracle-trade-disabled-left1",
+    "success": false,
+    "baseline_cu": 17176,
+    "go_cu": 17176,
+    "rust_cu": 11209,
+    "saving": 0,
+    "paired_ratio": 1.532340083861183
+  },
+  {
+    "name": "oracle-pda-mismatch-left1",
+    "success": false,
+    "baseline_cu": 10322,
+    "go_cu": 10322,
+    "rust_cu": 9261,
+    "saving": 0,
+    "paired_ratio": 1.114566461505237
+  },
+  {
+    "name": "negative-runtime-clock-left1",
+    "success": false,
+    "baseline_cu": 10998,
+    "go_cu": 10998,
+    "rust_cu": 9346,
+    "saving": 0,
+    "paired_ratio": 1.1767601112775519
+  },
+  {
+    "name": "regressed-runtime-clock-left1",
+    "success": false,
+    "baseline_cu": 20532,
+    "go_cu": 20532,
+    "rust_cu": 11301,
+    "saving": 0,
+    "paired_ratio": 1.8168303689938943
+  },
+  {
+    "name": "pool-readonly-left1",
+    "success": false,
+    "baseline_cu": 3606,
+    "go_cu": 3606,
+    "rust_cu": 5987,
+    "saving": 0,
+    "paired_ratio": 0.6023049941540003
+  },
+  {
+    "name": "token-readonly-left1",
+    "success": false,
+    "baseline_cu": 3609,
+    "go_cu": 3609,
+    "rust_cu": 5990,
+    "saving": 0,
+    "paired_ratio": 0.6025041736227045
+  },
+  {
+    "name": "tick-readonly-left1",
+    "success": false,
+    "baseline_cu": 3621,
+    "go_cu": 3621,
+    "rust_cu": 6103,
+    "saving": 0,
+    "paired_ratio": 0.5933147632311978
+  },
+  {
+    "name": "wrong-pool-signing-bump-left1",
+    "success": false,
+    "baseline_cu": 99183,
+    "go_cu": 82345,
+    "rust_cu": 49681,
+    "saving": 16838,
+    "paired_ratio": 1.6574746885127112
+  },
+  {
+    "name": "invalid-wire-boolean-left1",
+    "success": false,
+    "baseline_cu": 1023,
+    "go_cu": 1023,
+    "rust_cu": 3246,
+    "saving": 0,
+    "paired_ratio": 0.31515711645101663
+  },
+  {
+    "name": "reordered-arrays-left1",
+    "success": true,
+    "baseline_cu": 103907,
+    "go_cu": 87069,
+    "rust_cu": 56957,
+    "saving": 16838,
+    "paired_ratio": 1.528679530171884
+  },
+  {
+    "name": "rollback-success-then-bad-instruction-left1",
+    "success": false,
+    "baseline_cu": 103934,
+    "go_cu": 87096,
+    "rust_cu": 57363,
+    "saving": 16838,
+    "paired_ratio": 1.5183306312431357
+  }
+]

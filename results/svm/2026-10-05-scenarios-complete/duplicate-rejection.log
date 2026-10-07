@@ -1,0 +1,4 @@
+Testing 1 compiled SBF scenarios with LiteSVM...
+PASS duplicate-clock step 1               735 CU
+gosvm: duplicate-clock step 2 simulation: transaction error "AlreadyProcessed"; expected null
+

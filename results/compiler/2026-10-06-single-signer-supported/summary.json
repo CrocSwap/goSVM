@@ -1,0 +1,365 @@
+{
+  "passed": true,
+  "frontend_source_pin": "15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134",
+  "cli_sha256": "75eca8ab214b4cc0ac3a0e9f6ee1ddb7c8cdf4ac1f408554b714839e018afadc",
+  "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/docs/repro/sdk_seed_tick.go.txt": "1055e0e4c3256e4640e41c3d2f8faf5df4ce9964eaeaa365486651579b8f3061",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm": "75eca8ab214b4cc0ac3a0e9f6ee1ddb7c8cdf4ac1f408554b714839e018afadc",
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/single_signer_prototype.go.txt": "09ba67bd2b84d360d7e38b14310233a9facfc5dfbd971a326d65f59b27a9beba",
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/single_signer_native_test.go.txt": "f12411a24ecf173546bd22cd1270650b9ee920c57bcc5223270a96b14cd8420e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/single_signer_verify.py": "3ea928330df0c21bf40ed8be1dc69ae8fa1da008ac428753e036bcab009b837f",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go-handler/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go/wire/wire.go": "9958fda8b2b9a3a78a9059662d37ba743e0e224a28dcbc6685037c238e7c67b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go/math/swap_step.go": "6e2950dfe5705daa002ddff2007b2fef0a58585bdd04775e05a6befa7bb46a99",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go/math/tick.go": "6320aff670654155a77d2c66743dd3c9e18543b29e354c5c2b6f0f2b2e51330d",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/programs/whirlpool/go/math/wide.go": "b8d64acd101cfbff807f04f7fa5253e28d9c65d605c8cb49946945cafdce133c"
+  },
+  "checks": [
+    {
+      "label": "baseline-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/handler/isolation-profile"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.6539865410886705
+    },
+    {
+      "label": "native-builder",
+      "command": [
+        "go",
+        "test",
+        "./sdk/cpi",
+        "-count=1",
+        "-v"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/handler/.gosvm/sdk",
+      "exit_code": 0,
+      "seconds": 0.7096086670644581
+    },
+    {
+      "label": "prototype-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/handler/isolation-profile"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.3464897503145039
+    },
+    {
+      "label": "prototype-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/handler/isolation-profile"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.17996366741135716
+    },
+    {
+      "label": "stack-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-DGOSVM_SBF_V3=1",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/stack.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.17989008408039808
+    },
+    {
+      "label": "stack-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/source/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/stack.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/single-signer/2026-10-06-single-signer-supported/stack.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.02100645797327161
+    },
+    {
+      "label": "baseline-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07410029089078307
+    },
+    {
+      "label": "baseline-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.12294958299025893
+    },
+    {
+      "label": "baseline-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/baseline-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07699199998751283
+    },
+    {
+      "label": "prototype-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07753162458539009
+    },
+    {
+      "label": "prototype-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07496262481436133
+    },
+    {
+      "label": "prototype-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07433733390644193
+    },
+    {
+      "label": "cpi-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.04159987531602383
+    },
+    {
+      "label": "cpi-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.07637849962338805
+    },
+    {
+      "label": "cpi-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/gosvm/15b1d1cdf9653b2fa43e54c023415212356545b95c9c5d46814fa2826e699134/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/prototype.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench-supported/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-single-signer-supported/cpi-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.0680240411311388
+    }
+  ],
+  "limitations": [
+    "Isolated experimental helper; canonical SDK and benchmark are untouched",
+    "Probe CU differences include dispatch/codegen effects, not full-handler attribution",
+    "Default 200000-CU fixture workflow; the benchmark probe also included a 150-CU budget instruction",
+    "Actual System CPI is checked; full Whirlpools Token/CPI corpus is still required before adoption"
+  ],
+  "cu": {
+    "baseline": {
+      "noop": 264,
+      "seed-construction": 3126,
+      "seed-plus-signer-copy": 5580,
+      "validate-once": 1761,
+      "validate-twice": 3038,
+      "seed-too-long": 272,
+      "seed-count-limit": 964,
+      "nil-signer": 272,
+      "signer-count-limit": 6073,
+      "signer-byte-capacity": 15371,
+      "wrong-discriminator-3": 568,
+      "wrong-discriminator-4": 568,
+      "wrong-pool-3": 887,
+      "wrong-pool-4": 887,
+      "invalid-first-flag-3": 1235,
+      "invalid-first-flag-4": 1235,
+      "invalid-last-flag-3": 1757,
+      "invalid-last-flag-4": 1757,
+      "short-array-3": 566,
+      "short-array-4": 566
+    },
+    "prototype": {
+      "noop": 273,
+      "seed-construction": 3136,
+      "seed-plus-signer-copy": 5590,
+      "validate-once": 1851,
+      "validate-twice": 3128,
+      "seed-too-long": 730,
+      "seed-count-limit": 1294,
+      "nil-signer": 281,
+      "signer-count-limit": 6082,
+      "signer-byte-capacity": 16259,
+      "wrong-discriminator-3": 587,
+      "wrong-discriminator-4": 587,
+      "wrong-pool-3": 909,
+      "wrong-pool-4": 909,
+      "invalid-first-flag-3": 1323,
+      "invalid-first-flag-4": 1323,
+      "invalid-last-flag-3": 1845,
+      "invalid-last-flag-4": 1845,
+      "short-array-3": 584,
+      "short-array-4": 584,
+      "compact-signer": 3327,
+      "compact-long-seed": 273,
+      "compact-seed-limit": 950,
+      "compact-nil-signer": 275
+    },
+    "cpi": {
+      "general-transfer": 6357,
+      "compact-transfer": 4019,
+      "compact-rollback": 4016,
+      "general-bad-bump": 6175,
+      "compact-bad-bump": 3830,
+      "general-readonly-source": 6176,
+      "compact-readonly-source": 3831
+    }
+  },
+  "elf": {
+    "baseline": {
+      "bytes": 7752,
+      "sha256": "817d54eca2d3337fc3f4b799702e8486f3fe6873c3f9b88486c5e52a94b0960a"
+    },
+    "prototype": {
+      "bytes": 15712,
+      "sha256": "9f13769f35e78c1a1616cd0acde6e8c06a0b6fa970e2ab84ff5a7a75d55866e0"
+    }
+  },
+  "max_static_frame": 2816
+}

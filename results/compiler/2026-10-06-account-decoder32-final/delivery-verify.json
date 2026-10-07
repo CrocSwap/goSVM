@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "archive_sha256": "1da9e93a68915a25dd7b361dc2391e6c7e817ac439c9ef0b3769676f22a72909",
+  "files_verified": 116,
+  "cli_sha256": "ba8d8dcb38e0acafad25c44ad5ad812e83cc7434a32bda6b5cb31bb965d6bbd1",
+  "executable": true,
+  "phoenix_rebuild_sha256": "0d35bdf2434684ba6b0d10b45905293c9b257d182ce6e9416e40e45091b5d91f",
+  "frontend_rebuild_sha256": "d1e018476ad7480e5547b4a0d01a3b99dd154e0d51c12e40b20ce5be67492a28",
+  "frontend_rebuild_exact": false,
+  "source_frontend_phoenix_rebuild_sha256": "0d35bdf2434684ba6b0d10b45905293c9b257d182ce6e9416e40e45091b5d91f",
+  "source_frontend_behavior_exact": true
+}

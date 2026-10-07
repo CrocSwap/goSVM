@@ -1,0 +1,4 @@
+results/compiler/2026-10-05-slice-views-supported/program.c:35:memcpy	0	static
+results/compiler/2026-10-05-slice-views-supported/program.c:41:memset	0	static
+results/compiler/2026-10-05-slice-views-supported/program.c:992:entrypoint	1024	static
+results/compiler/2026-10-05-slice-views-supported/program.c:243:v32	1088	static

@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-escrow-return-data/program.c:36:memcpy	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:48:memset	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:5776:entrypoint	2880	static
+results/compiler/2026-10-06-escrow-return-data/program.c:3793:v206	640	static
+results/compiler/2026-10-06-escrow-return-data/program.c:3899:v211	576	static
+results/compiler/2026-10-06-escrow-return-data/program.c:2033:v179	384	static
+results/compiler/2026-10-06-escrow-return-data/program.c:606:v81	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:656:v92	448	static
+results/compiler/2026-10-06-escrow-return-data/program.c:1703:v161	1408	static
+results/compiler/2026-10-06-escrow-return-data/program.c:719:v97	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:880:v110	128	static
+results/compiler/2026-10-06-escrow-return-data/program.c:791:v102	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:247:sol_Invoke	960	static
+results/compiler/2026-10-06-escrow-return-data/program.c:4957:v217	640	static
+results/compiler/2026-10-06-escrow-return-data/program.c:210:sol_CloseAccount	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:199:sol_set_data_len	0	static
+results/compiler/2026-10-06-escrow-return-data/program.c:5662:v223	640	static

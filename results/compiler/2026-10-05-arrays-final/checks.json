@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "passed": true,
+  "checks": [
+    {
+      "command": {
+        "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+        "yield_time_ms": 1000,
+        "max_output_tokens": 2400
+      },
+      "exit_code": 0,
+      "notes": "Root make test completed successfully; compiled compiler and project tests plus existing packages."
+    },
+    {
+      "command": {
+        "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+        "yield_time_ms": 1000,
+        "max_output_tokens": 1500
+      },
+      "exit_code": 0
+    },
+    {
+      "command": {
+        "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test ./...",
+        "workdir": "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap",
+        "yield_time_ms": 1000,
+        "max_output_tokens": 1000
+      },
+      "exit_code": 0,
+      "stdout": "?   \texample.com/typed-swap/client\t[no test files]\nok  \texample.com/typed-swap\t(cached)\n"
+    },
+    {
+      "command": {
+        "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test -ldflags=-linkmode=external ./...",
+        "workdir": "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/svm-transport",
+        "yield_time_ms": 1000,
+        "max_output_tokens": 1000
+      },
+      "exit_code": 0,
+      "stdout": "ok  \tgosvm-svm-transport-experiment\t(cached)\n"
+    }
+  ],
+  "corrected_evidence_discovery_issue": {
+    "reason": "The first script stored .go and .c together under results, which root Go tools discovered as packages.",
+    "first_attempt": [
+      {
+        "command": {
+          "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+          "yield_time_ms": 1000,
+          "max_output_tokens": 2200
+        },
+        "exit_code": 2,
+        "stdout": "package gosvm/results/compiler/2026-10-05-arrays: C source files not allowed when not using cgo or SWIG: program.c\npackage gosvm/results/compiler/2026-10-05-arrays-complete: C source files not allowed when not using cgo or SWIG: program.c\nmake: *** [test] Error 1\n"
+      },
+      {
+        "command": {
+          "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+          "yield_time_ms": 1000,
+          "max_output_tokens": 1200
+        },
+        "exit_code": 1,
+        "stdout": "package gosvm/results/compiler/2026-10-05-arrays: C source files not allowed when not using cgo or SWIG: program.c\npackage gosvm/results/compiler/2026-10-05-arrays-complete: C source files not allowed when not using cgo or SWIG: program.c\n"
+      }
+    ],
+    "correction": "Original artifacts preserved behind evidence-only module boundaries; final native driver saved as .go.txt and built in ignored staging."
+  }
+}

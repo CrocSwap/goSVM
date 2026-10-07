@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "passed": true,
+  "probe_repetitions": 3,
+  "starter_cases": 14,
+  "fresh_validator_agreement": true,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "runtime_version": "gosvm-svm-runner 0.3.0 (LiteSVM 0.8.2)",
+  "probe_success_cu": [
+    735
+  ],
+  "artifacts": {
+    "gosvm-svm-runner": {
+      "bytes": 6886256,
+      "sha256": "5c3720cd2780abbb65c0a5c395387eef88f50c07442dc74de871987ecd33006c"
+    },
+    "probe.so": {
+      "bytes": 1664,
+      "sha256": "ca78ed54ef51ded4165bc1993d15d300f19502850c0c66662b73907985ac7a19"
+    },
+    "gosvm": {
+      "bytes": 7165248,
+      "sha256": "d0554f48fa85ac9daf551032d990b3f09bf5e0cf72e748ad1e812a8191936e8e"
+    }
+  },
+  "source_sha256": {
+    "scripts/svm_controls.py": "1ea9dc815bf7ebeb1a12fa3757a5b12af90da32614e00d01e33eea63ef6eb5ba",
+    "benchmarks/svm-controls/probe.c": "e332e8b88dd707ece362ace868585614c4d85cd30dda584a331b712ba7c96092",
+    "benchmarks/svm-runner/Cargo.toml": "e9ece8b4867dcd7fda239fd341873439cce95e4af9a8a8cc3253787c9672ddf5",
+    "benchmarks/svm-runner/Cargo.lock": "dae253f6a57f2f1b08ec7c7322ec84c87e6101b38fd78a35d5931589eaee8e2a",
+    "benchmarks/svm-runner/src/lib.rs": "7f11b2d97165e25a4a42d67a1f1a3d35f2794f1862ceaf199da8daa63a0225fb",
+    "internal/testvm/session.go": "6fdd95676251316c55ce32f3870d8d3857962a2e236bf92ffc4427fccb6d15ec",
+    "internal/testvm/command.go": "6f9a58e402842b5f2096bb01b31509d94666822d581a839e787d30b68191020d",
+    "internal/testvm/controls_integration_test.go": "e676d40181743b64142306b23696fcd0aefb8c66da98b518a1e2adbeb2fbe5ca",
+    "internal/sbftest/fast.go": "c5cf140cca8deeb2a1d51979f4a95e1ee8df7a531a04c59084c8536f8f9cc9e2",
+    "cmd/gosvm/project.go": "e30ea258c3569760889ff61d69aa82eadd874762c6d2f0687851fb040c752309"
+  },
+  "limitations": [
+    "Clock/Rent only; no automatic epoch/slot-hash/consensus advancement",
+    "Runtime probe is C; Go SDK sysvar authoring is not implemented",
+    "Starter CLI schema is still single-account schema 1",
+    "No full-token or dependency-heavy protocol measurements in this experiment",
+    "macOS arm64 only; no portable timing or memory-footprint claim"
+  ]
+}

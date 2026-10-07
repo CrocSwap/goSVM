@@ -1,0 +1,18 @@
+=== RUN   TestControlValuesDifferential
+--- PASS: TestControlValuesDifferential (0.60s)
+=== RUN   TestControlRejections
+=== RUN   TestControlRejections/named_results
+=== RUN   TestControlRejections/interface_error
+=== RUN   TestControlRejections/fallthrough
+=== RUN   TestControlRejections/labeled_continue
+=== RUN   TestControlRejections/struct_switch
+--- PASS: TestControlRejections (0.00s)
+    --- PASS: TestControlRejections/named_results (0.00s)
+    --- PASS: TestControlRejections/interface_error (0.00s)
+    --- PASS: TestControlRejections/fallthrough (0.00s)
+    --- PASS: TestControlRejections/labeled_continue (0.00s)
+    --- PASS: TestControlRejections/struct_switch (0.00s)
+=== RUN   TestImportedMultipleResults
+--- PASS: TestImportedMultipleResults (0.14s)
+PASS
+ok  	gosvm/internal/compiler	0.753s

@@ -1,0 +1,3 @@
+program.go:6:2: example.org/gosvm-benchmarks/whirlpool@v0.0.0: replacement directory ../go does not exist
+program.go:7:2: example.org/gosvm-benchmarks/whirlpool@v0.0.0: replacement directory ../go does not exist
+program.go:8:2: example.org/gosvm-benchmarks/whirlpool@v0.0.0: replacement directory ../go does not exist

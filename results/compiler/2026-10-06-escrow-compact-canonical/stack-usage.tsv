@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:36:memcpy	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:48:memset	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:5759:entrypoint	1984	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:3776:v206	640	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:3882:v211	576	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:2016:v179	384	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:589:v81	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:639:v92	448	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:1686:v161	1408	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:702:v97	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:863:v110	128	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:774:v102	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:230:sol_Invoke	960	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:4940:v217	640	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:193:sol_CloseAccount	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:182:sol_set_data_len	0	static
+results/compiler/2026-10-06-escrow-compact-canonical/program.c:5645:v223	640	static

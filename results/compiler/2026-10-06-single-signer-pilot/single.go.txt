@@ -1,0 +1,69 @@
+// Experimental compact builder. This file is staged into an isolated SDK copy;
+// it is not part of the shipped SDK snapshot.
+package cpi
+
+import (
+	"gosvm/sdk/pda"
+	"gosvm/solana"
+)
+
+// SingleSigner builds the existing one-group CPI encoding in one backing value.
+// Its borrowed bytes remain valid only while this value remains alive and stable.
+type SingleSigner struct {
+	buffer [530]byte
+	used   uint64
+	count  uint64
+}
+
+func (s *SingleSigner) AddBytes(b []byte) uint64 {
+	if s.count >= 16 || len(b) > 32 || s.used > 528 || uint64(len(b))+1 > 528-s.used {
+		return pda.ErrSeeds
+	}
+	s.buffer[2+s.used] = byte(len(b))
+	for j := uint64(0); j < uint64(len(b)); j++ {
+		s.buffer[3+s.used+j] = b[j]
+	}
+	s.used = s.used + 1 + uint64(len(b))
+	s.count++
+	return 0
+}
+
+func (s *SingleSigner) AddByte(value byte) uint64 {
+	var b [1]byte
+	b[0] = value
+	return s.AddBytes(b[:])
+}
+
+func (s *SingleSigner) AddKey(key [32]byte) uint64 { return s.AddBytes(key[:]) }
+
+func (s *SingleSigner) AddUint32(value uint32) uint64 {
+	var b [4]byte
+	for j := uint64(0); j < 4; j++ {
+		b[j] = byte(value >> (j * 8))
+	}
+	return s.AddBytes(b[:])
+}
+
+func (s *SingleSigner) AddUint64(value uint64) uint64 {
+	var b [8]byte
+	for j := uint64(0); j < 8; j++ {
+		b[j] = byte(value >> (j * 8))
+	}
+	return s.AddBytes(b[:])
+}
+
+func (s *SingleSigner) Bytes() []byte {
+	s.buffer[0] = 1
+	s.buffer[1] = byte(s.count)
+	return s.buffer[:2+s.used]
+}
+
+func InvokeSingle(c solana.Context, program uint64, metas *Metas, data []byte, signer *SingleSigner) uint64 {
+	if metas == nil {
+		return ErrMetas
+	}
+	if signer == nil {
+		return ErrSigners
+	}
+	return solana.Invoke(c, program, metas.Bytes(), data, signer.Bytes())
+}

@@ -1,0 +1,5104 @@
+{
+  "schema": 1,
+  "passed": false,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "samples": 5,
+  "source_sha256": {
+    "benchmarks/anchor/go-token/swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0",
+    "cmd/gosvm/main.go": "9213073218582b930be40cbed45c8e028371c5380fa9c44c00e6e1f5009a01a6",
+    "cmd/gosvm/project.go": "4974ce04e1d274305f1de5a1420959cfbb0b4406538c03ce4e8308fefdcf4568",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "examples/escrow/.gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    "examples/escrow/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "examples/escrow/.gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+    "examples/escrow/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "examples/escrow/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "examples/escrow/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "examples/escrow/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "examples/escrow/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "examples/escrow/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "examples/escrow/client/zz_gosvm.go": "8d27c8d4d22f2ecb5f6b363488136be99e931e16625db31e2ce3dbd02624d570",
+    "examples/escrow/go.mod": "559c18578129db9c573b131e58db8e0aeb813b57a88b7989212937ab74fd8c77",
+    "examples/escrow/gosvm.json": "fc3dc6733c460b6f9e25da08ba0cb555e864ac4097bd1b43adb09dd8d605ed63",
+    "examples/escrow/idl.json": "3083cdb0ea1f6d161112477059f05d22ba0dafcc4c216f8087575a760c3a313b",
+    "examples/escrow/layouts.json": "56c9b151acc84007cbd7b7f258b102f01a9c2b43035ae0fb2c2efe31ed8a058e",
+    "examples/escrow/model/model.go": "2f9e87e829268dab4fba9d73e0407d7e1a31428dd07db51742b7ed2a56037e90",
+    "examples/escrow/program.go": "0ce285fdadf8d320d65fad5ea88f885a11cadd0b85310a0ccf4614c65b699324",
+    "examples/escrow/program_test.go": "38735e1d75efed1552ea28d873374057ca7f5f423e30aefc2d4e5ab36a31b8f9",
+    "examples/escrow/testdata/svm.json": "97bedf573f448e11a638b9bb6344ce9b8dc6b1fe5f9784635a81ce76208e91b2",
+    "examples/escrow/zz_gosvm.go": "ec94a6d278247f08a3cf7465bd1d73e00678c93f29242daa367cb51b19c44be7",
+    "examples/full-swap/.gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    "examples/full-swap/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "examples/full-swap/.gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+    "examples/full-swap/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "examples/full-swap/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "examples/full-swap/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "examples/full-swap/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "examples/full-swap/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "examples/full-swap/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "examples/full-swap/client/zz_gosvm.go": "ecfc39ebc1ade968390df8ad002cd9be7aaeff9d2aef5fae8ea83c6fe48acc24",
+    "examples/full-swap/go.mod": "8a6cbf93502371fa0ec02420e6bc6de1550192f357304706d58fd6a28e3a445f",
+    "examples/full-swap/gosvm.json": "b22dbc63564c108f23e361b31e59a8f18049810ac95c18ada30a74a482025e3c",
+    "examples/full-swap/idl.json": "f9001b5dc8855bee5a31bc2bba15e31b19976c87aaa056aebb99875cc6612097",
+    "examples/full-swap/layouts.json": "40e2f6dd52a40189fd7cdaff7ce80340861cd6a6d9a9f789cdbb063797cc7275",
+    "examples/full-swap/lifecycle.go": "ea2afb247e73db01fb272aa6c2123474b6226d94793486f0ac0dcf26bf1fbe38",
+    "examples/full-swap/lifecycle_test.go": "e7a8175bd2083224d42cb62bcba615720c3825c58a74cac29fe631fdee15c5ab",
+    "examples/full-swap/model/model.go": "8fb4bbde17e019f1f065e96fa920ceeb6011aa0422358f4d39f8b352e1b29ef2",
+    "examples/full-swap/model/quote.go": "392e808643abbffb16cc2282d61dd49f591562714518724e94efb6d47266ab6b",
+    "examples/full-swap/model/quote_test.go": "91cb7797a176add6eed5540ff7056735a5bbc09ceb4fc9d3f58a527153fc3050",
+    "examples/full-swap/program.go": "e3255cfe50fc49d14036c572b6815bd6a2790e7c5d7772ffdd6f13af40368125",
+    "examples/full-swap/testdata/lifecycle.json": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+    "examples/full-swap/testdata/spl-token.so": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6",
+    "examples/full-swap/testdata/svm.json": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+    "examples/full-swap/zz_gosvm.go": "da2eeeedbd0c7a1c718ad90bbb264ffaf97120630ec34eb2979d86859cfeca76",
+    "go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "internal/compiler/abi.c.txt": "ddfff3c1a2db9a9992661643c941a0c17c19e9dccc02aa58fdef660b1c3ab73e",
+    "internal/compiler/accounts.c.txt": "776572fce2ac37d7188da2c68f2ad86e3e6935e8fb821ca6c8be2c3319c73b0b",
+    "internal/compiler/arrays.go": "fcd18ba1946fa29d80537e7c56e633008da4c859c7e7cc81a0113a97a05e4750",
+    "internal/compiler/arrays_test.go": "0488a5ef332e3477807be7e0300899f727f27fd6fa0ee66a628a850f472d90d5",
+    "internal/compiler/build.go": "7c3aa3ecf06e84021121f1ca5673247bd4d40e3feba91cadff93b7105861f473",
+    "internal/compiler/cache.go": "c11912e137672dc29beea72da4366b46286b98fb0ca0ffa062a0e69446475fe8",
+    "internal/compiler/cache_test.go": "a4e0737fe34cbdf2c0e6e0a72fdb643869668b51ae69f864e3d12a680af97053",
+    "internal/compiler/clock_test.go": "89dda731fb27bf03d8df26e598005d744c7cf0deb27294651e34cd4e8b3f7880",
+    "internal/compiler/compiler.go": "20889cac5a39c4f4f90fbd9cfe223092b1195b8e1f044abc50d0ce3fb3bf9af8",
+    "internal/compiler/compiler_test.go": "f896df42a5160888533b613d8b3e62696120db7b607b9dac5d67a00e19e71ac5",
+    "internal/compiler/control.go": "ce320d3157ff0cf393f6738412f9de65f4e6b11f7f951d872fc56b940b6fffdd",
+    "internal/compiler/control_test.go": "d1bdb57f9efa40e5b0b5cdd581b3cf02ccad0ba28d681f5136b630a4a8ff4462",
+    "internal/compiler/cpi.c.txt": "7884d6f545f3d92fbc6b920f9de139ff312c3c7b41863a6fd7816003dc112f1b",
+    "internal/compiler/cpi_test.go": "ceca81980ee8c945b6862fb9760265fc183493058a85a2b4bca2a32d32eeb481",
+    "internal/compiler/lifecycle_test.go": "78df81a83809c8efc7ace9f5cdf5c5c2da080efaff71adcd1773e3f9ab6dc815",
+    "internal/compiler/memory_test.go": "cc9fea4f73065187e1ba06ce26ed376feb47865944deca359735c1d75baa35c4",
+    "internal/compiler/packages.go": "5bd99937282c724e6ee5abe4d572e05a47e30ddeb45a4f33bf4c02ed0ef37731",
+    "internal/compiler/packages_test.go": "73b971ad661ccdf662a2fa01e162ba74d6819461a9336b8dd005b56cdf62e453",
+    "internal/compiler/pointers.go": "35a88517929368b894e04b96d7924bd903cab297cc5110e4465605e81adb265c",
+    "internal/compiler/pointers_test.go": "d87e23f7e23d9f764a4a2772a3eeb1e2fa3baf359d6a594ab1f039e3d8ac8f22",
+    "internal/compiler/results.go": "d210943c96bfb699c74b550e5ed4c60a7d7a5d634abf186a414d87de797ad39a",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "87b1fe99746090bd80299ecc802bbc3eda775c76b807c78978a112104e7d5be9",
+    "internal/compiler/solana.go": "da52aaee5ade2ac2044f064d2016223ebb9815e02821b42c3b3c920af3f9af6a",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/types.go": "8a62730a61fa56bc7efb98f8db7d6a0774ca1bb2c4592ba18c0ff6caf8bf6764",
+    "internal/compiler/types_test.go": "797f551222fc0a5506808353c836edd4d924e3af98751f57ef17b3faf50b99ac",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "internal/compiler/views.go": "7550a84ca182315ee290f92cdebe1ec6043fce4a14839ff04005784f264f3c68",
+    "internal/compiler/views_test.go": "5fc480aab57e112b3458fb5ceaca6b0a9fa0c9dabb458a1c31c730166205169c",
+    "internal/project/constraints2.go": "d426c2b8f47befe37fd70e25a6ca57bb81bdf971117608244d34141754c1ccc9",
+    "internal/project/constraints2_test.go": "3053dcfa090a898a427e76b7011a2d7b8154d50698664316e4c0c955820c0612",
+    "internal/project/generate.go": "7551dc4cc4921bef1d08fc3390fe9c75688b57136b4123f53241e2d0cdd64e77",
+    "internal/project/generate2.go": "541a98b09d06ea7837c8993f5745d4e6c31255905d8835eedec868958bdfb622",
+    "internal/project/lifecycle2.go": "b7c23a2c4eb56f56fd3e3c3406ad817ea4eb5680db03f30a195648e62b5d5608",
+    "internal/project/lifecycle2_test.go": "5a7568fe0df1fac83b19cd9be3e19afe24b77d79123566f373238abd6d9f2223",
+    "internal/project/project.go": "ec835a06a633f0b67cc665a19ab59020874e6a547cf80e0802057e674c9686c8",
+    "internal/project/project_test.go": "7eb37aea4a335da660fb9f8523fe140832780e4cddde9e23fee4a4c6349443ec",
+    "internal/project/schema2/README.md.tmpl": "5fd8a11c6e32b91986d1d91b53d36560acb712bfbaa599bc663440a17d63f797",
+    "internal/project/schema2/model.go.tmpl": "0a435490eac091aab2fbc321d80203f1905a89107caa66dc1481c08b7e982fe8",
+    "internal/project/schema2/program.go.tmpl": "d04242b5296e0dbe2afeeab051970d9cd696eef54606c27e5054398170790093",
+    "internal/project/schema2/program_test.go.tmpl": "6cce6b3ac8d85d542e963982ce82c1ea3edf6e7756d511b6b860e5fe18e4c168",
+    "internal/project/schema2.go": "fcb2dcbd5c04b243f5fedde16a08af42611e74e5561532b761d1f534901b1dc8",
+    "internal/project/schema2_test.go": "580aad9542fb291125b9801b5656d37d7e76c0a8ecfe738962656808f2517d2f",
+    "internal/project/sdk_test.go": "6b1477f5760041bd62f23b5796fc89caaeb7d7356102cc1d2d74f8e5c875cf38",
+    "internal/project/templates/README.md.tmpl": "f583eaf29e0cb54ec9f8bff4950803a928a59494374d8cfc18a96ac0275fc95e",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "scripts/build-cli.sh": "14334eed5948e43dbaa16e00c577bda09fbc706b7822e98d7c428932b5a8cb98",
+    "scripts/milestone2_bench.py": "6258e8195750a8a6621aabfa45e442962ba48555ba369b9d2a5199c75754d2f0",
+    "sdk/bundle.go": "a905b0dbaef563a53881394a57d9b65e11e32f4285bb9e316185b8a37b6cfbcc",
+    "sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+    "sdk/cpi/cpi_test.go": "258d422b8f376d8c2c6ddb492fc7653aa1f812c8c54e5551b06d68c7493eb223",
+    "sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "sdk/pda/pda_test.go": "a701fffe6e49c7ff4c1da7145ef7f09690714b4ac3ba9868f5be70471d773b9d",
+    "sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "sdk/system/rent_test.go": "de49cb262f817e474ebc1b217ed22d2543845b89ebfe1f21da8a78f58f9bb75e",
+    "sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "sdk/system/system_test.go": "97f7cbb1aba3e5454fb8934c35bc4a0c6fe36d8fe7370e395965f79c9131724e",
+    "sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "sdk/token/lifecycle_test.go": "0fc4b441449f8dc025b863930b1ca920703051e6ad97436dcc4cbecb06355317",
+    "sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "sdk/token/token_test.go": "a86c57f63377cd7caa42585fe7a366e3229e79a7bffdfa7bc1438cfe32bff7ab",
+    "solana/api-v1.go.txt": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/clock_test.go": "82f2af700ba77116fe28425e7b85aa39c85c130d4de260479aaa747bc639d986",
+    "solana/lifecycle_test.go": "b68ae6b892d82ebb3708066a9efce6557f919ff922b634aa40b0a68d717a8598",
+    "solana/source.go": "cd805f22c14dac83d1d82d3376ff7cc523d673536c18fc7842a3121cf8a1c708"
+  },
+  "setup": {
+    "cli_fresh_cache": {
+      "label": "cli-fresh-cache",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 15.82714374968782,
+      "cpu_seconds": 36.018221,
+      "load_average_before": [
+        7.974609375,
+        14.083984375,
+        19.03271484375
+      ],
+      "exit_code": 0,
+      "log": "001-cli-fresh-cache.log"
+    },
+    "go_cache_after_bootstrap": {
+      "files": 1196,
+      "logical_bytes": 97262825,
+      "allocated_bytes": 101421056
+    },
+    "cli_warm_cache": {
+      "label": "cli-warm-cache",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.3150161672383547,
+      "cpu_seconds": 0.5916950000000041,
+      "load_average_before": [
+        10.05908203125,
+        14.2431640625,
+        19.00244140625
+      ],
+      "exit_code": 0,
+      "log": "002-cli-warm-cache.log"
+    },
+    "runner_install": {
+      "label": "runner-install",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.19861866673454642,
+      "cpu_seconds": 0.18545299999999898,
+      "load_average_before": [
+        10.05908203125,
+        14.2431640625,
+        19.00244140625
+      ],
+      "exit_code": 0,
+      "log": "003-runner-install.log"
+    }
+  },
+  "rows": [
+    {
+      "label": "escrow-project_clean_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.23496533324942,
+      "cpu_seconds": 1.1909550000000095,
+      "load_average_before": [
+        10.47900390625,
+        14.13232421875,
+        18.87890625
+      ],
+      "exit_code": 0,
+      "log": "011-escrow-project_clean_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.054189625,
+          "generation": 0.357121959,
+          "manifest": 0.001540541,
+          "sbf_build": 0.795965042
+        },
+        "total_seconds": 1.209131834
+      },
+      "workload": "escrow",
+      "scenario": "project_clean_build",
+      "sample": 0,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-project_clean_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.200264375191182,
+      "cpu_seconds": 2.1376670000000004,
+      "load_average_before": [
+        10.47900390625,
+        14.13232421875,
+        18.87890625
+      ],
+      "exit_code": 0,
+      "log": "012-managed_swap-project_clean_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.042871541,
+          "generation": 0.400848375,
+          "manifest": 0.001747458,
+          "sbf_build": 1.692752625
+        },
+        "total_seconds": 2.13858125
+      },
+      "workload": "managed_swap",
+      "scenario": "project_clean_build",
+      "sample": 0,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "generated_swap_only-project_clean_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3234171671792865,
+      "cpu_seconds": 1.2201870000000028,
+      "load_average_before": [
+        10.0400390625,
+        13.98046875,
+        18.79736328125
+      ],
+      "exit_code": 0,
+      "log": "013-generated_swap_only-project_clean_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.055254042,
+          "generation": 0.412399083,
+          "manifest": 0.004181917,
+          "sbf_build": 0.775776125
+        },
+        "total_seconds": 1.2486471670000001
+      },
+      "workload": "generated_swap_only",
+      "scenario": "project_clean_build",
+      "sample": 0,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-project_clean_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.29762399988248944,
+      "cpu_seconds": 0.2549870000000034,
+      "load_average_before": [
+        10.0400390625,
+        13.98046875,
+        18.79736328125
+      ],
+      "exit_code": 0,
+      "log": "014-manual_swap-project_clean_build-0.log",
+      "workload": "manual_swap",
+      "scenario": "project_clean_build",
+      "sample": 0,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "managed_swap-project_clean_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.528399667236954,
+      "cpu_seconds": 2.455105000000005,
+      "load_average_before": [
+        10.0400390625,
+        13.98046875,
+        18.79736328125
+      ],
+      "exit_code": 0,
+      "log": "015-managed_swap-project_clean_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.06114275,
+          "generation": 0.499735084,
+          "manifest": 0.002344792,
+          "sbf_build": 1.925535583
+        },
+        "total_seconds": 2.4890554590000002
+      },
+      "workload": "managed_swap",
+      "scenario": "project_clean_build",
+      "sample": 1,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "generated_swap_only-project_clean_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.2405939577147365,
+      "cpu_seconds": 1.169712000000004,
+      "load_average_before": [
+        10.0400390625,
+        13.98046875,
+        18.79736328125
+      ],
+      "exit_code": 0,
+      "log": "016-generated_swap_only-project_clean_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.05281525,
+          "generation": 0.401019,
+          "manifest": 0.001908292,
+          "sbf_build": 0.759822458
+        },
+        "total_seconds": 1.215889708
+      },
+      "workload": "generated_swap_only",
+      "scenario": "project_clean_build",
+      "sample": 1,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-project_clean_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.2990572499111295,
+      "cpu_seconds": 0.25004299999999446,
+      "load_average_before": [
+        9.87646484375,
+        13.880859375,
+        18.73388671875
+      ],
+      "exit_code": 0,
+      "log": "017-manual_swap-project_clean_build-1.log",
+      "workload": "manual_swap",
+      "scenario": "project_clean_build",
+      "sample": 1,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "escrow-project_clean_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.431738083716482,
+      "cpu_seconds": 1.349684000000007,
+      "load_average_before": [
+        9.87646484375,
+        13.880859375,
+        18.73388671875
+      ],
+      "exit_code": 0,
+      "log": "018-escrow-project_clean_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.052172917,
+          "generation": 0.397360833,
+          "manifest": 0.002052667,
+          "sbf_build": 0.937968875
+        },
+        "total_seconds": 1.389969834
+      },
+      "workload": "escrow",
+      "scenario": "project_clean_build",
+      "sample": 1,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "manual_swap-project_clean_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.30199691699817777,
+      "cpu_seconds": 0.25180300000000067,
+      "load_average_before": [
+        9.87646484375,
+        13.880859375,
+        18.73388671875
+      ],
+      "exit_code": 0,
+      "log": "019-manual_swap-project_clean_build-2.log",
+      "workload": "manual_swap",
+      "scenario": "project_clean_build",
+      "sample": 2,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-project_clean_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.9568874170072377,
+      "cpu_seconds": 1.2475819999999977,
+      "load_average_before": [
+        9.87646484375,
+        13.880859375,
+        18.73388671875
+      ],
+      "exit_code": 0,
+      "log": "020-generated_swap_only-project_clean_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.079686041,
+          "generation": 0.376495209,
+          "manifest": 0.001617,
+          "sbf_build": 1.431209084
+        },
+        "total_seconds": 1.8896679170000001
+      },
+      "workload": "generated_swap_only",
+      "scenario": "project_clean_build",
+      "sample": 2,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "escrow-project_clean_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3899831250309944,
+      "cpu_seconds": 1.3183660000000081,
+      "load_average_before": [
+        12.20849609375,
+        14.2978515625,
+        18.8525390625
+      ],
+      "exit_code": 0,
+      "log": "021-escrow-project_clean_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.059349625,
+          "generation": 0.405241,
+          "manifest": 0.001843667,
+          "sbf_build": 0.878450666
+        },
+        "total_seconds": 1.3452130420000001
+      },
+      "workload": "escrow",
+      "scenario": "project_clean_build",
+      "sample": 2,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-project_clean_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 3.0478347088210285,
+      "cpu_seconds": 2.5621049999999954,
+      "load_average_before": [
+        12.20849609375,
+        14.2978515625,
+        18.8525390625
+      ],
+      "exit_code": 0,
+      "log": "022-managed_swap-project_clean_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.071712542,
+          "generation": 0.723824667,
+          "manifest": 0.001981792,
+          "sbf_build": 2.189091666
+        },
+        "total_seconds": 2.986994459
+      },
+      "workload": "managed_swap",
+      "scenario": "project_clean_build",
+      "sample": 2,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "managed_swap-project_clean_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.789681375026703,
+      "cpu_seconds": 2.5677780000000006,
+      "load_average_before": [
+        12.20849609375,
+        14.2978515625,
+        18.8525390625
+      ],
+      "exit_code": 0,
+      "log": "023-managed_swap-project_clean_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.066980125,
+          "generation": 0.568977125,
+          "manifest": 0.00199425,
+          "sbf_build": 2.121987416
+        },
+        "total_seconds": 2.760223958
+      },
+      "workload": "managed_swap",
+      "scenario": "project_clean_build",
+      "sample": 3,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "escrow-project_clean_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.4506333749741316,
+      "cpu_seconds": 1.344681000000005,
+      "load_average_before": [
+        11.791015625,
+        14.17626953125,
+        18.78271484375
+      ],
+      "exit_code": 0,
+      "log": "024-escrow-project_clean_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049887333,
+          "generation": 0.432536834,
+          "manifest": 0.002093292,
+          "sbf_build": 0.90885275
+        },
+        "total_seconds": 1.393648917
+      },
+      "workload": "escrow",
+      "scenario": "project_clean_build",
+      "sample": 3,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "manual_swap-project_clean_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.30705425003543496,
+      "cpu_seconds": 0.24748899999999097,
+      "load_average_before": [
+        11.791015625,
+        14.17626953125,
+        18.78271484375
+      ],
+      "exit_code": 0,
+      "log": "025-manual_swap-project_clean_build-3.log",
+      "workload": "manual_swap",
+      "scenario": "project_clean_build",
+      "sample": 3,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-project_clean_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.2869048747234046,
+      "cpu_seconds": 1.1771930000000062,
+      "load_average_before": [
+        11.791015625,
+        14.17626953125,
+        18.78271484375
+      ],
+      "exit_code": 0,
+      "log": "026-generated_swap_only-project_clean_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.055405625,
+          "generation": 0.364662708,
+          "manifest": 0.003022709,
+          "sbf_build": 0.796735166
+        },
+        "total_seconds": 1.220100583
+      },
+      "workload": "generated_swap_only",
+      "scenario": "project_clean_build",
+      "sample": 3,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "escrow-project_clean_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3452860829420388,
+      "cpu_seconds": 1.2774480000000104,
+      "load_average_before": [
+        11.4072265625,
+        14.05712890625,
+        18.71337890625
+      ],
+      "exit_code": 0,
+      "log": "027-escrow-project_clean_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.054932625,
+          "generation": 0.3669145,
+          "manifest": 0.001787583,
+          "sbf_build": 0.898707584
+        },
+        "total_seconds": 1.323074333
+      },
+      "workload": "escrow",
+      "scenario": "project_clean_build",
+      "sample": 4,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-project_clean_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.3425102499313653,
+      "cpu_seconds": 2.3146529999999927,
+      "load_average_before": [
+        11.4072265625,
+        14.05712890625,
+        18.71337890625
+      ],
+      "exit_code": 0,
+      "log": "028-managed_swap-project_clean_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.042044791,
+          "generation": 0.477135125,
+          "manifest": 0.003247708,
+          "sbf_build": 1.793669916
+        },
+        "total_seconds": 2.316359208
+      },
+      "workload": "managed_swap",
+      "scenario": "project_clean_build",
+      "sample": 4,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "manual_swap-project_clean_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.24240483390167356,
+      "cpu_seconds": 0.19928300000001187,
+      "load_average_before": [
+        11.4072265625,
+        14.05712890625,
+        18.71337890625
+      ],
+      "exit_code": 0,
+      "log": "029-manual_swap-project_clean_build-4.log",
+      "workload": "manual_swap",
+      "scenario": "project_clean_build",
+      "sample": 4,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-project_clean_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.1223359578289092,
+      "cpu_seconds": 1.0545149999999843,
+      "load_average_before": [
+        11.4072265625,
+        14.05712890625,
+        18.71337890625
+      ],
+      "exit_code": 0,
+      "log": "030-generated_swap_only-project_clean_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.04519125,
+          "generation": 0.312691875,
+          "manifest": 0.001493541,
+          "sbf_build": 0.703755666
+        },
+        "total_seconds": 1.06341575
+      },
+      "workload": "generated_swap_only",
+      "scenario": "project_clean_build",
+      "sample": 4,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "generated_swap_only-source_edit_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.1295619159936905,
+      "cpu_seconds": 1.1008560000000003,
+      "load_average_before": [
+        10.89404296875,
+        13.90673828125,
+        18.6328125
+      ],
+      "exit_code": 0,
+      "log": "031-generated_swap_only-source_edit_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.050075042,
+          "generation": 0.370782292,
+          "manifest": 0.001976917,
+          "sbf_build": 0.678064541
+        },
+        "total_seconds": 1.101231334
+      },
+      "workload": "generated_swap_only",
+      "scenario": "source_edit_build",
+      "sample": 0,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "managed_swap-source_edit_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.6305008325725794,
+      "cpu_seconds": 2.5118589999999976,
+      "load_average_before": [
+        10.89404296875,
+        13.90673828125,
+        18.6328125
+      ],
+      "exit_code": 0,
+      "log": "032-managed_swap-source_edit_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.060923875,
+          "generation": 0.481850125,
+          "manifest": 0.00233775,
+          "sbf_build": 2.026330417
+        },
+        "total_seconds": 2.571757542
+      },
+      "workload": "managed_swap",
+      "scenario": "source_edit_build",
+      "sample": 0,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "escrow-source_edit_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3848063750192523,
+      "cpu_seconds": 1.31278399999999,
+      "load_average_before": [
+        10.89404296875,
+        13.90673828125,
+        18.6328125
+      ],
+      "exit_code": 0,
+      "log": "033-escrow-source_edit_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.054714209,
+          "generation": 0.338120708,
+          "manifest": 0.001508584,
+          "sbf_build": 0.92685025
+        },
+        "total_seconds": 1.321611917
+      },
+      "workload": "escrow",
+      "scenario": "source_edit_build",
+      "sample": 0,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "manual_swap-source_edit_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.2910840408876538,
+      "cpu_seconds": 0.24708900000000966,
+      "load_average_before": [
+        10.90234375,
+        13.8583984375,
+        18.587890625
+      ],
+      "exit_code": 0,
+      "log": "034-manual_swap-source_edit_build-0.log",
+      "workload": "manual_swap",
+      "scenario": "source_edit_build",
+      "sample": 0,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "managed_swap-source_edit_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.4491332923062146,
+      "cpu_seconds": 2.423790000000004,
+      "load_average_before": [
+        10.90234375,
+        13.8583984375,
+        18.587890625
+      ],
+      "exit_code": 0,
+      "log": "035-managed_swap-source_edit_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049675792,
+          "generation": 0.480136958,
+          "manifest": 0.002231958,
+          "sbf_build": 1.8763826670000001
+        },
+        "total_seconds": 2.408772
+      },
+      "workload": "managed_swap",
+      "scenario": "source_edit_build",
+      "sample": 1,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "manual_swap-source_edit_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.3065530420280993,
+      "cpu_seconds": 0.2530510000000028,
+      "load_average_before": [
+        10.90234375,
+        13.8583984375,
+        18.587890625
+      ],
+      "exit_code": 0,
+      "log": "036-manual_swap-source_edit_build-1.log",
+      "workload": "manual_swap",
+      "scenario": "source_edit_build",
+      "sample": 1,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-source_edit_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.1899095829576254,
+      "cpu_seconds": 1.1389490000000038,
+      "load_average_before": [
+        10.90234375,
+        13.8583984375,
+        18.587890625
+      ],
+      "exit_code": 0,
+      "log": "037-generated_swap_only-source_edit_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.0498495,
+          "generation": 0.361977125,
+          "manifest": 0.001922667,
+          "sbf_build": 0.724987541
+        },
+        "total_seconds": 1.1390637080000001
+      },
+      "workload": "generated_swap_only",
+      "scenario": "source_edit_build",
+      "sample": 1,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "escrow-source_edit_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3289239169098437,
+      "cpu_seconds": 1.2961500000000115,
+      "load_average_before": [
+        10.90234375,
+        13.8583984375,
+        18.587890625
+      ],
+      "exit_code": 0,
+      "log": "038-escrow-source_edit_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049027625,
+          "generation": 0.364572125,
+          "manifest": 0.001828208,
+          "sbf_build": 0.885073209
+        },
+        "total_seconds": 1.300759916
+      },
+      "workload": "escrow",
+      "scenario": "source_edit_build",
+      "sample": 1,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "escrow-source_edit_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.338315709028393,
+      "cpu_seconds": 1.283543999999985,
+      "load_average_before": [
+        10.4296875,
+        13.7109375,
+        18.5078125
+      ],
+      "exit_code": 0,
+      "log": "039-escrow-source_edit_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.053441041,
+          "generation": 0.374207208,
+          "manifest": 0.001465667,
+          "sbf_build": 0.867164542
+        },
+        "total_seconds": 1.2965569160000001
+      },
+      "workload": "escrow",
+      "scenario": "source_edit_build",
+      "sample": 2,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-source_edit_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.3288177913054824,
+      "cpu_seconds": 2.2738130000000147,
+      "load_average_before": [
+        10.4296875,
+        13.7109375,
+        18.5078125
+      ],
+      "exit_code": 0,
+      "log": "040-managed_swap-source_edit_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.046208166,
+          "generation": 0.4691175,
+          "manifest": 0.002146042,
+          "sbf_build": 1.745178042
+        },
+        "total_seconds": 2.262926417
+      },
+      "workload": "managed_swap",
+      "scenario": "source_edit_build",
+      "sample": 2,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "manual_swap-source_edit_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.25942108407616615,
+      "cpu_seconds": 0.24408799999999786,
+      "load_average_before": [
+        10.4296875,
+        13.7109375,
+        18.5078125
+      ],
+      "exit_code": 0,
+      "log": "041-manual_swap-source_edit_build-2.log",
+      "workload": "manual_swap",
+      "scenario": "source_edit_build",
+      "sample": 2,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-source_edit_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.1510290405713022,
+      "cpu_seconds": 1.0946669999999976,
+      "load_average_before": [
+        10.07470703125,
+        13.58251953125,
+        18.43408203125
+      ],
+      "exit_code": 0,
+      "log": "042-generated_swap_only-source_edit_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049351,
+          "generation": 0.347738459,
+          "manifest": 0.001678667,
+          "sbf_build": 0.70648325
+        },
+        "total_seconds": 1.105506792
+      },
+      "workload": "generated_swap_only",
+      "scenario": "source_edit_build",
+      "sample": 2,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-source_edit_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.2515999171882868,
+      "cpu_seconds": 0.21565599999999563,
+      "load_average_before": [
+        10.07470703125,
+        13.58251953125,
+        18.43408203125
+      ],
+      "exit_code": 0,
+      "log": "043-manual_swap-source_edit_build-3.log",
+      "workload": "manual_swap",
+      "scenario": "source_edit_build",
+      "sample": 3,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "escrow-source_edit_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.2738535832613707,
+      "cpu_seconds": 1.2115660000000048,
+      "load_average_before": [
+        10.07470703125,
+        13.58251953125,
+        18.43408203125
+      ],
+      "exit_code": 0,
+      "log": "044-escrow-source_edit_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.044316334,
+          "generation": 0.363594833,
+          "manifest": 0.002329042,
+          "sbf_build": 0.798173791
+        },
+        "total_seconds": 1.2086695
+      },
+      "workload": "escrow",
+      "scenario": "source_edit_build",
+      "sample": 3,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "generated_swap_only-source_edit_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.0206677909009159,
+      "cpu_seconds": 0.9889299999999963,
+      "load_average_before": [
+        10.07470703125,
+        13.58251953125,
+        18.43408203125
+      ],
+      "exit_code": 0,
+      "log": "045-generated_swap_only-source_edit_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.040712,
+          "generation": 0.299332541,
+          "manifest": 0.00138925,
+          "sbf_build": 0.653202709
+        },
+        "total_seconds": 0.994904166
+      },
+      "workload": "generated_swap_only",
+      "scenario": "source_edit_build",
+      "sample": 3,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "managed_swap-source_edit_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.233117958996445,
+      "cpu_seconds": 2.1950990000000132,
+      "load_average_before": [
+        10.07470703125,
+        13.58251953125,
+        18.43408203125
+      ],
+      "exit_code": 0,
+      "log": "046-managed_swap-source_edit_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.054436417,
+          "generation": 0.414919875,
+          "manifest": 0.002017458,
+          "sbf_build": 1.724256625
+        },
+        "total_seconds": 2.197185625
+      },
+      "workload": "managed_swap",
+      "scenario": "source_edit_build",
+      "sample": 3,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "generated_swap_only-source_edit_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9971558339893818,
+      "cpu_seconds": 0.9510599999999876,
+      "load_average_before": [
+        9.98828125,
+        13.50634765625,
+        18.37841796875
+      ],
+      "exit_code": 0,
+      "log": "047-generated_swap_only-source_edit_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.04125175,
+          "generation": 0.31199425,
+          "manifest": 0.001642333,
+          "sbf_build": 0.60360125
+        },
+        "total_seconds": 0.958726292
+      },
+      "workload": "generated_swap_only",
+      "scenario": "source_edit_build",
+      "sample": 4,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-source_edit_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.25058795837685466,
+      "cpu_seconds": 0.2008159999999961,
+      "load_average_before": [
+        9.98828125,
+        13.50634765625,
+        18.37841796875
+      ],
+      "exit_code": 0,
+      "log": "048-manual_swap-source_edit_build-4.log",
+      "workload": "manual_swap",
+      "scenario": "source_edit_build",
+      "sample": 4,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "escrow-source_edit_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.0431801248341799,
+      "cpu_seconds": 1.0269810000000064,
+      "load_average_before": [
+        9.98828125,
+        13.50634765625,
+        18.37841796875
+      ],
+      "exit_code": 0,
+      "log": "049-escrow-source_edit_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.042410209,
+          "generation": 0.276602875,
+          "manifest": 0.001285625,
+          "sbf_build": 0.703174083
+        },
+        "total_seconds": 1.023759333
+      },
+      "workload": "escrow",
+      "scenario": "source_edit_build",
+      "sample": 4,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-source_edit_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 2.0628362908028066,
+      "cpu_seconds": 2.0173500000000004,
+      "load_average_before": [
+        9.98828125,
+        13.50634765625,
+        18.37841796875
+      ],
+      "exit_code": 0,
+      "log": "050-managed_swap-source_edit_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.041085042,
+          "generation": 0.391153584,
+          "manifest": 0.001710166,
+          "sbf_build": 1.561432875
+        },
+        "total_seconds": 1.995617541
+      },
+      "workload": "managed_swap",
+      "scenario": "source_edit_build",
+      "sample": 4,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "managed_swap-no_op_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6883089998736978,
+      "cpu_seconds": 0.6731969999999805,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "051-managed_swap-no_op_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.048937,
+          "generation": 0.42374075,
+          "manifest": 0.001713875,
+          "sbf_build": 0.184916375
+        },
+        "total_seconds": 0.659567791
+      },
+      "workload": "managed_swap",
+      "scenario": "no_op_build",
+      "sample": 0,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "escrow-no_op_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.532456667162478,
+      "cpu_seconds": 0.5055850000000177,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "052-escrow-no_op_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.040315667,
+          "generation": 0.303425834,
+          "manifest": 0.001502958,
+          "sbf_build": 0.155700167
+        },
+        "total_seconds": 0.501417042
+      },
+      "workload": "escrow",
+      "scenario": "no_op_build",
+      "sample": 0,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "manual_swap-no_op_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.04015250038355589,
+      "cpu_seconds": 0.021736999999994566,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "053-manual_swap-no_op_build-0.log",
+      "workload": "manual_swap",
+      "scenario": "no_op_build",
+      "sample": 0,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-no_op_build-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5833777501247823,
+      "cpu_seconds": 0.513773999999998,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "054-generated_swap_only-no_op_build-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.047016875,
+          "generation": 0.30786075,
+          "manifest": 0.002019625,
+          "sbf_build": 0.151907958
+        },
+        "total_seconds": 0.509086584
+      },
+      "workload": "generated_swap_only",
+      "scenario": "no_op_build",
+      "sample": 0,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "managed_swap-no_op_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6826794580556452,
+      "cpu_seconds": 0.6889849999999988,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "055-managed_swap-no_op_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.042938458,
+          "generation": 0.421182709,
+          "manifest": 0.002102666,
+          "sbf_build": 0.187259333
+        },
+        "total_seconds": 0.653717334
+      },
+      "workload": "managed_swap",
+      "scenario": "no_op_build",
+      "sample": 1,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "escrow-no_op_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5278913341462612,
+      "cpu_seconds": 0.514013999999996,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "056-escrow-no_op_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.043536459,
+          "generation": 0.307525583,
+          "manifest": 0.001500167,
+          "sbf_build": 0.156957166
+        },
+        "total_seconds": 0.509743709
+      },
+      "workload": "escrow",
+      "scenario": "no_op_build",
+      "sample": 1,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "generated_swap_only-no_op_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5913633326999843,
+      "cpu_seconds": 0.5608869999999868,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "057-generated_swap_only-no_op_build-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049510958,
+          "generation": 0.352228292,
+          "manifest": 0.001431125,
+          "sbf_build": 0.156206417
+        },
+        "total_seconds": 0.559643209
+      },
+      "workload": "generated_swap_only",
+      "scenario": "no_op_build",
+      "sample": 1,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-no_op_build-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.02317900024354458,
+      "cpu_seconds": 0.018949000000006322,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "058-manual_swap-no_op_build-1.log",
+      "workload": "manual_swap",
+      "scenario": "no_op_build",
+      "sample": 1,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "manual_swap-no_op_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.0211644577793777,
+      "cpu_seconds": 0.01842800000000011,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "059-manual_swap-no_op_build-2.log",
+      "workload": "manual_swap",
+      "scenario": "no_op_build",
+      "sample": 2,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "managed_swap-no_op_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6932773333974183,
+      "cpu_seconds": 0.6894989999999979,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "060-managed_swap-no_op_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.04628975,
+          "generation": 0.412280959,
+          "manifest": 0.001707958,
+          "sbf_build": 0.214173459
+        },
+        "total_seconds": 0.674726375
+      },
+      "workload": "managed_swap",
+      "scenario": "no_op_build",
+      "sample": 2,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "generated_swap_only-no_op_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5175057090818882,
+      "cpu_seconds": 0.5018550000000062,
+      "load_average_before": [
+        9.66845703125,
+        13.38134765625,
+        18.3056640625
+      ],
+      "exit_code": 0,
+      "log": "061-generated_swap_only-no_op_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.041636125,
+          "generation": 0.310953209,
+          "manifest": 0.001381542,
+          "sbf_build": 0.149177125
+        },
+        "total_seconds": 0.503444167
+      },
+      "workload": "generated_swap_only",
+      "scenario": "no_op_build",
+      "sample": 2,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "escrow-no_op_build-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5911391251720488,
+      "cpu_seconds": 0.5426229999999919,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "062-escrow-no_op_build-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.07418,
+          "generation": 0.325644791,
+          "manifest": 0.001553583,
+          "sbf_build": 0.156981459
+        },
+        "total_seconds": 0.5603455
+      },
+      "workload": "escrow",
+      "scenario": "no_op_build",
+      "sample": 2,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "managed_swap-no_op_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6955613750033081,
+      "cpu_seconds": 0.656687999999999,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "063-managed_swap-no_op_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.05052425,
+          "generation": 0.415778125,
+          "manifest": 0.001754042,
+          "sbf_build": 0.173815709
+        },
+        "total_seconds": 0.642246292
+      },
+      "workload": "managed_swap",
+      "scenario": "no_op_build",
+      "sample": 3,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "escrow-no_op_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5708896247670054,
+      "cpu_seconds": 0.5100439999999935,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "064-escrow-no_op_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.039881417,
+          "generation": 0.314957709,
+          "manifest": 0.002110125,
+          "sbf_build": 0.148119459
+        },
+        "total_seconds": 0.50533125
+      },
+      "workload": "escrow",
+      "scenario": "no_op_build",
+      "sample": 3,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "generated_swap_only-no_op_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5408312920480967,
+      "cpu_seconds": 0.49220700000000406,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "065-generated_swap_only-no_op_build-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.044821209,
+          "generation": 0.289386792,
+          "manifest": 0.001399375,
+          "sbf_build": 0.177685917
+        },
+        "total_seconds": 0.513574792
+      },
+      "workload": "generated_swap_only",
+      "scenario": "no_op_build",
+      "sample": 3,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "manual_swap-no_op_build-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.022840249817818403,
+      "cpu_seconds": 0.018659999999997012,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "066-manual_swap-no_op_build-3.log",
+      "workload": "manual_swap",
+      "scenario": "no_op_build",
+      "sample": 3,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "managed_swap-no_op_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6294520827941597,
+      "cpu_seconds": 0.6194860000000126,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "067-managed_swap-no_op_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.042343167,
+          "generation": 0.378949584,
+          "manifest": 0.001774166,
+          "sbf_build": 0.174919
+        },
+        "total_seconds": 0.598224
+      },
+      "workload": "managed_swap",
+      "scenario": "no_op_build",
+      "sample": 4,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 68473,
+        "allocated_bytes": 73728
+      }
+    },
+    {
+      "label": "manual_swap-no_op_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/swap.go"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.02326137525960803,
+      "cpu_seconds": 0.018533000000005018,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "068-manual_swap-no_op_build-4.log",
+      "workload": "manual_swap",
+      "scenario": "no_op_build",
+      "sample": 4,
+      "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 8217,
+        "allocated_bytes": 12288
+      }
+    },
+    {
+      "label": "generated_swap_only-no_op_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5457343747839332,
+      "cpu_seconds": 0.4996719999999968,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "069-generated_swap_only-no_op_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.046082209,
+          "generation": 0.308002416,
+          "manifest": 0.00160175,
+          "sbf_build": 0.14301825
+        },
+        "total_seconds": 0.498957583
+      },
+      "workload": "generated_swap_only",
+      "scenario": "no_op_build",
+      "sample": 4,
+      "elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 21689,
+        "allocated_bytes": 28672
+      }
+    },
+    {
+      "label": "escrow-no_op_build-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "build",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5097560421563685,
+      "cpu_seconds": 0.49030600000000746,
+      "load_average_before": [
+        9.37451171875,
+        13.2587890625,
+        18.2333984375
+      ],
+      "exit_code": 0,
+      "log": "070-escrow-no_op_build-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "build",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.040497458,
+          "generation": 0.297946125,
+          "manifest": 0.001496333,
+          "sbf_build": 0.145025958
+        },
+        "total_seconds": 0.485198958
+      },
+      "workload": "escrow",
+      "scenario": "no_op_build",
+      "sample": 4,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3",
+      "retained_build": {
+        "files": 2,
+        "logical_bytes": 25433,
+        "allocated_bytes": 32768
+      }
+    },
+    {
+      "label": "generated_swap_only-native_forced-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.0746337077580392,
+      "cpu_seconds": 1.2793959999999949,
+      "load_average_before": [
+        9.74462890625,
+        13.27099609375,
+        18.20849609375
+      ],
+      "exit_code": 0,
+      "log": "075-generated_swap_only-native_forced-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.302476708,
+          "manifest": 0.001221291,
+          "native_tests": 0.718958458
+        },
+        "total_seconds": 1.022981792
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_forced",
+      "sample": 0
+    },
+    {
+      "label": "managed_swap-native_forced-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8394626663066447,
+      "cpu_seconds": 1.4102099999999957,
+      "load_average_before": [
+        9.74462890625,
+        13.27099609375,
+        18.20849609375
+      ],
+      "exit_code": 0,
+      "log": "076-managed_swap-native_forced-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.358301459,
+          "manifest": 0.001532459,
+          "native_tests": 0.421975125
+        },
+        "total_seconds": 0.782180125
+      },
+      "workload": "managed_swap",
+      "scenario": "native_forced",
+      "sample": 0
+    },
+    {
+      "label": "escrow-native_forced-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6813984592445195,
+      "cpu_seconds": 1.1429660000000013,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "077-escrow-native_forced-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.314232833,
+          "manifest": 0.001693667,
+          "native_tests": 0.344524084
+        },
+        "total_seconds": 0.660762833
+      },
+      "workload": "escrow",
+      "scenario": "native_forced",
+      "sample": 0
+    },
+    {
+      "label": "managed_swap-native_forced-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9476657090708613,
+      "cpu_seconds": 1.572418999999993,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "078-managed_swap-native_forced-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.439303208,
+          "manifest": 0.001745292,
+          "native_tests": 0.451504041
+        },
+        "total_seconds": 0.892994875
+      },
+      "workload": "managed_swap",
+      "scenario": "native_forced",
+      "sample": 1
+    },
+    {
+      "label": "escrow-native_forced-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.696446374990046,
+      "cpu_seconds": 1.105666000000003,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "079-escrow-native_forced-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.3235505,
+          "manifest": 0.001519375,
+          "native_tests": 0.323532083
+        },
+        "total_seconds": 0.648940708
+      },
+      "workload": "escrow",
+      "scenario": "native_forced",
+      "sample": 1
+    },
+    {
+      "label": "generated_swap_only-native_forced-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7690303749404848,
+      "cpu_seconds": 1.1168510000000005,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "080-generated_swap_only-native_forced-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.295723792,
+          "manifest": 0.001800834,
+          "native_tests": 0.422093875
+        },
+        "total_seconds": 0.71995125
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_forced",
+      "sample": 1
+    },
+    {
+      "label": "managed_swap-native_forced-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8999826251529157,
+      "cpu_seconds": 1.4935989999999961,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "081-managed_swap-native_forced-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.401665916,
+          "manifest": 0.002058291,
+          "native_tests": 0.453448791
+        },
+        "total_seconds": 0.85757325
+      },
+      "workload": "managed_swap",
+      "scenario": "native_forced",
+      "sample": 2
+    },
+    {
+      "label": "generated_swap_only-native_forced-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8022064170800149,
+      "cpu_seconds": 1.2073859999999996,
+      "load_average_before": [
+        9.8447265625,
+        13.23291015625,
+        18.166015625
+      ],
+      "exit_code": 0,
+      "log": "082-generated_swap_only-native_forced-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.339809959,
+          "manifest": 0.002825792,
+          "native_tests": 0.433157042
+        },
+        "total_seconds": 0.776418542
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_forced",
+      "sample": 2
+    },
+    {
+      "label": "escrow-native_forced-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7048034588806331,
+      "cpu_seconds": 1.149598999999995,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "083-escrow-native_forced-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.372637458,
+          "manifest": 0.001933625,
+          "native_tests": 0.314109084
+        },
+        "total_seconds": 0.689056375
+      },
+      "workload": "escrow",
+      "scenario": "native_forced",
+      "sample": 2
+    },
+    {
+      "label": "managed_swap-native_forced-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8890739171765745,
+      "cpu_seconds": 1.471636999999987,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "084-managed_swap-native_forced-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.39441625,
+          "manifest": 0.001711833,
+          "native_tests": 0.4398745
+        },
+        "total_seconds": 0.836384333
+      },
+      "workload": "managed_swap",
+      "scenario": "native_forced",
+      "sample": 3
+    },
+    {
+      "label": "escrow-native_forced-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6473707500845194,
+      "cpu_seconds": 1.0345819999999932,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "085-escrow-native_forced-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.299389584,
+          "manifest": 0.002297291,
+          "native_tests": 0.318701625
+        },
+        "total_seconds": 0.620871875
+      },
+      "workload": "escrow",
+      "scenario": "native_forced",
+      "sample": 3
+    },
+    {
+      "label": "generated_swap_only-native_forced-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7412844998762012,
+      "cpu_seconds": 1.057405000000017,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "086-generated_swap_only-native_forced-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.289124917,
+          "manifest": 0.001579292,
+          "native_tests": 0.382373
+        },
+        "total_seconds": 0.673410292
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_forced",
+      "sample": 3
+    },
+    {
+      "label": "escrow-native_forced-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6864032908342779,
+      "cpu_seconds": 1.0486099999999965,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "087-escrow-native_forced-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.314619917,
+          "manifest": 0.001502333,
+          "native_tests": 0.308697083
+        },
+        "total_seconds": 0.625117458
+      },
+      "workload": "escrow",
+      "scenario": "native_forced",
+      "sample": 4
+    },
+    {
+      "label": "managed_swap-native_forced-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.907492249738425,
+      "cpu_seconds": 1.4156089999999892,
+      "load_average_before": [
+        9.53662109375,
+        13.11279296875,
+        18.0947265625
+      ],
+      "exit_code": 0,
+      "log": "088-managed_swap-native_forced-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.381158583,
+          "manifest": 0.002122917,
+          "native_tests": 0.458991166
+        },
+        "total_seconds": 0.842679041
+      },
+      "workload": "managed_swap",
+      "scenario": "native_forced",
+      "sample": 4
+    },
+    {
+      "label": "generated_swap_only-native_forced-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7823117091320455,
+      "cpu_seconds": 1.150098999999983,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "089-generated_swap_only-native_forced-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.3198535,
+          "manifest": 0.002779,
+          "native_tests": 0.414940542
+        },
+        "total_seconds": 0.738398125
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_forced",
+      "sample": 4
+    },
+    {
+      "label": "escrow-native_test_edit-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.6967565407976508,
+      "cpu_seconds": 1.1071680000000157,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "090-escrow-native_test_edit-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.305938791,
+          "manifest": 0.001561,
+          "native_tests": 0.351779167
+        },
+        "total_seconds": 0.659578916
+      },
+      "workload": "escrow",
+      "scenario": "native_test_edit",
+      "sample": 0
+    },
+    {
+      "label": "generated_swap_only-native_test_edit-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7972796251997352,
+      "cpu_seconds": 1.1958569999999895,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "091-generated_swap_only-native_test_edit-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.327964083,
+          "manifest": 0.001481916,
+          "native_tests": 0.441445083
+        },
+        "total_seconds": 0.771215042
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_test_edit",
+      "sample": 0
+    },
+    {
+      "label": "managed_swap-native_test_edit-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9337328341789544,
+      "cpu_seconds": 1.5128229999999903,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "092-managed_swap-native_test_edit-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.392317875,
+          "manifest": 0.002683792,
+          "native_tests": 0.464108459
+        },
+        "total_seconds": 0.859977083
+      },
+      "workload": "managed_swap",
+      "scenario": "native_test_edit",
+      "sample": 0
+    },
+    {
+      "label": "escrow-native_test_edit-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7418626663275063,
+      "cpu_seconds": 1.1622360000000072,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "093-escrow-native_test_edit-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.326713625,
+          "manifest": 0.001505292,
+          "native_tests": 0.379946375
+        },
+        "total_seconds": 0.70860875
+      },
+      "workload": "escrow",
+      "scenario": "native_test_edit",
+      "sample": 1
+    },
+    {
+      "label": "managed_swap-native_test_edit-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9569909577257931,
+      "cpu_seconds": 1.5632719999999765,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "094-managed_swap-native_test_edit-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.394022833,
+          "manifest": 0.00212625,
+          "native_tests": 0.507304291
+        },
+        "total_seconds": 0.903850375
+      },
+      "workload": "managed_swap",
+      "scenario": "native_test_edit",
+      "sample": 1
+    },
+    {
+      "label": "generated_swap_only-native_test_edit-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.848143917042762,
+      "cpu_seconds": 1.2272379999999856,
+      "load_average_before": [
+        9.4931640625,
+        13.04443359375,
+        18.041015625
+      ],
+      "exit_code": 0,
+      "log": "095-generated_swap_only-native_test_edit-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.301086708,
+          "manifest": 0.001449875,
+          "native_tests": 0.490453459
+        },
+        "total_seconds": 0.793710042
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_test_edit",
+      "sample": 1
+    },
+    {
+      "label": "generated_swap_only-native_test_edit-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8083963748067617,
+      "cpu_seconds": 1.1642570000000063,
+      "load_average_before": [
+        9.21337890625,
+        12.92724609375,
+        17.97021484375
+      ],
+      "exit_code": 0,
+      "log": "096-generated_swap_only-native_test_edit-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.315507125,
+          "manifest": 0.002352083,
+          "native_tests": 0.441998417
+        },
+        "total_seconds": 0.760492333
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_test_edit",
+      "sample": 2
+    },
+    {
+      "label": "managed_swap-native_test_edit-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9490382079966366,
+      "cpu_seconds": 1.6174279999999968,
+      "load_average_before": [
+        9.21337890625,
+        12.92724609375,
+        17.97021484375
+      ],
+      "exit_code": 0,
+      "log": "097-managed_swap-native_test_edit-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.41221675,
+          "manifest": 0.002094875,
+          "native_tests": 0.505198625
+        },
+        "total_seconds": 0.919961708
+      },
+      "workload": "managed_swap",
+      "scenario": "native_test_edit",
+      "sample": 2
+    },
+    {
+      "label": "escrow-native_test_edit-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.86105554131791,
+      "cpu_seconds": 1.3191250000000068,
+      "load_average_before": [
+        9.21337890625,
+        12.92724609375,
+        17.97021484375
+      ],
+      "exit_code": 0,
+      "log": "098-escrow-native_test_edit-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.38942075,
+          "manifest": 0.003097,
+          "native_tests": 0.434834917
+        },
+        "total_seconds": 0.828064708
+      },
+      "workload": "escrow",
+      "scenario": "native_test_edit",
+      "sample": 2
+    },
+    {
+      "label": "managed_swap-native_test_edit-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.019299291074276,
+      "cpu_seconds": 1.695087000000008,
+      "load_average_before": [
+        9.21337890625,
+        12.92724609375,
+        17.97021484375
+      ],
+      "exit_code": 0,
+      "log": "099-managed_swap-native_test_edit-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.474002791,
+          "manifest": 0.002239917,
+          "native_tests": 0.495533667
+        },
+        "total_seconds": 0.972151709
+      },
+      "workload": "managed_swap",
+      "scenario": "native_test_edit",
+      "sample": 3
+    },
+    {
+      "label": "generated_swap_only-native_test_edit-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9002282503060997,
+      "cpu_seconds": 1.3233310000000031,
+      "load_average_before": [
+        9.21337890625,
+        12.92724609375,
+        17.97021484375
+      ],
+      "exit_code": 0,
+      "log": "100-generated_swap_only-native_test_edit-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.34254975,
+          "manifest": 0.001416084,
+          "native_tests": 0.48810275
+        },
+        "total_seconds": 0.832617167
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_test_edit",
+      "sample": 3
+    },
+    {
+      "label": "escrow-native_test_edit-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8517392920330167,
+      "cpu_seconds": 1.343057999999985,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "101-escrow-native_test_edit-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.358393125,
+          "manifest": 0.002257916,
+          "native_tests": 0.453819917
+        },
+        "total_seconds": 0.814834584
+      },
+      "workload": "escrow",
+      "scenario": "native_test_edit",
+      "sample": 3
+    },
+    {
+      "label": "generated_swap_only-native_test_edit-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/swap-only-gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9398408751003444,
+      "cpu_seconds": 1.354465999999988,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "102-generated_swap_only-native_test_edit-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.393471,
+          "manifest": 0.002483084,
+          "native_tests": 0.513499125
+        },
+        "total_seconds": 0.910068375
+      },
+      "workload": "generated_swap_only",
+      "scenario": "native_test_edit",
+      "sample": 4
+    },
+    {
+      "label": "managed_swap-native_test_edit-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.9690517499111593,
+      "cpu_seconds": 1.5771890000000255,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "103-managed_swap-native_test_edit-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.402535167,
+          "manifest": 0.001881459,
+          "native_tests": 0.496185708
+        },
+        "total_seconds": 0.901023417
+      },
+      "workload": "managed_swap",
+      "scenario": "native_test_edit",
+      "sample": 4
+    },
+    {
+      "label": "escrow-native_test_edit-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.8164868750609457,
+      "cpu_seconds": 1.2228359999999867,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "104-escrow-native_test_edit-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "generation": 0.358672875,
+          "manifest": 0.002372291,
+          "native_tests": 0.383810209
+        },
+        "total_seconds": 0.746069333
+      },
+      "workload": "escrow",
+      "scenario": "native_test_edit",
+      "sample": 4
+    },
+    {
+      "label": "managed_swap-lifecycle-svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-managed-swap-supported/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-lifecycle-svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.19762820797041059,
+      "cpu_seconds": 0.1705259999999953,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "105-managed_swap-lifecycle-svm-0.log",
+      "workload": "managed_swap",
+      "scenario": "svm_lifecycle",
+      "sample": 0,
+      "startup_seconds": 0.033557709,
+      "fixture_seconds": 0.098535042,
+      "runner_execution_seconds": 0.067011,
+      "report": "managed_swap-lifecycle-svm-0.json"
+    },
+    {
+      "label": "managed_swap-shared_swap-svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-framework-swap-managed/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-shared_swap-svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.3636763752438128,
+      "cpu_seconds": 0.3728460000000027,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "106-managed_swap-shared_swap-svm-0.log",
+      "workload": "managed_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 0,
+      "startup_seconds": 0.026127583,
+      "fixture_seconds": 0.254448458,
+      "runner_execution_seconds": 0.177826,
+      "report": "managed_swap-shared_swap-svm-0.json"
+    },
+    {
+      "label": "generated_swap_only-shared_swap-svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-framework-swap-lifecycle-final/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/generated_swap_only-shared_swap-svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.475464291870594,
+      "cpu_seconds": 0.42563200000001444,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "107-generated_swap_only-shared_swap-svm-0.log",
+      "workload": "generated_swap_only",
+      "scenario": "svm_shared_swap",
+      "sample": 0,
+      "startup_seconds": 0.027012792,
+      "fixture_seconds": 0.306330458,
+      "runner_execution_seconds": 0.208341,
+      "report": "generated_swap_only-shared_swap-svm-0.json"
+    },
+    {
+      "label": "manual_swap-shared_swap-svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/manual_swap-shared_swap-svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.30107508366927505,
+      "cpu_seconds": 0.2817070000000186,
+      "load_average_before": [
+        9.1162109375,
+        12.84521484375,
+        17.91162109375
+      ],
+      "exit_code": 0,
+      "log": "108-manual_swap-shared_swap-svm-0.log",
+      "workload": "manual_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 0,
+      "startup_seconds": 0.023456584,
+      "fixture_seconds": 0.166165,
+      "runner_execution_seconds": 0.098888,
+      "report": "manual_swap-shared_swap-svm-0.json"
+    },
+    {
+      "label": "escrow-lifecycle-svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-escrow-token-lifecycle/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/escrow-lifecycle-svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.13490154221653938,
+      "cpu_seconds": 0.10501100000000463,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "109-escrow-lifecycle-svm-0.log",
+      "workload": "escrow",
+      "scenario": "svm_lifecycle",
+      "sample": 0,
+      "startup_seconds": 0.019694375,
+      "fixture_seconds": 0.04899125,
+      "runner_execution_seconds": 0.025772,
+      "report": "escrow-lifecycle-svm-0.json"
+    },
+    {
+      "label": "manual_swap-shared_swap-svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/manual_swap-shared_swap-svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.3604589579626918,
+      "cpu_seconds": 0.3222239999999914,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "110-manual_swap-shared_swap-svm-1.log",
+      "workload": "manual_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 1,
+      "startup_seconds": 0.023675583,
+      "fixture_seconds": 0.203539959,
+      "runner_execution_seconds": 0.117161,
+      "report": "manual_swap-shared_swap-svm-1.json"
+    },
+    {
+      "label": "escrow-lifecycle-svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-escrow-token-lifecycle/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/escrow-lifecycle-svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.1386639168485999,
+      "cpu_seconds": 0.10279400000001004,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "111-escrow-lifecycle-svm-1.log",
+      "workload": "escrow",
+      "scenario": "svm_lifecycle",
+      "sample": 1,
+      "startup_seconds": 0.01986175,
+      "fixture_seconds": 0.049100042,
+      "runner_execution_seconds": 0.025689,
+      "report": "escrow-lifecycle-svm-1.json"
+    },
+    {
+      "label": "managed_swap-shared_swap-svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-framework-swap-managed/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-shared_swap-svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.34980366565287113,
+      "cpu_seconds": 0.35505299999999806,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "112-managed_swap-shared_swap-svm-1.log",
+      "workload": "managed_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 1,
+      "startup_seconds": 0.02377125,
+      "fixture_seconds": 0.240326166,
+      "runner_execution_seconds": 0.168855,
+      "report": "managed_swap-shared_swap-svm-1.json"
+    },
+    {
+      "label": "generated_swap_only-shared_swap-svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-framework-swap-lifecycle-final/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/generated_swap_only-shared_swap-svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.528635666705668,
+      "cpu_seconds": 0.4495249999999942,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "113-generated_swap_only-shared_swap-svm-1.log",
+      "workload": "generated_swap_only",
+      "scenario": "svm_shared_swap",
+      "sample": 1,
+      "startup_seconds": 0.02882275,
+      "fixture_seconds": 0.361067333,
+      "runner_execution_seconds": 0.232991,
+      "report": "generated_swap_only-shared_swap-svm-1.json"
+    },
+    {
+      "label": "managed_swap-lifecycle-svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-managed-swap-supported/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-lifecycle-svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.35532379196956754,
+      "cpu_seconds": 0.21170299999999287,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "114-managed_swap-lifecycle-svm-1.log",
+      "workload": "managed_swap",
+      "scenario": "svm_lifecycle",
+      "sample": 1,
+      "startup_seconds": 0.0511865,
+      "fixture_seconds": 0.183289417,
+      "runner_execution_seconds": 0.114005,
+      "report": "managed_swap-lifecycle-svm-1.json"
+    },
+    {
+      "label": "escrow-lifecycle-svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-escrow-token-lifecycle/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/escrow-lifecycle-svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.24977495800703764,
+      "cpu_seconds": 0.1415179999999907,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "115-escrow-lifecycle-svm-2.log",
+      "workload": "escrow",
+      "scenario": "svm_lifecycle",
+      "sample": 2,
+      "startup_seconds": 0.02746325,
+      "fixture_seconds": 0.1554645,
+      "runner_execution_seconds": 0.039629,
+      "report": "escrow-lifecycle-svm-2.json"
+    },
+    {
+      "label": "managed_swap-shared_swap-svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-framework-swap-managed/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-shared_swap-svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.7193073332309723,
+      "cpu_seconds": 0.4533540000000045,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "116-managed_swap-shared_swap-svm-2.log",
+      "workload": "managed_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 2,
+      "startup_seconds": 0.033804416,
+      "fixture_seconds": 0.368299042,
+      "runner_execution_seconds": 0.218753,
+      "report": "managed_swap-shared_swap-svm-2.json"
+    },
+    {
+      "label": "managed_swap-lifecycle-svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-managed-swap-supported/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-lifecycle-svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.20275212498381734,
+      "cpu_seconds": 0.17759899999999362,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "117-managed_swap-lifecycle-svm-2.log",
+      "workload": "managed_swap",
+      "scenario": "svm_lifecycle",
+      "sample": 2,
+      "startup_seconds": 0.023034625,
+      "fixture_seconds": 0.107558084,
+      "runner_execution_seconds": 0.0714,
+      "report": "managed_swap-lifecycle-svm-2.json"
+    },
+    {
+      "label": "manual_swap-shared_swap-svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/manual_swap-shared_swap-svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.36380733409896493,
+      "cpu_seconds": 0.3371449999999925,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "118-manual_swap-shared_swap-svm-2.log",
+      "workload": "manual_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 2,
+      "startup_seconds": 0.023973584,
+      "fixture_seconds": 0.219440041,
+      "runner_execution_seconds": 0.124752,
+      "report": "manual_swap-shared_swap-svm-2.json"
+    },
+    {
+      "label": "generated_swap_only-shared_swap-svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-framework-swap-lifecycle-final/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/generated_swap_only-shared_swap-svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.3520196657627821,
+      "cpu_seconds": 0.36429600000001017,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "119-generated_swap_only-shared_swap-svm-2.log",
+      "workload": "generated_swap_only",
+      "scenario": "svm_shared_swap",
+      "sample": 2,
+      "startup_seconds": 0.024824792,
+      "fixture_seconds": 0.246559958,
+      "runner_execution_seconds": 0.173029,
+      "report": "generated_swap_only-shared_swap-svm-2.json"
+    },
+    {
+      "label": "generated_swap_only-shared_swap-svm-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-framework-swap-lifecycle-final/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/generated_swap_only-shared_swap-svm-3.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.4995387499220669,
+      "cpu_seconds": 0.3978039999999936,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "120-generated_swap_only-shared_swap-svm-3.log",
+      "workload": "generated_swap_only",
+      "scenario": "svm_shared_swap",
+      "sample": 3,
+      "startup_seconds": 0.023553459,
+      "fixture_seconds": 0.351130459,
+      "runner_execution_seconds": 0.216806,
+      "report": "generated_swap_only-shared_swap-svm-3.json"
+    },
+    {
+      "label": "escrow-lifecycle-svm-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-escrow-token-lifecycle/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/escrow-lifecycle-svm-3.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.20850299997255206,
+      "cpu_seconds": 0.14086299999998886,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "121-escrow-lifecycle-svm-3.log",
+      "workload": "escrow",
+      "scenario": "svm_lifecycle",
+      "sample": 3,
+      "startup_seconds": 0.027713583,
+      "fixture_seconds": 0.09751325,
+      "runner_execution_seconds": 0.03918,
+      "report": "escrow-lifecycle-svm-3.json"
+    },
+    {
+      "label": "managed_swap-shared_swap-svm-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-framework-swap-managed/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-shared_swap-svm-3.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.5730185001157224,
+      "cpu_seconds": 0.46607899999999347,
+      "load_average_before": [
+        8.8662109375,
+        12.7314453125,
+        17.841796875
+      ],
+      "exit_code": 0,
+      "log": "122-managed_swap-shared_swap-svm-3.log",
+      "workload": "managed_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 3,
+      "startup_seconds": 0.05491675,
+      "fixture_seconds": 0.39930825,
+      "runner_execution_seconds": 0.2366,
+      "report": "managed_swap-shared_swap-svm-3.json"
+    },
+    {
+      "label": "manual_swap-shared_swap-svm-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/manual_swap-shared_swap-svm-3.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.41671800008043647,
+      "cpu_seconds": 0.3712930000000014,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "123-manual_swap-shared_swap-svm-3.log",
+      "workload": "manual_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 3,
+      "startup_seconds": 0.037941209,
+      "fixture_seconds": 0.243860041,
+      "runner_execution_seconds": 0.131603,
+      "report": "manual_swap-shared_swap-svm-3.json"
+    },
+    {
+      "label": "managed_swap-lifecycle-svm-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-managed-swap-supported/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-lifecycle-svm-3.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.2525332081131637,
+      "cpu_seconds": 0.20971399999998397,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "124-managed_swap-lifecycle-svm-3.log",
+      "workload": "managed_swap",
+      "scenario": "svm_lifecycle",
+      "sample": 3,
+      "startup_seconds": 0.027814125,
+      "fixture_seconds": 0.126933375,
+      "runner_execution_seconds": 0.084771,
+      "report": "managed_swap-lifecycle-svm-3.json"
+    },
+    {
+      "label": "manual_swap-shared_swap-svm-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/manual_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/manual_swap-shared_swap-svm-4.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.29722299985587597,
+      "cpu_seconds": 0.3042780000000036,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "125-manual_swap-shared_swap-svm-4.log",
+      "workload": "manual_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 4,
+      "startup_seconds": 0.026218125,
+      "fixture_seconds": 0.180070333,
+      "runner_execution_seconds": 0.107936,
+      "report": "manual_swap-shared_swap-svm-4.json"
+    },
+    {
+      "label": "managed_swap-shared_swap-svm-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-framework-swap-managed/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-shared_swap-svm-4.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.4742125002667308,
+      "cpu_seconds": 0.443144999999987,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "126-managed_swap-shared_swap-svm-4.log",
+      "workload": "managed_swap",
+      "scenario": "svm_shared_swap",
+      "sample": 4,
+      "startup_seconds": 0.030416209,
+      "fixture_seconds": 0.306540625,
+      "runner_execution_seconds": 0.210318,
+      "report": "managed_swap-shared_swap-svm-4.json"
+    },
+    {
+      "label": "escrow-lifecycle-svm-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-escrow-token-lifecycle/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/escrow-lifecycle-svm-4.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.1933092917315662,
+      "cpu_seconds": 0.1364110000000025,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "127-escrow-lifecycle-svm-4.log",
+      "workload": "escrow",
+      "scenario": "svm_lifecycle",
+      "sample": 4,
+      "startup_seconds": 0.027684875,
+      "fixture_seconds": 0.070705958,
+      "runner_execution_seconds": 0.035297,
+      "report": "escrow-lifecycle-svm-4.json"
+    },
+    {
+      "label": "generated_swap_only-shared_swap-svm-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/generated_swap_only/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-framework-swap-lifecycle-final/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/generated_swap_only-shared_swap-svm-4.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.47854979196563363,
+      "cpu_seconds": 0.43469300000001,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "128-generated_swap_only-shared_swap-svm-4.log",
+      "workload": "generated_swap_only",
+      "scenario": "svm_shared_swap",
+      "sample": 4,
+      "startup_seconds": 0.029847125,
+      "fixture_seconds": 0.304534834,
+      "runner_execution_seconds": 0.211646,
+      "report": "generated_swap_only-shared_swap-svm-4.json"
+    },
+    {
+      "label": "managed_swap-lifecycle-svm-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/build/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-managed-swap-supported/fixtures.json",
+        "-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/managed_swap-lifecycle-svm-4.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 0.2005559578537941,
+      "cpu_seconds": 0.20168199999998393,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "129-managed_swap-lifecycle-svm-4.log",
+      "workload": "managed_swap",
+      "scenario": "svm_lifecycle",
+      "sample": 4,
+      "startup_seconds": 0.027313166,
+      "fixture_seconds": 0.11930575,
+      "runner_execution_seconds": 0.080455,
+      "report": "managed_swap-lifecycle-svm-4.json"
+    },
+    {
+      "label": "escrow-integrated-test-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/testdata/svm.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.6511528748087585,
+      "cpu_seconds": 1.8423989999999861,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "130-escrow-integrated-test-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.245107708,
+          "generation": 0.384426084,
+          "manifest": 0.002630708,
+          "native_tests": 0.690735459,
+          "sbf_build": 0.192145041,
+          "svm_tests": 0.112403625
+        },
+        "total_seconds": 1.628317708
+      },
+      "workload": "escrow",
+      "scenario": "integrated_native_svm",
+      "sample": 0
+    },
+    {
+      "label": "managed_swap-integrated-test-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/testdata/lifecycle.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.448519832920283,
+      "cpu_seconds": 2.090363000000025,
+      "load_average_before": [
+        10.31787109375,
+        12.96826171875,
+        17.89501953125
+      ],
+      "exit_code": 0,
+      "log": "131-managed_swap-integrated-test-0.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.0482025,
+          "generation": 0.492315417,
+          "manifest": 0.00389825,
+          "native_tests": 0.461234625,
+          "sbf_build": 0.220292209,
+          "svm_tests": 0.177515291
+        },
+        "total_seconds": 1.403914208
+      },
+      "workload": "managed_swap",
+      "scenario": "integrated_native_svm",
+      "sample": 0
+    },
+    {
+      "label": "escrow-integrated-test-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/testdata/svm.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.052636125124991,
+      "cpu_seconds": 1.4748909999999853,
+      "load_average_before": [
+        10.9326171875,
+        13.0517578125,
+        17.8955078125
+      ],
+      "exit_code": 0,
+      "log": "132-escrow-integrated-test-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.046383084,
+          "generation": 0.360436917,
+          "manifest": 0.001895917,
+          "native_tests": 0.323531875,
+          "sbf_build": 0.177844584,
+          "svm_tests": 0.099805083
+        },
+        "total_seconds": 1.010278833
+      },
+      "workload": "escrow",
+      "scenario": "integrated_native_svm",
+      "sample": 1
+    },
+    {
+      "label": "managed_swap-integrated-test-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/testdata/lifecycle.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.3007495841011405,
+      "cpu_seconds": 1.9279170000000079,
+      "load_average_before": [
+        10.9326171875,
+        13.0517578125,
+        17.8955078125
+      ],
+      "exit_code": 0,
+      "log": "133-managed_swap-integrated-test-1.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.047569458,
+          "generation": 0.4031915,
+          "manifest": 0.00176025,
+          "native_tests": 0.475497333,
+          "sbf_build": 0.185255792,
+          "svm_tests": 0.160605083
+        },
+        "total_seconds": 1.274254542
+      },
+      "workload": "managed_swap",
+      "scenario": "integrated_native_svm",
+      "sample": 1
+    },
+    {
+      "label": "escrow-integrated-test-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/testdata/svm.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.0684395828284323,
+      "cpu_seconds": 1.4804490000000001,
+      "load_average_before": [
+        10.9326171875,
+        13.0517578125,
+        17.8955078125
+      ],
+      "exit_code": 0,
+      "log": "134-escrow-integrated-test-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.045297583,
+          "generation": 0.332244833,
+          "manifest": 0.001495791,
+          "native_tests": 0.342980333,
+          "sbf_build": 0.183373917,
+          "svm_tests": 0.109649791
+        },
+        "total_seconds": 1.015408375
+      },
+      "workload": "escrow",
+      "scenario": "integrated_native_svm",
+      "sample": 2
+    },
+    {
+      "label": "managed_swap-integrated-test-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/testdata/lifecycle.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.521371291950345,
+      "cpu_seconds": 2.099911999999982,
+      "load_average_before": [
+        10.9326171875,
+        13.0517578125,
+        17.8955078125
+      ],
+      "exit_code": 0,
+      "log": "135-managed_swap-integrated-test-2.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.048627084,
+          "generation": 0.545637833,
+          "manifest": 0.00175975,
+          "native_tests": 0.469950167,
+          "sbf_build": 0.224037792,
+          "svm_tests": 0.206503459
+        },
+        "total_seconds": 1.4977414580000001
+      },
+      "workload": "managed_swap",
+      "scenario": "integrated_native_svm",
+      "sample": 2
+    },
+    {
+      "label": "escrow-integrated-test-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/testdata/svm.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.2443948341533542,
+      "cpu_seconds": 1.5261460000000326,
+      "load_average_before": [
+        12.29931640625,
+        13.2998046875,
+        17.95458984375
+      ],
+      "exit_code": 0,
+      "log": "136-escrow-integrated-test-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.048208791,
+          "generation": 0.397264916,
+          "manifest": 0.006082125,
+          "native_tests": 0.400054166,
+          "sbf_build": 0.179691125,
+          "svm_tests": 0.10751925
+        },
+        "total_seconds": 1.139198917
+      },
+      "workload": "escrow",
+      "scenario": "integrated_native_svm",
+      "sample": 3
+    },
+    {
+      "label": "managed_swap-integrated-test-3",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/testdata/lifecycle.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.4061544160358608,
+      "cpu_seconds": 2.0914289999999625,
+      "load_average_before": [
+        12.29931640625,
+        13.2998046875,
+        17.95458984375
+      ],
+      "exit_code": 0,
+      "log": "137-managed_swap-integrated-test-3.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.048103375,
+          "generation": 0.464616875,
+          "manifest": 0.002143208,
+          "native_tests": 0.472351584,
+          "sbf_build": 0.203105083,
+          "svm_tests": 0.162115709
+        },
+        "total_seconds": 1.35303525
+      },
+      "workload": "managed_swap",
+      "scenario": "integrated_native_svm",
+      "sample": 3
+    },
+    {
+      "label": "managed_swap-integrated-test-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/managed_swap/testdata/lifecycle.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.4760913751088083,
+      "cpu_seconds": 2.141736000000023,
+      "load_average_before": [
+        12.29931640625,
+        13.2998046875,
+        17.95458984375
+      ],
+      "exit_code": 0,
+      "log": "138-managed_swap-integrated-test-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.057886833,
+          "generation": 0.44525325,
+          "manifest": 0.002114166,
+          "native_tests": 0.481457458,
+          "sbf_build": 0.231864459,
+          "svm_tests": 0.186705708
+        },
+        "total_seconds": 1.405905792
+      },
+      "workload": "managed_swap",
+      "scenario": "integrated_native_svm",
+      "sample": 4
+    },
+    {
+      "label": "escrow-integrated-test-4",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-milestone2-bench/tools/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "-svm-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/milestone2-bench/2026-10-06-milestone2-bench/escrow/testdata/svm.json",
+        "-timings",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "wall_seconds": 1.1562815830111504,
+      "cpu_seconds": 1.5798340000000195,
+      "load_average_before": [
+        11.71435546875,
+        13.16162109375,
+        17.87841796875
+      ],
+      "exit_code": 0,
+      "log": "139-escrow-integrated-test-4.log",
+      "phases": {
+        "schema": 1,
+        "command": "test",
+        "passed": true,
+        "phase_seconds": {
+          "backend_check": 0.049084208,
+          "generation": 0.394177458,
+          "manifest": 0.001980417,
+          "native_tests": 0.37817925,
+          "sbf_build": 0.186614458,
+          "svm_tests": 0.112763125
+        },
+        "total_seconds": 1.123185167
+      },
+      "workload": "escrow",
+      "scenario": "integrated_native_svm",
+      "sample": 4
+    }
+  ],
+  "limitations": [
+    "Local macOS arm64 observations with warm OS caches and installed v1.51 LLVM; not portable promises",
+    "Fresh native cache is measured for CLI bootstrap, then shared; project-clean is not a cold machine",
+    "Manual swap is a direct compiler command; project commands also validate and generate schema artifacts",
+    "Historical swap-only CLI/source is deliberately pinned; frontend/SDK improvements and lifecycle additions are distinct effects",
+    "Complete swap includes four instructions; manual and historical generated comparators provide swap only",
+    "Escrow has no matched Rust counterpart in this experiment",
+    "No downloads, validator or Cargo build in measured paths; prior Rust benchmarks remain separately scoped",
+    "Native tests differ by application; no matched native-suite speedup is claimed",
+    "Logical and allocated disk bytes are distinguished; compiler temp peak is sampled in separate untimed probes",
+    "No public release, external developer trial or current RPC rent quotation is implied"
+  ],
+  "tools": {
+    "cli": {
+      "sha256": "8319053dc925911bdad47acc714d2d40e5fad4857b98c8fbdcbb7779e44f1f20",
+      "files": 1,
+      "logical_bytes": 7674560,
+      "allocated_bytes": 7675904
+    },
+    "runner": {
+      "sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "files": 1,
+      "logical_bytes": 6886240,
+      "allocated_bytes": 6889472
+    },
+    "runner_archive": {
+      "sha256": "a73c0b01a4c6f6655b305567b0e7c294f53e4e3b0082f3825c8299334be4ee0f",
+      "files": 1,
+      "logical_bytes": 3165750,
+      "allocated_bytes": 3166208
+    },
+    "backend": {
+      "clang": {
+        "sha256": "ec3fc09b50c81d5d7cd5925b6671ee69d340ae251949589ddfae4d66dfbde3ac",
+        "files": 1,
+        "logical_bytes": 113291976,
+        "allocated_bytes": 113295360
+      },
+      "ld.lld": {
+        "sha256": "969e4ced1adfa882763460657b0cd817f02ec172c21799d9c068becbee26941b",
+        "files": 1,
+        "logical_bytes": 62781728,
+        "allocated_bytes": 62783488
+      }
+    },
+    "llvm_directory": {
+      "files": 954,
+      "logical_bytes": 398819809,
+      "allocated_bytes": 401166336
+    },
+    "go_version": "go version go1.22.0 darwin/arm64",
+    "clang_version": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+    "historical_cli": {
+      "sha256": "20f915c74d8e4e95e425f2a41cffa2e3f42e3616fc4acb2d3753d4274ee15471",
+      "files": 1,
+      "logical_bytes": 7641712,
+      "allocated_bytes": 7643136
+    }
+  },
+  "input_sha256": {
+    "generated_swap_only": {
+      ".gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+      ".gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+      ".gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+      ".gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+      ".gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+      ".gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+      ".gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+      ".gosvm/sdk/solana/api.go": "52a36e28341d6a46473f7d17c36befb988933309ba2de1deb4ee8544d1623d59",
+      "README.md": "6640cf3a5acef4e37008c19602857f741fdf6e6cd088b83869a2978299f5ef9f",
+      "client/zz_gosvm.go": "ae78ca46e99ec188ac9473f43926f9d9952bc0c2748135954370fd713faaa14e",
+      "go.mod": "8a6cbf93502371fa0ec02420e6bc6de1550192f357304706d58fd6a28e3a445f",
+      "gosvm.json": "9d0fa4060ef805f8ee0294acd3c7e37fb94a80c397f4ad50554b8be62372ea7e",
+      "idl.json": "c53edb46dc4066531fc4d4fbbdb2d40899c2374a4b83ea05874c3ed04885b930",
+      "layouts.json": "bf95b572494f18fd75ca458f28ba3e5338421a4fbc887916ce5236545aa05f4e",
+      "model/model.go": "3bdd7c66c0bf7972d45986bcc5b22ca309bafb33af636a30bcd75bdf18195366",
+      "model/quote.go": "392e808643abbffb16cc2282d61dd49f591562714518724e94efb6d47266ab6b",
+      "model/quote_test.go": "91cb7797a176add6eed5540ff7056735a5bbc09ceb4fc9d3f58a527153fc3050",
+      "program.go": "e3255cfe50fc49d14036c572b6815bd6a2790e7c5d7772ffdd6f13af40368125",
+      "testdata/svm.json": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "zz_gosvm.go": "c1700e955fc573eea0b05897f2a737972e854bed8d4b520e46bd0db33d2219da"
+    },
+    "managed_swap": {
+      ".gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+      ".gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+      ".gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+      ".gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+      ".gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+      ".gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+      ".gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+      ".gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+      ".gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+      "README.md": "2dc4a5e553bcbd6a2ecb022ae94f41010506078ab886386b721017e5c67aee5e",
+      "client/zz_gosvm.go": "ecfc39ebc1ade968390df8ad002cd9be7aaeff9d2aef5fae8ea83c6fe48acc24",
+      "go.mod": "8a6cbf93502371fa0ec02420e6bc6de1550192f357304706d58fd6a28e3a445f",
+      "gosvm.json": "b22dbc63564c108f23e361b31e59a8f18049810ac95c18ada30a74a482025e3c",
+      "idl.json": "f9001b5dc8855bee5a31bc2bba15e31b19976c87aaa056aebb99875cc6612097",
+      "layouts.json": "40e2f6dd52a40189fd7cdaff7ce80340861cd6a6d9a9f789cdbb063797cc7275",
+      "lifecycle.go": "ea2afb247e73db01fb272aa6c2123474b6226d94793486f0ac0dcf26bf1fbe38",
+      "lifecycle_test.go": "e7a8175bd2083224d42cb62bcba615720c3825c58a74cac29fe631fdee15c5ab",
+      "model/model.go": "8fb4bbde17e019f1f065e96fa920ceeb6011aa0422358f4d39f8b352e1b29ef2",
+      "model/quote.go": "392e808643abbffb16cc2282d61dd49f591562714518724e94efb6d47266ab6b",
+      "model/quote_test.go": "91cb7797a176add6eed5540ff7056735a5bbc09ceb4fc9d3f58a527153fc3050",
+      "program.go": "e3255cfe50fc49d14036c572b6815bd6a2790e7c5d7772ffdd6f13af40368125",
+      "testdata/lifecycle.json": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "testdata/spl-token.so": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6",
+      "testdata/svm.json": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "zz_gosvm.go": "da2eeeedbd0c7a1c718ad90bbb264ffaf97120630ec34eb2979d86859cfeca76"
+    },
+    "escrow": {
+      ".gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+      ".gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+      ".gosvm/sdk/sdk/cpi/cpi.go": "d51c7a6ff8f15cd920e79061646ce539b812614b8ca9713eeeb1400a082c759d",
+      ".gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+      ".gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+      ".gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+      ".gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+      ".gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+      ".gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+      "README.md": "2a9185249d6efc9877fd6e73b24c4f1e6069adb90ec9d7e76f117089d37b9437",
+      "client/zz_gosvm.go": "8d27c8d4d22f2ecb5f6b363488136be99e931e16625db31e2ce3dbd02624d570",
+      "go.mod": "559c18578129db9c573b131e58db8e0aeb813b57a88b7989212937ab74fd8c77",
+      "gosvm.json": "fc3dc6733c460b6f9e25da08ba0cb555e864ac4097bd1b43adb09dd8d605ed63",
+      "idl.json": "3083cdb0ea1f6d161112477059f05d22ba0dafcc4c216f8087575a760c3a313b",
+      "layouts.json": "56c9b151acc84007cbd7b7f258b102f01a9c2b43035ae0fb2c2efe31ed8a058e",
+      "model/model.go": "2f9e87e829268dab4fba9d73e0407d7e1a31428dd07db51742b7ed2a56037e90",
+      "program.go": "0ce285fdadf8d320d65fad5ea88f885a11cadd0b85310a0ccf4614c65b699324",
+      "program_test.go": "38735e1d75efed1552ea28d873374057ca7f5f423e30aefc2d4e5ab36a31b8f9",
+      "testdata/svm.json": "97bedf573f448e11a638b9bb6344ce9b8dc6b1fe5f9784635a81ce76208e91b2",
+      "zz_gosvm.go": "ec94a6d278247f08a3cf7465bd1d73e00678c93f29242daa367cb51b19c44be7"
+    },
+    "manual_swap": {
+      "swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0"
+    }
+  },
+  "temporary_peak_probes": {},
+  "failure": "tempdir not empty before probe"
+}

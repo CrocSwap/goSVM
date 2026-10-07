@@ -1,0 +1,14 @@
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:36:memcpy	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:48:memset	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1825:entrypoint	2432	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1666:v72	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1610:v61	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:155:sol_Clock	64	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1499:v55	64	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1453:v52	64	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1137:v43	128	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:1652:v69	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:843:v21	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:870:v26	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:934:v34	0	static
+results/compiler/2026-10-06-account-decoder32-final/phoenix-new.c:881:v30	64	static

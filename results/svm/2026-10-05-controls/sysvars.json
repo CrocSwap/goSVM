@@ -1,0 +1,14 @@
+{
+  "clock": {
+    "slot": 9007199254740993,
+    "epoch_start_timestamp": -23,
+    "epoch": 7,
+    "leader_schedule_epoch": 9,
+    "unix_timestamp": -123456
+  },
+  "rent": {
+    "lamports_per_byte_year": 777,
+    "exemption_threshold": 1.5,
+    "burn_percent": 17
+  }
+}

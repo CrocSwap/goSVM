@@ -1,0 +1,21 @@
+Testing 20 compiled SBF scenarios with LiteSVM...
+PASS noop step 1                          264 CU
+PASS seed-construction step 1             3126 CU
+PASS seed-plus-signer-copy step 1         5580 CU
+PASS validate-once step 1                 1761 CU
+PASS validate-twice step 1                3038 CU
+PASS seed-too-long step 1                 272 CU
+PASS seed-count-limit step 1              964 CU
+PASS nil-signer step 1                    272 CU
+PASS signer-count-limit step 1            6073 CU
+PASS signer-byte-capacity step 1          15371 CU
+PASS wrong-discriminator-3 step 1         568 CU
+PASS wrong-discriminator-4 step 1         568 CU
+PASS wrong-pool-3 step 1                  887 CU
+PASS wrong-pool-4 step 1                  887 CU
+PASS invalid-first-flag-3 step 1          1235 CU
+PASS invalid-first-flag-4 step 1          1235 CU
+PASS invalid-last-flag-3 step 1           1757 CU
+PASS invalid-last-flag-4 step 1           1757 CU
+PASS short-array-3 step 1                 566 CU
+PASS short-array-4 step 1                 566 CU

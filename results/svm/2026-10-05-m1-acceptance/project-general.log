@@ -1,0 +1,4 @@
+?   	example.com/milestone1/acceptance/client	[no test files]
+ok  	example.com/milestone1/acceptance	0.005s
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m1-acceptance/starter/build/program.so (3216 bytes, 172ms)
+gosvm: open /Users/colkitt/sith/toys/crypto/goSVM/build/milestone1-acceptance/2026-10-05-m1-acceptance/starter/testdata/svm.json: no such file or directory

@@ -1,0 +1,386 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "v0-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/gosvm",
+        "-arch",
+        "v0",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-original.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/sdk2/multiply"
+      ],
+      "exit_code": 0,
+      "seconds": 0.017259416170418262
+    },
+    {
+      "name": "v0-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=generic",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3042449578642845
+    },
+    {
+      "name": "v0-helper",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=generic",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-x",
+        "c",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/builtins.c.txt",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-helper.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.02388920821249485
+    },
+    {
+      "name": "v0-helper-disassembly",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/llvm-objdump",
+        "-dr",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-helper.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.025289915967732668
+    },
+    {
+      "name": "v0-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf.ld",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-helper.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11535899993032217
+    },
+    {
+      "name": "v0-symbols",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/llvm-readelf",
+        "--dyn-syms",
+        "--relocations",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.so"
+      ],
+      "exit_code": 0,
+      "seconds": 0.02218537498265505
+    },
+    {
+      "name": "v0-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.45093291625380516
+    },
+    {
+      "name": "v0-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5043889591470361
+    },
+    {
+      "name": "v0-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v0-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5450142500922084
+    },
+    {
+      "name": "v3-emit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/gosvm",
+        "-arch",
+        "v3",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-original.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/sdk2/multiply"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0126995830796659
+    },
+    {
+      "name": "v3-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.045961708296090364
+    },
+    {
+      "name": "v3-helper",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-x",
+        "c",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/builtins.c.txt",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-helper.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.024263292085379362
+    },
+    {
+      "name": "v3-helper-disassembly",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/llvm-objdump",
+        "-dr",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-helper.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.00812616664916277
+    },
+    {
+      "name": "v3-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-helper.o",
+        "--no-undefined"
+      ],
+      "exit_code": 0,
+      "seconds": 0.019538041204214096
+    },
+    {
+      "name": "v3-symbols",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/llvm-readelf",
+        "--dyn-syms",
+        "--relocations",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.so"
+      ],
+      "exit_code": 0,
+      "seconds": 0.007781249936670065
+    },
+    {
+      "name": "v3-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6404462503269315
+    },
+    {
+      "name": "v3-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5399957499466836
+    },
+    {
+      "name": "v3-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_phoenix_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3.so",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-multi3-sbf/v3-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5170004591345787
+    }
+  ],
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/multi3_sbf_verify.py": "641d611fe2fe98e5abc7ee0048260b29740b5e7910c478e5c112bf22a57a56c8",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/gosvm": "0644336253795dd1307ec33d70a21cafb234051a8f4dfcf10e474e5c3632953f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/builtins.c.txt": "5601f30834c866e2f457595508e260ecb44ca8e8b8ae237f8be72d7453afe9ef",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/results/phoenix-v1/2026-10-06-v0-multiply-reproduction/fixtures.json": "2467677bd162c2b8ae1b69d35e31239ece15adbf78f7795dc96f14710df6dc14",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/runtime/bin/gosvm-svm-runner": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/phoenix-v1/transaction-maker": "f778f7dd7b9d3676eb7462f6070f68d5971cc1e75be333cdd911504697699722",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/tools/phoenix-v1/runtime-features.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/phoenix-dependencies/2026-10-06-phoenix-dependencies/sdk2/multiply/program.go": "22214591bbf077f5e4c880108ce97613c22ef5d4131729b703120c9b203c9426"
+  },
+  "artifacts": {
+    "v0": {
+      "sha256": "2a8c4da82b9ea07fe1e909faa6a4925bc3bc5deba431bc3239896e2863af38f6",
+      "bytes": 2840,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-multi3-sbf/v0.c:338:entrypoint",
+          "bytes": 1856,
+          "kind": "static"
+        },
+        {
+          "function": "internal/compiler/builtins.c.txt:8:__multi3",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    },
+    "v3": {
+      "sha256": "21504aa9927d5b0fba75a0ef787127be29f9ff78eb07f7f05099ced266cb5868",
+      "bytes": 2488,
+      "frames": [
+        {
+          "function": "results/compiler/2026-10-06-multi3-sbf/v3.c:339:entrypoint",
+          "bytes": 1856,
+          "kind": "static"
+        },
+        {
+          "function": "internal/compiler/builtins.c.txt:8:__multi3",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ]
+    }
+  },
+  "cases": 633,
+  "repetitions": 3,
+  "targets": [
+    "v0",
+    "v3"
+  ]
+}

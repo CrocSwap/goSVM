@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-checked-token-decoder32/program.c:35:memcpy	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:41:memset	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:3884:entrypoint	3648	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:2900:v213	64	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:2977:v219	128	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:3398:v252	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:515:v48	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:532:v54	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:558:v57	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:522:v51	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:608:v68	448	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:743:v78	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:671:v73	0	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:832:v86	128	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:2787:v209	64	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:3124:v245	1344	static
+results/compiler/2026-10-06-checked-token-decoder32/program.c:220:sol_Invoke	960	static

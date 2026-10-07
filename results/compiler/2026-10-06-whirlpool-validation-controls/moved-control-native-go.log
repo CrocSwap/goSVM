@@ -1,0 +1,7 @@
+?   	example.org/gosvm-benchmarks/whirlpool/client	[no test files]
+ok  	example.org/gosvm-benchmarks/whirlpool	0.018s
+?   	example.org/gosvm-benchmarks/whirlpool/model	[no test files]
+?   	example.org/gosvm-benchmarks/whirlpool/probe	[no test files]
+ok  	example.org/gosvm-benchmarks/whirlpool/math	1.063s
+ok  	example.org/gosvm-benchmarks/whirlpool/swap	0.203s
+ok  	example.org/gosvm-benchmarks/whirlpool/wire	0.215s

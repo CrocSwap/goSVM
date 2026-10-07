@@ -1,0 +1,732 @@
+{
+  "passed": true,
+  "scope": "Lowered-C diagnostics on compact handler; compiler/SDK/benchmark unchanged",
+  "checks": [
+    {
+      "name": "emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler"
+      ],
+      "exit_code": 0,
+      "seconds": 0.18150570802390575
+    },
+    {
+      "name": "baseline-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09420400019735098
+    },
+    {
+      "name": "baseline-native",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11687970906496048
+    },
+    {
+      "name": "baseline-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6197387496940792
+    },
+    {
+      "name": "baseline-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10341483308002353
+    },
+    {
+      "name": "baseline-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4577347910962999
+    },
+    {
+      "name": "baseline-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.45317912474274635
+    },
+    {
+      "name": "baseline-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/baseline-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42958095809444785
+    },
+    {
+      "name": "read-words-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07752091577276587
+    },
+    {
+      "name": "read-words-native",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10361383389681578
+    },
+    {
+      "name": "read-words-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.42948695784434676
+    },
+    {
+      "name": "read-words-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.012191166169941425
+    },
+    {
+      "name": "read-words-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.444006625097245
+    },
+    {
+      "name": "read-words-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4302510414272547
+    },
+    {
+      "name": "read-words-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/read-words-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4261573748663068
+    },
+    {
+      "name": "write-words-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.08672200003638864
+    },
+    {
+      "name": "write-words-native",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10527337482199073
+    },
+    {
+      "name": "write-words-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.49006329104304314
+    },
+    {
+      "name": "write-words-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.016958709340542555
+    },
+    {
+      "name": "write-words-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5391980828717351
+    },
+    {
+      "name": "write-words-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.541287874802947
+    },
+    {
+      "name": "write-words-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/write-words-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.49484966695308685
+    },
+    {
+      "name": "compare-pointers-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09884708421304822
+    },
+    {
+      "name": "compare-pointers-native",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.12119187461212277
+    },
+    {
+      "name": "compare-pointers-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5084653748199344
+    },
+    {
+      "name": "compare-pointers-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.014300084207206964
+    },
+    {
+      "name": "compare-pointers-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.47932916739955544
+    },
+    {
+      "name": "compare-pointers-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5248627923429012
+    },
+    {
+      "name": "compare-pointers-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/compare-pointers-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.48778212489560246
+    },
+    {
+      "name": "combined-native-build",
+      "command": [
+        "clang",
+        "-std=c11",
+        "-O2",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=all",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-native.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0920788748189807
+    },
+    {
+      "name": "combined-native",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-native"
+      ],
+      "exit_code": 0,
+      "seconds": 0.12926245806738734
+    },
+    {
+      "name": "combined-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5364472498185933
+    },
+    {
+      "name": "combined-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.o"
+      ],
+      "exit_code": 0,
+      "seconds": 0.015708417166024446
+    },
+    {
+      "name": "combined-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-0.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4916410418227315
+    },
+    {
+      "name": "combined-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4741070829331875
+    },
+    {
+      "name": "combined-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-codegen-controls-final/combined-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4711842080578208
+    }
+  ],
+  "variants": {
+    "baseline": {
+      "elf_bytes": 84192,
+      "elf_sha256": "19daf911c6348dbb6ba86df8452a0637fe6c415ce9322d582a91232741e83bad",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.737882912481617,
+      "median_success_saving": 0,
+      "success_improve": 0,
+      "success_regress": 0,
+      "failure_improve": 0,
+      "failure_regress": 0
+    },
+    "read-words": {
+      "elf_bytes": 85352,
+      "elf_sha256": "bd7c4351b31129df4149ccd838311f89e0dc92b3f52a36d90f4d11debdc5db51",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.7423573954128728,
+      "median_success_saving": -8,
+      "success_improve": 42,
+      "success_regress": 61,
+      "failure_improve": 31,
+      "failure_regress": 14
+    },
+    "write-words": {
+      "elf_bytes": 84208,
+      "elf_sha256": "88c724968cb445c0709d02912e814b4aa4e3783634268e22d31536e79eeee54b",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.702519975414874,
+      "median_success_saving": 746,
+      "success_improve": 103,
+      "success_regress": 0,
+      "failure_improve": 23,
+      "failure_regress": 0
+    },
+    "compare-pointers": {
+      "elf_bytes": 84192,
+      "elf_sha256": "19daf911c6348dbb6ba86df8452a0637fe6c415ce9322d582a91232741e83bad",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.737882912481617,
+      "median_success_saving": 0,
+      "success_improve": 0,
+      "success_regress": 0,
+      "failure_improve": 0,
+      "failure_regress": 0
+    },
+    "combined": {
+      "elf_bytes": 85368,
+      "elf_sha256": "16ecc6db980f38579e78a6792f3bed2baf1b905c03e2c2031650b12a12939815",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.7069145666871544,
+      "median_success_saving": 644,
+      "success_improve": 103,
+      "success_regress": 0,
+      "failure_improve": 31,
+      "failure_regress": 14
+    }
+  },
+  "generated_c_sha256": "6a6268772eb35ec1f9a9ede9a576183c0549b2db349ee11c35bc8c9f12899914",
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm": "90ebc1d0a9221241ef2fa764b5fbf7380829859ad493a24cf25530907b96ea26",
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/packed_codegen_experiment.py": "5161b80e133b1279d1461c56224a4d58f1afa5d065336681c61cd8e8ebece315",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/program.go": "0185e3e7c69b3cba7cfe8e08ca7f3e8a9f3b4adaa84aae78c82bcb045b317db9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/wire/wire.go": "9958fda8b2b9a3a78a9059662d37ba743e0e224a28dcbc6685037c238e7c67b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/canonical-0.json": "a79f5ae7c94d3e4cc621d9f8d7551060f3050a88fc54d6f10d2ffe3ffc509c13",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py": "ffc001495b9226770c4396cd71b275eba2877d4b7fb6b7055cc11ff4cda485a4",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228"
+  },
+  "native_vectors": 12000
+}

@@ -1,0 +1,7 @@
+?   	example.org/gosvm/multi-state/client	[no test files]
+?   	example.org/gosvm/multi-state/model	[no test files]
+ok  	example.org/gosvm/multi-state	(cached)
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/schema2/2026-10-05-schema2-prototype-fixed/multi-state/build/program.so (7088 bytes, 825ms)
+Testing 2 compiled SBF scenarios with LiteSVM...
+PASS set-limit-then-move-merged-privileges step 1 6595 CU
+PASS set-limit-then-failed-move-atomic-rollback step 1 5916 CU

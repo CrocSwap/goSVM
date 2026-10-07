@@ -1,0 +1,8 @@
+?   	example.com/typed-swap/client	[no test files]
+--- FAIL: TestDeliberateFailure (0.00s)
+    program_test.go:91: diagnostic failure probe
+FAIL
+FAIL	example.com/typed-swap	0.005s
+FAIL
+gosvm timings: {"schema":1,"command":"test","passed":false,"phase_seconds":{"generation":0.001323125,"manifest":0.000178333,"native_tests":0.174620583},"total_seconds":0.176342167}
+gosvm: exit status 1

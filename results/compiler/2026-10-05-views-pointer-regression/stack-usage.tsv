@@ -1,0 +1,4 @@
+results/compiler/2026-10-05-views-pointer-regression/program.c:29:memcpy	0	static
+results/compiler/2026-10-05-views-pointer-regression/program.c:35:memset	0	static
+results/compiler/2026-10-05-views-pointer-regression/program.c:777:entrypoint	64	static
+results/compiler/2026-10-05-views-pointer-regression/program.c:253:go_Process	64	static

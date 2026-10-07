@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical/scaffold
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical/scaffold" && gosvm check && go test ./... && gosvm build

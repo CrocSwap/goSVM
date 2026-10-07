@@ -1,0 +1,6 @@
+=== RUN   TestSDK2OwnedLifecycleDifferential
+--- PASS: TestSDK2OwnedLifecycleDifferential (2.91s)
+=== RUN   TestSDK2RentCalculationC
+--- PASS: TestSDK2RentCalculationC (0.84s)
+PASS
+ok  	gosvm/internal/compiler	3.941s

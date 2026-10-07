@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "command": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+      "exit_code": 0
+    },
+    {
+      "command": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+      "exit_code": 0
+    },
+    {
+      "command": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test ./...",
+      "cwd": "examples/typed-swap",
+      "exit_code": 0
+    },
+    {
+      "check": "current source hashes and per-report fixture hashes verified",
+      "passed": true
+    },
+    {
+      "check": "local documentation links resolve",
+      "passed": true
+    }
+  ]
+}

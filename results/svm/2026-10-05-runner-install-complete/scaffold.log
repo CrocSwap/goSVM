@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/runner-install/2026-10-05-runner-install-complete/starter
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/runner-install/2026-10-05-runner-install-complete/starter" && gosvm check && go test ./... && gosvm build

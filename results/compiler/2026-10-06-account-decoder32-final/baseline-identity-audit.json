@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "checks": {
+    "go": {
+      "cases": 430,
+      "cu_unchanged": true,
+      "logs_unchanged": true,
+      "new_report_sha256": "3bc1f61e570afa7f605f14ad0a195dcbc7fd0ada6e111405f6f77891df71e452",
+      "baseline_report_sha256": "14c7d24e2b3c64c024d35a7047713ae747c25cc6f98e49777439e8b72538ace1"
+    },
+    "rust": {
+      "cases": 430,
+      "cu_unchanged": true,
+      "logs_unchanged": true,
+      "new_report_sha256": "208e6261f6a533c183408a1a3aaf724f5c8c4d9b481761299f60e3b207b77892",
+      "baseline_report_sha256": "35bdc2741db82611873b3e491610f56e18fc119b687fa9d343b83bd67587cf1b"
+    },
+    "upstream": {
+      "cases": 430,
+      "cu_unchanged": true,
+      "logs_unchanged": true,
+      "new_report_sha256": "124762baa96646c2790d6e1963a0bb4158f61d3360158b634605e69c04753d52",
+      "baseline_report_sha256": "86947b9e0ab7007f6bf57bde2e3d095df44b94e2ac92a62baa2a240adc37a6b5"
+    }
+  }
+}

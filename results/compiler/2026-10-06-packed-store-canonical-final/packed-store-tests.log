@@ -1,0 +1,22 @@
+=== RUN   TestPackedStoreRecognition
+=== RUN   TestPackedStoreRecognition/different_stride
+=== RUN   TestPackedStoreRecognition/mutation
+=== RUN   TestPackedStoreRecognition/side_effect
+=== RUN   TestPackedStoreRecognition/different_offset
+=== RUN   TestPackedStoreRecognition/extra_store
+=== RUN   TestPackedStoreRecognition/shadowed_value
+=== RUN   TestPackedStoreRecognition/short_width
+=== RUN   TestPackedStoreRecognition/nonzero_start
+--- PASS: TestPackedStoreRecognition (0.00s)
+    --- PASS: TestPackedStoreRecognition/different_stride (0.00s)
+    --- PASS: TestPackedStoreRecognition/mutation (0.00s)
+    --- PASS: TestPackedStoreRecognition/side_effect (0.00s)
+    --- PASS: TestPackedStoreRecognition/different_offset (0.00s)
+    --- PASS: TestPackedStoreRecognition/extra_store (0.00s)
+    --- PASS: TestPackedStoreRecognition/shadowed_value (0.00s)
+    --- PASS: TestPackedStoreRecognition/short_width (0.00s)
+    --- PASS: TestPackedStoreRecognition/nonzero_start (0.00s)
+=== RUN   TestPackedStoreNativeCDifferential
+--- PASS: TestPackedStoreNativeCDifferential (2.21s)
+PASS
+ok  	gosvm/internal/compiler	2.240s

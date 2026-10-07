@@ -1,0 +1,4 @@
+results/compiler/2026-10-05-array-capacity/byte/program.c:21:memcpy	0	static
+results/compiler/2026-10-05-array-capacity/byte/program.c:27:memset	0	static
+results/compiler/2026-10-05-array-capacity/byte/program.c:351:entrypoint	64	static
+results/compiler/2026-10-05-array-capacity/byte/program.c:66:go_Process	2112	static

@@ -1,0 +1,4 @@
+results/compiler/2026-10-05-shared-imports-final/program.c:21:memcpy	0	static
+results/compiler/2026-10-05-shared-imports-final/program.c:27:memset	0	static
+results/compiler/2026-10-05-shared-imports-final/program.c:369:entrypoint	64	static
+results/compiler/2026-10-05-shared-imports-final/program.c:266:go_Process	0	static

@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "sbf-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-probe/2026-10-06-packed-store-probe"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/program.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-probe/2026-10-06-packed-store-probe"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/program.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/sbf-0.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/program.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/sbf-1.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/program.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/fixtures.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-probe/sbf-2.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "cli_sha256": "e4dae52c37cd0088edfb6889f50b9bef9f7937c11bdf156f80faa34dac61aa9e",
+  "script_sha256": "826337ed135bfcaa05949dac87964e7cd2abd652d390f6e6c02ea06a62f1e90e",
+  "scenarios": 422,
+  "repetitions": 3,
+  "elf_sha256": "07cf8861707335389c806dcede7695ad006a2245ad697f203df440040acb6517",
+  "elf_bytes": 2888,
+  "fixture_sha256": "a3d6f64e77a0204e7d3077ef5b7dade4d7eaafa529a162082390e4f8f17e8e0e",
+  "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+  "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+  "successful": 64,
+  "failures": 358
+}

@@ -1,0 +1,2195 @@
+{
+  "schema": 1,
+  "passed": true,
+  "samples": 5,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "setup": {
+    "frontend_fresh_cache": {
+      "wall_seconds": 5.688845333177596,
+      "cpu_seconds": 19.370434,
+      "load_average_before": [
+        6.67041015625,
+        6.05859375,
+        5.52685546875
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/cli-cold.log",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    },
+    "frontend_cached": {
+      "wall_seconds": 0.29004104202613235,
+      "cpu_seconds": 0.39082400000000117,
+      "load_average_before": [
+        7.73779296875,
+        6.2900390625,
+        5.611328125
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/cli-warm.log",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    },
+    "native_cache_after_frontend_bytes": 95303201,
+    "runner_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+    "go_version": "go version go1.22.0 darwin/arm64",
+    "clang_version": "clang version 19.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git 0c30adaa95a6c007f6210d41735371f25c4c91ed)",
+    "host_cargo_cached_build": {
+      "wall_seconds": 0.7032178337685764,
+      "cpu_seconds": 0.24225399999999953,
+      "load_average_before": [
+        7.73779296875,
+        6.2900390625,
+        5.611328125
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/runner-cached-build.log",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "benchmarks/svm-runner/Cargo.toml",
+        "--target-dir",
+        "build/svm-fixtures-target"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    },
+    "scaffold": {
+      "wall_seconds": 0.02173933293670416,
+      "cpu_seconds": 0.010781999999998959,
+      "load_average_before": [
+        7.73779296875,
+        6.2900390625,
+        5.611328125
+      ],
+      "log": "results/svm/2026-10-05-workflow-complete/scaffold.log",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+        "new",
+        "-module",
+        "example.com/typed-swap",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/starter"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    },
+    "bounded_first_project": {
+      "workload": "bounded",
+      "scenario": "first_project",
+      "sample": 0,
+      "wall_seconds": 4.756696041207761,
+      "cpu_seconds": 12.920574000000002,
+      "phases_seconds": {
+        "backend_check": 0.128258709,
+        "generation": 0.001417625,
+        "manifest": 0.000236292,
+        "native_tests": 4.281671125,
+        "sbf_build": 0.272912292,
+        "svm_tests": 0.044430417
+      },
+      "native_test_result_cached": false,
+      "svm_startup_seconds": 0.029275667,
+      "svm_fixture_seconds": 0.005540292,
+      "svm_total_seconds": 0.041678041,
+      "vm_execution_seconds": 0.003479,
+      "before": {
+        "elf_exists": false,
+        "elf_sha256": null,
+        "elf_mtime_ns": null,
+        "receipt": null
+      },
+      "after": {
+        "elf_exists": true,
+        "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+        "elf_mtime_ns": 1791237212977243724,
+        "receipt": {
+          "Input": "ccd5e11e647f0449a3c35058423e413c7d81af974bff0f566c28676a0e747625",
+          "Output": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7"
+        }
+      },
+      "commands": [
+        {
+          "wall_seconds": 4.756696041207761,
+          "cpu_seconds": 12.920574000000002,
+          "load_average_before": [
+            7.73779296875,
+            6.2900390625,
+            5.611328125
+          ],
+          "log": "results/svm/2026-10-05-workflow-complete/bounded-first_project-0.log",
+          "command": [
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+            "test",
+            "--svm",
+            "-dir",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/starter",
+            "-llvm",
+            "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+            "-svm-runner",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-fixtures-target/release/gosvm-svm-runner",
+            "-timings"
+          ],
+          "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+        }
+      ]
+    },
+    "full_token_first_project": {
+      "workload": "full_token",
+      "scenario": "first_project",
+      "sample": 0,
+      "wall_seconds": 0.813895583152771,
+      "cpu_seconds": 0.9326769999999964,
+      "phases_seconds": {
+        "native_tests": 0.45817383332177997,
+        "sbf_build_command": 0.18385200016200542,
+        "svm_test_command": 0.1718697496689856
+      },
+      "native_test_result_cached": false,
+      "svm_startup_seconds": 0.021295708,
+      "svm_fixture_seconds": 0.087224667,
+      "svm_total_seconds": 0.143846875,
+      "vm_execution_seconds": 0.050648,
+      "before": {
+        "elf_exists": false,
+        "elf_sha256": null,
+        "elf_mtime_ns": null,
+        "receipt": null
+      },
+      "after": {
+        "elf_exists": true,
+        "elf_sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24",
+        "elf_mtime_ns": 1791237213665838181,
+        "receipt": {
+          "Input": "75e3198a82e3da6e5cb74697842966a3d43fd0c958af6f57461d1c3f8e716cf5",
+          "Output": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+        }
+      },
+      "commands": [
+        {
+          "wall_seconds": 0.45817383332177997,
+          "cpu_seconds": 0.660221,
+          "load_average_before": [
+            8.3994140625,
+            6.451171875,
+            5.671875
+          ],
+          "log": "results/svm/2026-10-05-workflow-complete/full_token-first_project-0-native.log",
+          "command": [
+            "go",
+            "test",
+            "./original"
+          ],
+          "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token"
+        },
+        {
+          "wall_seconds": 0.18385200016200542,
+          "cpu_seconds": 0.11746799999999613,
+          "load_average_before": [
+            8.3994140625,
+            6.451171875,
+            5.671875
+          ],
+          "log": "results/svm/2026-10-05-workflow-complete/full_token-first_project-0-build.log",
+          "command": [
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+            "-arch",
+            "v3",
+            "-llvm",
+            "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+            "-o",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/token.so",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/contract"
+          ],
+          "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+        },
+        {
+          "wall_seconds": 0.1718697496689856,
+          "cpu_seconds": 0.15498800000000035,
+          "load_average_before": [
+            8.3994140625,
+            6.451171875,
+            5.671875
+          ],
+          "log": "results/svm/2026-10-05-workflow-complete/full_token-first_project-0-svm.log",
+          "command": [
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/gosvm",
+            "svm-test",
+            "-elf",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/token.so",
+            "-fixtures",
+            "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-general-complete/token-fixtures.json",
+            "-runner",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-fixtures-target/release/gosvm-svm-runner",
+            "-report",
+            "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow-complete/token/build/svm-results.json"
+          ],
+          "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+        }
+      ]
+    }
+  },
+  "groups": [
+    {
+      "workload": "bounded",
+      "scenario": "project_clean",
+      "wall": {
+        "median_seconds": 0.2882740832865238,
+        "min_seconds": 0.2255924171768129,
+        "max_seconds": 0.45391545817255974,
+        "samples_seconds": [
+          0.38467812491580844,
+          0.45391545817255974,
+          0.2882740832865238,
+          0.22923916671425104,
+          0.2255924171768129
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.4492849999999997,
+        "min_seconds": 0.3571649999999966,
+        "max_seconds": 0.474537999999999,
+        "samples_seconds": [
+          0.4665329999999974,
+          0.474537999999999,
+          0.4492849999999997,
+          0.3711830000000038,
+          0.3571649999999966
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.019239334,
+          "min_seconds": 0.018394,
+          "max_seconds": 0.024577166,
+          "samples_seconds": [
+            0.024577166,
+            0.021299334,
+            0.019239334,
+            0.019015125,
+            0.018394
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001437959,
+          "min_seconds": 0.001322041,
+          "max_seconds": 0.005453833,
+          "samples_seconds": [
+            0.005453833,
+            0.001613792,
+            0.001437959,
+            0.001427917,
+            0.001322041
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000303959,
+          "min_seconds": 0.000229625,
+          "max_seconds": 0.000335625,
+          "samples_seconds": [
+            0.000311458,
+            0.000335625,
+            0.000303959,
+            0.000264541,
+            0.000229625
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.117940667,
+          "min_seconds": 0.086054208,
+          "max_seconds": 0.283162041,
+          "samples_seconds": [
+            0.237590167,
+            0.283162041,
+            0.117940667,
+            0.110661583,
+            0.086054208
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.0625705,
+          "min_seconds": 0.044938458,
+          "max_seconds": 0.082376417,
+          "samples_seconds": [
+            0.0625705,
+            0.071524458,
+            0.082376417,
+            0.047184875,
+            0.044938458
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.023178166,
+          "min_seconds": 0.019271042,
+          "max_seconds": 0.037811542,
+          "samples_seconds": [
+            0.024028541,
+            0.037811542,
+            0.023178166,
+            0.019867417,
+            0.019271042
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.010900416,
+        "min_seconds": 0.009236209,
+        "max_seconds": 0.01700725,
+        "samples_seconds": [
+          0.010900416,
+          0.01700725,
+          0.011244458,
+          0.009787125,
+          0.009236209
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.004065791,
+        "min_seconds": 0.003429833,
+        "max_seconds": 0.010741958,
+        "samples_seconds": [
+          0.004317416,
+          0.010741958,
+          0.004065791,
+          0.003518084,
+          0.003429833
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001695,
+        "min_seconds": 0.001594,
+        "max_seconds": 0.005029,
+        "samples_seconds": [
+          0.002069,
+          0.005029,
+          0.001695,
+          0.001611,
+          0.001594
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "bounded",
+      "scenario": "no_op",
+      "wall": {
+        "median_seconds": 0.17859495803713799,
+        "min_seconds": 0.1760308751836419,
+        "max_seconds": 0.17945216689258814,
+        "samples_seconds": [
+          0.17859895760193467,
+          0.1760308751836419,
+          0.17859495803713799,
+          0.17945216689258814,
+          0.17704091733321548
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.3577389999999969,
+        "min_seconds": 0.3496450000000042,
+        "max_seconds": 0.39073499999999406,
+        "samples_seconds": [
+          0.39073499999999406,
+          0.3577389999999969,
+          0.3496450000000042,
+          0.38090499999999317,
+          0.35636199999999896
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.018110917,
+          "min_seconds": 0.0176675,
+          "max_seconds": 0.019993083,
+          "samples_seconds": [
+            0.0176675,
+            0.018038625,
+            0.018110917,
+            0.019993083,
+            0.018509792
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001313375,
+          "min_seconds": 0.00129075,
+          "max_seconds": 0.002096667,
+          "samples_seconds": [
+            0.00129075,
+            0.001313709,
+            0.001313375,
+            0.002096667,
+            0.001306292
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000240542,
+          "min_seconds": 0.00021575,
+          "max_seconds": 0.000479542,
+          "samples_seconds": [
+            0.000239875,
+            0.000240542,
+            0.00021575,
+            0.000479542,
+            0.0002595
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.102889125,
+          "min_seconds": 0.092610875,
+          "max_seconds": 0.115273167,
+          "samples_seconds": [
+            0.102889125,
+            0.101267959,
+            0.092610875,
+            0.115273167,
+            0.102934292
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.004041042,
+          "min_seconds": 0.00376175,
+          "max_seconds": 0.004140958,
+          "samples_seconds": [
+            0.004041042,
+            0.004140958,
+            0.00376175,
+            0.004031708,
+            0.004128416
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.020333208,
+          "min_seconds": 0.019527584,
+          "max_seconds": 0.022626208,
+          "samples_seconds": [
+            0.020056833,
+            0.020938667,
+            0.019527584,
+            0.022626208,
+            0.020333208
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.009198542,
+        "min_seconds": 0.008740667,
+        "max_seconds": 0.01140375,
+        "samples_seconds": [
+          0.008740667,
+          0.009301709,
+          0.009083458,
+          0.01140375,
+          0.009198542
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.003824,
+        "min_seconds": 0.003430667,
+        "max_seconds": 0.003962125,
+        "samples_seconds": [
+          0.003851833,
+          0.003824,
+          0.00350575,
+          0.003962125,
+          0.003430667
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001772,
+        "min_seconds": 0.001602,
+        "max_seconds": 0.001811,
+        "samples_seconds": [
+          0.001772,
+          0.001811,
+          0.001627,
+          0.001811,
+          0.001602
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "bounded",
+      "scenario": "source_edit",
+      "wall": {
+        "median_seconds": 0.22946237493306398,
+        "min_seconds": 0.22515154210850596,
+        "max_seconds": 0.23816791689023376,
+        "samples_seconds": [
+          0.23816791689023376,
+          0.22515154210850596,
+          0.22946237493306398,
+          0.22527799988165498,
+          0.23502808390185237
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.3948699999999974,
+        "min_seconds": 0.37727300000000064,
+        "max_seconds": 0.4350380000000005,
+        "samples_seconds": [
+          0.4350380000000005,
+          0.3948699999999974,
+          0.37727300000000064,
+          0.40432299999999444,
+          0.3853650000000002
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.017972834,
+          "min_seconds": 0.017477791,
+          "max_seconds": 0.018469625,
+          "samples_seconds": [
+            0.017618208,
+            0.017477791,
+            0.017972834,
+            0.018469625,
+            0.018465834
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001327125,
+          "min_seconds": 0.001251291,
+          "max_seconds": 0.001485,
+          "samples_seconds": [
+            0.001485,
+            0.001251291,
+            0.001275541,
+            0.001437959,
+            0.001327125
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000244,
+          "min_seconds": 0.000213375,
+          "max_seconds": 0.000302459,
+          "samples_seconds": [
+            0.000253333,
+            0.000213375,
+            0.000244,
+            0.000302459,
+            0.000234458
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.101385666,
+          "min_seconds": 0.089062583,
+          "max_seconds": 0.118141625,
+          "samples_seconds": [
+            0.101385666,
+            0.089062583,
+            0.093699084,
+            0.109709041,
+            0.118141625
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.045284416,
+          "min_seconds": 0.044662541,
+          "max_seconds": 0.053732834,
+          "samples_seconds": [
+            0.045284416,
+            0.044662541,
+            0.053732834,
+            0.045060166,
+            0.04799675
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.01956925,
+          "min_seconds": 0.019167708,
+          "max_seconds": 0.021485084,
+          "samples_seconds": [
+            0.020902792,
+            0.019167708,
+            0.019545083,
+            0.01956925,
+            0.021485084
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.009349667,
+        "min_seconds": 0.009215333,
+        "max_seconds": 0.010104,
+        "samples_seconds": [
+          0.009349667,
+          0.009288084,
+          0.009618625,
+          0.009215333,
+          0.010104
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.003518958,
+        "min_seconds": 0.003410125,
+        "max_seconds": 0.003634667,
+        "samples_seconds": [
+          0.003518958,
+          0.003500209,
+          0.003523291,
+          0.003410125,
+          0.003634667
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001653,
+        "min_seconds": 0.001611,
+        "max_seconds": 0.001667,
+        "samples_seconds": [
+          0.001667,
+          0.001616,
+          0.001653,
+          0.001611,
+          0.001661
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "bounded",
+      "scenario": "source_edit_uncached_native",
+      "wall": {
+        "median_seconds": 0.28605562495067716,
+        "min_seconds": 0.28169966628775,
+        "max_seconds": 0.28820374980568886,
+        "samples_seconds": [
+          0.28784187510609627,
+          0.28605562495067716,
+          0.2858212091960013,
+          0.28820374980568886,
+          0.28169966628775
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.5090580000000031,
+        "min_seconds": 0.4857929999999975,
+        "max_seconds": 0.5172760000000061,
+        "samples_seconds": [
+          0.5172760000000061,
+          0.4857929999999975,
+          0.5090580000000031,
+          0.5093530000000044,
+          0.500785000000004
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.0187085,
+          "min_seconds": 0.018261667,
+          "max_seconds": 0.021107917,
+          "samples_seconds": [
+            0.018261667,
+            0.018585708,
+            0.021107917,
+            0.019775,
+            0.0187085
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001431625,
+          "min_seconds": 0.001335583,
+          "max_seconds": 0.001465834,
+          "samples_seconds": [
+            0.001465834,
+            0.001431625,
+            0.001335583,
+            0.001346958,
+            0.001455166
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000255125,
+          "min_seconds": 0.000236584,
+          "max_seconds": 0.000280625,
+          "samples_seconds": [
+            0.00026025,
+            0.000236584,
+            0.000255125,
+            0.000254459,
+            0.000280625
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.167866083,
+          "min_seconds": 0.149301292,
+          "max_seconds": 0.176070916,
+          "samples_seconds": [
+            0.170834791,
+            0.149301292,
+            0.176070916,
+            0.16778375,
+            0.167866083
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.047374666,
+          "min_seconds": 0.046377792,
+          "max_seconds": 0.053720625,
+          "samples_seconds": [
+            0.047374666,
+            0.053720625,
+            0.047339125,
+            0.050442333,
+            0.046377792
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.019888625,
+          "min_seconds": 0.019127417,
+          "max_seconds": 0.020914959,
+          "samples_seconds": [
+            0.019127417,
+            0.020914959,
+            0.019888625,
+            0.020298208,
+            0.0196375
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.009729083,
+        "min_seconds": 0.009446959,
+        "max_seconds": 0.010771167,
+        "samples_seconds": [
+          0.009446959,
+          0.009602084,
+          0.009826084,
+          0.010771167,
+          0.009729083
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.003503625,
+        "min_seconds": 0.00327825,
+        "max_seconds": 0.003945583,
+        "samples_seconds": [
+          0.003473291,
+          0.003945583,
+          0.003533125,
+          0.00327825,
+          0.003503625
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001627,
+        "min_seconds": 0.00157,
+        "max_seconds": 0.001805,
+        "samples_seconds": [
+          0.001617,
+          0.001805,
+          0.001627,
+          0.00157,
+          0.001634
+        ]
+      },
+      "native_cached_count": 0
+    },
+    {
+      "workload": "bounded",
+      "scenario": "test_edit",
+      "wall": {
+        "median_seconds": 0.3375153332017362,
+        "min_seconds": 0.28503791708499193,
+        "max_seconds": 0.4306137920357287,
+        "samples_seconds": [
+          0.4306137920357287,
+          0.34287120774388313,
+          0.28503791708499193,
+          0.3375153332017362,
+          0.29008704237639904
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.5052839999999996,
+        "min_seconds": 0.47067100000000295,
+        "max_seconds": 0.5223050000000029,
+        "samples_seconds": [
+          0.5223050000000029,
+          0.47067100000000295,
+          0.47402500000000103,
+          0.5052839999999996,
+          0.5118479999999934
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.02256,
+          "min_seconds": 0.020414,
+          "max_seconds": 0.029550458,
+          "samples_seconds": [
+            0.029550458,
+            0.020948333,
+            0.020414,
+            0.02256,
+            0.023266583
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001506625,
+          "min_seconds": 0.001467666,
+          "max_seconds": 0.002322708,
+          "samples_seconds": [
+            0.001590917,
+            0.001501625,
+            0.001506625,
+            0.002322708,
+            0.001467666
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000279375,
+          "min_seconds": 0.000269666,
+          "max_seconds": 0.000981333,
+          "samples_seconds": [
+            0.000272833,
+            0.000279375,
+            0.000981333,
+            0.000496792,
+            0.000269666
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.253203666,
+          "min_seconds": 0.218667167,
+          "max_seconds": 0.326177042,
+          "samples_seconds": [
+            0.326177042,
+            0.253203666,
+            0.218667167,
+            0.271958708,
+            0.226820375
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.004112667,
+          "min_seconds": 0.004076292,
+          "max_seconds": 0.004139375,
+          "samples_seconds": [
+            0.00413675,
+            0.004076292,
+            0.004095916,
+            0.004112667,
+            0.004139375
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.021089208,
+          "min_seconds": 0.020711834,
+          "max_seconds": 0.0241595,
+          "samples_seconds": [
+            0.0241595,
+            0.021089208,
+            0.0221825,
+            0.020711834,
+            0.020932584
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.01053675,
+        "min_seconds": 0.009990542,
+        "max_seconds": 0.0122475,
+        "samples_seconds": [
+          0.0122475,
+          0.011016041,
+          0.01053675,
+          0.010224083,
+          0.009990542
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.003596541,
+        "min_seconds": 0.00333625,
+        "max_seconds": 0.00387675,
+        "samples_seconds": [
+          0.00387675,
+          0.00333625,
+          0.003377791,
+          0.003685875,
+          0.003596541
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001702,
+        "min_seconds": 0.001588,
+        "max_seconds": 0.001726,
+        "samples_seconds": [
+          0.001726,
+          0.001588,
+          0.001601,
+          0.001723,
+          0.001702
+        ]
+      },
+      "native_cached_count": 0
+    },
+    {
+      "workload": "bounded",
+      "scenario": "uncached_native",
+      "wall": {
+        "median_seconds": 0.22909241681918502,
+        "min_seconds": 0.22838700003921986,
+        "max_seconds": 0.3333507920615375,
+        "samples_seconds": [
+          0.22869454231113195,
+          0.22909241681918502,
+          0.22838700003921986,
+          0.3333507920615375,
+          0.28439512476325035
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.4723289999999949,
+        "min_seconds": 0.42714899999999645,
+        "max_seconds": 0.5151859999999999,
+        "samples_seconds": [
+          0.4299699999999973,
+          0.4723289999999949,
+          0.42714899999999645,
+          0.5151859999999999,
+          0.4999699999999976
+        ]
+      },
+      "phases": {
+        "backend_check": {
+          "median_seconds": 0.021824208,
+          "min_seconds": 0.018385083,
+          "max_seconds": 0.028134042,
+          "samples_seconds": [
+            0.02328975,
+            0.018385083,
+            0.018618208,
+            0.028134042,
+            0.021824208
+          ]
+        },
+        "generation": {
+          "median_seconds": 0.001373458,
+          "min_seconds": 0.001330709,
+          "max_seconds": 0.001835458,
+          "samples_seconds": [
+            0.001373458,
+            0.001330709,
+            0.001366959,
+            0.001723208,
+            0.001835458
+          ]
+        },
+        "manifest": {
+          "median_seconds": 0.000251,
+          "min_seconds": 0.000225375,
+          "max_seconds": 0.000414875,
+          "samples_seconds": [
+            0.000248917,
+            0.000251,
+            0.000225375,
+            0.000414875,
+            0.000299333
+          ]
+        },
+        "native_tests": {
+          "median_seconds": 0.159714958,
+          "min_seconds": 0.147953291,
+          "max_seconds": 0.239017416,
+          "samples_seconds": [
+            0.147953291,
+            0.159714958,
+            0.157688625,
+            0.239017416,
+            0.216971042
+          ]
+        },
+        "sbf_build": {
+          "median_seconds": 0.004062875,
+          "min_seconds": 0.003740583,
+          "max_seconds": 0.005599,
+          "samples_seconds": [
+            0.003740583,
+            0.004128292,
+            0.004062875,
+            0.005599,
+            0.003918333
+          ]
+        },
+        "svm_tests": {
+          "median_seconds": 0.019557709,
+          "min_seconds": 0.019226625,
+          "max_seconds": 0.024716833,
+          "samples_seconds": [
+            0.019226625,
+            0.019500625,
+            0.020069084,
+            0.024716833,
+            0.019557709
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.00959725,
+        "min_seconds": 0.00888525,
+        "max_seconds": 0.012360959,
+        "samples_seconds": [
+          0.00888525,
+          0.00959725,
+          0.009383375,
+          0.012360959,
+          0.009776875
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.003532375,
+        "min_seconds": 0.003372,
+        "max_seconds": 0.003964584,
+        "samples_seconds": [
+          0.003431083,
+          0.003532375,
+          0.003601917,
+          0.003964584,
+          0.003372
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.001639,
+        "min_seconds": 0.001577,
+        "max_seconds": 0.001865,
+        "samples_seconds": [
+          0.001634,
+          0.00164,
+          0.001639,
+          0.001865,
+          0.001577
+        ]
+      },
+      "native_cached_count": 0
+    },
+    {
+      "workload": "full_token",
+      "scenario": "project_clean",
+      "wall": {
+        "median_seconds": 0.5328980423510075,
+        "min_seconds": 0.42310074996203184,
+        "max_seconds": 0.5992100844159722,
+        "samples_seconds": [
+          0.5992100844159722,
+          0.5567244170233607,
+          0.5328980423510075,
+          0.42310074996203184,
+          0.4392348318360746
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.5907599999999942,
+        "min_seconds": 0.5260910000000028,
+        "max_seconds": 0.6065579999999926,
+        "samples_seconds": [
+          0.6051909999999943,
+          0.6065579999999926,
+          0.5907599999999942,
+          0.5436429999999994,
+          0.5260910000000028
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.12581904092803597,
+          "min_seconds": 0.12261124979704618,
+          "max_seconds": 0.18739750003442168,
+          "samples_seconds": [
+            0.12577462522313,
+            0.18739750003442168,
+            0.17664325004443526,
+            0.12261124979704618,
+            0.12581904092803597
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.13327750004827976,
+          "min_seconds": 0.1265942919999361,
+          "max_seconds": 0.23846391681581736,
+          "samples_seconds": [
+            0.23846391681581736,
+            0.13327750004827976,
+            0.18107608426362276,
+            0.1265942919999361,
+            0.1322759580798447
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.1811398328281939,
+          "min_seconds": 0.17389520816504955,
+          "max_seconds": 0.23604941694065928,
+          "samples_seconds": [
+            0.2349715423770249,
+            0.23604941694065928,
+            0.17517870804294944,
+            0.17389520816504955,
+            0.1811398328281939
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.01344575,
+        "min_seconds": 0.013091083,
+        "max_seconds": 0.02988775,
+        "samples_seconds": [
+          0.02988775,
+          0.017190125,
+          0.013397959,
+          0.01344575,
+          0.013091083
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.086471375,
+        "min_seconds": 0.078669292,
+        "max_seconds": 0.12367725,
+        "samples_seconds": [
+          0.12367725,
+          0.103323084,
+          0.086471375,
+          0.083266375,
+          0.078669292
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.048769,
+        "min_seconds": 0.045973,
+        "max_seconds": 0.063772,
+        "samples_seconds": [
+          0.063772,
+          0.058923,
+          0.048769,
+          0.048452,
+          0.045973
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "full_token",
+      "scenario": "no_op",
+      "wall": {
+        "median_seconds": 0.2690325416624546,
+        "min_seconds": 0.26190795889124274,
+        "max_seconds": 0.31847129110246897,
+        "samples_seconds": [
+          0.2690325416624546,
+          0.3083949997089803,
+          0.26190795889124274,
+          0.2660850416868925,
+          0.31847129110246897
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.439985999999994,
+        "min_seconds": 0.4156250000000057,
+        "max_seconds": 0.46206400000000336,
+        "samples_seconds": [
+          0.4156250000000057,
+          0.439985999999994,
+          0.4254190000000033,
+          0.46206400000000336,
+          0.45196100000000605
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.12577337492257357,
+          "min_seconds": 0.12260766699910164,
+          "max_seconds": 0.12789033306762576,
+          "samples_seconds": [
+            0.12577337492257357,
+            0.12260766699910164,
+            0.12539587495848536,
+            0.12739850021898746,
+            0.12789033306762576
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.009951333049684763,
+          "min_seconds": 0.009771707933396101,
+          "max_seconds": 0.019343832973390818,
+          "samples_seconds": [
+            0.019343832973390818,
+            0.009771707933396101,
+            0.010320791974663734,
+            0.00982950022444129,
+            0.009951333049684763
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.12885704124346375,
+          "min_seconds": 0.12391533376649022,
+          "max_seconds": 0.18062962498515844,
+          "samples_seconds": [
+            0.12391533376649022,
+            0.17601562477648258,
+            0.12619129195809364,
+            0.12885704124346375,
+            0.18062962498515844
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.010795084,
+        "min_seconds": 0.010654666,
+        "max_seconds": 0.013233958,
+        "samples_seconds": [
+          0.010654666,
+          0.012692125,
+          0.010795084,
+          0.010729834,
+          0.013233958
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.078011625,
+        "min_seconds": 0.075472958,
+        "max_seconds": 0.079220667,
+        "samples_seconds": [
+          0.075472958,
+          0.079220667,
+          0.078698209,
+          0.076650375,
+          0.078011625
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.04578,
+        "min_seconds": 0.044089,
+        "max_seconds": 0.046462,
+        "samples_seconds": [
+          0.044089,
+          0.046444,
+          0.046462,
+          0.044395,
+          0.04578
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "full_token",
+      "scenario": "source_edit",
+      "wall": {
+        "median_seconds": 0.5333190415985882,
+        "min_seconds": 0.4885668330825865,
+        "max_seconds": 0.5831967485137284,
+        "samples_seconds": [
+          0.49009887501597404,
+          0.4885668330825865,
+          0.5348984571173787,
+          0.5333190415985882,
+          0.5831967485137284
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.6324660000000044,
+        "min_seconds": 0.5978979999999989,
+        "max_seconds": 0.686479999999996,
+        "samples_seconds": [
+          0.6324660000000044,
+          0.6308200000000017,
+          0.5978979999999989,
+          0.686479999999996,
+          0.6461289999999966
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.22685354109853506,
+          "min_seconds": 0.22442858293652534,
+          "max_seconds": 0.2308829170651734,
+          "samples_seconds": [
+            0.2308829170651734,
+            0.2294060830026865,
+            0.22685354109853506,
+            0.22533162496984005,
+            0.22442858293652534
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.13135508308187127,
+          "min_seconds": 0.13019700022414327,
+          "max_seconds": 0.180803082883358,
+          "samples_seconds": [
+            0.13135508308187127,
+            0.1313994168303907,
+            0.13019700022414327,
+            0.13028891663998365,
+            0.180803082883358
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.17769849998876452,
+          "min_seconds": 0.12776133324950933,
+          "max_seconds": 0.17796508269384503,
+          "samples_seconds": [
+            0.1278608748689294,
+            0.12776133324950933,
+            0.17784791579470038,
+            0.17769849998876452,
+            0.17796508269384503
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.010638583,
+        "min_seconds": 0.010558916,
+        "max_seconds": 0.014115166,
+        "samples_seconds": [
+          0.0105645,
+          0.010558916,
+          0.010638583,
+          0.014115166,
+          0.011734167
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.076643459,
+        "min_seconds": 0.075238625,
+        "max_seconds": 0.081880417,
+        "samples_seconds": [
+          0.075238625,
+          0.076543542,
+          0.07775475,
+          0.076643459,
+          0.081880417
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.044866,
+        "min_seconds": 0.044166,
+        "max_seconds": 0.047541,
+        "samples_seconds": [
+          0.044166,
+          0.04478,
+          0.045354,
+          0.044866,
+          0.047541
+        ]
+      },
+      "native_cached_count": 5
+    },
+    {
+      "workload": "full_token",
+      "scenario": "source_edit_uncached_native",
+      "wall": {
+        "median_seconds": 0.5364479161798954,
+        "min_seconds": 0.4971744166687131,
+        "max_seconds": 0.5961833763867617,
+        "samples_seconds": [
+          0.5323364180512726,
+          0.5881620007567108,
+          0.4971744166687131,
+          0.5961833763867617,
+          0.5364479161798954
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.6911509999999961,
+        "min_seconds": 0.6592670000000034,
+        "max_seconds": 0.7219599999999904,
+        "samples_seconds": [
+          0.6592670000000034,
+          0.7219599999999904,
+          0.6911509999999961,
+          0.7072279999999953,
+          0.6898760000000017
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.2753600003197789,
+          "min_seconds": 0.23134795809164643,
+          "max_seconds": 0.2877174592576921,
+          "samples_seconds": [
+            0.2753600003197789,
+            0.2802223339676857,
+            0.2331122918985784,
+            0.2877174592576921,
+            0.23134795809164643
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.1300725839100778,
+          "min_seconds": 0.1288748332299292,
+          "max_seconds": 0.13091862481087446,
+          "samples_seconds": [
+            0.1300725839100778,
+            0.12935225013643503,
+            0.13091862481087446,
+            0.13089704234153032,
+            0.1288748332299292
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.17622512485831976,
+          "min_seconds": 0.1269038338214159,
+          "max_seconds": 0.17858741665259004,
+          "samples_seconds": [
+            0.1269038338214159,
+            0.17858741665259004,
+            0.13314349995926023,
+            0.17756887478753924,
+            0.17622512485831976
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.012310583,
+        "min_seconds": 0.011066792,
+        "max_seconds": 0.014422542,
+        "samples_seconds": [
+          0.011066792,
+          0.012310583,
+          0.01139425,
+          0.013304,
+          0.014422542
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.07798025,
+        "min_seconds": 0.075253,
+        "max_seconds": 0.079469125,
+        "samples_seconds": [
+          0.075253,
+          0.07798025,
+          0.079469125,
+          0.078529167,
+          0.076722666
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.045714,
+        "min_seconds": 0.043933,
+        "max_seconds": 0.045772,
+        "samples_seconds": [
+          0.043933,
+          0.045772,
+          0.045763,
+          0.045714,
+          0.045193
+        ]
+      },
+      "native_cached_count": 0
+    },
+    {
+      "workload": "full_token",
+      "scenario": "test_edit",
+      "wall": {
+        "median_seconds": 0.5361695429310203,
+        "min_seconds": 0.47014500107616186,
+        "max_seconds": 0.6336604165844619,
+        "samples_seconds": [
+          0.5361695429310203,
+          0.4771437500603497,
+          0.47014500107616186,
+          0.6336604165844619,
+          0.5496814581565559
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.6635829999999956,
+        "min_seconds": 0.6147589999999994,
+        "max_seconds": 0.703985000000003,
+        "samples_seconds": [
+          0.703985000000003,
+          0.6189020000000092,
+          0.6635829999999956,
+          0.6731119999999997,
+          0.6147589999999994
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.2938537080772221,
+          "min_seconds": 0.28201754204928875,
+          "max_seconds": 0.43394166696816683,
+          "samples_seconds": [
+            0.3402982917614281,
+            0.28201754204928875,
+            0.2841283748857677,
+            0.43394166696816683,
+            0.2938537080772221
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.019288708921521902,
+          "min_seconds": 0.018336874898523092,
+          "max_seconds": 0.07146995794028044,
+          "samples_seconds": [
+            0.019288708921521902,
+            0.018336874898523092,
+            0.018486416898667812,
+            0.022397249937057495,
+            0.07146995794028044
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.17678933311253786,
+          "min_seconds": 0.16753020929172635,
+          "max_seconds": 0.18435779213905334,
+          "samples_seconds": [
+            0.17658254224807024,
+            0.17678933311253786,
+            0.16753020929172635,
+            0.1773214996792376,
+            0.18435779213905334
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.01518275,
+        "min_seconds": 0.012009917,
+        "max_seconds": 0.017932083,
+        "samples_seconds": [
+          0.015820792,
+          0.012009917,
+          0.01518275,
+          0.017932083,
+          0.015088167
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.084331542,
+        "min_seconds": 0.07917575,
+        "max_seconds": 0.086605459,
+        "samples_seconds": [
+          0.084331542,
+          0.085160875,
+          0.086605459,
+          0.07917575,
+          0.082102875
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.048205,
+        "min_seconds": 0.046306,
+        "max_seconds": 0.051098,
+        "samples_seconds": [
+          0.048205,
+          0.049801,
+          0.051098,
+          0.046306,
+          0.046802
+        ]
+      },
+      "native_cached_count": 0
+    },
+    {
+      "workload": "full_token",
+      "scenario": "uncached_native",
+      "wall": {
+        "median_seconds": 0.42490999959409237,
+        "min_seconds": 0.36851508263498545,
+        "max_seconds": 0.4323872900567949,
+        "samples_seconds": [
+          0.4323872900567949,
+          0.42490999959409237,
+          0.4320668331347406,
+          0.4171860427595675,
+          0.36851508263498545
+        ]
+      },
+      "cpu": {
+        "median_seconds": 0.5659810000000078,
+        "min_seconds": 0.5443769999999937,
+        "max_seconds": 0.5901360000000082,
+        "samples_seconds": [
+          0.578426000000011,
+          0.5659810000000078,
+          0.5556179999999991,
+          0.5901360000000082,
+          0.5443769999999937
+        ]
+      },
+      "phases": {
+        "native_tests": {
+          "median_seconds": 0.23479341622442007,
+          "min_seconds": 0.2213065419346094,
+          "max_seconds": 0.2354758749715984,
+          "samples_seconds": [
+            0.23479341622442007,
+            0.23057508282363415,
+            0.2354758749715984,
+            0.2213065419346094,
+            0.23505320772528648
+          ]
+        },
+        "sbf_build_command": {
+          "median_seconds": 0.020304583944380283,
+          "min_seconds": 0.010173458140343428,
+          "max_seconds": 0.020429915748536587,
+          "samples_seconds": [
+            0.020429915748536587,
+            0.019269166979938745,
+            0.02030712505802512,
+            0.020304583944380283,
+            0.010173458140343428
+          ]
+        },
+        "svm_test_command": {
+          "median_seconds": 0.1755749168805778,
+          "min_seconds": 0.12328841676935554,
+          "max_seconds": 0.17716395808383822,
+          "samples_seconds": [
+            0.17716395808383822,
+            0.17506574979051948,
+            0.17628383310511708,
+            0.1755749168805778,
+            0.12328841676935554
+          ]
+        }
+      },
+      "svm_startup": {
+        "median_seconds": 0.011225334,
+        "min_seconds": 0.01045975,
+        "max_seconds": 0.012680833,
+        "samples_seconds": [
+          0.01181225,
+          0.011225334,
+          0.012680833,
+          0.010749209,
+          0.01045975
+        ]
+      },
+      "svm_fixture": {
+        "median_seconds": 0.079787417,
+        "min_seconds": 0.075923792,
+        "max_seconds": 0.092369333,
+        "samples_seconds": [
+          0.079787417,
+          0.078677583,
+          0.080706042,
+          0.092369333,
+          0.075923792
+        ]
+      },
+      "vm_execution": {
+        "median_seconds": 0.047101,
+        "min_seconds": 0.044679,
+        "max_seconds": 0.051253,
+        "samples_seconds": [
+          0.047101,
+          0.045465,
+          0.047451,
+          0.051253,
+          0.044679
+        ]
+      },
+      "native_cached_count": 0
+    }
+  ],
+  "sampling_order": [
+    {
+      "scenario": "project_clean",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 4,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "project_clean",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "no_op",
+      "sample": 4,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 4,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "source_edit_uncached_native",
+      "sample": 4,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 4,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "test_edit",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 0,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 0,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 1,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 1,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 2,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 2,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 3,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 3,
+      "workload": "full_token"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 4,
+      "workload": "bounded"
+    },
+    {
+      "scenario": "uncached_native",
+      "sample": 4,
+      "workload": "full_token"
+    }
+  ],
+  "seed": 20261005,
+  "unprofiled_control": {
+    "median_seconds": 0.17825825000181794,
+    "min_seconds": 0.17574162501841784,
+    "max_seconds": 0.23147587524726987,
+    "samples_seconds": [
+      0.17816179059445858,
+      0.23147587524726987,
+      0.17889641597867012,
+      0.17825825000181794,
+      0.17574162501841784
+    ]
+  },
+  "profiled_control": {
+    "median_seconds": 0.1800170000642538,
+    "min_seconds": 0.17353545874357224,
+    "max_seconds": 0.22994091687723994,
+    "samples_seconds": [
+      0.18116695806384087,
+      0.22994091687723994,
+      0.17353545874357224,
+      0.1800170000642538,
+      0.17943383287638426
+    ]
+  },
+  "paired_controls": [
+    {
+      "profiled_control": 0.18116695806384087,
+      "unprofiled": 0.17816179059445858,
+      "order": [
+        true,
+        false
+      ],
+      "profiled_minus_unprofiled_seconds": 0.003005167469382286
+    },
+    {
+      "profiled_control": 0.22994091687723994,
+      "unprofiled": 0.23147587524726987,
+      "order": [
+        true,
+        false
+      ],
+      "profiled_minus_unprofiled_seconds": -0.0015349583700299263
+    },
+    {
+      "profiled_control": 0.17353545874357224,
+      "unprofiled": 0.17889641597867012,
+      "order": [
+        true,
+        false
+      ],
+      "profiled_minus_unprofiled_seconds": -0.005360957235097885
+    },
+    {
+      "unprofiled": 0.17825825000181794,
+      "profiled_control": 0.1800170000642538,
+      "order": [
+        false,
+        true
+      ],
+      "profiled_minus_unprofiled_seconds": 0.0017587500624358654
+    },
+    {
+      "profiled_control": 0.17943383287638426,
+      "unprofiled": 0.17574162501841784,
+      "order": [
+        true,
+        false
+      ],
+      "profiled_minus_unprofiled_seconds": 0.003692207857966423
+    }
+  ],
+  "source_sha256": {
+    "Makefile": "8dfda67d65494076c39aa004a963f2dfc5ce354258f79f51ef4a65f915281f85",
+    "benchmarks/anchor/go-token/swap.go": "2584a87da6a3cee21a7246bc285649618090710ce5ef524e16e6c4bcfd27c8d0",
+    "benchmarks/svm-runner/Cargo.lock": "991c86bafbc9d1dce932cc91a61faa3d3492bf7df2c864fd506e8c52442d294b",
+    "benchmarks/svm-runner/Cargo.toml": "34c645c49920f94acdd63731d03483866bf806423fb9a2f59928074e0780bf2f",
+    "benchmarks/svm-runner/src/lib.rs": "eea4eda8fc64e65f050b32dc66da8c67cca21cd96ca69731324dc1b848d032ca",
+    "benchmarks/svm-runner/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "cmd/gosvm/main.go": "1329674f2518944ef4ab93602b70594e7ebd283a2a8e35cd05595a2e146973a9",
+    "cmd/gosvm/project.go": "df02dc4ae5f64292962e59720c5a58a35ccc46f52a089bc24a79d651590c2c95",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "examples/tokenswap/swap.go": "219b28248670fff4d29894dd7af7746d43950e43cc6a6c769d4f979ebf22a6c0",
+    "examples/tokenswap/swap_test.go": "399025f4c4465348dc2a6585cc15c32454971bf27d13a13f504dd2ac71f49148",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/build.go": "8e8b0c59aff8980e482776b58bccd4052377a7e3905afe53d15f3371a357bcf2",
+    "internal/compiler/cache.go": "2430443b181104660100ffc5fd55f68fbc1d8f48ea02bd3dc5460abe2b3b6bd0",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "847f487bfa7171d337f541b95ec8558a32b286f6d8e2aa707a89c003e909b73c",
+    "internal/compiler/compiler_test.go": "7db5a1a0e80cd309d72881b14cf0c99d1eeefbbeab6434dff7e76532d3808c3c",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "internal/project/generate.go": "0f530b48bdd6714899556bf219010fa0a8924d2d4b26f4b652f2d7ef06e732da",
+    "internal/project/project.go": "3fb68c81c29ab7be3b7d8a07741127525bce6b356cec0961bafb5f2e28958f17",
+    "internal/project/project_test.go": "7eb37aea4a335da660fb9f8523fe140832780e4cddde9e23fee4a4c6349443ec",
+    "internal/project/templates/README.md.tmpl": "d213aca07050b7dfb96d277589b1ad856e7c79de3643daafdc88e2d9d32e1969",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "a26c5ce51fdc07b936c30432e6f87ad2f91a34cf09e9b54e058a8301e7211f8b",
+    "internal/sbftest/general_run.go": "8605de77e6e51acf44604c2333953b54187ea181fc564d0b57223c7d23be7949",
+    "internal/sbftest/general_test.go": "07181aaac419163e1566f59fd2bd858ba7a68ee63c636c8300c6090925fdde2b",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "c205c939b47d5514d1b0f65911003e10ba1023acf169592b748b737aa5592f79",
+    "internal/testvm/command_test.go": "5cc6d9f99a6297bbdae7993e387dae0d43c507fe5bcf6be40155680b86f3f839",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "80660457d7eeb72413b09ff02fad5693ecdf573c6cd80dc2f5a49e4b5802e286",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "scripts/svm_workflow.py": "bfef9b8066e80ead2769900ea492b8e789a850094ca555c6a7b172437929b6a9",
+    "solana/api.go": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/source.go": "83eeb25914c4abcb566e44bebbfe2b0caa9e5efb4ad1db6352f3a3c68f3fc418",
+    "third_party/litesvm-0.8.2/.cargo_vcs_info.json": "87d004265478a41db06aaf60ff34a3548c82e6587af617bdc928408bf12a0a25",
+    "third_party/litesvm-0.8.2/Cargo.lock": "72f9befe78b280768f31a73060c269145ed435f8493d5f1b5276cedf0ce4e2f3",
+    "third_party/litesvm-0.8.2/Cargo.toml": "955fb1e7c077521ec7cf66d56ed5aa47a61148854f4415873bfbb2e43cc489aa",
+    "third_party/litesvm-0.8.2/Cargo.toml.orig": "6776a553b71aa306fed1228f6f9ec065d3d1c0ea665b1fa05f466e9e0fbfcd4d",
+    "third_party/litesvm-0.8.2/GOSVM_PROVENANCE.json": "949643c65a8cc46eab74e2498509a71c73cf8a6c50d2f4c1448d02bd3f6c4536",
+    "third_party/litesvm-0.8.2/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+    "third_party/litesvm-0.8.2/benches/hashing.rs": "55c2db883510d1b544bb60893330f0b1bbb3ffef8f2898beed2adac7b01b1daa",
+    "third_party/litesvm-0.8.2/benches/max_perf.rs": "9414311c87c799b768cf8cbde02850b86c4b0c7f6c4e1c5d80afa49ae5d9b074",
+    "third_party/litesvm-0.8.2/benches/simple_bench.rs": "f0b3e9dd03d995aa5c6d0144e90ba2683a74178d9570c887aad6b079d913e53f",
+    "third_party/litesvm-0.8.2/src/accounts_db.rs": "d2c895da2908a8d65bbbf4033f1f361f87df0223ffd55254513785219ce8cc65",
+    "third_party/litesvm-0.8.2/src/callback.rs": "d5187d19e7dbf2cc0b7062d05d42ebd9cbf3bf2e26a5023ca4da082c460887c8",
+    "third_party/litesvm-0.8.2/src/error.rs": "818613573f1aa77b32d2d2c492583b8ed3283ebf29095821122e40fcc6686ca7",
+    "third_party/litesvm-0.8.2/src/format_logs.rs": "86dfd7bff252c131e893eec418f6687d2f982940a1cdd1258d91206e3d93e484",
+    "third_party/litesvm-0.8.2/src/history.rs": "640c243960ef510eccc027cc3f8a00f7416d76499bf0e8390c9159d0d37e8f45",
+    "third_party/litesvm-0.8.2/src/lib.rs": "7ae8eb5059d1ef03a0d68101b95b883857b03088975ce8460afce27ab1dc7639",
+    "third_party/litesvm-0.8.2/src/message_processor.rs": "4fcc07fb023b4ac28fa0400006b2202e03eee803fcd94c4f17afc8a4227878ff",
+    "third_party/litesvm-0.8.2/src/precompiles.rs": "0c9adb3e4ad26b8a4e8444ca137f769913dbfef2721b542ee924e6c93af3ce8d",
+    "third_party/litesvm-0.8.2/src/programs/elf/address_lookup_table.so": "e264e1537c5ee1252aae1fa476c25000b641357bc6af4efab65f314160a99570",
+    "third_party/litesvm-0.8.2/src/programs/elf/config.so": "06dd0ed33dda54b37fbbb9df5e08d28a71aa817dbc57d7b0a57e348d2f4e34fa",
+    "third_party/litesvm-0.8.2/src/programs/elf/spl_associated_token_account-1.1.1.so": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d",
+    "third_party/litesvm-0.8.2/src/programs/elf/spl_memo-1.0.0.so": "67053ed6b0c4b2ff0cead4dc469b2dd30847264b28164ef5e5263d5cf1258c6e",
+    "third_party/litesvm-0.8.2/src/programs/elf/spl_memo-3.0.0.so": "f520eaf096361abbb9639ea4dc3e5388a87b9330e121f476607b87c46ef67954",
+    "third_party/litesvm-0.8.2/src/programs/elf/spl_token-3.5.0.so": "7b44674b9704fa7640fbebfac68389f338b500b8c2bc29175c27ed66838b5a3c",
+    "third_party/litesvm-0.8.2/src/programs/elf/spl_token_2022-8.0.0.so": "d2f8858d3204d0f47cef71a419048380dee8e88da4c63cf207d61d486555d240",
+    "third_party/litesvm-0.8.2/src/programs/mod.rs": "5d15337fd755815f843c0644694dbc414024b2b15774ff4feb6be3b1889f6539",
+    "third_party/litesvm-0.8.2/src/types.rs": "d286e18533da35d40d2a84373048daf1131f4c1a9377b905eaee776000b9e1c1",
+    "third_party/litesvm-0.8.2/src/utils/inner_instructions.rs": "5417462d9f623da876f6721996a3b6d723f2b2b6bf26cca8f3334fbaf70c1aa8",
+    "third_party/litesvm-0.8.2/src/utils/mod.rs": "64a9bf1874964f91213637c7b45bc6f3021e8407914a8403e0bb471401310da1",
+    "third_party/litesvm-0.8.2/src/utils/rent.rs": "04a4f0e1cffc5829c3c88fab5e241475931a0e865e2490cd7da2885a797880d9",
+    "third_party/litesvm-0.8.2/src/utils/serde_with_str.rs": "b648889116bdcecad810611ae4bb412a5a1a56dbd6703fc59db7fd944fdc9c53",
+    "third_party/litesvm-0.8.2/tests/blockhash.rs": "9dc7b5e8b5817a87cf69d4a3e1c61c7ac8cc1837fc792dbd580f10876d301131",
+    "third_party/litesvm-0.8.2/tests/compute_budget.rs": "0dc4529bdeb187c46aa14e19a423c414ab72208af2a901f8a55a4f85639a44ee",
+    "third_party/litesvm-0.8.2/tests/config_program.rs": "9440f63b327da430167bfbebf32aa23d0d6c8b4d6c0199b9c96dc598ea31795c",
+    "third_party/litesvm-0.8.2/tests/counter_test.rs": "28858e27d2200d759e413cd962db0aaca415cc824b86ce05821f0620b261cb0b",
+    "third_party/litesvm-0.8.2/tests/fees.rs": "2b73f052a1b8967459c6049c4bb7bb164897ea808a117083c3d0d7deaf871dec",
+    "third_party/litesvm-0.8.2/tests/parsing.rs": "781a3756d5eec20ce5cd16a8088b8590898989e59a8110912934045aacaad16f",
+    "third_party/litesvm-0.8.2/tests/precompiles.rs": "71e04a96c55b6bcbd317c3ced46faa757ad02a17b73a6f869996fd039857b534",
+    "third_party/litesvm-0.8.2/tests/pubkey_signer.rs": "772ac31bafbcedf451a609e2525c553a7698dbc9c964abfabdaae35fb7257b67",
+    "third_party/litesvm-0.8.2/tests/spl.rs": "747bf21685a69abc02abeec5945c01b841e9c18e7f9c3f1a3ee8df38f31a885c",
+    "third_party/litesvm-0.8.2/tests/stake_program.rs": "0608186bd1923690b24f699659ab9ecbca22ba5d07cf5612f0a1c2945016adf9",
+    "third_party/litesvm-0.8.2/tests/system.rs": "baeb297b86f315ec9b021d8ca96704ff6ac362311a0a9119285b115d136ebe54",
+    "third_party/litesvm-0.8.2/tests/test_dflow_load.rs": "cb54a54879d4e23f5ffd7755efc03c7dbadd382223430fdd84364fbdb43ce2d6",
+    "third_party/litesvm-0.8.2/tests/tx_history.rs": "7465c569d2692d6aca9fcd51f2a67791b686f10aa41d9d17a756ed9582313b6f"
+  },
+  "baseline_token_fixtures_sha256": "5f14d46720a56d0d3116171d39b79bbe647675a81a43a3c596c067ab1c5a7128",
+  "feature_profile_sha256": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+  "artifacts": {
+    "gosvm": {
+      "bytes": 7263824,
+      "sha256": "40cf26e03b867c0b7192943ecc41ee12466b405f7db65f73bcf8ffb8e2d795a9"
+    },
+    "gosvm-svm-runner": {
+      "bytes": 6886240,
+      "sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3"
+    },
+    "clang": {
+      "bytes": 113291976,
+      "sha256": "ec3fc09b50c81d5d7cd5925b6671ee69d340ae251949589ddfae4d66dfbde3ac"
+    },
+    "ld.lld": {
+      "bytes": 62781728,
+      "sha256": "969e4ced1adfa882763460657b0cd817f02ec172c21799d9c068becbee26941b"
+    }
+  },
+  "footprint": {
+    "bounded_project_build_bytes": 18907,
+    "token_project_build_bytes": 124560,
+    "shared_native_go_cache_bytes": 151526175,
+    "runner_host_target_bytes": 445266765
+  },
+  "limitations": [
+    "Shared desktop, shuffled serial measurements; no portable latency guarantee",
+    "Installed tools and cached crate sources; downloads/backend installation excluded",
+    "Runner cached build measured; cold runner bootstrap is the earlier compatibility-spike observation",
+    "Project clean means empty project build outputs with native Go cache retained",
+    "Full token workflow tests original native business logic and builds the matched wire adapter separately",
+    "No fresh full-validator latency measurement: local RPC binding is restricted",
+    "Dependency-heavy protocol and external program benchmark not run; Basanos untouched"
+  ]
+}

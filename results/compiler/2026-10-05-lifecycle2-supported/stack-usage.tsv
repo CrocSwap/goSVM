@@ -1,0 +1,15 @@
+results/compiler/2026-10-05-lifecycle2-supported/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:48:memset	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:2107:entrypoint	1664	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:794:v71	64	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:358:v27	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:451:v33	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:170:sol_ResizeAccount	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:177:sol_CloseAccount	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:1708:v119	256	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:1461:v113	1408	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:600:v55	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:761:v68	128	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:672:v60	0	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:214:sol_Invoke	960	static
+results/compiler/2026-10-05-lifecycle2-supported/program.c:166:sol_set_data_len	0	static

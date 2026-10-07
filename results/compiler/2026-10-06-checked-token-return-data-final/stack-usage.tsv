@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:35:memcpy	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:41:memset	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:3898:entrypoint	3648	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:2914:v213	64	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:2991:v219	128	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:3412:v252	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:529:v48	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:546:v54	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:572:v57	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:536:v51	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:622:v68	448	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:757:v78	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:685:v73	0	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:846:v86	128	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:2801:v209	64	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:3138:v245	1344	static
+results/compiler/2026-10-06-checked-token-return-data-final/program.c:232:sol_Invoke	960	static

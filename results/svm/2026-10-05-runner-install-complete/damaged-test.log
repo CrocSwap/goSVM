@@ -1,0 +1,5 @@
+?   	example.com/installed-runner/client	[no test files]
+ok  	example.com/installed-runner	(cached)
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/runner-install/2026-10-05-runner-install-complete/starter/build/program.so (3216 bytes, 339ms)
+gosvm timings: {"schema":1,"command":"test","passed":false,"phase_seconds":{"backend_check":0.049597875,"generation":0.003584834,"manifest":0.000596417,"native_tests":0.275341584,"sbf_build":0.009414291,"svm_tests":0.018418916},"total_seconds":0.357228334}
+gosvm: managed runner integrity check: managed runner member bin/gosvm-svm-runner SHA-256 mismatch; restore the pinned package

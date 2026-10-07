@@ -1,0 +1,16 @@
+Testing 5 compiled SBF scenarios with LiteSVM...
+PASS general-transfer step 1              6357 CU
+PASS compact-transfer step 1              4019 CU
+PASS compact-rollback step 1              4016 CU
+gosvm: compact-bad-bump step 1 simulation: transaction error {"InstructionError":[0,"PrivilegeEscalation"]}; expected {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2008
+                }
+              ]
+            }
+Program CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8 invoke [1]
+9JmAoja9Q7JScySij75htRRzKEHsTpJML4mHoQ9jDyzh's signer privilege escalated
+Program CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8 consumed 3830 of 200000 compute units
+Program CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8 failed: Cross-program invocation with unauthorized signer or writable account

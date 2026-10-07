@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "checks": [
+    "root make test",
+    "root go vet ./...",
+    "full-swap gosvm test -- -count=1",
+    "full-swap gosvm build and preserved ELF equality",
+    "git diff --check"
+  ],
+  "swap_elf_bytes": 21536,
+  "swap_elf_sha256": "697f57b3b3512c3baa25785822c765239eb9861feb8fc852af94fb9de0420b13",
+  "comparison": "2026-10-05-framework-swap-lifecycle-final; byte-identical rebuilt program; no new full-corpus execution claimed"
+}

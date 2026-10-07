@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle2/2026-10-05-lifecycle2/sdk-two
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle2/2026-10-05-lifecycle2/sdk-two" && gosvm check && go test ./... && gosvm build

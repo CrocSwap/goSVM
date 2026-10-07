@@ -1,0 +1,10 @@
+=== RUN   TestSDKAccountDecoderCapacityAndAliases
+=== RUN   TestSDKAccountDecoderCapacityAndAliases/SDK1
+    accounts_test.go:139: 192 serialized decoder/alias/handler-count cases under UBSan
+=== RUN   TestSDKAccountDecoderCapacityAndAliases/SDK2
+    accounts_test.go:139: 192 serialized decoder/alias/handler-count cases under UBSan
+--- PASS: TestSDKAccountDecoderCapacityAndAliases (1.08s)
+    --- PASS: TestSDKAccountDecoderCapacityAndAliases/SDK1 (0.56s)
+    --- PASS: TestSDKAccountDecoderCapacityAndAliases/SDK2 (0.52s)
+PASS
+ok  	gosvm/internal/compiler	1.109s

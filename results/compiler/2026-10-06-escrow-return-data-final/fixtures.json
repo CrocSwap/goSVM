@@ -1,0 +1,3782 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+  "payer_seed": "90804c1638c5d980d4e72100b45c40dd924ce059e9cd82023ee757c23faea0fa",
+  "sysvars": {
+    "rent": {
+      "lamports_per_byte_year": 3480,
+      "exemption_threshold": 2.0,
+      "burn_percent": 50
+    }
+  },
+  "signers": [
+    {
+      "name": "creator",
+      "seed": "5d1b2d7b5204703187edd4a6f5a824b9926850e200e9e84fd903f066d318844e"
+    },
+    {
+      "name": "beneficiary",
+      "seed": "0957d11dc61e2b9b423f9991bbab2a000988a89a80c969d9930c6482ca55d64a"
+    },
+    {
+      "name": "intruder",
+      "seed": "59a5540e28889fce7584e5f0eab2ff805827c9aaf9a2a98dff9d88d1a872e9f0"
+    }
+  ],
+  "native_programs": [
+    {
+      "name": "system",
+      "address": "11111111111111111111111111111111"
+    }
+  ],
+  "accounts": [
+    {
+      "name": "creator",
+      "address": "FaBhtYsFfdzpgXsBWD9pTgbXELkAYC7G1mUQg9Z6UFkJ",
+      "initial": {
+        "data": "",
+        "owner": "11111111111111111111111111111111",
+        "lamports": 100000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "beneficiary",
+      "address": "595kSUmXgE9s8j4oKditnye64jribYXWmyBSKhmfu3pc",
+      "initial": {
+        "data": "",
+        "owner": "11111111111111111111111111111111",
+        "lamports": 100000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "intruder",
+      "address": "E1fHTd72ZgWs6FnL974jkpiFgWgjWN925Yru4BGafexD",
+      "initial": {
+        "data": "",
+        "owner": "11111111111111111111111111111111",
+        "lamports": 100000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "escrow",
+      "address": "CEEQzPVVpJZyVnjAHAsvEBLrrHGAU3iNFDASBqunDrX6"
+    }
+  ],
+  "cases": [
+    {
+      "name": "open-claim-reuse",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 102733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 94533920,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 102733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          },
+          "fresh_blockhash": true
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 102733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "fresh_blockhash": true
+        }
+      ]
+    },
+    {
+      "name": "open-cancel-reuse",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          },
+          "fresh_blockhash": true
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 102733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          },
+          "fresh_blockhash": true
+        }
+      ]
+    },
+    {
+      "name": "zero-deposit-rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc200000000000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4100
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1,
+              "11111111111111111111111111111111 success": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "deposit-cpi-failure-rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc200e1f505000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 1
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "target-already-funded",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6009
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "escrow",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 1,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "target-already-owned",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6009
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "target-has-data",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6009
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "01",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 10000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "escrow",
+          "state": {
+            "data": "01",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 10000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "bad-pda-bump",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fd"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6008
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "bad-nonce-pda",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007c00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6008
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "bad-beneficiary-args",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa541c15337b7a7d98d537df9dff68a2abb0964929a399ad036a9e4a4d6d93d5660160f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "beneficiary-substitution",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "intruder",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "creator-unsigned",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6001
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "creator-readonly",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6001
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "target-readonly",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6001
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "System-substitution",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "program",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6005
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "duplicate-recipient",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6006
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim-wrong-secret",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c663000000000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4102
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim-wrong-nonce",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007c00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4103
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim-beneficiary-unsigned",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6001
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim-beneficiary-substitute",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "intruder",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "claim-creator-substitute",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "intruder",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel-creator-unsigned",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": false
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6001
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel-creator-substitute",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "intruder",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "close-refund-overflow",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2014
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 18446744073709551615,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "beneficiary",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 18446744073709551615,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "close-owner-mismatch",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6002
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "close-wrong-layout",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6003
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "close-unallocated",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6002
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "atomic-open-bad-claim-rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            },
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c600000000000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                1,
+                {
+                  "Custom": 4102
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "atomic-close-bad-open-rollback",
+      "overrides": [
+        {
+          "name": "creator",
+          "state": {
+            "data": "",
+            "owner": "11111111111111111111111111111111",
+            "lamports": 97266960,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        },
+        {
+          "name": "escrow",
+          "state": {
+            "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+            "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+            "lamports": 2733040,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            },
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc200000000000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                1,
+                {
+                  "Custom": 4100
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "current-rent-lifecycle-0",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 98709791,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 1290209,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          },
+          "sysvars": {
+            "rent": {
+              "lamports_per_byte_year": 777,
+              "exemption_threshold": 1.5,
+              "burn_percent": 17
+            }
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "current-rent-lifecycle-1",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 98999999,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 1000001,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          },
+          "sysvars": {
+            "rent": {
+              "lamports_per_byte_year": 0,
+              "exemption_threshold": 0.0,
+              "burn_percent": 0
+            }
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "0dfaf1907856e9ca"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed-claim-then-success",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": true,
+                  "signer": true
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ],
+              "data": "f39e53d840bfa5413d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 2,
+              "11111111111111111111111111111111 success": 2
+            }
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c600000000000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4102
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "1b84373305c042ecd883e3489d95577327ccb281ad972288dd9d1f18b35bf5988e738b43f5a4d9cf3d80c38acb37182927b8348a380a0a8fa2ab88eafa17d609ccff7cc03a9c61110f26ef8b553037cf153bf0abbb6131c85c4c4add60946ec4ed74899b25791bc240420f00000000007b00000000000000fe",
+                  "owner": "4BS3PgWBcK39ZnxrVsqAt8bDoeXJGNobhxvp2kxvdrJf",
+                  "lamports": 2733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "accounts": [
+                {
+                  "account": "escrow",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "creator",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "beneficiary",
+                  "writable": true,
+                  "signer": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c613171f00000000000000000000000000000000000000000000000000000000007b00000000000000"
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "creator",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 97266960,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 102733040,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 100000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "escrow",
+                "absent": true
+              }
+            ],
+            "simulation_accounts": [
+              {
+                "account": "escrow",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 0,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

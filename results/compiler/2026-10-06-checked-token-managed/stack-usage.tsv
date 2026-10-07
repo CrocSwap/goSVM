@@ -1,0 +1,17 @@
+results/compiler/2026-10-06-checked-token-managed/program.c:35:memcpy	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:41:memset	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:3722:entrypoint	3648	static
+results/compiler/2026-10-06-checked-token-managed/program.c:2738:v194	64	static
+results/compiler/2026-10-06-checked-token-managed/program.c:2815:v200	128	static
+results/compiler/2026-10-06-checked-token-managed/program.c:3236:v233	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:495:v43	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:512:v49	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:538:v52	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:502:v46	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:588:v63	448	static
+results/compiler/2026-10-06-checked-token-managed/program.c:723:v73	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:651:v68	0	static
+results/compiler/2026-10-06-checked-token-managed/program.c:812:v81	128	static
+results/compiler/2026-10-06-checked-token-managed/program.c:2625:v190	64	static
+results/compiler/2026-10-06-checked-token-managed/program.c:2962:v226	1344	static
+results/compiler/2026-10-06-checked-token-managed/program.c:215:sol_Invoke	960	static

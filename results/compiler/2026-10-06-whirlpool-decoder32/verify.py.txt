@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Replay the optimized Whirlpools snapshot with the expanded SDK-2 decoder."""
+import argparse, hashlib, json, os, re, shutil, statistics, subprocess, time
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+BASE=ROOT/'results/compiler/2026-10-06-whirlpool-optimized-final'
+SOURCE=ROOT/'build/whirlpool-optimized/2026-10-06-whirlpool-optimized-final'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--cli',required=True,type=Path);p.add_argument('--output',required=True,type=Path);a=p.parse_args()
+ cli=a.cli.resolve();out=a.output.resolve();stage=ROOT/'build/account-decoder'/out.name
+ assert out.is_relative_to(ROOT/'results') and not out.exists() and not stage.exists()
+ out.mkdir(parents=True);stage.mkdir(parents=True)
+ prior=json.loads((BASE/'summary.json').read_text());assert prior['passed']
+ inputs=[Path(__file__),cli,BASE/'summary.json']
+ for module in ('go','handler'):
+  paths=[x for x in (SOURCE/module).rglob('*') if x.is_file() and 'build' not in x.relative_to(SOURCE/module).parts];inputs+=paths
+  shutil.copytree(SOURCE/module,stage/module,ignore=shutil.ignore_patterns('build','profile'))
+ commands={}
+ for language in ('go','rust','upstream'):
+  commands[language]=next(x['command'] for x in prior['checks'] if x['name']==language+'-0')
+  inputs += [Path(commands[language][commands[language].index(flag)+1]) for flag in ('--elf','--runner','--maker','--features','--fixtures')]
+  inputs += [BASE/(language+'-'+str(i)+'.json') for i in range(3)]
+ summary=dict(passed=False,checks=[],input_sha256={str(x):sha(x) for x in inputs})
+ env=dict(os.environ,GOCACHE=str(ROOT/'build/lifecycle-go-cache'),GOWORK='off',GOTOOLCHAIN='local',GOPROXY='off',GOSUMDB='off',PYTHONDONTWRITEBYTECODE='1')
+ def save():(out/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+ def run(name,command):
+  start=time.perf_counter()
+  with (out/(name+'.log')).open('wb') as log:r=subprocess.run([str(x) for x in command],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT)
+  summary['checks'].append(dict(name=name,command=[str(x) for x in command],exit_code=r.returncode,seconds=time.perf_counter()-start));save()
+  assert r.returncode==0,name+': see log';print(name+': PASS',flush=True)
+ try:
+  elf=out/'handler.so';c=out/'handler.c';obj=out/'handler.o';llvm=Path.home()/'.cache/solana/v1.51/platform-tools/llvm'
+  run('emit',[cli,'-emit-c','-o',c,stage/'handler'])
+  run('compile',[llvm/'bin/clang','-target','sbf','-mcpu=v3','-O2','-fno-builtin','-fPIC','-fno-stack-protector','-std=c11','-Werror','-fstack-usage','-c',c,'-o',obj])
+  run('link',[llvm/'bin/ld.lld','-z','notext','-shared','--Bdynamic','--strip-all','--entry','entrypoint','--script',ROOT/'internal/compiler/sbf-v3.ld','--no-undefined','-o',elf,obj])
+  frames=[dict(function=x.split('\t')[0],bytes=int(x.split('\t')[1]),kind=x.split('\t')[2]) for x in obj.with_suffix('.su').read_text().splitlines()]
+  assert all(x['bytes']<=4096 and x['kind']=='static' for x in frames)
+  rows=[]
+  fixture=json.loads(Path(commands['go'][commands['go'].index('--fixtures')+1]).read_text())
+  prefix='Program '+fixture['program_id']+' consumed '
+  def logs(xs):return [re.sub(r' of \d+ compute units$',' of <remaining> compute units',x) for x in xs if not x.startswith(prefix)]
+  reports={}
+  for language in ('go','rust','upstream'):
+   repeats=[]
+   for i in range(3):
+    command=list(commands[language]);report=out/(language+'-'+str(i)+'.json');command[command.index('--report')+1]=str(report)
+    if language=='go':command[command.index('--elf')+1]=str(elf)
+    run(language+'-'+str(i),command);actual=json.loads(report.read_text());assert actual['passed'] and len(actual['cases'])==166
+    if repeats:assert actual['cases']==repeats[0]['cases']
+    old=json.loads((BASE/(language+'-'+str(i)+'.json')).read_text())
+    if language!='go':assert actual['cases']==old['cases'],'Rust changed'
+    for key in ('fixtures_sha256','runner_sha256','transaction_maker_sha256','features','runtime_version','compute_unit_limit'):assert actual[key]==old[key],key
+    repeats.append(actual)
+   reports[language]=repeats[0]
+  old=json.loads((BASE/'go-0.json').read_text())
+  for go,before,rust,full in zip(reports['go']['cases'],old['cases'],reports['rust']['cases'],reports['upstream']['cases']):
+   assert go['name']==before['name']==rust['name']==full['name']
+   assert len(go['steps'])==len(before['steps'])==len(rust['steps'])==len(full['steps'])
+   for s,b,r,f in zip(go['steps'],before['steps'],rust['steps'],full['steps']):
+    assert s['error']==b['error']==r['error']==f['error'] and s['committed']==b['committed']
+    assert logs(s['logs'])==logs(b['logs'])
+    rows.append(dict(name=go['name'],success=s['error'] is None,before_cu=b['cu'],go_cu=s['cu'],rust_cu=r['cu'],delta=s['cu']-b['cu']))
+  success=[x for x in rows if x['success']];assert len(success)==103
+  summary.update(scenarios=166,repetitions=3,median_paired_ratio=statistics.median(x['go_cu']/x['rust_cu'] for x in success),cu_delta_min=min(x['delta'] for x in rows),cu_delta_max=max(x['delta'] for x in rows),elf_sha256=sha(elf),elf_bytes=elf.stat().st_size,max_static_frame=max(x['bytes'] for x in frames),frames=frames)
+  (out/'per-case-cu.json').write_text(json.dumps(rows,indent=2)+'\n')
+  assert all(sha(Path(p))==h for p,h in summary['input_sha256'].items()),'input drift'
+  shutil.copyfile(__file__,out/'verify.py.txt');summary['passed']=True
+ finally:save()
+if __name__=='__main__':main()

@@ -1,0 +1,62 @@
+=== RUN   TestSchema2LifecycleGeneration
+--- PASS: TestSchema2LifecycleGeneration (2.24s)
+=== RUN   TestSchema2LifecycleDiagnostics
+=== RUN   TestSchema2LifecycleDiagnostics/init_readonly
+=== RUN   TestSchema2LifecycleDiagnostics/init_raw
+=== RUN   TestSchema2LifecycleDiagnostics/init_and_close
+=== RUN   TestSchema2LifecycleDiagnostics/no_payer
+=== RUN   TestSchema2LifecycleDiagnostics/readonly_payer
+=== RUN   TestSchema2LifecycleDiagnostics/unsigned_payer
+=== RUN   TestSchema2LifecycleDiagnostics/non-System_payer
+=== RUN   TestSchema2LifecycleDiagnostics/missing_System
+=== RUN   TestSchema2LifecycleDiagnostics/wrong_System
+=== RUN   TestSchema2LifecycleDiagnostics/no_target_signer
+=== RUN   TestSchema2LifecycleDiagnostics/external_PDA
+=== RUN   TestSchema2LifecycleDiagnostics/init_alias
+=== RUN   TestSchema2LifecycleDiagnostics/fresh_field_seed
+=== RUN   TestSchema2LifecycleDiagnostics/fresh_relationship
+=== RUN   TestSchema2LifecycleDiagnostics/fresh_target_relationship
+=== RUN   TestSchema2LifecycleDiagnostics/bad_argument_field
+=== RUN   TestSchema2LifecycleDiagnostics/scalar_argument_relationship
+=== RUN   TestSchema2LifecycleDiagnostics/close_readonly
+=== RUN   TestSchema2LifecycleDiagnostics/missing_refund
+=== RUN   TestSchema2LifecycleDiagnostics/self_refund
+=== RUN   TestSchema2LifecycleDiagnostics/readonly_refund
+=== RUN   TestSchema2LifecycleDiagnostics/missing_authority
+=== RUN   TestSchema2LifecycleDiagnostics/unsigned_authority
+=== RUN   TestSchema2LifecycleDiagnostics/caller_authority_field
+=== RUN   TestSchema2LifecycleDiagnostics/missing_authority_field
+=== RUN   TestSchema2LifecycleDiagnostics/scalar_authority_field
+=== RUN   TestSchema2LifecycleDiagnostics/close_alias
+--- PASS: TestSchema2LifecycleDiagnostics (1.41s)
+    --- PASS: TestSchema2LifecycleDiagnostics/init_readonly (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/init_raw (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/init_and_close (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/no_payer (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/readonly_payer (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/unsigned_payer (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/non-System_payer (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/missing_System (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/wrong_System (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/no_target_signer (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/external_PDA (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/init_alias (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/fresh_field_seed (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/fresh_relationship (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/fresh_target_relationship (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/bad_argument_field (0.23s)
+    --- PASS: TestSchema2LifecycleDiagnostics/scalar_argument_relationship (0.25s)
+    --- PASS: TestSchema2LifecycleDiagnostics/close_readonly (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/missing_refund (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/self_refund (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/readonly_refund (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/missing_authority (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/unsigned_authority (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/caller_authority_field (0.02s)
+    --- PASS: TestSchema2LifecycleDiagnostics/missing_authority_field (0.22s)
+    --- PASS: TestSchema2LifecycleDiagnostics/scalar_authority_field (0.22s)
+    --- PASS: TestSchema2LifecycleDiagnostics/close_alias (0.02s)
+=== RUN   TestSchema2AllInitTargetsValidatedBeforeCPI
+--- PASS: TestSchema2AllInitTargetsValidatedBeforeCPI (1.65s)
+PASS
+ok  	gosvm/internal/project	5.311s

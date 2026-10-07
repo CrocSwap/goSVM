@@ -1,0 +1,264 @@
+{
+  "passed": true,
+  "independent_developer_acceptance": false,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "manifest_sha256": "c960d07ebf692646e716cc0a12714ff7d789ac6c7db8fff23a74d6de10f54ac9",
+  "checks": [
+    {
+      "label": "go-version",
+      "command": [
+        "go",
+        "version"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial",
+      "exit_code": 0,
+      "wall_seconds": 0.04824333358556032,
+      "log": "go-version.log"
+    },
+    {
+      "label": "runner-install",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial",
+      "exit_code": 0,
+      "wall_seconds": 0.14677179185673594,
+      "log": "runner-install.log"
+    },
+    {
+      "label": "runner-status",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "runner",
+        "status"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial",
+      "exit_code": 0,
+      "wall_seconds": 0.0380557500757277,
+      "log": "runner-status.log"
+    },
+    {
+      "label": "full-swap-check",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "check"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap",
+      "exit_code": 0,
+      "wall_seconds": 0.2982370830141008,
+      "log": "full-swap-check.log"
+    },
+    {
+      "label": "full-swap-native",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "test",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap",
+      "exit_code": 0,
+      "wall_seconds": 3.2790017500519753,
+      "log": "full-swap-native.log"
+    },
+    {
+      "label": "full-swap-build",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "build",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap",
+      "exit_code": 0,
+      "wall_seconds": 1.1152442079037428,
+      "log": "full-swap-build.log"
+    },
+    {
+      "label": "escrow-check",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "check"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/escrow",
+      "exit_code": 0,
+      "wall_seconds": 0.17953341593965888,
+      "log": "escrow-check.log"
+    },
+    {
+      "label": "escrow-native",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "test",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/escrow",
+      "exit_code": 0,
+      "wall_seconds": 0.39445983385667205,
+      "log": "escrow-native.log"
+    },
+    {
+      "label": "escrow-build",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "build",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/escrow",
+      "exit_code": 0,
+      "wall_seconds": 0.542243666946888,
+      "log": "escrow-build.log"
+    },
+    {
+      "label": "swap-preloaded",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "test",
+        "--svm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-fixtures",
+        "testdata/svm.json",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap",
+      "exit_code": 0,
+      "wall_seconds": 0.5751831252127886,
+      "log": "swap-preloaded.log"
+    },
+    {
+      "label": "swap-lifecycle",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "test",
+        "--svm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-fixtures",
+        "testdata/lifecycle.json",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap",
+      "exit_code": 0,
+      "wall_seconds": 0.6173173342831433,
+      "log": "swap-lifecycle.log"
+    },
+    {
+      "label": "escrow-lifecycle",
+      "command": [
+        "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/tools/gosvm",
+        "test",
+        "--svm",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-fixtures",
+        "testdata/svm.json",
+        "--",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/escrow",
+      "exit_code": 0,
+      "wall_seconds": 0.50318020908162,
+      "log": "escrow-lifecycle.log"
+    },
+    {
+      "label": "service-tests",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap-service",
+      "exit_code": 0,
+      "wall_seconds": 1.264909999910742,
+      "log": "service-tests.log"
+    },
+    {
+      "label": "service-deps",
+      "command": [
+        "go",
+        "list",
+        "-deps",
+        "./..."
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap-service",
+      "exit_code": 0,
+      "wall_seconds": 0.13460825011134148,
+      "log": "service-deps.log"
+    },
+    {
+      "label": "service-legacy",
+      "command": [
+        "go",
+        "run",
+        "-ldflags=-linkmode=external",
+        ".",
+        "-pool",
+        "f19a6d0411b16dbc9f8817ada0f1705c6632be3997bca9adb1117bf2cb2b4bf2968e1de119b7236c3748a9ba53a24a22a7486130c7f8006fceb0b2aa752d94287196c7d1098fe2e4be039522bd3a4bebb95f45341ed850828175ec141ab68cb999ed536cfb669b7389a7f7e422bdb50535ed144fd01f2c2e8ec0aa8695b158aabbad8ab5f30742c0fb0000000000000000",
+        "-x",
+        "1000000",
+        "-y",
+        "2000000",
+        "-amount",
+        "1000"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap-service",
+      "exit_code": 0,
+      "wall_seconds": 0.30620958423241973,
+      "log": "service-legacy.log"
+    },
+    {
+      "label": "service-managed",
+      "command": [
+        "go",
+        "run",
+        "-ldflags=-linkmode=external",
+        ".",
+        "-managed",
+        "-pool",
+        "802cb35299c587669f8817ada0f1705c6632be3997bca9adb1117bf2cb2b4bf2968e1de119b7236c3748a9ba53a24a22a7486130c7f8006fceb0b2aa752d94287196c7d1098fe2e4be039522bd3a4bebb95f45341ed850828175ec141ab68cb999ed536cfb669b7389a7f7e422bdb50535ed144fd01f2c2e8ec0aa8695b158aabbad8ab5f30742c0fb0000000000000000000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "-x",
+        "1000000",
+        "-y",
+        "2000000",
+        "-amount",
+        "1000"
+      ],
+      "cwd": "/private/tmp/gosvm-m2-trial-final-7ge2qy6z/milestone2-trial/examples/full-swap-service",
+      "exit_code": 0,
+      "wall_seconds": 0.30528879119083285,
+      "log": "service-managed.log"
+    }
+  ],
+  "reports": {
+    "swap-preloaded": {
+      "report": "swap-preloaded.json",
+      "scenarios": 13,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab"
+    },
+    "swap-lifecycle": {
+      "report": "swap-lifecycle.json",
+      "scenarios": 29,
+      "elf_sha256": "8d37edb41b22b2ed59d89a6625ebe7721797d428cf4df387eea307dd55c872ab"
+    },
+    "escrow-lifecycle": {
+      "report": "escrow-lifecycle.json",
+      "scenarios": 32,
+      "elf_sha256": "4b858bceb77129196635f0873d6c61357180de013a7f90106a802fe7042c93f3"
+    }
+  },
+  "limitations": [
+    "Automated rehearsal does not establish independent developer feedback",
+    "Local installed-tool trial; no fresh-host, release or deployment claim"
+  ]
+}

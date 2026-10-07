@@ -1,0 +1,63 @@
+package main
+
+import (
+	"bytes"
+	"crypto/ed25519"
+	"crypto/sha256"
+	"encoding/binary"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"math/big"
+	"os"
+	program "example.org/gosvm/full-swap"
+	"gosvm/solana"
+)
+
+type account struct {Key,Owner,Data string;Signer,Writable,Executable bool;Lamports uint64}
+type row struct {Name,ID,Instruction string;Accounts []account}
+type result struct {Name string;Code uint64;Data []string;Lamports []uint64;Calls uint64}
+func decode(s string)[]byte{b,e:=hex.DecodeString(s);if e!=nil{panic(e)};return b[:len(b):len(b)]}
+func onCurve(b []byte)bool {
+	yBytes:=append([]byte(nil),b...);yBytes[31]&=127;for i,j:=0,31;i<j;i,j=i+1,j-1{yBytes[i],yBytes[j]=yBytes[j],yBytes[i]}
+	y:=new(big.Int).SetBytes(yBytes);p:=new(big.Int).Sub(new(big.Int).Lsh(big.NewInt(1),255),big.NewInt(19))
+	d:=new(big.Int).ModInverse(big.NewInt(121666),p);d.Mul(d,big.NewInt(-121665)).Mod(d,p)
+	y2:=new(big.Int).Mul(y,y);y2.Mod(y2,p);num:=new(big.Int).Sub(y2,big.NewInt(1));den:=new(big.Int).Mul(d,y2);den.Add(den,big.NewInt(1));inv:=new(big.Int).ModInverse(den,p);if inv==nil{return false};x2:=new(big.Int).Mul(num,inv);x2.Mod(x2,p);if x2.Sign()==0{return true};e:=new(big.Int).Rsh(new(big.Int).Sub(p,big.NewInt(1)),1);return new(big.Int).Exp(x2,e,p).Cmp(big.NewInt(1))==0
+}
+func derive(encoded,program []byte)([]byte,uint64) {
+	if len(encoded)==0{return nil,2007};data:=[]byte{};off:=1;for j:=0;j<int(encoded[0]);j++{n:=int(encoded[off]);off++;data=append(data,encoded[off:off+n]...);off+=n};data=append(data,program...);data=append(data,[]byte("ProgramDerivedAddress")...);h:=sha256.Sum256(data);if onCurve(h[:]){return nil,1};return h[:],0
+}
+func main() {
+	if len(os.Args)==3&&os.Args[1]=="--key"{fmt.Printf("%x\n",ed25519.NewKeyFromSeed(decode(os.Args[2])).Public().(ed25519.PublicKey));return}
+	var rows []row;if e:=json.NewDecoder(os.Stdin).Decode(&rows);e!=nil{panic(e)}
+	var results []result
+	for _,r:=range rows {
+		c:=solana.Context{ID:decode(r.ID),InstructionData:decode(r.Instruction)}
+		for _,a:=range r.Accounts{c.Accounts=append(c.Accounts,solana.Account{Key:decode(a.Key),Owner:decode(a.Owner),Data:decode(a.Data),Signer:a.Signer,Writable:a.Writable,Executable:a.Executable,Lamports:a.Lamports})}
+		out:=result{Name:r.Name,Data:[]string{},Lamports:[]uint64{}}
+		c.DeriveAddress=func(seeds,program,output []byte)uint64{address,code:=derive(seeds,program);if code!=0{return code};copy(output,address);return 0}
+		c.InvokeInstruction=func(p uint64,metas,data,seeds []byte)uint64{
+			out.Calls++
+			indices:=[]uint64{};for off:=0;off<len(metas);off+=9{indices=append(indices,binary.LittleEndian.Uint64(metas[off:]))}
+			if bytes.Equal(c.Accounts[p].Key,make([]byte,32)) {
+				if len(data)!=12||binary.LittleEndian.Uint32(data)!=2||len(indices)!=2{panic("System encoding")}
+				a,b:=indices[0],indices[1];amount:=binary.LittleEndian.Uint64(data[4:]);if c.Accounts[a].Lamports<amount{return 1};c.Accounts[a].Lamports-=amount;c.Accounts[b].Lamports+=amount;return 0
+			}
+			if len(data)!=9||data[0]!=3||len(indices)!=3{panic("Token encoding")}
+			s,d,a:=indices[0],indices[1],indices[2];source,destination:=c.Accounts[s].Data,c.Accounts[d].Data
+			if source[108]==2||destination[108]==2{return 17}
+			if !bytes.Equal(source[:32],destination[:32]){return 3}
+			if !bytes.Equal(source[32:64],c.Accounts[a].Key){return 4}
+			if !c.Accounts[a].Signer {
+				valid:=false;off:=1
+				for g:=0;g<int(seeds[0]);g++{start:=off;n:=int(seeds[off]);off++;for j:=0;j<n;j++{size:=int(seeds[off]);off+=1+size};address,code:=derive(seeds[start:off],c.ID);if code==0&&bytes.Equal(address,c.Accounts[a].Key){valid=true}}
+				if !valid{panic("invalid fixture signer seeds")}
+			}
+			amount:=binary.LittleEndian.Uint64(data[1:]);x,y:=binary.LittleEndian.Uint64(source[64:]),binary.LittleEndian.Uint64(destination[64:]);if x<amount{return 1};if ^uint64(0)-y<amount{return 14};binary.LittleEndian.PutUint64(source[64:],x-amount);binary.LittleEndian.PutUint64(destination[64:],y+amount);return 0
+		}
+		out.Code=program.Process(c)
+		for _,a:=range c.Accounts{out.Data=append(out.Data,hex.EncodeToString(a.Data));out.Lamports=append(out.Lamports,a.Lamports)}
+		results=append(results,out)
+	}
+	if e:=json.NewEncoder(os.Stdout).Encode(results);e!=nil{panic(e)}
+}

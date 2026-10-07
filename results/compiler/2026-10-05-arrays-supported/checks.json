@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "label": "arrays",
+      "chunk_id": "55cd36",
+      "wall_time_seconds": 0.000007167,
+      "session_id": 48427,
+      "original_token_count": 98,
+      "output": "differential-tests: PASS\ncli-build: PASS\nrunner-install: PASS\nnative-build: PASS\nnative-sign: PASS\nnative-expectations: PASS\nsbf-build: PASS\nemit-c: PASS\nstack-compile: PASS\nstack-link: PASS\nsvm-0: PASS\nsvm-1: PASS\nsvm-2: PASS\nPASS: 147 array scenarios, native-Go/SBF bytes and failures, three repetitions. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays-supported\n",
+      "exit_code": 0
+    },
+    {
+      "label": "capacity",
+      "chunk_id": "75e202",
+      "wall_time_seconds": 0.000011042,
+      "session_id": 2542,
+      "original_token_count": 212,
+      "output": "cli-build: PASS\nrunner-install: PASS\nnative-build: PASS\nnative-sign: PASS\nbyte-native: PASS\nbyte-build: PASS\nbyte-emit-c: PASS\nbyte-stack: PASS\nbyte-stack-link: PASS\nbyte-svm-0: PASS\nbyte-svm-1: PASS\nbyte-svm-2: PASS\nuint64-native: PASS\nuint64-build: PASS\nuint64-emit-c: PASS\nuint64-stack: PASS\nuint64-stack-link: PASS\nuint64-svm-0: PASS\nuint64-svm-1: PASS\nuint64-svm-2: PASS\nuint32-native: PASS\nuint32-build: PASS\nuint32-emit-c: PASS\nuint32-stack: PASS\nuint32-stack-link: PASS\nuint32-svm-0: PASS\nuint32-svm-1: PASS\nuint32-svm-2: PASS\nbool-native: PASS\nbool-build: PASS\nbool-emit-c: PASS\nbool-stack: PASS\nbool-stack-link: PASS\nbool-svm-0: PASS\nbool-svm-1: PASS\nbool-svm-2: PASS\nPASS: 60 capacity scenarios across four scalar kinds, three real-SBF repetitions. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-array-capacity-final\n",
+      "exit_code": 0
+    },
+    {
+      "label": "regression",
+      "chunk_id": "2b8f56",
+      "wall_time_seconds": 3.2326335840000002,
+      "session_id": 94618,
+      "original_token_count": 128,
+      "output": "source-install: PASS\nbackend-status: PASS\nrunner-install: PASS\nrunner-status: PASS\nrunner-idempotent: PASS\nscaffold: PASS\ndoctor: PASS\nstarter: PASS\nproject-general: PASS\nfull-token-build: PASS\nfull-token: PASS\nlifecycle-build: PASS\nlifecycle: PASS\nprobe-compile: PASS\nprobe-link: PASS\nsysvars: PASS\nmetadata-rejection: PASS\nPASS: installation/workflows; this script does not certify host cleanliness or a fresh validator. /Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-arrays-regression-final\n",
+      "exit_code": 0
+    },
+    {
+      "label": "root-test",
+      "chunk_id": "bc1b9e",
+      "wall_time_seconds": 0.000004292,
+      "session_id": 17596,
+      "original_token_count": 131,
+      "output": "?   \tgosvm/cmd/verify\t[no test files]\n?   \tgosvm/examples/array-capacity\t[no test files]\n?   \tgosvm/examples/array-values\t[no test files]\nok  \tgosvm/cmd/gosvm\t0.029s\nok  \tgosvm/examples/amm\t(cached)\nok  \tgosvm/examples/protocol\t(cached)\nok  \tgosvm/examples/tokenswap\t(cached)\nok  \tgosvm/internal/compiler\t2.401s\nok  \tgosvm/internal/project\t0.852s\nok  \tgosvm/internal/runner\t(cached)\nok  \tgosvm/internal/sbftest\t(cached)\nok  \tgosvm/internal/testvm\t(cached)\nok  \tgosvm/internal/toolchain\t(cached)\nok  \tgosvm/solana\t(cached)\n",
+      "exit_code": 0
+    },
+    {
+      "label": "root-vet",
+      "chunk_id": "87ef47",
+      "wall_time_seconds": 0.822275292,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "label": "starter",
+      "chunk_id": "4aca5c",
+      "wall_time_seconds": 0.403237125,
+      "exit_code": 0,
+      "original_token_count": 22,
+      "output": "?   \texample.com/typed-swap/client\t[no test files]\nok  \texample.com/typed-swap\t(cached)\n"
+    },
+    {
+      "label": "transport",
+      "chunk_id": "cd1211",
+      "wall_time_seconds": 0.487600042,
+      "exit_code": 0,
+      "original_token_count": 12,
+      "output": "ok  \tgosvm-svm-transport-experiment\t(cached)\n"
+    }
+  ]
+}

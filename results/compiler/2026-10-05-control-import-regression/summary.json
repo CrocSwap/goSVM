@@ -1,0 +1,455 @@
+{
+  "schema": 1,
+  "passed": true,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "source_sha256": {
+    "cmd/gosvm/main.go": "9213073218582b930be40cbed45c8e028371c5380fa9c44c00e6e1f5009a01a6",
+    "cmd/gosvm/project.go": "ae5720b29756fdbe07ff460d08182a7c4121b5e1d51d4fcb220dbe1b853e5f1b",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "examples/shared-packages/go.mod": "95dcd3989e15417f3240ead3146d40ed058660bd60a68450670b818cde0a6b60",
+    "examples/shared-packages/math/math.go": "47255a1c870ce10729566c03a07c1fcb372212fecac3bb4b02461dd8117cabd1",
+    "examples/shared-packages/model/model.go": "e9e3eb74b24251fdbb201616543007ec7006df56588f6e6f950fe808c4de152d",
+    "examples/shared-packages/program/program.go": "0b96b03839db8d6b36dab858951ed3caf325b20a0a7342e0cfebfc67584fb663",
+    "examples/shared-packages/program/program_test.go": "562ffeaa9751e13065b1c210de8792929f2b8ebe1f81cdc8b36c5980bfad2e7c",
+    "examples/shared-packages/quote/quote.go": "8c115102ad29fd9261a7aa7cb95c74f2d09e2a76e2feecf904fff32e84779610",
+    "examples/shared-packages/service/go.mod": "3a382c839fc94ab3212e15d3b72b66d4bf01bd071fe02a9a0e3760505297ee58",
+    "examples/shared-packages/service/main.go": "65aa62b1e667240f47188093fd5f6d741bee5291c9dbf81e071f285ea767002c",
+    "examples/shared-packages/wire/wire.go": "fba89f4a2cbbd3fe4ba86213081e14bcc76603984d8990e0938675fd884bcfe9",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/arrays.go": "80e3b4639d5eef0d93dbb96a941c8a87d45cb1193221fdd38535db22eebdae86",
+    "internal/compiler/arrays_test.go": "cff7c2ae6890513cd74717214caa907f1cc3348d89d46996019e3c14bd5ceabc",
+    "internal/compiler/build.go": "7c3aa3ecf06e84021121f1ca5673247bd4d40e3feba91cadff93b7105861f473",
+    "internal/compiler/cache.go": "33a3ae5abfe8239f3b010cc619a9d63c11dafc5c405ea626d544050951107305",
+    "internal/compiler/cache_test.go": "a4e0737fe34cbdf2c0e6e0a72fdb643869668b51ae69f864e3d12a680af97053",
+    "internal/compiler/compiler.go": "397e84a6f92c0cdb7edd180940ab11ba88ff9f54b951e48be640a98c737c5ea7",
+    "internal/compiler/compiler_test.go": "f896df42a5160888533b613d8b3e62696120db7b607b9dac5d67a00e19e71ac5",
+    "internal/compiler/control.go": "ce320d3157ff0cf393f6738412f9de65f4e6b11f7f951d872fc56b940b6fffdd",
+    "internal/compiler/control_test.go": "d1bdb57f9efa40e5b0b5cdd581b3cf02ccad0ba28d681f5136b630a4a8ff4462",
+    "internal/compiler/packages.go": "60c869ccb28339a9c3fd5bde1749b21a3c0e6724514eefc91d6a68ddfa7c7634",
+    "internal/compiler/packages_test.go": "6b348f6bb4a6d9e0d18321960757f0227d3e892fdd37d352e1d7584914e8ff1a",
+    "internal/compiler/results.go": "690a82b14b442573bb57c681fe75ee028c0b4f2c27be0d59f78844a27ed2adf1",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "scripts/array_native_driver.go.txt": "cb9846d708ba99fae95e5d94d6c904586aea31921bf07f7f3ba20c35f9792441",
+    "scripts/array_verify.py": "8b7ac064f2db82f5dcdb95b58b981e3b5e12523c0eb0981acbc091945fb35419",
+    "scripts/import_verify.py": "23552e65b47197426522c9f3e4fc6d0e48052989d9053d69e80635c3ef97ca91"
+  },
+  "checks": [
+    {
+      "check": "compiler-tests",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./internal/compiler",
+        "-run",
+        "TestShared|TestImported|TestModule|TestResolver",
+        "-count=1",
+        "-v"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 4.195044792257249,
+      "log": "compiler-tests.log"
+    },
+    {
+      "check": "application-tests",
+      "command": [
+        "go",
+        "test",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/examples/shared-packages",
+      "exit_code": 0,
+      "wall_seconds": 0.31081162486225367,
+      "log": "application-tests.log"
+    },
+    {
+      "check": "cli-build",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 1.8645732924342155,
+      "log": "cli-build.log"
+    },
+    {
+      "check": "runner-install",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.1852109171450138,
+      "log": "runner-install.log"
+    },
+    {
+      "check": "isolated-service",
+      "command": [
+        "go",
+        "run",
+        "-ldflags=-linkmode=external",
+        "."
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/service",
+      "exit_code": 0,
+      "wall_seconds": 0.48747412487864494,
+      "log": "isolated-service.log"
+    },
+    {
+      "check": "isolated-dependencies",
+      "command": [
+        "go",
+        "list",
+        "-deps",
+        "-json",
+        "."
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/service",
+      "exit_code": 0,
+      "wall_seconds": 0.18568016588687897,
+      "log": "isolated-dependencies.log"
+    },
+    {
+      "check": "native-build",
+      "command": [
+        "go",
+        "build",
+        "-ldflags=-linkmode=external",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/native-driver",
+        "."
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/native",
+      "exit_code": 0,
+      "wall_seconds": 0.8058984577655792,
+      "log": "native-build.log"
+    },
+    {
+      "check": "native-sign",
+      "command": [
+        "codesign",
+        "--force",
+        "--sign",
+        "-",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/native-driver"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.042848917189985514,
+      "log": "native-sign.log"
+    },
+    {
+      "check": "native-expectations",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/native-driver"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.0165093750692904,
+      "log": "native-expectations.log"
+    },
+    {
+      "check": "sbf-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/shared-packages/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.5083575407043099,
+      "log": "sbf-build.log"
+    },
+    {
+      "check": "emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/shared-packages/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.13184166699647903,
+      "log": "emit-c.log"
+    },
+    {
+      "check": "stack-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/stack.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.04081791639328003,
+      "log": "stack-compile.log"
+    },
+    {
+      "check": "stack-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/stack.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/stack.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.023619167041033506,
+      "log": "stack-link.log"
+    },
+    {
+      "check": "svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/svm-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.1250566248781979,
+      "log": "svm-0.log"
+    },
+    {
+      "check": "svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/svm-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.12933762511238456,
+      "log": "svm-1.log"
+    },
+    {
+      "check": "svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression/svm-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.12690037488937378,
+      "log": "svm-2.log"
+    },
+    {
+      "check": "cache-first",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-app/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.2299988749437034,
+      "log": "cache-first.log"
+    },
+    {
+      "check": "cache-noop",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-app/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.12327258288860321,
+      "log": "cache-noop.log"
+    },
+    {
+      "check": "cache-helper-edit",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-app/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.18172608269378543,
+      "log": "cache-helper-edit.log"
+    },
+    {
+      "check": "cache-restored",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/gosvm",
+        "-arch",
+        "v3",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/cache-app/program"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "wall_seconds": 0.17998775001615286,
+      "log": "cache-restored.log"
+    }
+  ],
+  "limitations": [
+    "Offline module imports and compiler subset; no workspace/vendor selection",
+    "Bounded arithmetic/state example, not full token swap or dependency-heavy protocol",
+    "Handwritten shared wire codecs, not schema-2 generated clients",
+    "Unpublished example modules use local development replacements",
+    "Native-Go/SBF comparison, not fresh-validator verification"
+  ],
+  "isolated_service": {
+    "result": {
+      "Quote": 1998,
+      "Pool": "40420f000000000080841e00000000000400000000000000",
+      "Instruction": "e803000000000000ce07000000000000"
+    },
+    "nonstandard_packages": [
+      {
+        "import": "example.com/shared-app/model",
+        "dir": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/shared/model"
+      },
+      {
+        "import": "example.com/shared-app/math",
+        "dir": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/shared/math"
+      },
+      {
+        "import": "example.com/shared-app/quote",
+        "dir": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/shared/quote"
+      },
+      {
+        "import": "example.com/shared-app/wire",
+        "dir": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/shared/wire"
+      },
+      {
+        "import": "example.com/shared-service",
+        "dir": "/Users/colkitt/sith/toys/crypto/goSVM/build/shared-imports/2026-10-05-control-import-regression/service"
+      }
+    ],
+    "sdk_dependency": false,
+    "compiler_dependency": false
+  },
+  "scenarios": 142,
+  "native_vectors": 140,
+  "native_c_vectors": 1011,
+  "samples": 3,
+  "expected_failures": 38,
+  "elf_bytes": 2048,
+  "elf_sha256": "f43f2ad0ce33659afb94bc8b5c3addfcdc2699c1a03e87f28c403e7e411007af",
+  "stack_frames": [
+    {
+      "function": "memcpy",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "memset",
+      "bytes": 0,
+      "kind": "static"
+    },
+    {
+      "function": "entrypoint",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "go_Process",
+      "bytes": 0,
+      "kind": "static"
+    }
+  ],
+  "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+  "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)"
+}

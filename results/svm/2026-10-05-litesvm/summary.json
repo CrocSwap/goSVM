@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "date": "2026-10-05",
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "samples": 3,
+  "timings": [
+    {
+      "sample": 0,
+      "engine": "validator",
+      "token_wall_seconds": 8.608376916032284,
+      "bounded_wall_seconds": 25.630895915906876,
+      "token_startup_seconds": 2.046111292,
+      "token_fixture_seconds": 6.124790125,
+      "token_vm_execution_seconds": null
+    },
+    {
+      "sample": 0,
+      "engine": "litesvm",
+      "token_wall_seconds": 1.93007304193452,
+      "bounded_wall_seconds": 0.2359941671602428,
+      "token_startup_seconds": 0.070044792,
+      "token_fixture_seconds": 0.16543575,
+      "token_vm_execution_seconds": 0.087535
+    },
+    {
+      "sample": 1,
+      "engine": "validator",
+      "token_wall_seconds": 9.458217999897897,
+      "bounded_wall_seconds": 25.438147665932775,
+      "token_startup_seconds": 2.234482875,
+      "token_fixture_seconds": 5.479641958,
+      "token_vm_execution_seconds": null
+    },
+    {
+      "sample": 1,
+      "engine": "litesvm",
+      "token_wall_seconds": 0.8657997087575495,
+      "bounded_wall_seconds": 0.18771112523972988,
+      "token_startup_seconds": 0.116620833,
+      "token_fixture_seconds": 0.282905542,
+      "token_vm_execution_seconds": 0.138824
+    },
+    {
+      "sample": 2,
+      "engine": "validator",
+      "token_wall_seconds": 9.216623625252396,
+      "bounded_wall_seconds": 25.408615957945585,
+      "token_startup_seconds": 2.63470025,
+      "token_fixture_seconds": 6.088819042,
+      "token_vm_execution_seconds": null
+    },
+    {
+      "sample": 2,
+      "engine": "litesvm",
+      "token_wall_seconds": 0.49991320772096515,
+      "bounded_wall_seconds": 0.12107654102146626,
+      "token_startup_seconds": 0.058113792,
+      "token_fixture_seconds": 0.168732458,
+      "token_vm_execution_seconds": 0.086498
+    }
+  ],
+  "equivalence_passed": true,
+  "runner_build_seconds": 99.14660308416933,
+  "runner_build_target": "empty target; cached crate sources",
+  "verifier_build_seconds": 1.5637962082400918,
+  "runner_bytes": 6800064,
+  "runner_sha256": "a7e9b23c4eebd3ea7b8eb3cd647c32a3be639e8020c4db24979e2addd571d857",
+  "verifier_sha256": "ccdf3ed9b899c395f0e8f31bc8f7589cf6b984b519e0c1066355fe449e1b5830",
+  "runner_target_logical_bytes": 404993879,
+  "versions": {
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "go": "go version go1.22.0 darwin/arm64",
+    "validator": "solana-test-validator 3.0.15 (src:42c10bf3; feat:3604001754, client:Agave)",
+    "runner": "gosvm-svm-runner 0.1.0 (LiteSVM 0.8.2)"
+  },
+  "source_sha256": {
+    "benchmarks/svm-runner/Cargo.lock": "151390163998d446bb741a85a6ddb7919b516680e2f483dda3fb57104e92a642",
+    "benchmarks/svm-runner/Cargo.toml": "3f020f74f6e215be263f446e3e46db377d5b6302bb41bdf76fd1f47a3139f700",
+    "benchmarks/svm-runner/README.md": "a8fea60bf2efb9ecd42b58830553ed39048ec92c277703fc9ce946f34616b3d2",
+    "benchmarks/svm-runner/src/main.rs": "cbc56d4b2093691a0d16e42f575431a04d263d6566c78f3f85c1e04b3e76a84b",
+    "cmd/verify/anchor.go": "1a59b18af1046683387c92ea2dd17340ad28275f6cc891818d2625e8419d4856",
+    "cmd/verify/main.go": "5d9c99beb61e26b0c43aaaae0d73b480373987cd721069fbf6aa241919b4cf8d",
+    "cmd/verify/protocol.go": "fa54ff62afe392559191ae4371ccedd03fee4aca0ee864050db8d60c62b20bbc",
+    "cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "cmd/verify/tokens.go": "83fa655e3fc3ef115e686e0166dbbb875b592d8c60c8159bf512e3b1b1c29a02",
+    "examples/typed-swap/testdata/sbf.json": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "2c9cc7575038aaf25123bafcc31de0f9f2afb4dc15ebf4b4bf123508a64f5eb2",
+    "internal/testvm/command_test.go": "5cc6d9f99a6297bbdae7993e387dae0d43c507fe5bcf6be40155680b86f3f839",
+    "scripts/svm_spike.py": "105d85ebad624dc45a90e7448e69f80f2c8951bb303eb553cf254696af415921"
+  },
+  "elf_sha256": {
+    "go-bounded.so": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+    "anchor_token_bench.so": "fca6bb6931d5eaaf5e04550053b3693ac5f88b1ecb0da32a84d59c12951fb283",
+    "anchor_bounded_bench.so": "924f4e2d16b39bfbbed13b5b711bc398229757caf2f3e09682f7e46b30756fa3",
+    "anchor_lean_token.so": "f70487227385f97513922fb77f2e82d7c3b7cfd80fc9bd7c62057b103bf87b98",
+    "anchor_lean_bounded.so": "a2b586edef444d66f7b00f0c12e67b4364ea6929cd8b3bc4df4f1d9bb628c1f9",
+    "go-token.so": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+  },
+  "limitations": [
+    "Shared desktop, fixed validator-then-runner order, no isolated CPU/load control",
+    "Feature IDs agree; activation slots/sysvars and the entire runtime version are not identical",
+    "HTTP fixture adapter has synthetic readiness and confirmation; no consensus or bank simulation",
+    "Fixture state checks cover account data, not fee/rent/bank lifecycle equivalence",
+    "No signed/downloadable runner distribution or embedded-binding comparison yet"
+  ],
+  "medians": {
+    "validator": {
+      "token_wall_seconds": 9.216623625252396,
+      "bounded_wall_seconds": 25.438147665932775,
+      "token_startup_seconds": 2.234482875,
+      "token_fixture_seconds": 6.088819042
+    },
+    "litesvm": {
+      "token_wall_seconds": 0.8657997087575495,
+      "bounded_wall_seconds": 0.18771112523972988,
+      "token_startup_seconds": 0.070044792,
+      "token_fixture_seconds": 0.168732458
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "passed": true,
+  "samples": 3,
+  "machine": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "fixture_format": "gosvm-svm-fixtures-v1",
+  "runtime_version": "gosvm-svm-runner 0.4.0 (LiteSVM 0.8.2)",
+  "scenarios": 108,
+  "steps_per_run": 110,
+  "matched_go_simulations": 105,
+  "fixture_sha256": "5f14d46720a56d0d3116171d39b79bbe647675a81a43a3c596c067ab1c5a7128",
+  "source_sha256": {
+    "benchmarks/svm-runner/Cargo.lock": "7e30c0e699eda29d553871fed2531e027d2da1541d55d22002927589283e23ec",
+    "benchmarks/svm-runner/Cargo.toml": "1d45b527fa93186d5467b3d68855d0585c652d7fa179c9b59cb7a46d7064df43",
+    "benchmarks/svm-runner/src/lib.rs": "9c9cc58ddf2fe42533a61b8f66200a55eb66997168bfa0e331db1ae0230d299e",
+    "benchmarks/svm-runner/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "cmd/gosvm/main.go": "1329674f2518944ef4ab93602b70594e7ebd283a2a8e35cd05595a2e146973a9",
+    "cmd/gosvm/project.go": "9bd903dd654e32a7389586027c64598ed64ba1474c83ecdbc4436681e5229ffb",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/verify/anchor.go": "1a59b18af1046683387c92ea2dd17340ad28275f6cc891818d2625e8419d4856",
+    "cmd/verify/main.go": "5d9c99beb61e26b0c43aaaae0d73b480373987cd721069fbf6aa241919b4cf8d",
+    "cmd/verify/protocol.go": "fa54ff62afe392559191ae4371ccedd03fee4aca0ee864050db8d60c62b20bbc",
+    "cmd/verify/scaling.go": "acbac0485f518568dba74aaa3c69534e5c192d474eb9f184ced88d741755a03f",
+    "cmd/verify/svm_fixtures.go": "443965ca63b6740c67ed78100095d323f256c06c9398ac61cb1caed83215a9b6",
+    "cmd/verify/tokens.go": "417d9ee98599c9b6c911ec09edd4896b3234db98dbfe192f50f762c8ff7c5d81",
+    "examples/typed-swap/testdata/svm.json": "ddbdb83c6d556b51b8a6d0c93330cf568340bf8950089da12a415d659158f37e",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "f2823da4c2d2946ccde1791e47861ba31bdebe49ad3983145ebc979011ed717c",
+    "internal/sbftest/general_run.go": "6933a60b8997731d91b5e97a4a24b1b8bb584949c70f7e4c8a5973e47c8d0100",
+    "internal/sbftest/general_test.go": "ea44ca80ca9b710bf3040a9c53b4ffff7fd4e8c4b1c68da6c4d4838a2d9bbba4",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "49065b60482b16cfed67f27370f226be45a6adc1f0320bec2b80d5392535fd8e",
+    "internal/testvm/command_test.go": "5cc6d9f99a6297bbdae7993e387dae0d43c507fe5bcf6be40155680b86f3f839",
+    "internal/testvm/controls_integration_test.go": "e676d40181743b64142306b23696fcd0aefb8c66da98b518a1e2adbeb2fbe5ca",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "80660457d7eeb72413b09ff02fad5693ecdf573c6cd80dc2f5a49e4b5802e286",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "scripts/svm_fixtures.py": "65bf2abc7ed5d65cc6e374720523e313f866876d7185fa83389c482e64b8e8f0"
+  },
+  "artifacts": {
+    "gosvm": {
+      "bytes": 7263808,
+      "sha256": "83acc3b0477b94c5cd346c95289e7e8b4986609de055035f4273a20a68dd9a9e"
+    },
+    "gosvm-svm-runner": {
+      "bytes": 6886256,
+      "sha256": "c07cd63c5ce7b113da6f708c8ceaa1f5ce95ea9fef4012ca16b6c85499befd63"
+    },
+    "go-token.so": {
+      "bytes": 8064,
+      "sha256": "9d53a2359551f48df1142f6c5db2405d78bfc182365b2b091cd3b95eeebada24"
+    },
+    "spl-token.so": {
+      "bytes": 133352,
+      "sha256": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6"
+    }
+  },
+  "limitations": [
+    "General CLI executes LiteSVM only; fresh validator comparison uses the existing independent harness",
+    "All general scenarios submit; original differential corpus mostly simulates",
+    "Seeded token accounts; account initialization/closing lifecycle remains open",
+    "Only macOS arm64 executed; no timing or memory guarantee",
+    "Dependency-heavy protocol not run"
+  ]
+}

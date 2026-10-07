@@ -1,0 +1,4 @@
+Testing 1 compiled SBF scenarios with LiteSVM...
+PASS stateful-swaps-and-atomic-rollback step 1 20329 CU
+PASS stateful-swaps-and-atomic-rollback step 2 20324 CU
+PASS stateful-swaps-and-atomic-rollback step 3 28163 CU

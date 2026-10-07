@@ -1,0 +1,2 @@
+gosvm timings: {"schema":1,"command":"test","passed":false,"phase_seconds":{"generation":0.000978459,"manifest":0.000215083},"total_seconds":0.001194375}
+gosvm: /Users/colkitt/sith/toys/crypto/goSVM/build/workflow-timing-diagnostics/bad.go:2:1: only functions and constants are supported at package scope

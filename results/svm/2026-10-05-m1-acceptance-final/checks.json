@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "passed": true,
+  "recorded_from": "Successful tool executions in the October 5 acceptance turn; Go checks used build/lifecycle-go-cache",
+  "checks": [
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "command": "make test",
+      "exit_code": 0,
+      "notes": "macOS external linker; cached package results"
+    },
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "command": "go vet ./...",
+      "exit_code": 0
+    },
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/examples/typed-swap",
+      "command": "GOWORK=off go test ./...",
+      "exit_code": 0,
+      "notes": "separate generated starter module; cached results"
+    },
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/svm-transport",
+      "command": "GOWORK=off go test -ldflags=-linkmode=external ./...",
+      "exit_code": 0,
+      "notes": "separate transport module; cached results"
+    },
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "command": "cargo test --release --locked --offline --manifest-path benchmarks/svm-runner/Cargo.toml --target-dir build/svm-fixtures-target",
+      "exit_code": 0,
+      "passed_tests": 5
+    },
+    {
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "command": "solana-test-validator --version",
+      "exit_code": 0,
+      "version": "3.0.15"
+    }
+  ]
+}

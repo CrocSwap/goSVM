@@ -1,0 +1,55 @@
+?   	gosvm/sdk	[no test files]
+=== RUN   TestBoundedMetasAndSignerGroups
+--- PASS: TestBoundedMetasAndSignerGroups (0.00s)
+=== RUN   TestInvokeValidationAndExactCallbackStatus
+--- PASS: TestInvokeValidationAndExactCallbackStatus (0.00s)
+PASS
+ok  	gosvm/sdk/cpi	0.014s
+=== RUN   TestExplicitSeedEncodingAndBounds
+--- PASS: TestExplicitSeedEncodingAndBounds (0.00s)
+=== RUN   TestAddressAndFailureOutput
+--- PASS: TestAddressAndFailureOutput (0.00s)
+PASS
+ok  	gosvm/sdk/pda	0.018s
+=== RUN   TestCheckedTransferAndCurrentReads
+--- PASS: TestCheckedTransferAndCurrentReads (0.00s)
+=== RUN   TestCheckedBalanceRevalidation
+=== RUN   TestCheckedBalanceRevalidation/owner
+=== RUN   TestCheckedBalanceRevalidation/layout
+=== RUN   TestCheckedBalanceRevalidation/privilege
+=== RUN   TestCheckedBalanceRevalidation/identity
+=== RUN   TestCheckedBalanceRevalidation/uninitialized
+=== RUN   TestCheckedBalanceRevalidation/native
+=== RUN   TestCheckedBalanceRevalidation/executable
+--- PASS: TestCheckedBalanceRevalidation (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/owner (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/layout (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/privilege (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/identity (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/uninitialized (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/native (0.00s)
+    --- PASS: TestCheckedBalanceRevalidation/executable (0.00s)
+=== RUN   TestTokenRevalidationBeforeInvoke
+=== RUN   TestTokenRevalidationBeforeInvoke/owner
+=== RUN   TestTokenRevalidationBeforeInvoke/size
+=== RUN   TestTokenRevalidationBeforeInvoke/uninitialized
+=== RUN   TestTokenRevalidationBeforeInvoke/native
+=== RUN   TestTokenRevalidationBeforeInvoke/readonly
+=== RUN   TestTokenRevalidationBeforeInvoke/identity
+=== RUN   TestTokenRevalidationBeforeInvoke/mint
+=== RUN   TestTokenRevalidationBeforeInvoke/authority
+=== RUN   TestTokenRevalidationBeforeInvoke/unsigned
+=== RUN   TestTokenRevalidationBeforeInvoke/program
+--- PASS: TestTokenRevalidationBeforeInvoke (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/owner (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/size (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/uninitialized (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/native (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/readonly (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/identity (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/mint (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/authority (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/unsigned (0.00s)
+    --- PASS: TestTokenRevalidationBeforeInvoke/program (0.00s)
+PASS
+ok  	gosvm/sdk/token	0.014s

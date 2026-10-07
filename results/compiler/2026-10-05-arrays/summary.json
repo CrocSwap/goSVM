@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "passed": true,
+  "source_sha256": {
+    "cmd/gosvm/main.go": "49020919b1839c7e9d2603f375b9d06e009598cdcf296d6b7d63d0b08c55c29c",
+    "cmd/gosvm/project.go": "ae5720b29756fdbe07ff460d08182a7c4121b5e1d51d4fcb220dbe1b853e5f1b",
+    "cmd/gosvm/project_test.go": "c6ab1ce9ae9cec54869b23fa1849c5d9a531344574cb8c3d547b92ec2af286c7",
+    "cmd/gosvm/runner.go": "010ee2caa519fdf6ed6ba323d641a68f409fd3dff25869d3c9c2d2d778a2f05f",
+    "cmd/gosvm/svm.go": "d15212f240a49a4f71f73a77580022e908b3f78476bbd33b327393cd673508f6",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "examples/array-values/program.go": "6a1771f0d25300fc01f62425cb5671e0f429e2313284038868f3500f968257c8",
+    "internal/compiler/abi.c.txt": "9b3de528a6bd81794c884af9d7c961477f3557c770926dc8a541fc5970dc6758",
+    "internal/compiler/accounts.c.txt": "665852d426b4d9f71ccd0dc39e866778a587c429d864c0804107c00c02bd0264",
+    "internal/compiler/arrays.go": "4e520d291a7477e98d0c4d1a907723b58f4be913f7d69e5291d90e6e73b711c4",
+    "internal/compiler/arrays_test.go": "73a6d846fdfae0ecdbcf8f495e45a9c827d89f1adddd87e45a7ff1d3ea3bdfaa",
+    "internal/compiler/build.go": "8e8b0c59aff8980e482776b58bccd4052377a7e3905afe53d15f3371a357bcf2",
+    "internal/compiler/cache.go": "2430443b181104660100ffc5fd55f68fbc1d8f48ea02bd3dc5460abe2b3b6bd0",
+    "internal/compiler/cache_test.go": "010e0a585fc956d4b32af4a6974162b696e33dddf922db827c2412341c246e52",
+    "internal/compiler/compiler.go": "08af3fffa74fbc17fc6543d0bd39dec1998735086e940c5fd33b153f9b53b5de",
+    "internal/compiler/compiler_test.go": "7db5a1a0e80cd309d72881b14cf0c99d1eeefbbeab6434dff7e76532d3808c3c",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/solana.c.txt": "eb952f35542924b9d17288291ad79534f20105518c37fbab4b40464cfc6ffa5e",
+    "internal/compiler/solana.go": "5328ba79fda46efa9c4b16c761c61ffd4d8ea99a9e184fd0098bb3235fcb6f75",
+    "internal/compiler/sources.go": "03df037ced54bfcf211225f019e9098af83a6adbd26ff4240abf27ecfe5bc8bb",
+    "internal/compiler/values_test.go": "83d9387409b2b986d8509018235d538c5d94dd54e7df10fe7c99f3c4194c139e",
+    "internal/runner/install.go": "0a003a11edf23730f12379e3026b028b027c98cadc67745053e0bb70921ba2ba",
+    "internal/runner/install_test.go": "92e1f7a5b7229000d578ae16bc9f86d4520da6e77a3b492b9ea67ea56e300f54",
+    "internal/runner/pins/darwin-arm64.json": "1a3abb8abb63972c2780308edce05ad8f4793be80d70ccadf4f0ee52803d1e16",
+    "internal/sbftest/fast.go": "7e5ea988c1ce4a600ad75a715430b89bdfd2b5e0f7463d82d02713331f9c8285",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "dd6c1d6f0c843f7163bace9a549d582ed0b815db5bf6e8c826f7f307583c9ec0",
+    "internal/sbftest/general_run.go": "48657ffba86dfb61aa8bb39dc423afa728c562a4acc18f404185be0c485bb394",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/run.go": "db2ea690fb3fa92a6d552e5d83057e8db98f6bf15cbbb49ec9f303e0360d1077",
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "ea09e77aa5f33ca48a44ddfa924b457d62f4c12b72e5c3aa24086e7265bdcaeb",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "b512dba30b8400854c76fabe215dce0a22e1cc62ef48eed254c3fc494e131963",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "scripts/array_verify.py": "fea3603eca14a525fab198930db93bf92e2863660cca27db48af947c57d4efc2"
+  },
+  "checks": [
+    {
+      "check": "differential-tests",
+      "command": [
+        "go",
+        "test",
+        "./internal/compiler",
+        "-run",
+        "TestScalarArrays|TestArray",
+        "-count=1",
+        "-v"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.9897095002233982,
+      "log": "differential-tests.log"
+    },
+    {
+      "check": "cli-build",
+      "command": [
+        "bash",
+        "scripts/build-cli.sh",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.9786167917773128,
+      "log": "cli-build.log"
+    },
+    {
+      "check": "runner-install",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "runner",
+        "install",
+        "-archive",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.130195832811296,
+      "log": "runner-install.log"
+    },
+    {
+      "check": "native-build",
+      "command": [
+        "go",
+        "build",
+        "-ldflags=-linkmode=external",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/native",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/native-driver.go"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.49908779095858335,
+      "log": "native-build.log"
+    },
+    {
+      "check": "native-sign",
+      "command": [
+        "codesign",
+        "--force",
+        "--sign",
+        "-",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/native"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.020976665895432234,
+      "log": "native-sign.log"
+    },
+    {
+      "check": "native-expectations",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/native"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.008687791880220175,
+      "log": "native-expectations.log"
+    },
+    {
+      "check": "sbf-build",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "-arch",
+        "v3",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/array-values"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.3941245418973267,
+      "log": "sbf-build.log"
+    },
+    {
+      "check": "emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "-arch",
+        "v3",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/examples/array-values"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.010266916826367378,
+      "log": "emit-c.log"
+    },
+    {
+      "check": "stack-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/stack.o"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.07772908266633749,
+      "log": "stack-compile.log"
+    },
+    {
+      "check": "stack-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/stack.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/stack.o"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.022805416956543922,
+      "log": "stack-link.log"
+    },
+    {
+      "check": "svm-0",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/svm-0.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.12417945871129632,
+      "log": "svm-0.log"
+    },
+    {
+      "check": "svm-1",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/svm-1.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.12486216612160206,
+      "log": "svm-1.log"
+    },
+    {
+      "check": "svm-2",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/array-values/2026-10-05-arrays/gosvm",
+        "svm-test",
+        "-elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/program.so",
+        "-fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/fixtures.json",
+        "-report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-arrays/svm-2.json"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 0.125365000218153,
+      "log": "svm-2.log"
+    }
+  ],
+  "limitations": [
+    "Scalar arrays only, at most 1024 bytes per value; no array slicing or nested/struct elements",
+    "Native-Go/SBF semantics comparison, not a fresh-validator oracle",
+    "Stack measurements are for this fixture, not a universal per-function bound",
+    "Compiler fixture; not bounded-starter, token-swap or dependency-heavy protocol performance"
+  ],
+  "scenarios": 141,
+  "transactions": 141,
+  "native_vectors": 140,
+  "native_c_differential_vectors": 1000,
+  "samples": 3,
+  "expected_failures": 9,
+  "elf_bytes": 4328,
+  "elf_sha256": "27f1c9132c5eb0d68ccd318d1c9ede155f3fd72b949b2608c060abf7171e729d",
+  "stack_frames": [
+    {
+      "function": "entrypoint",
+      "bytes": 64,
+      "kind": "static"
+    },
+    {
+      "function": "go_Process",
+      "bytes": 320,
+      "kind": "static"
+    }
+  ],
+  "fixture_sha256": "77241ebc382c248ee9a766517e66bf6e6d35ab5f6eb997a19ad64abf111ee2d8",
+  "native_expectations_sha256": "f9a6e20b39b8077beac027268b68ffa48e36232fa861929c0955d58f197b95ff",
+  "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+  "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)"
+}

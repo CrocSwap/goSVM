@@ -1,0 +1,158 @@
+{
+  "passed": true,
+  "scope": "Five interleaved forced SBF builds per frontend, identical copied application/SDK, installed cached tooling on shared desktop",
+  "samples": [
+    {
+      "variant": "baseline",
+      "sample": 0,
+      "seconds": 5.982925666961819,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "optimized",
+      "sample": 0,
+      "seconds": 5.405615833122283,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/optimized.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "optimized",
+      "sample": 1,
+      "seconds": 4.399354916997254,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/optimized.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "baseline",
+      "sample": 1,
+      "seconds": 4.6041293339803815,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "baseline",
+      "sample": 2,
+      "seconds": 5.641352375037968,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "optimized",
+      "sample": 2,
+      "seconds": 7.15562624996528,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/optimized.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "optimized",
+      "sample": 3,
+      "seconds": 6.049131874926388,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/optimized.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "baseline",
+      "sample": 3,
+      "seconds": 4.844879500102252,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "baseline",
+      "sample": 4,
+      "seconds": 6.9271484590135515,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    },
+    {
+      "variant": "optimized",
+      "sample": 4,
+      "seconds": 6.10758745810017,
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-no-cache",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/optimized.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store-builds/2026-10-06-packed-store-builds/handler"
+      ]
+    }
+  ],
+  "median_seconds": {
+    "baseline": 5.641352375037968,
+    "optimized": 6.049131874926388
+  },
+  "elf_sha256": {
+    "baseline": "19daf911c6348dbb6ba86df8452a0637fe6c415ce9322d582a91232741e83bad",
+    "optimized": "88c724968cb445c0709d02912e814b4aa4e3783634268e22d31536e79eeee54b"
+  },
+  "cli_sha256": {
+    "baseline": "90ebc1d0a9221241ef2fa764b5fbf7380829859ad493a24cf25530907b96ea26",
+    "optimized": "e4dae52c37cd0088edfb6889f50b9bef9f7937c11bdf156f80faa34dac61aa9e"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "scope": "O2, fixed-fee classic-token Whirlpools handler, events omitted; new owner-side application snapshot",
+  "source_proof_sha256": "6fcc377c166f9963176282447dead3a81f442df1f1a9a319ac6d6986361ce697",
+  "handler": {
+    "scenarios": 166,
+    "successful": 103,
+    "failed": 63,
+    "repetitions": 3,
+    "median_paired_ratio": 1.2808531366340767,
+    "elf_bytes": 83424,
+    "elf_sha256": "15fc075e82d857a5eca89f71fdf0a55154ca3bc3809497b2ac2d3f78c9673398",
+    "max_static_frame": 1472,
+    "median_success_saving": 14416,
+    "median_success_percent": 21.906669553919443,
+    "success_improve": 103,
+    "success_regress": 0,
+    "failure_improve": 29,
+    "failure_regress": 0,
+    "ratio_min": 1.226616619365864,
+    "ratio_max": 1.6170884506669752
+  },
+  "components": {
+    "cases": 29713,
+    "preserved_cases": 24713,
+    "new_muldiv_cases": 5000,
+    "repetitions": 3,
+    "fixture_sha256": "8fcf8a02dd40babe3ae240474f9b48f32494c13759a5c14ea7a412fa4cf3c1b3",
+    "go_elf_sha256": "462c61bb1dbc424eaa657e0491ec5a866596dc2f37b17f9e5d1a260347a53768",
+    "rust_elf_sha256": "a38212a20302c3110d890573193df3747d53f4bc6c6e73c3fc3afe213e91004c"
+  },
+  "archive_sha256": "25743a6fb546530424b97dffa6f71366239c995e8968c23d4c76ba19b37c5adb",
+  "frontend_archive_sha256": "5f4dfa414aada0437e75d8b059cc3cfe066f5ccf18e5c225aa84b3a3834e9c9e",
+  "manifest_sha256": "7abf1d367d8ec40c4ba74938dcdbd9480a05c38d5d0c1edd0d9d0dbd1bfe75d5",
+  "cli_sha256": "e4dae52c37cd0088edfb6889f50b9bef9f7937c11bdf156f80faa34dac61aa9e",
+  "command": [
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-snapshot/2026-10-06-whirlpool-optimized-snapshot/extracted/whirlpool-optimized/gosvm",
+    "-no-cache",
+    "-llvm",
+    "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+    "-o",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-optimized-snapshot/rebuilt.so",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-snapshot/2026-10-06-whirlpool-optimized-snapshot/extracted/whirlpool-optimized/handler"
+  ],
+  "extracted_rebuild_elf_sha256": "15fc075e82d857a5eca89f71fdf0a55154ca3bc3809497b2ac2d3f78c9673398",
+  "script_sha256": "7f13cfa72600deba988c4f6f2bef862b47a7ea8b6612efabe6ca4e4145fb0043"
+}

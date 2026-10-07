@@ -1,0 +1,2 @@
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/schema2/2026-10-05-schema2-prototype-fixed/multi-state/build/program.so (7088 bytes, 907ms)
+gosvm timings: {"schema":1,"command":"build","passed":true,"phase_seconds":{"backend_check":0.24855225,"generation":0.122270833,"manifest":0.000773708,"sbf_build":0.534175458},"total_seconds":0.9072785}

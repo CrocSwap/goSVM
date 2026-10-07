@@ -1,0 +1,63 @@
+{
+  "workload": "bounded",
+  "scenario": "no_op",
+  "sample": 3,
+  "wall_seconds": 0.2302175839431584,
+  "cpu_seconds": 0.39623799999999676,
+  "phases_seconds": {
+    "backend_check": 0.020005542,
+    "generation": 0.001381,
+    "manifest": 0.00027675,
+    "native_tests": 0.131588833,
+    "sbf_build": 0.003977375,
+    "svm_tests": 0.024809792
+  },
+  "native_test_result_cached": true,
+  "svm_startup_seconds": 0.012572792,
+  "svm_fixture_seconds": 0.004381917,
+  "svm_total_seconds": 0.022739,
+  "vm_execution_seconds": 0.002181,
+  "before": {
+    "elf_exists": true,
+    "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+    "elf_mtime_ns": 1791237047523117158,
+    "receipt": {
+      "Input": "ccd5e11e647f0449a3c35058423e413c7d81af974bff0f566c28676a0e747625",
+      "Output": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7"
+    }
+  },
+  "after": {
+    "elf_exists": true,
+    "elf_sha256": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7",
+    "elf_mtime_ns": 1791237047523117158,
+    "receipt": {
+      "Input": "ccd5e11e647f0449a3c35058423e413c7d81af974bff0f566c28676a0e747625",
+      "Output": "89e2e942d91fdc0d41ea443681ec52cb1c577c0863e1ededbb246c658d5daab7"
+    }
+  },
+  "commands": [
+    {
+      "wall_seconds": 0.2302175839431584,
+      "cpu_seconds": 0.39623799999999676,
+      "load_average_before": [
+        9.4794921875,
+        5.78076171875,
+        5.33447265625
+      ],
+      "log": "results/svm/2026-10-05-workflow/bounded-no_op-3.log",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow/gosvm",
+        "test",
+        "--svm",
+        "-dir",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow/starter",
+        "-llvm",
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm",
+        "-svm-runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/svm-fixtures-target/release/gosvm-svm-runner",
+        "-timings"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM"
+    }
+  ]
+}

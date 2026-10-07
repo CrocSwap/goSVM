@@ -1,0 +1,19 @@
+?   	example.com/typed-swap/client	[no test files]
+ok  	example.com/typed-swap	0.006s
+Built /Users/colkitt/sith/toys/crypto/goSVM/build/svm-workflows/2026-10-05-workflow/starter/build/program.so (3216 bytes, 259ms)
+Testing 14 compiled SBF fixtures with LiteSVM...
+PASS swap                         486 CU
+PASS zero amount                  262 CU
+PASS slippage                     279 CU
+PASS invalid reserves             255 CU
+PASS counter overflow             268 CU
+PASS owner                        87 CU
+PASS readonly                     81 CU
+PASS missing account              21 CU
+PASS short state                  99 CU
+PASS state discriminator          104 CU
+PASS instruction discriminator    135 CU
+PASS long instruction             106 CU
+PASS two swaps                    972 CU
+PASS atomic rollback              765 CU
+gosvm timings: {"schema":1,"command":"test","passed":true,"phase_seconds":{"backend_check":0.019845291,"generation":0.001314916,"manifest":0.000259208,"native_tests":0.233752,"sbf_build":0.003786709,"svm_tests":0.019494417},"total_seconds":0.278663333}

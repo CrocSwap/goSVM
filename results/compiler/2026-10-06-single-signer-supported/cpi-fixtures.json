@@ -1,0 +1,589 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+  "payer_seed": "1111111111111111111111111111111111111111111111111111111111111111",
+  "native_programs": [
+    {
+      "name": "system",
+      "address": "11111111111111111111111111111111"
+    }
+  ],
+  "accounts": [
+    {
+      "name": "source",
+      "address": "9JmAoja9Q7JScySij75htRRzKEHsTpJML4mHoQ9jDyzh",
+      "initial": {
+        "data": "",
+        "owner": "11111111111111111111111111111111",
+        "lamports": 1000000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "dest",
+      "address": "3yS1JFVT284y8z1LC9MRoWxZjzFrdoD5axKsZiyMsfC7",
+      "initial": {
+        "data": "",
+        "owner": "11111111111111111111111111111111",
+        "lamports": 1000000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    },
+    {
+      "name": "pool",
+      "address": "2VDW9dFE1ZXz4zWAbaBDQFynNVdRpQ73HyfSHMzBSL6Z",
+      "initial": {
+        "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+        "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+        "lamports": 1000000000,
+        "executable": false,
+        "rent_epoch": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "general-transfer",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "14",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 999999993,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000007,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "compact-transfer",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "15",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": null,
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 999999993,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000007,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "compact-rollback",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "16",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 7312
+                }
+              ]
+            },
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "general-bad-bump",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "14",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "PrivilegeEscalation"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b38557200acc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "pool",
+          "state": {
+            "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b38557200acc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+            "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "lamports": 1000000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "compact-bad-bump",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "15",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "PrivilegeEscalation"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b38557200acc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "overrides": [
+        {
+          "name": "pool",
+          "state": {
+            "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b38557200acc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+            "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+            "lamports": 1000000000,
+            "executable": false,
+            "rent_epoch": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "general-readonly-source",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "14",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "PrivilegeEscalation"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "compact-readonly-source",
+      "steps": [
+        {
+          "instructions": [
+            {
+              "program": "program",
+              "data": "15",
+              "accounts": [
+                {
+                  "account": "source",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "dest",
+                  "writable": true,
+                  "signer": false
+                },
+                {
+                  "account": "pool",
+                  "writable": false,
+                  "signer": false
+                },
+                {
+                  "account": "system",
+                  "writable": false,
+                  "signer": false
+                }
+              ]
+            }
+          ],
+          "expect": {
+            "error": {
+              "InstructionError": [
+                0,
+                "PrivilegeEscalation"
+              ]
+            },
+            "accounts": [
+              {
+                "account": "source",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "dest",
+                "state": {
+                  "data": "",
+                  "owner": "11111111111111111111111111111111",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pool",
+                "state": {
+                  "data": "3f95d10ce1806309ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b385572ffacc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3001d3a577491aecbe805223f5c7996b3d0ed0a2744617e9bb8d5f20f2c496683a0bddaf714314e6b88a5c2dffc193653708daac7e4011e3b587592afcce90623405d7a97b4d1ee0b2845627f9cb9d6f3102d4a6784a1bedbf815324f6c89a6c3e0fd1a3754718eabc8e5021f3c597693b0cdea0724415e7b98b5d2ef0c294663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794b1ceeb0825425f7c99b6d3f00d2a4764819ebbd8f5122f4c6986a3c0ddfa1734516e8ba8c5e2ff1c39567390adcae704213e5b7895b2cfec092643607d9ab7d4f10e2b4865829fbcd9f613304d6a87a4c1defb1835526f8ca9c6e3",
+                  "owner": "CktRuQ2mttgRGkXJtyksdKHjUdc2C4TgDzyB98oEzy8",
+                  "lamports": 1000000000,
+                  "executable": false,
+                  "rent_epoch": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

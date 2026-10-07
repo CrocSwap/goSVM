@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "policy": "Preserved local evidence; excluded from Git to avoid large blobs. No historical files were modified or deleted.",
+  "files": [
+    {
+      "path": "results/compiler/2026-10-06-account-decoder32-final/phoenix-fixtures.json",
+      "bytes": 469504312,
+      "sha256": "27df2f79c1c341bde8b52900ef075031b78de6b2d851d0dbda4acc685773adb3"
+    },
+    {
+      "path": "results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+      "bytes": 21421300,
+      "sha256": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd"
+    },
+    {
+      "path": "results/compiler/2026-10-06-compact-signer-canonical-supported/handler.json",
+      "bytes": 21421300,
+      "sha256": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd"
+    },
+    {
+      "path": "results/compiler/2026-10-06-phoenix-dependencies-final/trading-fixtures.json",
+      "bytes": 269908966,
+      "sha256": "cee3f59a550feabd8d33c7667625b49fcbdeea740bdbd27d0aebc289fe34ac3a"
+    },
+    {
+      "path": "results/compiler/2026-10-06-phoenix-dependencies/trading-fixtures.json",
+      "bytes": 269908966,
+      "sha256": "cee3f59a550feabd8d33c7667625b49fcbdeea740bdbd27d0aebc289fe34ac3a"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-go-0.json",
+      "bytes": 19348169,
+      "sha256": "fba37358d857d13f350adb9a2db5c7212c2a56f013200ed4712c7d25fbd11e1f"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-go-1.json",
+      "bytes": 19348172,
+      "sha256": "8e0cee5975995936c61a818105cb2b765db6c269cd9cb7395c675eee0744943f"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-go-2.json",
+      "bytes": 19348170,
+      "sha256": "c9c26e05a194aaf6e6ecee9341c801a817d58e707a4735042b72ee6bce7d387f"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-0.json",
+      "bytes": 19354645,
+      "sha256": "854391c54f54cd487a425b000e3de8a3a4aa8e5743b282dfc955f065525443f4"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-1.json",
+      "bytes": 19354646,
+      "sha256": "283f956908bad768de5a49ebdc3471a6eaa5d677c672d50008c376aa2bb9fd9a"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components-rust-2.json",
+      "bytes": 19354645,
+      "sha256": "713a58423f31e124422c801c2dca7372e92f9435368f5f790f053779567343e9"
+    },
+    {
+      "path": "results/compiler/2026-10-06-whirlpool-optimized-final/components.json",
+      "bytes": 17975175,
+      "sha256": "8fcf8a02dd40babe3ae240474f9b48f32494c13759a5c14ea7a412fa4cf3c1b3"
+    },
+    {
+      "path": "results/maintenance/2026-10-06-deep-build-cleanup/build-snapshots.tar.gz",
+      "bytes": 331766879,
+      "sha256": "11e339e7f9adede498b881e7180f08288735b7fedf9451bb93b1ceb6c0f6f740"
+    }
+  ]
+}

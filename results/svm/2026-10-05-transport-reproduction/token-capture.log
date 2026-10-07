@@ -1,0 +1,10 @@
+PASS: 315 token-swap simulations, 6 committed swaps, 6 rollback checks
+go wide-swap        20329 CU
+go maximum-input    20311 CU
+go small-swap       20241 CU
+lean-rust wide-swap        20392 CU
+lean-rust maximum-input    20480 CU
+lean-rust small-swap       20041 CU
+anchor wide-swap        19431 CU
+anchor maximum-input    19519 CU
+anchor small-swap       19080 CU

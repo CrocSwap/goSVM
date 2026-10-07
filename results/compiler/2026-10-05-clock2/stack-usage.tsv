@@ -1,0 +1,6 @@
+results/compiler/2026-10-05-clock2/program.c:36:memcpy	0	static
+results/compiler/2026-10-05-clock2/program.c:48:memset	0	static
+results/compiler/2026-10-05-clock2/program.c:496:entrypoint	1152	static
+results/compiler/2026-10-05-clock2/program.c:150:sol_Clock	64	static
+results/compiler/2026-10-05-clock2/program.c:270:v4	0	static
+results/compiler/2026-10-05-clock2/program.c:298:v8	0	static

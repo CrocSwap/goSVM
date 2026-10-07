@@ -1,0 +1,16 @@
+=== RUN   TestSDK2ClockNativeCDifferential
+--- PASS: TestSDK2ClockNativeCDifferential (2.78s)
+=== RUN   TestSDK2InvokeBoundaryDifferential
+--- PASS: TestSDK2InvokeBoundaryDifferential (3.38s)
+=== RUN   TestSDK2LifecycleLoaderSelection
+--- PASS: TestSDK2LifecycleLoaderSelection (0.01s)
+=== RUN   TestSDK2OwnedLifecycleDifferential
+--- PASS: TestSDK2OwnedLifecycleDifferential (2.90s)
+=== RUN   TestSDK2RentCalculationC
+--- PASS: TestSDK2RentCalculationC (1.72s)
+=== RUN   TestSDK2AggregateMemory
+--- PASS: TestSDK2AggregateMemory (1.24s)
+=== RUN   TestSDK2ArrayValueSemantics
+--- PASS: TestSDK2ArrayValueSemantics (1.99s)
+PASS
+ok  	gosvm/internal/compiler	14.149s

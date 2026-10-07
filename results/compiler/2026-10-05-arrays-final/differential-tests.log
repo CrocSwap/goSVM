@@ -1,0 +1,34 @@
+=== RUN   TestScalarArraysDifferential
+--- PASS: TestScalarArraysDifferential (0.22s)
+=== RUN   TestArrayDeclarationOrder
+--- PASS: TestArrayDeclarationOrder (0.05s)
+=== RUN   TestArrayRejections
+=== RUN   TestArrayRejections/slice_conversion
+=== RUN   TestArrayRejections/array_range
+=== RUN   TestArrayRejections/huge_length
+=== RUN   TestArrayRejections/oversize_word
+=== RUN   TestArrayRejections/signed_element
+=== RUN   TestArrayRejections/nested_array
+=== RUN   TestArrayRejections/struct_element
+=== RUN   TestArrayRejections/context_element
+=== RUN   TestArrayRejections/slice_element
+=== RUN   TestArrayRejections/array_slice
+=== RUN   TestArrayRejections/oversize_byte
+=== RUN   TestArrayRejections/array_pointer
+--- PASS: TestArrayRejections (0.00s)
+    --- PASS: TestArrayRejections/slice_conversion (0.00s)
+    --- PASS: TestArrayRejections/array_range (0.00s)
+    --- PASS: TestArrayRejections/huge_length (0.00s)
+    --- PASS: TestArrayRejections/oversize_word (0.00s)
+    --- PASS: TestArrayRejections/signed_element (0.00s)
+    --- PASS: TestArrayRejections/nested_array (0.00s)
+    --- PASS: TestArrayRejections/struct_element (0.00s)
+    --- PASS: TestArrayRejections/context_element (0.00s)
+    --- PASS: TestArrayRejections/slice_element (0.00s)
+    --- PASS: TestArrayRejections/array_slice (0.00s)
+    --- PASS: TestArrayRejections/oversize_byte (0.00s)
+    --- PASS: TestArrayRejections/array_pointer (0.00s)
+=== RUN   TestArrayStorageLimit
+--- PASS: TestArrayStorageLimit (0.00s)
+PASS
+ok  	gosvm/internal/compiler	0.278s

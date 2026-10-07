@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "label": "root-tests",
+      "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" make test",
+      "chunk_id": "820f00",
+      "wall_time_seconds": 0.000007208,
+      "session_id": 24887,
+      "original_token_count": 144,
+      "output": "?   \tgosvm/cmd/verify\t[no test files]\n?   \tgosvm/examples/array-capacity\t[no test files]\n?   \tgosvm/examples/array-values\t[no test files]\n?   \tgosvm/examples/control-values\t[no test files]\nok  \tgosvm/cmd/gosvm\t0.130s\nok  \tgosvm/examples/amm\t(cached)\nok  \tgosvm/examples/protocol\t(cached)\nok  \tgosvm/examples/tokenswap\t(cached)\nok  \tgosvm/internal/compiler\t5.648s\nok  \tgosvm/internal/project\t1.212s\nok  \tgosvm/internal/runner\t(cached)\nok  \tgosvm/internal/sbftest\t(cached)\nok  \tgosvm/internal/testvm\t(cached)\nok  \tgosvm/internal/toolchain\t(cached)\nok  \tgosvm/solana\t(cached)\n",
+      "exit_code": 0
+    },
+    {
+      "label": "vet",
+      "cmd": "GOCACHE=\"$PWD/build/lifecycle-go-cache\" go vet ./...",
+      "chunk_id": "8bbf93",
+      "wall_time_seconds": 0.000003083,
+      "session_id": 25765,
+      "original_token_count": 0,
+      "output": "",
+      "exit_code": 0
+    },
+    {
+      "label": "workloads",
+      "cmd": "python3 scripts/milestone1_acceptance.py --output results/svm/2026-10-05-m2-control-regression --runner-archive results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz --existing-backend build/polish/cache/toolchains/v1.51/darwin-arm64 --host-note 'Existing development host, control/return compiler regression. Fresh-host and final fresh-validator checks remain explicitly skipped by user for milestone 1.'",
+      "chunk_id": "bd5a88",
+      "wall_time_seconds": 0.000004208,
+      "session_id": 32547,
+      "original_token_count": 127,
+      "output": "source-install: PASS\nbackend-status: PASS\nrunner-install: PASS\nrunner-status: PASS\nrunner-idempotent: PASS\nscaffold: PASS\ndoctor: PASS\nstarter: PASS\nproject-general: PASS\nfull-token-build: PASS\nfull-token: PASS\nlifecycle-build: PASS\nlifecycle: PASS\nprobe-compile: PASS\nprobe-link: PASS\nsysvars: PASS\nmetadata-rejection: PASS\nPASS: installation/workflows; this script does not certify host cleanliness or a fresh validator. /Users/colkitt/sith/toys/crypto/goSVM/results/svm/2026-10-05-m2-control-regression\n",
+      "exit_code": 0
+    },
+    {
+      "label": "imports",
+      "cmd": "python3 scripts/import_verify.py --output results/compiler/2026-10-05-control-import-regression",
+      "chunk_id": "90f43f",
+      "wall_time_seconds": 0.000005459,
+      "session_id": 82582,
+      "original_token_count": 144,
+      "output": "compiler-tests: PASS\napplication-tests: PASS\ncli-build: PASS\nrunner-install: PASS\nisolated-service: PASS\nisolated-dependencies: PASS\nnative-build: PASS\nnative-sign: PASS\nnative-expectations: PASS\nsbf-build: PASS\nemit-c: PASS\nstack-compile: PASS\nstack-link: PASS\nsvm-0: PASS\nsvm-1: PASS\nsvm-2: PASS\ncache-first: PASS\ncache-noop: PASS\ncache-helper-edit: PASS\ncache-restored: PASS\nPASS: 142 shared-package SBF scenarios, three repetitions, isolated native client and dependency cache. /Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-05-control-import-regression\n",
+      "exit_code": 0
+    },
+    {
+      "label": "starter",
+      "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test ./... -count=1",
+      "chunk_id": "e01ff3",
+      "wall_time_seconds": 0.892636083,
+      "exit_code": 0,
+      "original_token_count": 22,
+      "output": "?   \texample.com/typed-swap/client\t[no test files]\nok  \texample.com/typed-swap\t0.008s\n"
+    },
+    {
+      "label": "transport",
+      "cmd": "GOCACHE=/Users/colkitt/sith/toys/crypto/goSVM/build/lifecycle-go-cache GOWORK=off go test -ldflags=-linkmode=external ./... -count=1",
+      "chunk_id": "ad2373",
+      "wall_time_seconds": 0.000004416,
+      "session_id": 94072,
+      "original_token_count": 11,
+      "output": "ok  \tgosvm-svm-transport-experiment\t0.017s\n",
+      "exit_code": 0
+    }
+  ]
+}

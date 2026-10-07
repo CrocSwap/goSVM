@@ -1,0 +1,5 @@
+{
+  "source_edit": "bounded: rename effective -> effectiveInput; token original+adapter: rename net -> netInput",
+  "test_edit": "append a new zero-input assertion with a unique test name each repetition",
+  "scope": "all edits are in isolated staging; original repository programs stay unchanged"
+}

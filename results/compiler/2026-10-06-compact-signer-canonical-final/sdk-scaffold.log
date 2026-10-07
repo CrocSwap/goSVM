@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/scaffold
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/scaffold" && gosvm check && go test ./... && gosvm build

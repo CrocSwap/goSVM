@@ -1,0 +1,6 @@
+Testing 30 compiled SBF scenarios with LiteSVM...
+PASS signed-lifecycle step 1              5483 CU
+gosvm: signed-lifecycle step 2 simulation: transaction error {"InsufficientFundsForRent":{"account_index":3}}; expected null
+Program AwbwNMdKeebv4WJ1ow4GVwYgxEZEZTX5HDAszcuiEVv5 invoke [1]
+Program AwbwNMdKeebv4WJ1ow4GVwYgxEZEZTX5HDAszcuiEVv5 consumed 3619 of 200000 compute units
+Program AwbwNMdKeebv4WJ1ow4GVwYgxEZEZTX5HDAszcuiEVv5 success

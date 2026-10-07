@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "objective": "Achieve a 1.33x CU cost relative to Rust implementation on the whirlpools benchmark",
+  "median_paired_ratio": 1.2808531366340767,
+  "successful_cases": 103,
+  "total_handler_cases": 166,
+  "handler_languages": [
+    "go",
+    "rust",
+    "upstream"
+  ],
+  "repetitions": 3,
+  "component_cases": 29713,
+  "component_languages": [
+    "go",
+    "rust"
+  ],
+  "source_inputs_unchanged": true,
+  "matched_fixture_and_runtime_pins": true,
+  "elf_sha256": "15fc075e82d857a5eca89f71fdf0a55154ca3bc3809497b2ac2d3f78c9673398",
+  "delivery_archive_sha256": "25743a6fb546530424b97dffa6f71366239c995e8968c23d4c76ba19b37c5adb",
+  "extracted_rebuild_matches": true,
+  "scope": "O2, fixed-fee classic-token Whirlpools handler, events omitted; new owner-side application snapshot",
+  "per_case_target": false,
+  "max_successful_ratio": 1.6170884506669752,
+  "proof_sha256": "6fcc377c166f9963176282447dead3a81f442df1f1a9a319ac6d6986361ce697",
+  "delivery_proof_sha256": "7b3d7a386d97d18954c44b872c94d36205be404aa42575307df3554c47c99d69"
+}

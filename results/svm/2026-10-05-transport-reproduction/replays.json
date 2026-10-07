@@ -1,0 +1,248 @@
+{
+  "equivalence_passed": true,
+  "samples": 1,
+  "schema": 1,
+  "scope": "same pinned LiteSVM core; full recorded RPC responses; init plus fixtures; shutdown excluded; embedded library dlopen excluded",
+  "timings": [
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00784225,
+      "fixture_seconds": 0.004688916,
+      "total_seconds": 0.012531458
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007282458,
+      "fixture_seconds": 0.003906708,
+      "total_seconds": 0.011189417
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.007178084,
+      "fixture_seconds": 0.003855417,
+      "total_seconds": 0.011033709
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.014020417,
+      "fixture_seconds": 0.11030125,
+      "total_seconds": 0.124321875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.011274625,
+      "fixture_seconds": 0.003859125,
+      "total_seconds": 0.015133875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008763959,
+      "fixture_seconds": 0.003044792,
+      "total_seconds": 0.011808875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008491708,
+      "fixture_seconds": 0.003329625,
+      "total_seconds": 0.011821458
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.017009583,
+      "fixture_seconds": 0.105964708,
+      "total_seconds": 0.122974417
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.01520475,
+      "fixture_seconds": 0.003853334,
+      "total_seconds": 0.01905825
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.005153708,
+      "fixture_seconds": 0.002525708,
+      "total_seconds": 0.007679541
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.004889125,
+      "fixture_seconds": 0.002511792,
+      "total_seconds": 0.007401084
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.012606542,
+      "fixture_seconds": 0.101763375,
+      "total_seconds": 0.114370209
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.009704792,
+      "fixture_seconds": 0.003405125,
+      "total_seconds": 0.013110125
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.00830525,
+      "fixture_seconds": 0.003312625,
+      "total_seconds": 0.011618167
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 71,
+      "startup_seconds": 0.008232625,
+      "fixture_seconds": 0.002966208,
+      "total_seconds": 0.011199084
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "stdio",
+      "batch": 64,
+      "calls": 414,
+      "startup_seconds": 0.015214083,
+      "fixture_seconds": 0.103878042,
+      "total_seconds": 0.119092375
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.00694075,
+      "fixture_seconds": 0.003379958,
+      "total_seconds": 0.010320875
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.005034458,
+      "fixture_seconds": 0.002832875,
+      "total_seconds": 0.007867542
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.004852125,
+      "fixture_seconds": 0.002774542,
+      "total_seconds": 0.007626792
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "embedded",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.012858167,
+      "fixture_seconds": 0.1046715,
+      "total_seconds": 0.117529917
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-anchor.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.013433041,
+      "fixture_seconds": 0.009577,
+      "total_seconds": 0.023010166
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-go.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.010181125,
+      "fixture_seconds": 0.009011667,
+      "total_seconds": 0.019192917
+    },
+    {
+      "sample": 0,
+      "trace": "bounded-lean-rust.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 71,
+      "startup_seconds": 0.009737875,
+      "fixture_seconds": 0.00926025,
+      "total_seconds": 0.01899825
+    },
+    {
+      "sample": 0,
+      "trace": "token.jsonl",
+      "transport": "http",
+      "batch": 1,
+      "calls": 414,
+      "startup_seconds": 0.018190167,
+      "fixture_seconds": 0.146222791,
+      "total_seconds": 0.164413125
+    }
+  ]
+}

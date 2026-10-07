@@ -1,0 +1,2 @@
+Created /Users/colkitt/sith/toys/crypto/goSVM/build/clock2/2026-10-05-clock2-supported/sdk-two
+Next: cd "/Users/colkitt/sith/toys/crypto/goSVM/build/clock2/2026-10-05-clock2-supported/sdk-two" && gosvm check && go test ./... && gosvm build

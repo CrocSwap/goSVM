@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "passed": true,
+  "scope": "Current compiled artifacts compared with captured independent validator evidence; no new validator execution",
+  "matched_go_token_vectors": 105,
+  "lifecycle_transactions": 26,
+  "known_metadata_difference": {
+    "field": "rent_epoch",
+    "new_account_litesvm": 0,
+    "new_account_validator": 18446744073709551615
+  },
+  "only_vendored_source_change": [
+    "src/lib.rs"
+  ],
+  "pinned_runner_source_matches_provenance": true,
+  "feature_ids_match_captured_validator": true,
+  "evidence_sha256": {
+    "results/svm/2026-10-05-general-complete/fresh-validator.json": "44881553421635669fa4bce1ad5591b70c2a206078bcbf7cd5dce06740b71817",
+    "results/svm/2026-10-05-lifecycle-verified/validator-results.json": "79df4ab93396d4bec69ad6eeefafe8924d1cd37344bf6accf28e59847284a847",
+    "results/svm/2026-10-05-lifecycle-verified/fixtures.json": "e08f8dae3b97d965707a9fbacc166b92ec07687970b1e364e55397692f4d0bb2",
+    "results/svm/2026-10-05-lifecycle-verified/validator-fixtures.json": "b6772b38a84e17487a8a50ba8377a16c144f64862bcc2d5c12b86f91789a5a86",
+    "third_party/litesvm-0.8.2/GOSVM_PROVENANCE.json": "949643c65a8cc46eab74e2498509a71c73cf8a6c50d2f4c1448d02bd3f6c4536",
+    "results/svm/2026-10-05-runner-install-complete/provenance.json": "13650c3d59463522ed9ee61cc384a55a69f6df0b48e37d547cdb6c42c1f9f726"
+  },
+  "final_fresh_validator_gate": "open",
+  "clean_host_gate": "open"
+}

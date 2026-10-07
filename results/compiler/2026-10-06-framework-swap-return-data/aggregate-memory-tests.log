@@ -1,0 +1,19 @@
+=== RUN   TestSDK2ClockNativeCDifferential
+--- PASS: TestSDK2ClockNativeCDifferential (0.44s)
+=== RUN   TestSDK2InvokeBoundaryDifferential
+--- PASS: TestSDK2InvokeBoundaryDifferential (0.54s)
+=== RUN   TestSDK2LifecycleLoaderSelection
+--- PASS: TestSDK2LifecycleLoaderSelection (0.01s)
+=== RUN   TestSDK2OwnedLifecycleDifferential
+--- PASS: TestSDK2OwnedLifecycleDifferential (0.76s)
+=== RUN   TestSDK2RentCalculationC
+--- PASS: TestSDK2RentCalculationC (0.43s)
+=== RUN   TestSDK2AggregateMemory
+--- PASS: TestSDK2AggregateMemory (0.31s)
+=== RUN   TestSDK2ArrayValueSemantics
+--- PASS: TestSDK2ArrayValueSemantics (0.74s)
+=== RUN   TestSDK2ReturnDataNativeCDifferential
+    return_data_test.go:75: 165 return-data vectors passed
+--- PASS: TestSDK2ReturnDataNativeCDifferential (0.37s)
+PASS
+ok  	gosvm/internal/compiler	3.627s

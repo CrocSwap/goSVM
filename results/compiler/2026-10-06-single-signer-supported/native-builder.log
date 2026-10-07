@@ -1,0 +1,6 @@
+=== RUN   TestCompactSignerRandomEncodingAndFailedAdd
+--- PASS: TestCompactSignerRandomEncodingAndFailedAdd (0.00s)
+=== RUN   TestCompactSignerScalarsAndInvokeGuards
+--- PASS: TestCompactSignerScalarsAndInvokeGuards (0.00s)
+PASS
+ok  	gosvm/sdk/cpi	0.008s

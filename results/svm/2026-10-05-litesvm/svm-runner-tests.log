@@ -1,0 +1,9 @@
+   Compiling gosvm-svm-runner v0.1.0 (/Users/colkitt/sith/toys/crypto/goSVM/benchmarks/svm-runner)
+    Finished `release` profile [optimized] target(s) in 2.06s
+     Running unittests src/main.rs (build/svm-experiments/2026-10-05-litesvm/runner-target/release/deps/gosvm_svm_runner-f822f5cfecb73607)
+
+running 1 test
+test tests::reject_unknown_features_and_select_only_requested_features ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

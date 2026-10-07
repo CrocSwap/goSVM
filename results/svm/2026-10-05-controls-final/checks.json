@@ -1,0 +1,12 @@
+{
+  "root_make_test": "passed",
+  "root_go_vet": "passed",
+  "generated_starter_tests": "passed",
+  "transport_module_tests_and_vet": "passed",
+  "rust_locked_release_tests": "passed",
+  "compiled_controls_probe_repetitions": 3,
+  "fresh_validator_starter_cases": 14,
+  "token_regression": "../2026-10-05-controls-token/summary.json",
+  "docs_links_and_recorded_source_hashes": "verified",
+  "basanos": "untouched"
+}

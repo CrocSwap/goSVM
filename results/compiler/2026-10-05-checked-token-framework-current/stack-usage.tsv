@@ -1,0 +1,17 @@
+results/compiler/2026-10-05-checked-token-framework-current/program.c:35:memcpy	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:41:memset	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:1910:entrypoint	3648	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:926:v90	64	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:1003:v96	128	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:1424:v129	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:392:v40	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:409:v46	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:435:v49	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:399:v43	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:485:v60	448	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:620:v70	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:548:v65	0	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:709:v78	128	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:813:v86	64	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:1150:v122	1344	static
+results/compiler/2026-10-05-checked-token-framework-current/program.c:149:sol_Invoke	960	static

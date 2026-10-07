@@ -1,0 +1,18 @@
+package main
+
+import (
+	"crypto/ed25519"
+	"encoding/hex"
+	"fmt"
+	"os"
+)
+
+func main() {
+	for _, value := range os.Args[1:] {
+		seed, err := hex.DecodeString(value)
+		if err != nil || len(seed) != ed25519.SeedSize {
+			panic("invalid local fixture seed")
+		}
+		fmt.Printf("%x\n", ed25519.NewKeyFromSeed(seed).Public().(ed25519.PublicKey))
+	}
+}

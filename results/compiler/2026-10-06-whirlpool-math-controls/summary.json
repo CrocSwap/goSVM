@@ -1,0 +1,727 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "baseline-native-go",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/baseline/go",
+      "exit_code": 0,
+      "seconds": 3.102482082787901
+    },
+    {
+      "name": "baseline-native-handler",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/baseline/handler",
+      "exit_code": 0,
+      "seconds": 1.0187422917224467
+    },
+    {
+      "name": "baseline-emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/baseline/handler"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.3587541254237294
+    },
+    {
+      "name": "baseline-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.4726195000112057
+    },
+    {
+      "name": "baseline-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.11923104198649526
+    },
+    {
+      "name": "baseline-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.1947951670736074
+    },
+    {
+      "name": "baseline-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.175103500019759
+    },
+    {
+      "name": "baseline-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/baseline-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.2101627090014517
+    },
+    {
+      "name": "bounded-muldiv-native-go",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/bounded-muldiv/go",
+      "exit_code": 0,
+      "seconds": 2.2957666250877082
+    },
+    {
+      "name": "bounded-muldiv-native-handler",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/bounded-muldiv/handler",
+      "exit_code": 0,
+      "seconds": 0.9789872919209301
+    },
+    {
+      "name": "bounded-muldiv-emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/bounded-muldiv/handler"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.3734469162300229
+    },
+    {
+      "name": "bounded-muldiv-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.3251199582591653
+    },
+    {
+      "name": "bounded-muldiv-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.03380608279258013
+    },
+    {
+      "name": "bounded-muldiv-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.1979432082735002
+    },
+    {
+      "name": "bounded-muldiv-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.1973966667428613
+    },
+    {
+      "name": "bounded-muldiv-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/bounded-muldiv-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.161415542010218
+    },
+    {
+      "name": "normalized-delta-a-native-go",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/normalized-delta-a/go",
+      "exit_code": 0,
+      "seconds": 2.2691085408441722
+    },
+    {
+      "name": "normalized-delta-a-native-handler",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/normalized-delta-a/handler",
+      "exit_code": 0,
+      "seconds": 0.9596025422215462
+    },
+    {
+      "name": "normalized-delta-a-emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/normalized-delta-a/handler"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.3548078751191497
+    },
+    {
+      "name": "normalized-delta-a-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.1560138748027384
+    },
+    {
+      "name": "normalized-delta-a-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.03148945793509483
+    },
+    {
+      "name": "normalized-delta-a-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.2097222497686744
+    },
+    {
+      "name": "normalized-delta-a-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.3584023746661842
+    },
+    {
+      "name": "normalized-delta-a-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/normalized-delta-a-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.2645993330515921
+    },
+    {
+      "name": "combined-native-go",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/combined/go",
+      "exit_code": 0,
+      "seconds": 2.488209208007902
+    },
+    {
+      "name": "combined-native-handler",
+      "command": [
+        "go",
+        "test",
+        "-ldflags=-linkmode=external",
+        "./...",
+        "-count=1"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/combined/handler",
+      "exit_code": 0,
+      "seconds": 0.8900042497552931
+    },
+    {
+      "name": "combined-emit-c",
+      "command": [
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm",
+        "-emit-c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/build/whirlpool-math/2026-10-06-whirlpool-math-controls/combined/handler"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.32208424992859364
+    },
+    {
+      "name": "combined-compile",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/clang",
+        "-target",
+        "sbf",
+        "-mcpu=v3",
+        "-O2",
+        "-fno-builtin",
+        "-fPIC",
+        "-fno-stack-protector",
+        "-std=c11",
+        "-Werror",
+        "-fstack-usage",
+        "-c",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.c",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.0771982497535646
+    },
+    {
+      "name": "combined-link",
+      "command": [
+        "/Users/colkitt/.cache/solana/v1.51/platform-tools/llvm/bin/ld.lld",
+        "-z",
+        "notext",
+        "-shared",
+        "--Bdynamic",
+        "--strip-all",
+        "--entry",
+        "entrypoint",
+        "--script",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/compiler/sbf-v3.ld",
+        "--no-undefined",
+        "-o",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.so",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.o"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.02804608317092061
+    },
+    {
+      "name": "combined-sbf-0",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined-0.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 0.9805558328516781
+    },
+    {
+      "name": "combined-sbf-1",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined-1.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.2357044583186507
+    },
+    {
+      "name": "combined-sbf-2",
+      "command": [
+        "python3",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py",
+        "--runner",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/cache/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner",
+        "--maker",
+        "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/build/verification/2026-10-06-fee-growth-handler/transaction-maker",
+        "--elf",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined.so",
+        "--features",
+        "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json",
+        "--fixtures",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json",
+        "--report",
+        "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-whirlpool-math-controls/combined-2.json"
+      ],
+      "cwd": "/Users/colkitt/sith/toys/crypto/goSVM",
+      "exit_code": 0,
+      "seconds": 1.285075332969427
+    }
+  ],
+  "variants": {
+    "baseline": {
+      "elf_bytes": 84208,
+      "elf_sha256": "88c724968cb445c0709d02912e814b4aa4e3783634268e22d31536e79eeee54b",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.702519975414874,
+      "median_success_saving": 0,
+      "success_improve": 0,
+      "success_regress": 0,
+      "failure_improve": 0,
+      "failure_regress": 0,
+      "scenarios": 166,
+      "repetitions": 3
+    },
+    "bounded-muldiv": {
+      "elf_bytes": 84120,
+      "elf_sha256": "cee9073192dba51dd87c40097bb2b6741d7ff4b45bf4dae4b6b383c8557d02f0",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.4080717488789238,
+      "median_success_saving": 10493,
+      "success_improve": 103,
+      "success_regress": 0,
+      "failure_improve": 23,
+      "failure_regress": 0,
+      "scenarios": 166,
+      "repetitions": 3
+    },
+    "normalized-delta-a": {
+      "elf_bytes": 84696,
+      "elf_sha256": "d5c9e0cb6007cf478ebeca33e2c7a9fd10353279542897063b53ed537db8be75",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.6654985106010163,
+      "median_success_saving": 1169,
+      "success_improve": 89,
+      "success_regress": 14,
+      "failure_improve": 23,
+      "failure_regress": 0,
+      "scenarios": 166,
+      "repetitions": 3
+    },
+    "combined": {
+      "elf_bytes": 82064,
+      "elf_sha256": "f4a97e39de96b1074a3d098a6e4c08d3bf43480e8aff7e2d7548bd0722e3f5d9",
+      "max_static_frame": 1472,
+      "median_paired_ratio": 1.4116639710779184,
+      "median_success_saving": 10373,
+      "success_improve": 96,
+      "success_regress": 7,
+      "failure_improve": 23,
+      "failure_regress": 0,
+      "scenarios": 166,
+      "repetitions": 3
+    }
+  },
+  "scope": "Copied classic-token fixed-fee handler, events omitted, O2; application arithmetic changes only",
+  "input_sha256": {
+    "/Users/colkitt/sith/toys/crypto/goSVM/scripts/whirlpool_math_experiment.py": "88d31f12fa9391fa8891d624bae980a474f5eb86f8e3335b61c0c46ac8b079b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/gosvm": "e4dae52c37cd0088edfb6889f50b9bef9f7937c11bdf156f80faa34dac61aa9e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-compact-signer-canonical-final/handler.json": "59c682cade0cae55a4b2f9c0d2869d771630964c4ff2221d7cfcad0a9a5ecfdd",
+    "/Users/colkitt/sith/toys/crypto/goSVM/results/compiler/2026-10-06-packed-store-canonical-final/canonical-0.json": "6cf7693ec0a372e9cf3e4906c185b7bcfc2aff773c614e904e8a60e0020c56e0",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/scripts/run_budget_suite.py": "ffc001495b9226770c4396cd71b275eba2877d4b7fb6b7055cc11ff4cda485a4",
+    "/Users/colkitt/sith/toys/crypto/goSVM-benchmarks/results/whirlpool/2026-10-06-compact-signer-v1-verified/rust-0.json": "91aec13e2be6093047b8dc34cc7d991253fe8de38d4564903d2718358512a219",
+    "/Users/colkitt/sith/toys/crypto/goSVM/internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/go.mod": "ba95da041c0d7277b7a5e8897108e6105081cc09960c494d9cba4c6bdf80b437",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/compact_test.go": "c318d920050d55b3dd4c9701d9900bbd56cd528029a5fc22a2edf2505931fe66",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/program.go": "0185e3e7c69b3cba7cfe8e08ca7f3e8a9f3b4adaa84aae78c82bcb045b317db9",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/README.md": "66a73cbab0ffdd4034623503d78fa2289e4dc57151c2f948d432171612512804",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/compact-probe/program.go": "a20c566cb78be6c6885035448f1c3d57e99a3bb1dd4e7cc7b64fcb87b0350b30",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/handler/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/zz_gosvm.go": "1225f43e89bb66ded5fdd4d927eb0e923e3b78ed33dfc83462c1cf072ea7661b",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/go.mod": "4801e83c977d1975dd907e0f3bd508b7ec01e857f4e8ccc7d6b98ba50e00610f",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/program_test.go": "25c699925ebae6f71a69e68ad4033e41970426c9572ba19ba15be805724d1c61",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/gosvm.json": "0a8c62db826bc5ead05423f939039fec69da0e3dbb2c074c9cb1ffa55ef9255e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/idl.json": "f46c33fcce1601597d4f7e27d3faa18b1667784983c799e5664a6d3d83fc763d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/program.go": "fa2e167e76230005a87ffc55a4932d7a2bb3b6e002445fd1d413f7edc7e46cab",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/README.md": "91a1f0c89fc6539a548afbdd018ed73bafa5b87f601f35b4cc01dfbefb823e4d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/layouts.json": "463ef653480cc61aca6d549ce34abef605862a9b1a996add5d66dc30b77e8cc1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/math.json": "49694017e132533e0ed1f9a619d7821363ba898c3b70e43bd6f0df247802b97e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/wide_optimization.json": "53153d3a35040bf2c11552fd8b3242066136181de72085f81d3bf048a61d5fa1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/swap.provenance.json": "9f064976a478efa957ebd94e146ce40955fcac86f687f2bea117c147350e2cd1",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/wide_optimization.provenance.json": "00896dc57dce5029bde72eb0da003b25c9464976094b2a11722869be1f914e7d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/optimization.provenance.json": "48265e72e8f35ff8501def055d0268eff2e957e0dd1e9d408d74a597d4c0e11d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/math.provenance.json": "475605efc9d5934521733f9c14a2df8306422819b7b066e2dc1ed450c1237789",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/swap.json.gz": "00d41fac1a6c6d58104c1003314489dcbadf5cfe06c68bf27d853fad4895554a",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/testdata/optimization.json": "3917a45826a320995393a0826a1baa902b118e9092483662b0ea62968f004e2e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/wire/wire_test.go": "495cdc69ecc05b0130566e035b167e99e8706c10cba40ddfc286c782b5669ee6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/wire/wire.go": "9958fda8b2b9a3a78a9059662d37ba743e0e224a28dcbc6685037c238e7c67b7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/swap/reference_test.go": "714e7b5ffdbf30c62f642215eaace3c03ad536b173552e3b0a268bbf914f1c93",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/swap/swap.go": "317d059cf3a16a2dbe490c9585ec5a37803843adeb2c64d2daefe241c01c6231",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/math/swap_step.go": "6e2950dfe5705daa002ddff2007b2fef0a58585bdd04775e05a6befa7bb46a99",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/math/reference_test.go": "1936780d945b2f53a0c9f9a7a50f483da7465335e4df38b2c2a866f1eaf33ff6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/math/tick.go": "6320aff670654155a77d2c66743dd3c9e18543b29e354c5c2b6f0f2b2e51330d",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/math/wide_test.go": "217c5eeb38c6e76957387b1e57e8ecc6613591a63a52245312d7707e249b13d0",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/math/wide.go": "b8d64acd101cfbff807f04f7fa5253e28d9c65d605c8cb49946945cafdce133c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/model/model.go": "185b71c6f5a6dd4b30bab61d95d7e7f9a777c7f5154ac012421a684d7644f1a6",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/client/zz_gosvm.go": "80b8c5ca05a5588dc8351bb1eab05ffe3fc7054760b1591da3f2a089447e955e",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/probe/program.go": "0914c979c5db37f497bc1663b1c7eb03b14c3382bb3150f94ef3a8ea55a74202",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/compact-signer-canonical/2026-10-06-compact-signer-canonical-final/go/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/solana/api.go": "07f4f3f188bdadd803b1fa7d5350b2216810f5aefba74431d6d964fa5dd25012",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    "/Users/colkitt/sith/toys/crypto/goSVM/build/packed-store/2026-10-06-packed-store-canonical-final/scaffold/.gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183"
+  }
+}

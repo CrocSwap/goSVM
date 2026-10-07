@@ -1,0 +1,14 @@
+=== RUN   TestMultiplyBuiltinNativeDifferential
+    builtins_test.go:71: 6096 multiplication vectors passed
+--- PASS: TestMultiplyBuiltinNativeDifferential (0.35s)
+=== RUN   TestSBFUnresolvedSymbolGuard
+--- PASS: TestSBFUnresolvedSymbolGuard (0.62s)
+=== RUN   TestSDK2ReturnDataNativeCDifferential
+    return_data_test.go:75: 165 return-data vectors passed
+--- PASS: TestSDK2ReturnDataNativeCDifferential (0.91s)
+PASS
+ok  	gosvm/internal/compiler	1.908s
+=== RUN   TestReturnDataBoundsCopiesAndUnavailable
+--- PASS: TestReturnDataBoundsCopiesAndUnavailable (0.00s)
+PASS
+ok  	gosvm/solana	0.024s

@@ -1,0 +1,2 @@
+package arraycapacity
+func Process(s,i []byte)uint64{s[3]=37;flags(s,i);return 0}

@@ -1,0 +1,534 @@
+[
+  {
+    "case": "no-accounts",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    }
+  },
+  {
+    "case": "missing-account",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    }
+  },
+  {
+    "case": "extra-account",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 101
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    }
+  },
+  {
+    "case": "account-limit",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 1001
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6000
+        }
+      ]
+    }
+  },
+  {
+    "case": "long-pool",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6003
+        }
+      ]
+    }
+  },
+  {
+    "case": "pool-discriminator",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6003
+        }
+      ]
+    }
+  },
+  {
+    "case": "instruction-discriminator",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    }
+  },
+  {
+    "case": "pool-owner",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6002
+        }
+      ]
+    }
+  },
+  {
+    "case": "pool-readonly",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6001
+        }
+      ]
+    }
+  },
+  {
+    "case": "pool-length",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6003
+        }
+      ]
+    }
+  },
+  {
+    "case": "no-signer",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 104
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6001
+        }
+      ]
+    }
+  },
+  {
+    "case": "fake-program",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 105
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6001
+        }
+      ]
+    }
+  },
+  {
+    "case": "alias",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 106
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6006
+        }
+      ]
+    }
+  },
+  {
+    "case": "vault-substitute",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 107
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6007
+        }
+      ]
+    }
+  },
+  {
+    "case": "token-owner",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3010
+        }
+      ]
+    }
+  },
+  {
+    "case": "token-length",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3010
+        }
+      ]
+    }
+  },
+  {
+    "case": "token-readonly",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6001
+        }
+      ]
+    }
+  },
+  {
+    "case": "uninitialized",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3010
+        }
+      ]
+    }
+  },
+  {
+    "case": "native-token",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 108
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 3010
+        }
+      ]
+    }
+  },
+  {
+    "case": "mint",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6007
+        }
+      ]
+    }
+  },
+  {
+    "case": "same-mint",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 109
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6007
+        }
+      ]
+    }
+  },
+  {
+    "case": "user-authority",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6007
+        }
+      ]
+    }
+  },
+  {
+    "case": "vault-authority",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 110
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6007
+        }
+      ]
+    }
+  },
+  {
+    "case": "pda",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6008
+        }
+      ]
+    }
+  },
+  {
+    "case": "bump",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 111
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6008
+        }
+      ]
+    }
+  },
+  {
+    "case": "short-ix",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    }
+  },
+  {
+    "case": "long-ix",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 102
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6004
+        }
+      ]
+    }
+  },
+  {
+    "case": "override-foreign-owner",
+    "baseline": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 103
+        }
+      ]
+    },
+    "framework": {
+      "InstructionError": [
+        0,
+        {
+          "Custom": 6002
+        }
+      ]
+    }
+  }
+]

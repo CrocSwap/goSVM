@@ -1,0 +1,16 @@
+results/compiler/2026-10-05-checked-token-supported/program.c:35:memcpy	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:41:memset	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:1775:entrypoint	3712	static
+results/compiler/2026-10-05-checked-token-supported/program.c:806:v85	128	static
+results/compiler/2026-10-05-checked-token-supported/program.c:945:v88	256	static
+results/compiler/2026-10-05-checked-token-supported/program.c:1289:v118	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:385:v39	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:402:v45	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:428:v48	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:392:v42	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:478:v59	448	static
+results/compiler/2026-10-05-checked-token-supported/program.c:613:v69	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:541:v64	0	static
+results/compiler/2026-10-05-checked-token-supported/program.c:702:v77	128	static
+results/compiler/2026-10-05-checked-token-supported/program.c:1063:v111	1472	static
+results/compiler/2026-10-05-checked-token-supported/program.c:149:sol_Invoke	960	static
