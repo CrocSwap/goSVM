@@ -1,0 +1,28 @@
+{
+  "authority_changes": [
+    {
+      "at": "2026-10-09T19:54:43Z",
+      "from": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+      "signature": "53vXf5a2vxFaoeep4WhF4St6GoeK24rTc95LqvBLqEReHyDZQ3brLK5vfh5Evf8rgSGvJmG3NpbinBV6nwTaAjBV",
+      "to": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B"
+    },
+    {
+      "at": "2026-10-09T19:54:53Z",
+      "from": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B",
+      "signature": "NbHFdmQQEi61Ez7HeWWidK6m21jTPJahgvboeU9tjUnbmvEQRF1aTPEdiwT9LvgAGmWC1gcEZxxJvcg7Z4Dqm4G",
+      "to": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj"
+    }
+  ],
+  "deployed_at": "2026-10-09T19:54:33Z",
+  "elf_bytes": 3216,
+  "elf_sha256": "48669f4ec07ca02c40afdc2b9ec273e063b578fd4489c8b31e00297c9e194574",
+  "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+  "network": "solana-devnet",
+  "payer": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+  "platform_tools": "v1.57",
+  "program_id": "938KLVtR7jsQ7ATRPVC57GhwCXLwSwmoei8kZeuDQMVi",
+  "signature": "5UvmSJmBcN18EzcFwPw3MwH8AS679PsKGYydccCSZ5q68WMEFc2tZsYMc5CNmi2tY7NfsrCEFLdoNv9hkYa2BYvi",
+  "target_profile": "solana-v3",
+  "upgrade_authority": null,
+  "url": "https://api.devnet.solana.com"
+}

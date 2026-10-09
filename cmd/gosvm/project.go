@@ -44,6 +44,7 @@ const help = `gosvm experimental project tools
   gosvm svm-test          Run general fixtures against an already-compiled ELF
   gosvm deploy -network N Check the cluster accepts the target, then deploy (fogo-testnet, solana-devnet, ...)
   gosvm call -network N   Simulate (or -send) an instruction to the deployed program; prints return data/CU/logs
+  gosvm authority -network N  Show, transfer (-set key.json) or remove (-immutable) the upgrade authority
 
 Projects are discovered from the current directory or a parent.
 new accepts -module <import/path> and -schema 2 for the multi-state prototype.
@@ -86,6 +87,9 @@ func projectCommand(args []string) error {
 	}
 	if command == "call" {
 		return callCommand(args[1:])
+	}
+	if command == "authority" {
+		return authorityCommand(args[1:])
 	}
 	if command == "runner" {
 		return runnerCommand(args[1:])

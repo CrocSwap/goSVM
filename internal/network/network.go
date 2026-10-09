@@ -68,11 +68,31 @@ type RPC struct {
 	Client *http.Client
 }
 
+// Call performs a JSON-RPC request, retrying transport failures and HTTP 429/5xx
+// (public endpoints reset connections and rate-limit). Every method GoSVM uses
+// is safe to repeat: reads are idempotent and a resent signed transaction is
+// deduplicated by its signature.
 func (r RPC) Call(ctx context.Context, method string, params []any, result any) error {
+	var err error
+	for attempt := 0; attempt < 4; attempt++ {
+		var retry bool
+		if retry, err = r.call(ctx, method, params, result); err == nil || !retry {
+			return err
+		}
+		select {
+		case <-ctx.Done():
+			return err
+		case <-time.After(time.Duration(attempt+1) * time.Second):
+		}
+	}
+	return err
+}
+
+func (r RPC) call(ctx context.Context, method string, params []any, result any) (bool, error) {
 	body, _ := json.Marshal(map[string]any{"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
 	req, err := http.NewRequestWithContext(ctx, "POST", r.URL, bytes.NewReader(body))
 	if err != nil {
-		return err
+		return false, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 	client := r.Client
@@ -81,9 +101,12 @@ func (r RPC) Call(ctx context.Context, method string, params []any, result any) 
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return true, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode >= 500 {
+		return true, fmt.Errorf("%s %s: HTTP %s", r.URL, method, resp.Status)
+	}
 	var out struct {
 		Result json.RawMessage `json:"result"`
 		Error  *struct {
@@ -91,12 +114,12 @@ func (r RPC) Call(ctx context.Context, method string, params []any, result any) 
 		} `json:"error"`
 	}
 	if err = json.NewDecoder(resp.Body).Decode(&out); err != nil {
-		return fmt.Errorf("%s %s: %w", r.URL, method, err)
+		return true, fmt.Errorf("%s %s: %w", r.URL, method, err)
 	}
 	if out.Error != nil {
-		return fmt.Errorf("%s %s: %s", r.URL, method, out.Error.Message)
+		return false, fmt.Errorf("%s %s: %s", r.URL, method, out.Error.Message)
 	}
-	return json.Unmarshal(out.Result, result)
+	return false, json.Unmarshal(out.Result, result)
 }
 
 // FeatureActive reports whether a feature account exists with an activation slot.

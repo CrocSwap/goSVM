@@ -1,0 +1,85 @@
+{
+  "authority_changes": [
+    {
+      "at": "2026-10-09T19:53:45Z",
+      "from": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B",
+      "signature": "22CYB8dK6MciD8K5ajhCq3du5Q1Z18k7aYhrRLFSr1uTKpvBfebuXrHnE1cgnPB7nPh5LbvsWPoSmxLRjjGqKqjM",
+      "to": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj"
+    }
+  ],
+  "deployed_at": "2026-10-09T19:53:32Z",
+  "elf_bytes": 15888,
+  "elf_sha256": "fd6b76f3c8fe61848be010c3f691c29583bf9612f49fc5c5fea136ab6cce54e3",
+  "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+  "history": [
+    {
+      "deployed_at": "2026-10-09T19:25:22Z",
+      "elf_bytes": 15888,
+      "elf_sha256": "fd6b76f3c8fe61848be010c3f691c29583bf9612f49fc5c5fea136ab6cce54e3",
+      "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+      "network": "solana-devnet",
+      "platform_tools": "v1.57",
+      "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+      "signature": "3JbK1bPPv8rsxumoPSn7y3EGswtkijaTpqFnadTU48X9hEnQngGF1UR584fmykyHw5DLjiRqfxP6qsWtEPxn4xfF",
+      "target_profile": "solana-v3",
+      "upgrade_authority": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+      "url": "https://api.devnet.solana.com"
+    },
+    {
+      "deployed_at": "2026-10-09T19:38:56Z",
+      "elf_bytes": 15904,
+      "elf_sha256": "2b89db5a4b92fcad2d0c09d33df072344eb609a9196fede6dc170feaa1d7e215",
+      "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+      "network": "solana-devnet",
+      "platform_tools": "v1.57",
+      "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+      "signature": "5EUNe3YcNc7ejZCQCQZ8m5VhZGw93VmmMYP87LJNWLzNSsn3TTfZL9645anjb91Xkw9YDdvXwwpPxg7kb8ZeBH6D",
+      "target_profile": "solana-v3",
+      "upgrade_authority": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+      "url": "https://api.devnet.solana.com"
+    },
+    {
+      "authority_changes": [
+        {
+          "at": "2026-10-09T19:51:54Z",
+          "from": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+          "signature": "5QGJDb89nbBbvhXUimKRzJXenvQgnXuuHybk5PEXRMz1dQWUHapBKxu43dn3GTbHFD7PY3u93GPUG2fBrhHkswR5",
+          "to": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B"
+        }
+      ],
+      "deployed_at": "2026-10-09T19:42:32Z",
+      "elf_bytes": 15888,
+      "elf_sha256": "fd6b76f3c8fe61848be010c3f691c29583bf9612f49fc5c5fea136ab6cce54e3",
+      "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+      "network": "solana-devnet",
+      "platform_tools": "v1.57",
+      "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+      "signature": "2DGYt9v4WXeLc2xiu9cHAC744d2LBZGLuLetuZuXyX1jhTK9UQpSHrRudxP86zuNb1v6Yxe2ggXt5y9ZwnZVxfJy",
+      "target_profile": "solana-v3",
+      "upgrade_authority": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B",
+      "url": "https://api.devnet.solana.com"
+    },
+    {
+      "deployed_at": "2026-10-09T19:52:48Z",
+      "elf_bytes": 15904,
+      "elf_sha256": "2b89db5a4b92fcad2d0c09d33df072344eb609a9196fede6dc170feaa1d7e215",
+      "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+      "network": "solana-devnet",
+      "payer": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+      "platform_tools": "v1.57",
+      "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+      "signature": "Lu3VLYNkv8nfxqUP4mT8AdiWutgLwpoFbv9sAUhZyeviMHEPi7hGdG8HTzPqbAxWXEH4EPZgfsDKMEMdc5mHcjM",
+      "target_profile": "solana-v3",
+      "upgrade_authority": "H9dGKkX5YvfawfT1DGy1VeFyLLbe82nXF8MLPwHE8p3B",
+      "url": "https://api.devnet.solana.com"
+    }
+  ],
+  "network": "solana-devnet",
+  "payer": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+  "platform_tools": "v1.57",
+  "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+  "signature": "4BCpV6cJxB9opa5PXwzseek9jnxpBhBbaF2any8AyFb57sN2yznLVUZLoShpgZdSCNid95kRTWcKt6mhZxrLnXUZ",
+  "target_profile": "solana-v3",
+  "upgrade_authority": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+  "url": "https://api.devnet.solana.com"
+}

@@ -1,0 +1,34 @@
+{
+  "authority_changes": [
+    {
+      "at": "2026-10-09T22:47:55Z",
+      "from": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+      "signature": "3VjJqoewhe26nAsRbDQ8htFSqzdT77kqTwmCCA1S14oqn8AhH2f9DpJSuG2Fe4SF9sauREtLFJQ6c4x3Fy5LafNT",
+      "to": "7b1wMCk8A79HEg2RzKY9Rdg7jABnZ3BzhDPZNxjCa7tr"
+    },
+    {
+      "at": "2026-10-09T22:47:56Z",
+      "from": "7b1wMCk8A79HEg2RzKY9Rdg7jABnZ3BzhDPZNxjCa7tr",
+      "signature": "25EwwDvNkQp9bTi2dJZRf8sw9CDFyzAnEAcnvvn56gXkv5mHcXh44FBk2sgk5TakUXyuWCQmDur8vt7p4GH9ACwJ",
+      "to": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE"
+    },
+    {
+      "at": "2026-10-09T22:47:58Z",
+      "from": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+      "signature": "5ewfzD6hviB8kwap8szrrE9LKjDaD7AjDoGBFgtVuVLfvUANzZwq3PDBwoGfCVvVQa9K56yo1AnrfjRo8zdtgo18",
+      "to": null
+    }
+  ],
+  "deployed_at": "2026-10-09T22:47:53Z",
+  "elf_bytes": 4064,
+  "elf_sha256": "eadcdb45fd7ab4721a840d80523aa9d6c15bedad8b0ac8b2f72b5ae1e5185c31",
+  "genesis_hash": "9GGSFo95raqzZxWqKM5tGYvJp5iv4Dm565S4r8h5PEu9",
+  "network": "fogo-testnet",
+  "payer": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+  "platform_tools": "v1.57",
+  "program_id": "Nn9ULfqFZTWGVy1HwGLpqmriUxnbZoYaeZawmqYxEeV",
+  "signature": "26dj4qg5MEaBHZLZQNHmyHaSBPLxFRH6qQmpahKoqdbWXriasibRZP8kvqdkUXQVtZYT8VZpEd9Ms3AaAND9bUYm",
+  "target_profile": "fogo-v0",
+  "upgrade_authority": null,
+  "url": "https://testnet.fogo.io"
+}

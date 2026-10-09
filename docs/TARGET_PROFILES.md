@@ -183,7 +183,22 @@ program's upgrade authority. An identical build sends nothing. A larger build fi
 extends the program data (at least 10 KiB, per SIMD-0431) in its own transaction,
 then waits a slot. A new buffer is then written and `Upgrade` replaces the code,
 with the buffer's lamports returned to the payer. Each deploy first closes leftover
-buffers from interrupted runs. The record keeps earlier deployments under `history`. The fee payer/upgrade authority is
+buffers from interrupted runs. The record keeps earlier deployments under `history`.
+
+```sh
+gosvm authority -network solana-devnet                       # show
+gosvm authority -network solana-devnet -set new-authority.json   # new key co-signs
+gosvm deploy -network solana-devnet -authority new-authority.json
+gosvm authority -network solana-devnet -set-address <multisig> -unchecked
+gosvm authority -network solana-devnet -immutable -confirm <program id>
+```
+
+`-set` uses SetAuthorityChecked, so a wrong key cannot strand the program.
+`-set-address` (an address that cannot sign here, e.g. a multisig) requires
+`-unchecked`. `-immutable` is permanent and requires repeating the program ID.
+`-authority` names the current authority when it is not the payer. Changes are
+appended to the record's `authority_changes`; plain `gosvm authority` resyncs the
+record from the chain. Mainnets also require `-mainnet`. The fee payer/upgrade authority is
 `deploy/keys/<network>-payer.json` and the program address keypair is
 `deploy/keys/<network>-program.json`; both are created on first use in a Git-ignored
 directory. GoSVM never uses the Solana CLI's configured keypair, which may belong

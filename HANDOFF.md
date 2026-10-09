@@ -66,7 +66,9 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   (SBPFv0); four committed calls each returned the expected data or error.
   [Redeploy](results/network/2026-10-09-redeploy/README.md) upgrades in place
   (no-op if identical, extends when larger, reclaims leftover buffers); verified
-  on both networks.
+  on both networks. [Upgrade authority](results/network/2026-10-09-upgrade-authority/README.md):
+  `gosvm authority` shows/transfers (checked or `-unchecked` address)/removes it,
+  and `deploy -authority` upgrades as a non-payer authority; verified on both.
 
 Open: Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
 needs a consumer pin addition and requalification when published.

@@ -320,9 +320,10 @@ func (r RPC) send(ctx context.Context, txs [][]byte, sigs []string) error {
 // buffer (its keypair saved to bufferPath until deployment finishes), chunked
 // writes, then program creation and DeployWithMaxDataLen with the payer as
 // upgrade authority. It returns the final deploy transaction signature.
-func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf []byte, bufferPath string, out io.Writer) (string, error) {
+func DeployV3(ctx context.Context, r RPC, payer, authority, program ed25519.PrivateKey, elf []byte, bufferPath string, out io.Writer) (string, error) {
 	loader := mustKey(LoaderV3)
 	payerKey := []byte(payer.Public().(ed25519.PublicKey))
+	authorityKey := []byte(authority.Public().(ed25519.PublicKey))
 	programKey := []byte(program.Public().(ed25519.PublicKey))
 	var existing struct {
 		Value *json.RawMessage `json:"value"`
@@ -333,7 +334,7 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 	if existing.Value != nil {
 		return "", fmt.Errorf("program %s already exists; use UpgradeV3", Base58(programKey))
 	}
-	bufferKey, err := r.writeBuffer(ctx, payer, elf, bufferPath, out)
+	bufferKey, err := r.writeBuffer(ctx, payer, authority, elf, bufferPath, out)
 	if err != nil {
 		return "", err
 	}
@@ -349,8 +350,8 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 	binary.LittleEndian.PutUint32(deployData, 2)
 	binary.LittleEndian.PutUint64(deployData[4:], uint64(len(elf)))
 	deploy := Instruction{loader, []Meta{{payerKey, true, true}, {ProgramDataAddress(programKey), false, true}, {programKey, false, true}, {bufferKey, false, true},
-		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {mustKey(SystemProgram), false, false}, {payerKey, true, false}}, deployData}
-	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, programKey, programRent, 36, loader), deploy}, program)
+		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {mustKey(SystemProgram), false, false}, {authorityKey, true, false}}, deployData}
+	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, programKey, programRent, 36, loader), deploy}, program, authority)
 	if err != nil {
 		return "", err
 	}
@@ -362,11 +363,12 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 	return sig, nil
 }
 
-// writeBuffer creates a loader-v3 buffer owned by the payer (its keypair kept at
-// bufferPath until the caller consumes it) and writes the ELF in chunks.
-func (r RPC) writeBuffer(ctx context.Context, payer ed25519.PrivateKey, elf []byte, bufferPath string, out io.Writer) ([]byte, error) {
+// writeBuffer creates a loader-v3 buffer under the upgrade authority, paid by
+// the payer (its keypair kept at bufferPath until consumed), and writes the ELF.
+func (r RPC) writeBuffer(ctx context.Context, payer, authority ed25519.PrivateKey, elf []byte, bufferPath string, out io.Writer) ([]byte, error) {
 	loader := mustKey(LoaderV3)
 	payerKey := []byte(payer.Public().(ed25519.PublicKey))
+	authorityKey := []byte(authority.Public().(ed25519.PublicKey))
 	os.Remove(bufferPath)
 	buffer, _, err := EnsureKeypair(bufferPath)
 	if err != nil {
@@ -382,7 +384,7 @@ func (r RPC) writeBuffer(ctx context.Context, payer ed25519.PrivateKey, elf []by
 	if err != nil {
 		return nil, err
 	}
-	initialize := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, false, false}}, []byte{0, 0, 0, 0}}
+	initialize := Instruction{loader, []Meta{{bufferKey, false, true}, {authorityKey, false, false}}, []byte{0, 0, 0, 0}}
 	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, bufferKey, bufferRent, uint64(bufferSize), loader), initialize}, buffer)
 	if err != nil {
 		return nil, err
@@ -416,8 +418,8 @@ func (r RPC) writeBuffer(ctx context.Context, payer ed25519.PrivateKey, elf []by
 			binary.LittleEndian.PutUint32(data[4:], uint32(offset))
 			binary.LittleEndian.PutUint64(data[8:], uint64(end-offset))
 			data = append(data, elf[offset:end]...)
-			write := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, true, false}}, data}
-			tx, sig, err := Sign(payer, hash, []Instruction{write})
+			write := Instruction{loader, []Meta{{bufferKey, false, true}, {authorityKey, true, false}}, data}
+			tx, sig, err := Sign(payer, hash, []Instruction{write}, authority)
 			if err != nil {
 				return nil, err
 			}
@@ -514,24 +516,25 @@ func (r RPC) slot(ctx context.Context) (uint64, error) {
 }
 
 // UpgradeV3 replaces a deployed program's code with elf, signed by its upgrade
-// authority (the payer). It extends program data first when elf is larger, in
+// authority (fees and any extension paid by the payer). It extends program data first when elf is larger, in
 // a separate transaction, then waits for a later slot before upgrading. The
 // returned signature is empty when the deployed code is already identical.
-func UpgradeV3(ctx context.Context, r RPC, payer ed25519.PrivateKey, programKey, elf []byte, bufferPath string, out io.Writer) (string, error) {
+func UpgradeV3(ctx context.Context, r RPC, payer, authority ed25519.PrivateKey, programKey, elf []byte, bufferPath string, out io.Writer) (string, error) {
 	loader := mustKey(LoaderV3)
 	payerKey := []byte(payer.Public().(ed25519.PublicKey))
-	exists, authority, deployed, err := r.Deployed(ctx, programKey)
+	authorityKey := []byte(authority.Public().(ed25519.PublicKey))
+	exists, current, deployed, err := r.Deployed(ctx, programKey)
 	if err != nil {
 		return "", err
 	}
 	if !exists {
 		return "", fmt.Errorf("program %s does not exist; deploy it first", Base58(programKey))
 	}
-	if authority == nil {
+	if current == nil {
 		return "", fmt.Errorf("program %s is immutable (no upgrade authority)", Base58(programKey))
 	}
-	if !bytes.Equal(authority, payerKey) {
-		return "", fmt.Errorf("program %s upgrade authority is %s, not the payer %s", Base58(programKey), Base58(authority), Base58(payerKey))
+	if !bytes.Equal(current, authorityKey) {
+		return "", fmt.Errorf("program %s upgrade authority is %s, not %s; pass that authority's keypair with -authority", Base58(programKey), Base58(current), Base58(authorityKey))
 	}
 	if Unchanged(deployed, elf) {
 		fmt.Fprintf(out, "Program %s already runs this exact build; nothing to upgrade\n", Base58(programKey))
@@ -579,7 +582,7 @@ func UpgradeV3(ctx context.Context, r RPC, payer ed25519.PrivateKey, programKey,
 			}
 		}
 	}
-	bufferKey, err := r.writeBuffer(ctx, payer, elf, bufferPath, out)
+	bufferKey, err := r.writeBuffer(ctx, payer, authority, elf, bufferPath, out)
 	if err != nil {
 		return "", err
 	}
@@ -588,8 +591,8 @@ func UpgradeV3(ctx context.Context, r RPC, payer ed25519.PrivateKey, programKey,
 		return "", err
 	}
 	upgrade := Instruction{loader, []Meta{{programData, false, true}, {programKey, false, true}, {bufferKey, false, true}, {payerKey, false, true},
-		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {payerKey, true, false}}, []byte{3, 0, 0, 0}}
-	tx, sig, err := Sign(payer, hash, []Instruction{upgrade})
+		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {authorityKey, true, false}}, []byte{3, 0, 0, 0}}
+	tx, sig, err := Sign(payer, hash, []Instruction{upgrade}, authority)
 	if err != nil {
 		return "", err
 	}
@@ -601,13 +604,14 @@ func UpgradeV3(ctx context.Context, r RPC, payer ed25519.PrivateKey, programKey,
 	return sig, nil
 }
 
-// ReclaimBuffers closes leftover loader-v3 buffers whose authority is the
-// payer (from interrupted deployments), returning their lamports to the payer.
+// ReclaimBuffers closes leftover loader-v3 buffers under the given authority
+// (from interrupted deployments), returning their lamports to the payer.
 // Closing needs only the authority's signature. RPCs that refuse the account
 // scan are skipped silently.
-func (r RPC) ReclaimBuffers(ctx context.Context, payer ed25519.PrivateKey, out io.Writer) error {
+func (r RPC) ReclaimBuffers(ctx context.Context, payer, authority ed25519.PrivateKey, out io.Writer) error {
 	payerKey := []byte(payer.Public().(ed25519.PublicKey))
-	filter := base64.StdEncoding.EncodeToString(append([]byte{1, 0, 0, 0, 1}, payerKey...))
+	authorityKey := []byte(authority.Public().(ed25519.PublicKey))
+	filter := base64.StdEncoding.EncodeToString(append([]byte{1, 0, 0, 0, 1}, authorityKey...))
 	var accounts []struct {
 		Pubkey  string `json:"pubkey"`
 		Account struct {
@@ -627,8 +631,8 @@ func (r RPC) ReclaimBuffers(ctx context.Context, payer ed25519.PrivateKey, out i
 		if err != nil {
 			return err
 		}
-		closeIx := Instruction{mustKey(LoaderV3), []Meta{{buffer, false, true}, {payerKey, false, true}, {payerKey, true, false}}, []byte{5, 0, 0, 0}}
-		tx, sig, err := Sign(payer, hash, []Instruction{closeIx})
+		closeIx := Instruction{mustKey(LoaderV3), []Meta{{buffer, false, true}, {payerKey, false, true}, {authorityKey, true, false}}, []byte{5, 0, 0, 0}}
+		tx, sig, err := Sign(payer, hash, []Instruction{closeIx}, authority)
 		if err != nil {
 			return err
 		}
@@ -638,4 +642,56 @@ func (r RPC) ReclaimBuffers(ctx context.Context, payer ed25519.PrivateKey, out i
 		}
 	}
 	return nil
+}
+
+// AuthorityChange selects a SetAuthority form. Exactly one of NewKey (checked:
+// the new authority signs), NewAddress (unchecked) or Immutable is set.
+type AuthorityChange struct {
+	NewKey     ed25519.PrivateKey
+	NewAddress []byte
+	Immutable  bool
+}
+
+// SetAuthority changes a program's upgrade authority, signed by the current one.
+func SetAuthority(ctx context.Context, r RPC, payer, current ed25519.PrivateKey, programKey []byte, change AuthorityChange) (string, error) {
+	currentKey := []byte(current.Public().(ed25519.PublicKey))
+	exists, authority, _, err := r.Deployed(ctx, programKey)
+	if err != nil {
+		return "", err
+	}
+	if !exists {
+		return "", fmt.Errorf("program %s does not exist", Base58(programKey))
+	}
+	if authority == nil {
+		return "", fmt.Errorf("program %s is already immutable", Base58(programKey))
+	}
+	if !bytes.Equal(authority, currentKey) {
+		return "", fmt.Errorf("program %s upgrade authority is %s, not %s; pass it with -authority", Base58(programKey), Base58(authority), Base58(currentKey))
+	}
+	metas := []Meta{{ProgramDataAddress(programKey), false, true}, {currentKey, true, false}}
+	signers := []ed25519.PrivateKey{current}
+	data := []byte{4, 0, 0, 0}
+	switch {
+	case change.NewKey != nil && change.NewAddress == nil && !change.Immutable:
+		metas = append(metas, Meta{[]byte(change.NewKey.Public().(ed25519.PublicKey)), true, false})
+		signers = append(signers, change.NewKey)
+		data[0] = 7 // SetAuthorityChecked
+	case change.NewAddress != nil && change.NewKey == nil && !change.Immutable:
+		if len(change.NewAddress) != 32 {
+			return "", fmt.Errorf("invalid new authority address")
+		}
+		metas = append(metas, Meta{change.NewAddress, false, false})
+	case change.Immutable && change.NewKey == nil && change.NewAddress == nil:
+	default:
+		return "", fmt.Errorf("choose exactly one authority change")
+	}
+	hash, err := r.blockhash(ctx)
+	if err != nil {
+		return "", err
+	}
+	tx, sig, err := Sign(payer, hash, []Instruction{{mustKey(LoaderV3), metas, data}}, signers...)
+	if err != nil {
+		return "", err
+	}
+	return sig, r.send(ctx, [][]byte{tx}, []string{sig})
 }

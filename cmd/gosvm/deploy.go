@@ -23,7 +23,8 @@ func deployCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm deploy", flag.ContinueOnError)
 	name := fs.String("network", "", "fogo-testnet, fogo-mainnet, solana-devnet, solana-testnet or solana-mainnet")
 	dir := fs.String("dir", ".", "project directory")
-	payer := fs.String("keypair", "", "fee payer / upgrade authority keypair (default: deploy/keys/<network>-payer.json, created if missing)")
+	payer := fs.String("keypair", "", "fee payer keypair (default: deploy/keys/<network>-payer.json, created if missing)")
+	authorityPath := fs.String("authority", "", "upgrade authority keypair (default: the payer)")
 	url := fs.String("url", "", "override the network's RPC URL")
 	mainnet := fs.Bool("mainnet", false, "confirm a mainnet deployment")
 	check := fs.Bool("check", false, "only build and check the cluster accepts the program; do not deploy")
@@ -100,6 +101,12 @@ func deployCommand(args []string) error {
 	if err != nil {
 		return err
 	}
+	authorityKey := payerKey
+	if *authorityPath != "" {
+		if authorityKey, err = network.Keypair(*authorityPath); err != nil {
+			return err
+		}
+	}
 	data, err := os.ReadFile(program)
 	if err != nil {
 		return err
@@ -131,7 +138,7 @@ func deployCommand(args []string) error {
 	deployCtx, deployCancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer deployCancel()
 	bufferPath := filepath.Join(root, "deploy", "keys", cluster.Name+"-buffer.json")
-	if err = rpc.ReclaimBuffers(deployCtx, payerKey, os.Stdout); err != nil {
+	if err = rpc.ReclaimBuffers(deployCtx, payerKey, authorityKey, os.Stdout); err != nil {
 		return err
 	}
 	exists, _, _, err := rpc.Deployed(deployCtx, []byte(key.Public().(ed25519.PublicKey)))
@@ -142,18 +149,18 @@ func deployCommand(args []string) error {
 	var signature string
 	if exists {
 		action = "Upgraded"
-		signature, err = network.UpgradeV3(deployCtx, rpc, payerKey, []byte(key.Public().(ed25519.PublicKey)), data, bufferPath, os.Stdout)
+		signature, err = network.UpgradeV3(deployCtx, rpc, payerKey, authorityKey, []byte(key.Public().(ed25519.PublicKey)), data, bufferPath, os.Stdout)
 		if err == nil && signature == "" {
 			return nil
 		}
 	} else {
-		signature, err = network.DeployV3(deployCtx, rpc, payerKey, key, data, bufferPath, os.Stdout)
+		signature, err = network.DeployV3(deployCtx, rpc, payerKey, authorityKey, key, data, bufferPath, os.Stdout)
 	}
 	if err != nil {
 		return fmt.Errorf("deploy to %s: %w", cluster.Name, err)
 	}
 	record := map[string]any{"network": cluster.Name, "url": cluster.URL, "genesis_hash": genesis, "target_profile": p.Name, "platform_tools": p.Tools,
-		"program_id": network.Address(key), "upgrade_authority": network.Address(payerKey), "signature": signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
+		"program_id": network.Address(key), "payer": network.Address(payerKey), "upgrade_authority": network.Address(authorityKey), "signature": signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
 	recordPath := filepath.Join(root, "deploy", cluster.Name+".json")
 	// Keep earlier deployments of this program as history.
 	if old, err := os.ReadFile(recordPath); err == nil && exists {

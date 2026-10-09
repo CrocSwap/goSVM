@@ -17,7 +17,7 @@ func main() {
 	}
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
-		case "toolchain", "runner", "new", "generate", "check", "build", "test", "svm-test", "doctor", "help", "version", "migrate-target", "library", "deploy", "call":
+		case "toolchain", "runner", "new", "generate", "check", "build", "test", "svm-test", "doctor", "help", "version", "migrate-target", "library", "deploy", "call", "authority":
 			if err := projectCommand(os.Args[1:]); err != nil {
 				fmt.Fprintln(os.Stderr, "gosvm:", err)
 				os.Exit(1)
