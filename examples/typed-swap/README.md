@@ -1,7 +1,7 @@
 # Bounded swap starter
 
 ```
-gosvm toolchain install  # first use on macOS arm64, if no backend is installed
+gosvm toolchain install -target legacy-v1.51-v3  # first use on macOS arm64
 gosvm doctor
 gosvm check
 go test ./...
@@ -70,7 +70,7 @@ pointers, heap allocation, interfaces, generics and goroutines remain unsupporte
 Host tests and `client/` may use the full Go language and standard library.
 
 Installation is experimental: build the CLI from the goSVM repository with
-`scripts/install.sh`, then use `gosvm toolchain install` on macOS arm64. This
+`scripts/install.sh`, then use `gosvm toolchain install -target legacy-v1.51-v3` on macOS arm64. This
 verifies the official v1.51 archive and retains only Clang and LLD. The initial
 448 MB download still contains the full upstream tools; Cargo is not needed.
 `gosvm toolchain status` verifies the cached binaries. Other hosts can supply

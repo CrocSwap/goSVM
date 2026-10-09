@@ -1,4 +1,5 @@
-// Package runner manages the explicitly installed experimental SVM runner.
+// Package runner manages explicitly installed, pinned experimental SVM runners.
+// Each pinned package installs into its own version-specific cache slot.
 package runner
 
 import (
@@ -21,14 +22,28 @@ import (
 	"time"
 )
 
+// Historical runner: LiteSVM 0.8.2, legacy and fogo-v0 qualification.
 const Version = "0.5.0"
 const Identity = "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)"
 
+// Modern runner: LiteSVM 0.13.0 / Agave 4.0, required by solana-v3.
+const ModernVersion = "0.6.0"
+const ModernIdentity = "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)"
+
 // Pins are part of the frontend, never supplied by an archive or its sender.
-// No public download endpoint is configured for this local experimental package.
+// No public download endpoint is configured for these local experimental packages.
 //
 //go:embed pins/darwin-arm64.json
 var pinned []byte
+
+//go:embed pins/0.6.0-darwin-arm64.json
+var modernPinned []byte
+
+var identities = map[string]string{Version: Identity, ModernVersion: ModernIdentity}
+var pins = map[string][]byte{Version: pinned, ModernVersion: modernPinned}
+
+// Versions lists the pinned runner packages this frontend can install.
+func Versions() []string { return []string{Version, ModernVersion} }
 
 type File struct {
 	SHA256 string `json:"sha256"`
@@ -45,21 +60,42 @@ type Pin struct {
 	Files        map[string]File `json:"files"`
 }
 
-func Package() (Pin, error) {
+// Package returns the historical 0.5.0 pin.
+func Package() (Pin, error) { return PackageFor(Version) }
+
+// PackageFor returns the frontend's embedded pin for a runner version.
+func PackageFor(version string) (Pin, error) {
 	var p Pin
 	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
 		return p, fmt.Errorf("managed runner package is currently verified on macOS arm64 only; supply an explicit runner")
 	}
-	if err := json.Unmarshal(pinned, &p); err != nil {
+	data, ok := pins[version]
+	if !ok {
+		return p, fmt.Errorf("no pinned runner package %q", version)
+	}
+	if err := json.Unmarshal(data, &p); err != nil {
 		return p, err
 	}
-	if p.Schema != 1 || p.Version != Version || p.Identity != Identity || p.Platform != runtime.GOOS+"-"+runtime.GOARCH || len(p.Files) == 0 {
+	if p.Schema != 1 || p.Version != version || p.Identity != identities[version] || p.Platform != runtime.GOOS+"-"+runtime.GOARCH || len(p.Files) == 0 {
 		return p, fmt.Errorf("invalid embedded runner pin")
 	}
 	return p, nil
 }
 
-func Root() string {
+// InstallHint is the exact command that installs a pinned runner version.
+func InstallHint(version string) string {
+	name := "<pinned-package>"
+	if p, err := PackageFor(version); err == nil {
+		name = p.ArchiveName
+	}
+	return "gosvm runner install -archive " + name
+}
+
+// Root is the historical 0.5.0 slot.
+func Root() string { return RootFor(Version) }
+
+// RootFor is the version-specific managed slot.
+func RootFor(version string) string {
 	cache := os.Getenv("GOSVM_CACHE")
 	if cache == "" {
 		var err error
@@ -72,7 +108,7 @@ func Root() string {
 	if !filepath.IsAbs(cache) {
 		return ""
 	}
-	return filepath.Join(cache, "runners", Version, runtime.GOOS+"-"+runtime.GOARCH)
+	return filepath.Join(cache, "runners", version, runtime.GOOS+"-"+runtime.GOARCH)
 }
 
 func hashFile(file string) (string, error) {
@@ -88,8 +124,12 @@ func hashFile(file string) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-func Verify(root string) (Pin, error) {
-	p, err := Package()
+// Verify checks a historical 0.5.0 installation.
+func Verify(root string) (Pin, error) { return VerifyVersion(Version, root) }
+
+// VerifyVersion checks an installed root against the pinned package for version.
+func VerifyVersion(version, root string) (Pin, error) {
+	p, err := PackageFor(version)
 	if err != nil {
 		return p, err
 	}
@@ -136,8 +176,12 @@ func verify(root string, p Pin) error {
 
 // ManagedPath fails closed when a managed install exists but is damaged. An
 // explicit runner remains an intentional override; normal tests never install.
-func ManagedPath() (string, bool, error) {
-	root := Root()
+func ManagedPath() (string, bool, error) { return ManagedPathFor(Version) }
+
+// ManagedPathFor returns the verified managed runner of one version. It reports
+// exists=false when that slot is not installed and an error when it is damaged.
+func ManagedPathFor(version string) (string, bool, error) {
+	root := RootFor(version)
 	if root == "" {
 		return "", false, fmt.Errorf("cannot resolve runner cache; set GOSVM_CACHE to an absolute path")
 	}
@@ -148,18 +192,68 @@ func ManagedPath() (string, bool, error) {
 	if err != nil {
 		return "", true, err
 	}
-	if _, err = Verify(root); err != nil {
-		return "", true, fmt.Errorf("managed runner integrity check: %w", err)
+	if _, err = VerifyVersion(version, root); err != nil {
+		return "", true, fmt.Errorf("managed runner %s integrity check: %w; remove %s and run %s", version, err, root, InstallHint(version))
 	}
 	return filepath.Join(root, "bin/gosvm-svm-runner"), true, nil
 }
 
-func Install(ctx context.Context, root, archive string, out io.Writer) error {
-	p, err := Package()
+// Install identifies which pinned package a local archive is (by size and
+// SHA-256) and installs it into that version's slot.
+func Install(ctx context.Context, archive string, out io.Writer) error {
+	var known []Pin
+	for _, v := range Versions() {
+		p, err := PackageFor(v)
+		if err != nil {
+			return err
+		}
+		known = append(known, p)
+	}
+	if archive == "" {
+		msg := "no public runner download is configured; install a pinned local package:"
+		for _, p := range known {
+			msg += fmt.Sprintf("\n  gosvm runner install -archive %s   (%s, SHA-256 %s)", p.ArchiveName, p.Identity, p.ArchiveSHA)
+		}
+		return fmt.Errorf("%s", msg)
+	}
+	p, err := identify(ctx, archive, known)
 	if err != nil {
 		return err
 	}
-	return install(ctx, root, archive, out, p, smoke)
+	fmt.Fprintf(out, "Recognized pinned package %s\n", p.Identity)
+	return install(ctx, RootFor(p.Version), archive, out, p, smokeFor(p.Identity))
+}
+
+// identify hashes at most the largest pinned size; install re-verifies the
+// private snapshot it extracts, so this choice cannot weaken verification.
+func identify(ctx context.Context, archive string, known []Pin) (Pin, error) {
+	var limit int64
+	for _, p := range known {
+		if p.ArchiveBytes > limit {
+			limit = p.ArchiveBytes
+		}
+	}
+	f, err := os.Open(archive)
+	if err != nil {
+		return Pin{}, err
+	}
+	defer f.Close()
+	h := sha256.New()
+	n, err := io.Copy(h, &io.LimitedReader{R: contextReader{ctx, f}, N: limit + 1})
+	if err != nil {
+		return Pin{}, err
+	}
+	digest := fmt.Sprintf("%x", h.Sum(nil))
+	for _, p := range known {
+		if n == p.ArchiveBytes && digest == p.ArchiveSHA {
+			return p, nil
+		}
+	}
+	var names []string
+	for _, p := range known {
+		names = append(names, p.ArchiveName+" ("+p.ArchiveSHA+")")
+	}
+	return Pin{}, fmt.Errorf("runner archive size or SHA-256 mismatch: matches no pinned package (got %s); expected one of: %s", digest, strings.Join(names, ", "))
 }
 
 func install(ctx context.Context, root, archive string, out io.Writer, p Pin, check func(context.Context, string) error) error {
@@ -337,15 +431,19 @@ func extract(ctx context.Context, input io.Reader, stage string, p Pin) error {
 	return nil
 }
 
-func smoke(ctx context.Context, binary string) error {
+func smokeFor(identity string) func(context.Context, string) error {
+	return func(ctx context.Context, binary string) error { return smoke(ctx, binary, identity) }
+}
+
+func smoke(ctx context.Context, binary, identity string) error {
 	ctx, stop := context.WithTimeout(ctx, 10*time.Second)
 	defer stop()
 	version, err := exec.CommandContext(ctx, binary, "--version").CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("version: %w: %s", err, version)
 	}
-	if strings.TrimSpace(string(version)) != Identity {
-		return fmt.Errorf("require %s; found %s", Identity, version)
+	if strings.TrimSpace(string(version)) != identity {
+		return fmt.Errorf("require %s; found %s", identity, version)
 	}
 	cmd := exec.CommandContext(ctx, binary, "--stdio")
 	cmd.Stdin = strings.NewReader("{\"schema\":1,\"id\":0,\"op\":\"init\",\"config\":{\"programs\":[],\"accounts\":[],\"payer\":\"11111111111111111111111111111112\"}}\n")

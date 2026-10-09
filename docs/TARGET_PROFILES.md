@@ -23,13 +23,19 @@ content pins in `internal/targets/profile.go`. This qualifies the two compiler
 executables for the recorded corpus, not every component of platform-tools,
 all host platforms or an entire network release. Version text alone is insufficient.
 
-Install official platform-tools v1.57 separately, or use an existing installation.
-Then import only the two qualified executables:
+`gosvm toolchain install` downloads the official platform-tools v1.57 macOS arm64
+archive (430,747,800 bytes, SHA-256 `48c32c2e…bc932b34a`, both pinned in the
+frontend), verifies it before decompression, keeps only Clang and LLD, and refuses
+to install unless they equal the content pins. One install serves `fogo-v0` and
+`solana-v3`. Alternatives use the same pins: `-archive <local copy>` or
+`-llvm <existing platform-tools v1.57 llvm dir>` (receipts record
+`official-archive` or `qualified-local-backend`). `gosvm doctor` reports backend
+and runner state for both profiles with the exact fix command.
 
 ```sh
-gosvm toolchain install -target solana-v3 \
-  -llvm "$HOME/.cache/solana/v1.57/platform-tools/llvm"
-gosvm toolchain status -target fogo-v0
+gosvm toolchain install          # or -archive file.tar.bz2, or -llvm dir
+gosvm toolchain status
+gosvm doctor
 
 gosvm new -target fogo-v0 my-program
 cd my-program
@@ -43,8 +49,8 @@ New projects default to `solana-v3`. `-target` on build/test/check/generate/doct
 selects a profile for that invocation without changing `gosvm.json` or application
 files. `SBF_LLVM` or an explicit `-llvm` can select a backend directory, but modern
 builds still require its content pin. `GOSVM_CACHE` selects the managed cache root.
-The modern importer refuses unqualified archive downloads and other host binaries;
-the historical installer remains available through `-target legacy-v1.51-v3`.
+Other archives and host binaries are refused; the historical v1.51 installer is
+unchanged and remains available through `-target legacy-v1.51-v3`.
 
 Normal modern outputs are:
 
@@ -81,16 +87,25 @@ become modern-v3 or Fogo measurements.
 
 ## Local runtime qualification
 
-Use a compatible explicit runner:
+Both runners are frontend-pinned packages with separate managed cache slots.
+`gosvm runner install -archive <package>` recognizes which one it is; `gosvm runner
+status` reports both. No public runner download exists. The 0.6.0 package is built
+by `scripts/package_modern_runner.py` (the 0.5.0 recipe is unchanged).
 
 ```sh
-gosvm test -target fogo-v0 --svm -svm-runner /path/to/historical-0.5-runner
-gosvm test -target solana-v3 --svm -svm-runner /path/to/modern-0.6-runner
+gosvm runner install -archive gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
+gosvm runner install -archive gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+gosvm test -target solana-v3 --svm     # selects managed 0.6.0
+gosvm test -target fogo-v0 --svm       # selects managed 0.5.0
 # General fixture paths are relative to the caller's working directory.
 gosvm test -dir examples/full-swap -target solana-v3 --svm \
-  -svm-fixtures examples/full-swap/testdata/lifecycle.json \
-  -svm-runner /path/to/modern-0.6-runner
+  -svm-fixtures examples/full-swap/testdata/lifecycle.json
 ```
+
+Selection order: `-svm-runner`, `GOSVM_TEST_RUNNER`, the verified managed runner
+for the target, then `gosvm-svm-runner` on `PATH`. `solana-v3` uses 0.6.0;
+`fogo-v0` and legacy use 0.5.0. `fogo-v0` falls back to managed 0.6.0 only when
+`GOSVM_TEST_FEATURES` is set. A damaged managed runner fails closed.
 
 The historical runner uses LiteSVM 0.8.2 and the observed local validator 3.0.15
 feature list. The separate [modern runner](../benchmarks/svm-runner-modern/README.md)

@@ -18,7 +18,7 @@ func svmTestCommand(args []string) error {
 	elf := fs.String("elf", "", "already-compiled SBF ELF matching -target (required)")
 	fixtures := fs.String("fixtures", "", "general fixture JSON file (required)")
 	report := fs.String("report", "build/svm-results.json", "report path (removed before execution)")
-	runner := fs.String("runner", "", "runner binary (or GOSVM_TEST_RUNNER/PATH)")
+	runner := fs.String("runner", "", "runner binary (default: GOSVM_TEST_RUNNER, managed runner for -target, PATH)")
 	pattern := fs.String("run", "", "scenario name regular expression")
 	if e := fs.Parse(args); e != nil {
 		if e == flag.ErrHelp {

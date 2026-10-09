@@ -52,7 +52,7 @@ func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptio
 	if e = validateFastELF(elfBytes, opts.Profile); e != nil {
 		return e
 	}
-	path, e := testvm.RunnerPath(opts.Runner)
+	path, e := testvm.RunnerFor(opts.Runner, opts.Profile)
 	if e != nil {
 		return e
 	}
