@@ -117,7 +117,7 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 	if opts.Sysvars != "" {
 		return fmt.Errorf("general fixtures declare sysvars in the fixture file; do not also use -svm-sysvars")
 	}
-	runner, e := testvm.RunnerPath(opts.Runner)
+	runner, e := testvm.RunnerFor(opts.Runner, opts.Profile)
 	if e != nil {
 		return e
 	}

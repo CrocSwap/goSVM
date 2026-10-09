@@ -102,9 +102,13 @@ gosvm test --sbf
 ```
 
 This is a **source installation**, tested on macOS arm64. Go and host Clang
-bootstrap the CLI. `gosvm toolchain install` downloads the official platform-tools
-**v1.51** archive, verifies a pinned SHA-256 digest before extraction, smoke-tests
-SBF compilation/linking, and retains only Clang and LLD. It does not invoke Cargo
+bootstrap the CLI. `gosvm toolchain install` now downloads the official
+platform-tools **v1.57** archive for `fogo-v0`/`solana-v3` and requires the
+extracted Clang/LLD to match their content pins ([target profiles](TARGET_PROFILES.md)).
+The historical description below applies to `gosvm toolchain install -target
+legacy-v1.51-v3`: it downloads the official **v1.51** archive, verifies a pinned
+SHA-256 digest before extraction, smoke-tests SBF compilation/linking, and retains
+only Clang and LLD. It does not invoke Cargo
 or install Rust. The initial upstream archive is still **448 MB**; the installed
 backend is about **168 MiB**. Downloads and extraction use a temporary directory,
 and the archive is removed after installation. Signed CLI releases and a smaller

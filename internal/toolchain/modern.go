@@ -1,6 +1,8 @@
 package toolchain
 
 import (
+	"archive/tar"
+	"compress/bzip2"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -9,7 +11,48 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 )
+
+// Official platform-tools v1.57 macOS arm64 release asset. Size and SHA-256 are
+// pinned from GitHub's release asset digest. The extracted Clang/LLD bytes must
+// additionally equal target.ModernBackendHashes, the locally qualified content.
+const (
+	ModernArchiveURL            = "https://github.com/anza-xyz/platform-tools/releases/download/v1.57/platform-tools-osx-aarch64.tar.bz2"
+	modernArchiveSHA            = "48c32c2ec3ac3729b5caf1fdd6c4145496125edf043b2662b0586bfbc932b34a"
+	modernArchiveSize     int64 = 430747800
+	SourceOfficialArchive       = "official-archive"
+	SourceQualifiedLocal        = "qualified-local-backend"
+)
+
+// modernPackage describes what a modern backend install must contain. Tests
+// substitute a fake package; production uses officialModern.
+type modernPackage struct {
+	URL     string
+	SHA     string
+	Size    int64
+	Members map[string]string // archive member -> installed path
+	Files   map[string]string // installed path -> SHA-256
+	Check   func(llvm string) error
+}
+
+func officialModern() modernPackage {
+	files := map[string]string{}
+	for name, hash := range target.ModernBackendHashes {
+		files["llvm/bin/"+name] = hash
+	}
+	return modernPackage{
+		URL: ModernArchiveURL, SHA: modernArchiveSHA, Size: modernArchiveSize,
+		// clang is a symlink to clang-22 and ld.lld a symlink to lld; both
+		// executables depend only on macOS system libraries (otool -L).
+		Members: map[string]string{"llvm/bin/clang-22": "llvm/bin/clang", "llvm/bin/lld": "llvm/bin/ld.lld"},
+		Files:   files,
+		Check: func(llvm string) error {
+			p, _ := target.Resolve(target.Solana)
+			return p.CheckBackend(llvm)
+		},
+	}
+}
 
 func ModernRoot() string {
 	if p := os.Getenv("GOSVM_CACHE"); p != "" {
@@ -21,39 +64,170 @@ func ModernRoot() string {
 	}
 	return filepath.Join(cache, "gosvm/toolchains", target.ModernTools, runtime.GOOS+"-"+runtime.GOARCH)
 }
-func VerifyModern(root string) error {
-	b, err := os.ReadFile(filepath.Join(root, "receipt.json"))
-	if err != nil {
-		return err
-	}
-	var r Receipt
-	if err = json.Unmarshal(b, &r); err != nil {
-		return err
-	}
-	if r.Version != target.ModernTools || r.Platform != runtime.GOOS+"-"+runtime.GOARCH || r.Source != "qualified-local-backend" || len(r.Files) != 2 {
-		return fmt.Errorf("modern backend receipt mismatch")
-	}
-	for name, want := range target.ModernBackendHashes {
-		if r.Files["llvm/bin/"+name] != want {
-			return fmt.Errorf("modern backend content pin mismatch")
-		}
-	}
-	p, _ := target.Resolve(target.Solana)
-	return p.CheckBackend(filepath.Join(root, "llvm"))
+
+// ModernAvailable reports whether a managed modern backend has been published.
+func ModernAvailable() bool {
+	root := ModernRoot()
+	_, err := os.Stat(filepath.Join(root, "receipt.json"))
+	return root != "" && err == nil
 }
 
-// InstallModern imports only the two already qualified binaries. There is no
-// unverified archive/download path for a candidate toolchain release.
+// VerifyModern accepts either an official-archive install or an imported
+// qualified local backend; both must match the frontend's content pins.
+func VerifyModern(root string) error {
+	_, err := ReadModern(root)
+	return err
+}
+
+// ReadModern verifies the managed modern backend and returns its receipt.
+func ReadModern(root string) (Receipt, error) {
+	return verifyModern(root, officialModern())
+}
+
+func verifyModern(root string, pkg modernPackage) (Receipt, error) {
+	var r Receipt
+	b, err := os.ReadFile(filepath.Join(root, "receipt.json"))
+	if err != nil {
+		return r, err
+	}
+	if err = json.Unmarshal(b, &r); err != nil {
+		return r, err
+	}
+	source := (r.Source == SourceOfficialArchive && r.ArchiveSHA == pkg.SHA) || (r.Source == SourceQualifiedLocal && r.ArchiveSHA == "")
+	if r.Version != target.ModernTools || r.Platform != runtime.GOOS+"-"+runtime.GOARCH || !source || len(r.Files) != len(pkg.Files) {
+		return r, fmt.Errorf("modern backend receipt mismatch")
+	}
+	for name, want := range pkg.Files {
+		if r.Files[name] != want {
+			return r, fmt.Errorf("modern backend content pin mismatch")
+		}
+		got, err := hashFile(filepath.Join(root, filepath.FromSlash(name)))
+		if err != nil {
+			return r, err
+		}
+		if got != want {
+			return r, fmt.Errorf("managed backend %s is damaged; remove %s and run gosvm toolchain install", name, root)
+		}
+	}
+	return r, pkg.Check(filepath.Join(root, "llvm"))
+}
+
+// InstallModern imports only the two already qualified binaries from an
+// existing platform-tools v1.57 installation.
 func InstallModern(ctx context.Context, root, llvm string, out io.Writer) error {
-	p, _ := target.Resolve(target.Solana)
-	if err := p.CheckBackend(llvm); err != nil {
+	pkg := officialModern()
+	if err := pkg.Check(llvm); err != nil {
 		return err
 	}
+	return publishModern(ctx, root, out, pkg, func(_, stage string) (Receipt, error) {
+		files := map[string]string{}
+		for dest, hash := range pkg.Files {
+			if err := ctx.Err(); err != nil {
+				return Receipt{}, err
+			}
+			data, err := os.ReadFile(filepath.Join(llvm, "bin", filepath.Base(dest)))
+			if err != nil {
+				return Receipt{}, err
+			}
+			p := filepath.Join(stage, filepath.FromSlash(dest))
+			if err = os.MkdirAll(filepath.Dir(p), 0755); err != nil {
+				return Receipt{}, err
+			}
+			if err = os.WriteFile(p, data, 0755); err != nil {
+				return Receipt{}, err
+			}
+			actual, err := hashFile(p)
+			if err != nil {
+				return Receipt{}, err
+			}
+			if actual != hash {
+				return Receipt{}, fmt.Errorf("backend changed during import")
+			}
+			files[dest] = hash
+		}
+		return Receipt{Version: target.ModernTools, Platform: runtime.GOOS + "-" + runtime.GOARCH, Source: SourceQualifiedLocal, Files: files}, nil
+	})
+}
+
+// InstallModernArchive downloads (archive == "") or reads a local copy of the
+// official v1.57 archive, verifies its size and SHA-256 before decompression,
+// extracts only Clang and LLD, and requires their exact qualified content.
+func InstallModernArchive(ctx context.Context, root, archive string, out io.Writer, download Download) error {
+	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
+		return fmt.Errorf("platform-tools %s is currently qualified on macOS arm64 only", target.ModernTools)
+	}
+	return installModernArchive(ctx, root, archive, out, download, officialModern())
+}
+
+func installModernArchive(ctx context.Context, root, archive string, out io.Writer, download Download, pkg modernPackage) error {
+	return publishModern(ctx, root, out, pkg, func(tmp, stage string) (Receipt, error) {
+		file := archive
+		if file == "" {
+			if download == nil {
+				return Receipt{}, fmt.Errorf("no downloader configured")
+			}
+			file = filepath.Join(tmp, "platform-tools.tar.bz2")
+			fmt.Fprintf(out, "Downloading official platform-tools %s (%.0f MB); only Clang and LLD will be retained.\n", target.ModernTools, float64(pkg.Size)/1e6)
+			f, err := os.OpenFile(file, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+			if err != nil {
+				return Receipt{}, err
+			}
+			w := &archiveWriter{w: f, out: out, size: pkg.Size, last: time.Now()}
+			copyErr := download(ctx, pkg.URL, w)
+			closeErr := f.Close()
+			if copyErr != nil {
+				return Receipt{}, copyErr
+			}
+			if closeErr != nil {
+				return Receipt{}, closeErr
+			}
+		}
+		fmt.Fprintln(out, "Verifying SHA-256 and extracting Clang and LLD...")
+		if info, err := os.Stat(file); err != nil {
+			return Receipt{}, err
+		} else if info.Size() != pkg.Size {
+			return Receipt{}, fmt.Errorf("backend archive size %d; expected %d", info.Size(), pkg.Size)
+		}
+		digest, err := hashFile(file)
+		if err != nil {
+			return Receipt{}, err
+		}
+		if digest != pkg.SHA {
+			return Receipt{}, fmt.Errorf("backend archive SHA-256 mismatch: got %s", digest)
+		}
+		f, err := os.Open(file)
+		if err != nil {
+			return Receipt{}, err
+		}
+		files, err := extractAllowlist(ctx, tar.NewReader(contextReader{ctx, bzip2.NewReader(contextReader{ctx, f})}), stage, pkg.Members)
+		closeErr := f.Close()
+		if err != nil {
+			return Receipt{}, err
+		}
+		if closeErr != nil {
+			return Receipt{}, closeErr
+		}
+		// Never execute extracted bytes that differ from the qualified backend.
+		for dest, want := range pkg.Files {
+			if files[dest] != want {
+				return Receipt{}, fmt.Errorf("official archive %s does not match the qualified content pin (got %s, want %s); not installing", dest, files[dest], want)
+			}
+		}
+		return Receipt{Version: target.ModernTools, Platform: runtime.GOOS + "-" + runtime.GOARCH, Source: SourceOfficialArchive, ArchiveSHA: pkg.SHA, Files: files}, nil
+	})
+}
+
+// publishModern stages a backend privately and publishes it by rename after the
+// receipt verifies. One installer per root; failures never leave a partial root.
+func publishModern(ctx context.Context, root string, out io.Writer, pkg modernPackage, fill func(tmp, stage string) (Receipt, error)) error {
+	if root == "" {
+		return fmt.Errorf("cannot resolve user cache directory; set GOSVM_CACHE")
+	}
 	if _, err := os.Stat(root); err == nil {
-		if err = VerifyModern(root); err != nil {
+		if _, err = verifyModern(root, pkg); err != nil {
 			return err
 		}
-		fmt.Fprintln(out, "Qualified backend already installed:", root)
+		fmt.Fprintln(out, "Qualified backend already installed and verified:", root)
 		return nil
 	} else if !os.IsNotExist(err) {
 		return err
@@ -63,40 +237,22 @@ func InstallModern(ctx context.Context, root, llvm string, out io.Writer) error 
 	}
 	lock := root + ".lock"
 	if err := os.Mkdir(lock, 0700); err != nil {
-		return fmt.Errorf("modern installer busy: %w", err)
+		return fmt.Errorf("modern installer busy (or interrupted earlier); lock: %s: %w", lock, err)
 	}
 	defer os.Remove(lock)
-	stage, err := os.MkdirTemp(filepath.Dir(root), ".modern-")
+	tmp, err := os.MkdirTemp(filepath.Dir(root), ".modern-")
 	if err != nil {
 		return err
 	}
-	defer os.RemoveAll(stage)
-	if err = os.MkdirAll(filepath.Join(stage, "llvm/bin"), 0755); err != nil {
+	defer os.RemoveAll(tmp)
+	stage := filepath.Join(tmp, "backend")
+	if err = os.MkdirAll(stage, 0755); err != nil {
 		return err
 	}
-	files := map[string]string{}
-	for name, hash := range target.ModernBackendHashes {
-		if err = ctx.Err(); err != nil {
-			return err
-		}
-		data, err := os.ReadFile(filepath.Join(llvm, "bin", name))
-		if err != nil {
-			return err
-		}
-		dest := filepath.Join(stage, "llvm/bin", name)
-		if err = os.WriteFile(dest, data, 0755); err != nil {
-			return err
-		}
-		actual, err := hashFile(dest)
-		if err != nil {
-			return err
-		}
-		if actual != hash {
-			return fmt.Errorf("backend changed during import")
-		}
-		files["llvm/bin/"+name] = hash
+	r, err := fill(tmp, stage)
+	if err != nil {
+		return err
 	}
-	r := Receipt{Version: p.Tools, Platform: runtime.GOOS + "-" + runtime.GOARCH, Source: "qualified-local-backend", Files: files}
 	b, err := json.MarshalIndent(r, "", "  ")
 	if err != nil {
 		return err
@@ -104,7 +260,7 @@ func InstallModern(ctx context.Context, root, llvm string, out io.Writer) error 
 	if err = os.WriteFile(filepath.Join(stage, "receipt.json"), append(b, '\n'), 0644); err != nil {
 		return err
 	}
-	if err = VerifyModern(stage); err != nil {
+	if _, err = verifyModern(stage, pkg); err != nil {
 		return err
 	}
 	if err = ctx.Err(); err != nil {
@@ -113,6 +269,6 @@ func InstallModern(ctx context.Context, root, llvm string, out io.Writer) error 
 	if err = os.Rename(stage, root); err != nil {
 		return err
 	}
-	fmt.Fprintln(out, "Installed content-pinned platform-tools v1.57 backend:", root)
+	fmt.Fprintf(out, "Installed content-pinned platform-tools %s backend (%s): %s\n", target.ModernTools, r.Source, root)
 	return nil
 }

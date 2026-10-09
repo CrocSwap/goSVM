@@ -16,7 +16,11 @@ GOSVM_TEST_RUNNER="$PWD/build/modern-runtime-target/release/gosvm-svm-runner" \
 
 Rust/Cargo is needed to bootstrap this local test engine; compiling applications
 still uses GoSVM and the Clang/LLD backend. No signed modern runner package or
-managed download is published here. `CARGO_TARGET_DIR` can choose another build
+managed download is published here. `scripts/package_modern_runner.py --output DIR
+[--binary existing-build]` produces a deterministic local package and a reviewable
+pin; the frontend embeds that pin (`internal/runner/pins/0.6.0-darwin-arm64.json`)
+and `gosvm runner install -archive` accepts only the pinned bytes. A rebuild from
+another checkout path or toolchain yields a different binary and needs a new pin. `CARGO_TARGET_DIR` can choose another build
 location. `--offline` uses the pinned registry archive and already cached dependencies;
 `--archive <litesvm-0.13.0.crate>` selects an existing archive explicitly.
 

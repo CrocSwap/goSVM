@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -195,6 +196,55 @@ func TestGzipTrailerAndInstalledFileType(t *testing.T) {
 	}
 	if err = verify(root, testPin(data)); err == nil {
 		t.Fatal("accepted installed symlink")
+	}
+}
+
+func TestEmbeddedPinsAndPackageDetection(t *testing.T) {
+	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
+		t.Skip("pins are qualified on macOS arm64 only")
+	}
+	for _, v := range Versions() {
+		p, err := PackageFor(v)
+		if err != nil || p.Files["bin/gosvm-svm-runner"].SHA256 == "" {
+			t.Fatalf("%s: %v", v, err)
+		}
+		// Every pinned member must be installable within extraction limits.
+		var total int64
+		for name, f := range p.Files {
+			if !safeMember(name) || f.Bytes <= 0 || f.Bytes > 32<<20 || len(f.SHA256) != 64 {
+				t.Fatalf("%s: uninstallable member %s %+v", v, name, f)
+			}
+			total += f.Bytes
+		}
+		if total > 64<<20 {
+			t.Fatalf("%s: package exceeds extraction limit", v)
+		}
+	}
+	t.Setenv("GOSVM_CACHE", t.TempDir())
+	if RootFor(Version) == RootFor(ModernVersion) || Root() != RootFor(Version) {
+		t.Fatal("runner versions must use separate cache slots")
+	}
+	err := Install(context.Background(), "", io.Discard)
+	for _, want := range []string{"gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz", "gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz"} {
+		if err == nil || !strings.Contains(err.Error(), "gosvm runner install -archive "+want) {
+			t.Fatalf("missing actionable hint for %s: %v", want, err)
+		}
+	}
+	a := testArchive(t, member{"bin/gosvm-svm-runner", "pinned executable", tar.TypeReg})
+	b := testArchive(t, member{"bin/gosvm-svm-runner", "other executable", tar.TypeReg})
+	pa, pb := testPin(a), testPin(b)
+	pb.Version = ModernVersion
+	file := filepath.Join(t.TempDir(), "package.tar.gz")
+	os.WriteFile(file, b, 0600)
+	if p, err := identify(context.Background(), file, []Pin{pa, pb}); err != nil || p.Version != ModernVersion {
+		t.Fatalf("identify: %v %v", p.Version, err)
+	}
+	os.WriteFile(file, append(b, 0), 0600)
+	if _, err := identify(context.Background(), file, []Pin{pa, pb}); err == nil {
+		t.Fatal("identified a modified archive")
+	}
+	if _, err := os.Stat(RootFor(ModernVersion)); !os.IsNotExist(err) {
+		t.Fatal("failed install created a runner slot")
 	}
 }
 

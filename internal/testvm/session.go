@@ -28,28 +28,73 @@ func Features() (json.RawMessage, error) {
 	return json.RawMessage(profile), nil
 }
 
-func RunnerPath(explicit string) (string, error) {
+// RunnerPath resolves a runner for historical (target-less) tests.
+func RunnerPath(explicit string) (string, error) { return RunnerFor(explicit, "") }
+
+// ManagedRunnerVersions lists, in preference order, the managed runner packages
+// that may be selected automatically for a profile. fogo-v0 is qualified on the
+// historical engine; the modern engine is eligible only with an explicit
+// GOSVM_TEST_FEATURES file, because the default v0 feature list targets 0.5.0.
+func ManagedRunnerVersions(profileName string) []string {
+	switch profileName {
+	case "solana-v3":
+		return []string{runner.ModernVersion}
+	case "fogo-v0":
+		if os.Getenv("GOSVM_TEST_FEATURES") != "" {
+			return []string{runner.Version, runner.ModernVersion}
+		}
+		return []string{runner.Version}
+	default:
+		return []string{runner.Version}
+	}
+}
+
+// RunnerInstallHint is the exact command installing the profile's preferred runner.
+func RunnerInstallHint(profileName string) string {
+	return runner.InstallHint(ManagedRunnerVersions(profileName)[0])
+}
+
+// RunnerFor selects the runner for a profile: explicit path, GOSVM_TEST_RUNNER,
+// a verified compatible managed package, then gosvm-svm-runner on PATH. A damaged
+// managed install fails closed. Identity is rechecked when the session starts.
+func RunnerFor(explicit, profileName string) (string, error) {
 	if explicit == "" {
 		explicit = os.Getenv("GOSVM_TEST_RUNNER")
 	}
 	if explicit == "" {
-		managed, exists, err := runner.ManagedPath()
-		if err != nil {
-			return "", err
-		}
-		if exists {
-			return managed, nil
+		for _, version := range ManagedRunnerVersions(profileName) {
+			managed, exists, err := runner.ManagedPathFor(version)
+			if err != nil {
+				return "", err
+			}
+			if exists {
+				return managed, nil
+			}
 		}
 		explicit = "gosvm-svm-runner"
 	}
 	path, e := exec.LookPath(explicit)
 	if e != nil {
-		return "", fmt.Errorf("SVM runner unavailable; run gosvm runner install -archive <pinned-package>, or supply -svm-runner/GOSVM_TEST_RUNNER: %w", e)
+		return "", fmt.Errorf("SVM runner %s unavailable%s; install it with: %s (or supply -svm-runner/GOSVM_TEST_RUNNER): %w", requiredRunner(profileName), forProfile(profileName), RunnerInstallHint(profileName), e)
 	}
 	return path, nil
 }
 
-const ModernRunnerVersion = "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)"
+func forProfile(name string) string {
+	if name == "" {
+		return ""
+	}
+	return " for " + name
+}
+
+func requiredRunner(profileName string) string {
+	if profileName == "solana-v3" {
+		return ModernRunnerVersion
+	}
+	return RunnerVersion
+}
+
+const ModernRunnerVersion = runner.ModernIdentity
 
 func FeaturesFor(profileName string) (json.RawMessage, error) {
 	if profileName == "solana-v3" && os.Getenv("GOSVM_TEST_FEATURES") == "" {
@@ -100,7 +145,7 @@ func StartTarget(ctx context.Context, path, profileName string) (*Session, error
 	}
 	identity := string(bytes.TrimSpace(version))
 	if !RunnerCompatible(identity, profileName) {
-		return nil, fmt.Errorf("require %s; found %s", RunnerVersion, version)
+		return nil, fmt.Errorf("require %s%s; found %s at %s; install it with: %s", requiredRunner(profileName), forProfile(profileName), identity, path, RunnerInstallHint(profileName))
 	}
 	childCtx, cancel := context.WithCancel(ctx)
 	s, e := startSession(exec.CommandContext(childCtx, path, "--stdio"), cancel)

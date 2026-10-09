@@ -25,11 +25,12 @@ const help = `gosvm experimental project tools
 
   gosvm library bind       Generate Go/native bindings from a pinned pure-library contract
   gosvm new <directory>    Create a typed bounded-swap program and tests
-  gosvm toolchain install Import the content-pinned modern backend; legacy downloads remain available
+  gosvm toolchain install Download the pinned platform-tools v1.57 backend (fogo-v0, solana-v3)
+                          (-archive local copy, -llvm import, -target legacy-v1.51-v3)
   gosvm toolchain status  Verify the managed backend
-  gosvm runner install    Verify and install a pinned local runner package
-  gosvm runner status     Verify the managed experimental runner
-  gosvm doctor            Check Go, pinned LLVM, and optional validator
+  gosvm runner install    Install a pinned local runner package: -archive <0.5.0 or 0.6.0 package>
+  gosvm runner status     Verify the managed runners (0.6.0 solana-v3; 0.5.0 fogo-v0/legacy)
+  gosvm doctor            Check Go, backends and runners for fogo-v0/solana-v3, with fixes
   gosvm generate          Generate account checks, codecs, client, and IDL
   gosvm check             Generate and check the on-chain Go subset (no LLVM)
   gosvm migrate-target    Explicitly migrate the target/toolchain configuration
@@ -48,7 +49,8 @@ and -no-cache. -target selects fogo-v0, solana-v3, or legacy-v1.51-v3.
 SBF_LLVM overrides the selected profile backend directory.
 Build/test accept -timings to print JSON phase durations for workflow diagnostics.
 Fast tests accept -svm-run <fixture regex> and -svm-runner <binary path>.
-Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed cache, PATH.
+Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed runner for
+the target (solana-v3 0.6.0; fogo-v0/legacy 0.5.0), PATH.
 Use -svm-sysvars <JSON file> for explicit Clock/Rent values in fast tests.
 Use -svm-fixtures <JSON file> for general multi-account project fixtures.
 Modern outputs/reports are under build/<target>/<tools>/<backend>/deps-<dependencies>/.
@@ -273,23 +275,42 @@ func projectCommand(args []string) error {
 				fmt.Printf("Expected validator %s for SBF tests\n", project.Validator)
 			}
 		}
-		if path, e := testvm.RunnerPath(""); e != nil {
-			fmt.Printf("SVM runner unavailable (optional; only needed for test --svm): %v\n", e)
-		} else {
+		// Report both deployable profiles; only the selected backend is required.
+		profiles := []string{target.Fogo, target.Solana}
+		if selected.Name == target.Legacy {
+			profiles = append(profiles, target.Legacy)
+		}
+		for _, name := range profiles {
+			p, _ := target.Resolve(name)
+			dir := llvmForTools(p.Tools)
+			if name == selected.Name {
+				dir = *llvm
+			}
+			required := ""
+			if name == selected.Name {
+				required = " (selected)"
+			}
+			if e := p.CheckBackend(dir); e != nil {
+				fmt.Printf("MISSING %s backend%s: %v\n  fix: %s\n", name, required, e, backendInstallCommand(p))
+				if name == selected.Name {
+					failed = true
+				}
+			} else {
+				fmt.Printf("OK %s backend%s / platform-tools %s / LLVM %s: %s\n", name, required, p.Tools, p.LLVM, dir)
+			}
+			path, e := testvm.RunnerFor("", name)
+			if e != nil {
+				fmt.Printf("MISSING %s SVM runner (optional; only for test --svm): %v\n  fix: %s\n", name, e, testvm.RunnerInstallHint(name))
+				continue
+			}
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			version, e := exec.CommandContext(ctx, path, "--version").CombinedOutput()
 			cancel()
-			if e != nil || !testvm.RunnerCompatible(strings.TrimSpace(string(version)), selected.Name) {
-				fmt.Printf("SVM runner incompatible (optional): %s: %v %s\n", path, e, version)
+			if e != nil || !testvm.RunnerCompatible(strings.TrimSpace(string(version)), name) {
+				fmt.Printf("INCOMPATIBLE %s SVM runner (optional): %s: %v %s\n  fix: %s\n", name, path, e, strings.TrimSpace(string(version)), testvm.RunnerInstallHint(name))
 			} else {
-				fmt.Printf("OK optional SVM runner: %s (%s)\n", path, strings.TrimSpace(string(version)))
+				fmt.Printf("OK %s SVM runner: %s (%s)\n", name, path, strings.TrimSpace(string(version)))
 			}
-		}
-		if e := selected.CheckBackend(*llvm); e != nil {
-			fmt.Println(e)
-			failed = true
-		} else {
-			fmt.Printf("OK %s / platform-tools %s / LLVM %s: %s\n", selected.Name, selected.Tools, selected.LLVM, *llvm)
 		}
 		if _, e := os.Stat(filepath.Join(*dir, "gosvm.json")); e == nil {
 			if _, e = project.Load(*dir); e != nil {
@@ -302,6 +323,13 @@ func projectCommand(args []string) error {
 				return e
 			}
 			fmt.Println("OK managed backend content hashes")
+		}
+		if toolchain.ModernAvailable() {
+			if r, e := toolchain.ReadModern(toolchain.ModernRoot()); e != nil {
+				fmt.Printf("DAMAGED managed platform-tools %s backend: %v\n  fix: remove %s and run gosvm toolchain install\n", target.ModernTools, e, toolchain.ModernRoot())
+			} else {
+				fmt.Printf("OK managed platform-tools %s content pins (%s)\n", target.ModernTools, r.Source)
+			}
 		}
 		if failed {
 			return fmt.Errorf("required tools missing; see diagnostics above")
@@ -390,14 +418,14 @@ func projectCommand(args []string) error {
 
 func toolchainCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gosvm toolchain install [-archive file.tar.bz2] | status")
+		return fmt.Errorf("usage: gosvm toolchain install [-archive file.tar.bz2 | -llvm dir] [-target legacy-v1.51-v3] | status")
 	}
 	fs := flag.NewFlagSet("gosvm toolchain "+args[0], flag.ContinueOnError)
-	profileName := fs.String("target", target.Legacy, "backend profile (legacy retains official archive installer)")
-	localLLVM := fs.String("llvm", "", "existing qualified modern backend directory to import")
+	profileName := fs.String("target", target.Solana, "fogo-v0 / solana-v3 (shared platform-tools v1.57 backend) or legacy-v1.51-v3")
+	localLLVM := fs.String("llvm", "", "import Clang/LLD from an existing platform-tools v1.57 llvm directory instead of downloading")
 	archive := ""
 	if args[0] == "install" {
-		fs.StringVar(&archive, "archive", "", "use a local official archive (same SHA-256 verification)")
+		fs.StringVar(&archive, "archive", "", "use a local copy of the official archive (same size/SHA-256/content verification)")
 	}
 	if e := fs.Parse(args[1:]); e != nil {
 		if e == flag.ErrHelp {
@@ -415,19 +443,22 @@ func toolchainCommand(args []string) error {
 	if p.Name != target.Legacy {
 		switch args[0] {
 		case "status":
-			if err = toolchain.VerifyModern(toolchain.ModernRoot()); err != nil {
-				return err
+			r, err := toolchain.ReadModern(toolchain.ModernRoot())
+			if err != nil {
+				return fmt.Errorf("managed platform-tools %s backend (fogo-v0, solana-v3) unavailable: %w; run gosvm toolchain install", p.Tools, err)
 			}
-			fmt.Println("Verified platform-tools", p.Tools, toolchain.ModernRoot())
+			fmt.Printf("Verified platform-tools %s for fogo-v0 and solana-v3 (%s): %s\n", p.Tools, r.Source, toolchain.ModernRoot())
 			return nil
 		case "install":
-			if archive != "" {
-				return fmt.Errorf("modern archive downloads are not qualified; use -llvm with an existing content-pinned v1.57 backend")
+			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+			defer stop()
+			if *localLLVM != "" {
+				if archive != "" {
+					return fmt.Errorf("choose either -archive or -llvm")
+				}
+				return toolchain.InstallModern(ctx, toolchain.ModernRoot(), *localLLVM, os.Stdout)
 			}
-			if *localLLVM == "" {
-				*localLLVM = llvmForTools(p.Tools)
-			}
-			return toolchain.InstallModern(context.Background(), toolchain.ModernRoot(), *localLLVM, os.Stdout)
+			return toolchain.InstallModernArchive(ctx, toolchain.ModernRoot(), archive, os.Stdout, downloadBackend)
 		default:
 			return fmt.Errorf("unknown toolchain command %q", args[0])
 		}
@@ -438,7 +469,7 @@ func toolchainCommand(args []string) error {
 	switch args[0] {
 	case "status":
 		if _, e := toolchain.Verify(toolchain.Root()); e != nil {
-			return fmt.Errorf("managed toolchain unavailable: %w; run gosvm toolchain install", e)
+			return fmt.Errorf("managed legacy toolchain unavailable: %w; run gosvm toolchain install -target legacy-v1.51-v3", e)
 		}
 		fmt.Printf("Verified %s: %s\n", toolchain.Version, toolchain.LLVM())
 		return nil
@@ -449,6 +480,14 @@ func toolchainCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown toolchain command %q", args[0])
 	}
+}
+
+// backendInstallCommand is the exact command that installs a profile's backend.
+func backendInstallCommand(p target.Profile) string {
+	if p.Tools == target.ModernTools {
+		return "gosvm toolchain install"
+	}
+	return "gosvm toolchain install -target " + target.Legacy
 }
 
 func downloadBackend(ctx context.Context, url string, out io.Writer) error {

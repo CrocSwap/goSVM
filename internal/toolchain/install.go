@@ -139,7 +139,7 @@ func Install(ctx context.Context, root, archive string, out io.Writer, download 
 		if e != nil {
 			return e
 		}
-		w := &archiveWriter{w: f, out: out, last: time.Now()}
+		w := &archiveWriter{w: f, out: out, size: archiveSize, last: time.Now()}
 		copyErr := download(ctx, archiveURL, w)
 		closeErr := f.Close()
 		if copyErr != nil {
@@ -199,17 +199,18 @@ type archiveWriter struct {
 	w    io.Writer
 	out  io.Writer
 	n    int64
+	size int64
 	last time.Time
 }
 
 func (p *archiveWriter) Write(b []byte) (int, error) {
-	if int64(len(b)) > archiveSize-p.n {
+	if int64(len(b)) > p.size-p.n {
 		return 0, fmt.Errorf("download exceeds pinned archive size")
 	}
 	n, e := p.w.Write(b)
 	p.n += int64(n)
 	if time.Since(p.last) > 5*time.Second {
-		fmt.Fprintf(p.out, "Downloaded %.0f / 448 MB\n", float64(p.n)/1e6)
+		fmt.Fprintf(p.out, "Downloaded %.0f / %.0f MB\n", float64(p.n)/1e6, float64(p.size)/1e6)
 		p.last = time.Now()
 	}
 	return n, e
@@ -228,7 +229,12 @@ func (r contextReader) Read(b []byte) (int, error) {
 }
 
 func extract(ctx context.Context, tr *tar.Reader, stage string) (map[string]string, error) {
-	wanted := map[string]string{"llvm/bin/clang-19": "llvm/bin/clang", "llvm/bin/lld": "llvm/bin/ld.lld"}
+	return extractAllowlist(ctx, tr, stage, map[string]string{"llvm/bin/clang-19": "llvm/bin/clang", "llvm/bin/lld": "llvm/bin/ld.lld"})
+}
+
+// extractAllowlist writes only the named regular archive members, renamed to
+// their fixed destinations; other members are skipped, never written.
+func extractAllowlist(ctx context.Context, tr *tar.Reader, stage string, wanted map[string]string) (map[string]string, error) {
 	files := map[string]string{}
 	for {
 		if e := ctx.Err(); e != nil {
@@ -272,7 +278,7 @@ func extract(ctx context.Context, tr *tar.Reader, stage string) (map[string]stri
 		}
 		files[dest] = fmt.Sprintf("%x", hash.Sum(nil))
 	}
-	if len(files) != 2 {
+	if len(files) != len(wanted) {
 		return nil, fmt.Errorf("archive missing Clang or LLD")
 	}
 	return files, nil
