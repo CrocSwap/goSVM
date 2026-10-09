@@ -1,0 +1,29 @@
+package program
+import (
+ "bytes"
+ "testing"
+ "example.com/rust-mixed/quote"
+)
+func TestRustBusinessAndMalformed(t *testing.T){
+ for _,v:=range []struct{pool Pool;arg SwapArgs;want Pool;code uint64}{
+  {Pool{1000,2000,7},SwapArgs{100},Pool{1100,1819,181},0},
+  {Pool{1000,2000,7},SwapArgs{0},Pool{1000,2000,0},0},
+  {Pool{1,4000000000,7},SwapArgs{^uint64(0)},Pool{0,1,3999999999},0},
+  {Pool{4294967196,2000,7},SwapArgs{100},Pool{0,2000,0},0},
+  {Pool{0,2000,7},SwapArgs{100},Pool{0,2000,7},104},
+  {Pool{1000,0,7},SwapArgs{100},Pool{1000,0,7},104},
+ } {got:=Swap(v.pool,v.arg);if got.Code!=v.code || got.State!=v.want {t.Fatal(v,got)}}
+}
+func TestNativeCanonicalABI(t *testing.T){
+ input:=[]byte{100,0,0,0,0,0,0,0,0xe8,3,0,0,0xd0,7,0,0};output:=[]byte{9,9,9,9,9,9,9,9}
+ code,n:=quote.Quote(input,output);if code!=0 || n!=8 || !bytes.Equal(output,[]byte{181,0,0,0,0,0,0,0}) {t.Fatal(code,n,output)}
+ for _,v:=range []struct{input,output []byte;status uint32}{
+  {[]byte{1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0},[]byte{9,9,9,9,9,9,9,9},4},
+  {input[:15],[]byte{9,9,9,9,9,9,9,9},4},
+  {input,[]byte{9,9,9,9,9,9,9},5},
+  {input,nil,1},
+  {nil,[]byte{9,9,9,9,9,9,9,9},4},
+ } {before:=append([]byte(nil),v.output...);code,n:=quote.Quote(v.input,v.output);if code!=v.status || n!=0 || !bytes.Equal(before,v.output){t.Fatal(code,n,v.output)}}
+ overlap:=append([]byte(nil),input...);before:=append([]byte(nil),overlap...)
+ code,n=quote.Quote(overlap,overlap[:8]);if code!=3 || n!=0 || !bytes.Equal(before,overlap){t.Fatal("alias",code,n,overlap)}
+}

@@ -44,6 +44,9 @@ func libraryCommand(args []string) error {
 	if len(args) > 0 && args[0] == "add" {
 		return libraryAdd(args[1:])
 	}
+	if len(args) > 0 && args[0] == "build-rust" {
+		return rustLibraryCommand(args[1:])
+	}
 	if len(args) == 0 || args[0] != "bind" {
 		return fmt.Errorf("usage: gosvm library add -name <package> [-function F] library.manifest.json...\n       gosvm library bind -manifest contract.json -output package-directory")
 	}

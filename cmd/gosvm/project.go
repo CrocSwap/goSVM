@@ -24,6 +24,7 @@ import (
 const help = `gosvm experimental project tools
 
   gosvm library bind       Generate Go/native bindings from a pinned pure-library contract
+  gosvm library build-rust Build a pure no_std Rust crate into ABI v1 library artifacts
   gosvm new <directory>    Create a typed bounded-swap program and tests
   gosvm toolchain install Download the pinned platform-tools v1.57 backend (fogo-v0, solana-v3)
                           (-archive local copy, -llvm import, -target legacy-v1.51-v3)

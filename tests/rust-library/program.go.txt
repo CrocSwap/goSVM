@@ -1,0 +1,25 @@
+package program
+
+import "example.com/rust-mixed/quote"
+
+type Pool struct { ReserveIn uint32; ReserveOut uint32; Last uint64 }
+type SwapArgs struct { Amount uint64 }
+type SwapResult struct { State Pool; Code uint64 }
+
+// Go owns accounts and validation; the pure Rust root quotes the swap.
+func Swap(pool Pool,args SwapArgs) SwapResult {
+ result:=SwapResult{State:pool}
+ var input [16]byte
+ for i:=uint64(0);i<8;i++ {input[i]=byte(args.Amount>>(i*8))}
+ for i:=uint64(0);i<4;i++ {input[8+i]=byte(pool.ReserveIn>>(i*8));input[12+i]=byte(pool.ReserveOut>>(i*8))}
+ var output [8]byte
+ status,length:=quote.Quote(input[:],output[:])
+ if status!=0 {result.Code=100+uint64(status);return result}
+ if length!=8 {result.Code=109;return result}
+ out:=uint64(0)
+ for i:=uint64(0);i<8;i++ {out=out|uint64(output[i])<<(i*8)}
+ result.State.Last=out
+ result.State.ReserveIn=pool.ReserveIn+uint32(args.Amount)
+ result.State.ReserveOut=pool.ReserveOut-uint32(out)
+ return result
+}
