@@ -1,0 +1,15 @@
+[package]
+name = "quote"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+# The whole GoSVM declaration: the root function and its canonical byte widths.
+[package.metadata.gosvm-library]
+function = "quote"
+input-bytes = 16
+output-bytes = 8
+schema = "Quote{amount:u64le,reserve_in:u32le,reserve_out:u32le} -> u64le"

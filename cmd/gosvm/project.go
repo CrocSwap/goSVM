@@ -24,6 +24,7 @@ import (
 const help = `gosvm experimental project tools
 
   gosvm library bind       Generate Go/native bindings from a pinned pure-library contract
+  gosvm library build-rust Build a pure no_std Rust crate into ABI v1 library artifacts
   gosvm new <directory>    Create a typed bounded-swap program and tests
   gosvm toolchain install Import the content-pinned modern backend; legacy downloads remain available
   gosvm toolchain status  Verify the managed backend

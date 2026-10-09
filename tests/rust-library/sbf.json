@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "quote",
+      "initial": "214125f28c448dc0e8030000d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a7176400000000000000"
+      ],
+      "expected": "214125f28c448dc04c0400001b070000b500000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "zero-amount",
+      "initial": "214125f28c448dc0e8030000d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a7170000000000000000"
+      ],
+      "expected": "214125f28c448dc0e8030000d00700000000000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "u128-boundary",
+      "initial": "214125f28c448dc00100000000286bee0700000000000000",
+      "instructions": [
+        "b8a708f64160a717ffffffffffffffff"
+      ],
+      "expected": "214125f28c448dc00000000001000000ff276bee00000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "wrap-to-zero-reserve",
+      "initial": "214125f28c448dc09cffffffd00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a7176400000000000000"
+      ],
+      "expected": "214125f28c448dc000000000d00700000000000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "malformed-reserve-in",
+      "initial": "214125f28c448dc000000000d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a7176400000000000000"
+      ],
+      "expected": "214125f28c448dc000000000d00700000700000000000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "malformed-reserve-out",
+      "initial": "214125f28c448dc0e8030000000000000700000000000000",
+      "instructions": [
+        "b8a708f64160a7176400000000000000"
+      ],
+      "expected": "214125f28c448dc0e8030000000000000700000000000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "success-then-malformed-rollback",
+      "initial": "214125f28c448dc09cffffffd00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a7176400000000000000",
+        "b8a708f64160a7170100000000000000"
+      ],
+      "expected": "214125f28c448dc09cffffffd00700000700000000000000",
+      "error": 104,
+      "error_index": 1
+    }
+  ]
+}
