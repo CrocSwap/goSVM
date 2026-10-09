@@ -1,8 +1,8 @@
-# goSVM
+![goSVM — compile Go to Solana programs](assets/gosvm-banner.svg)
 
-**Write Solana programs in Go.**
+**Write Solana and Fogo programs in Go.**
 
-goSVM compiles Go into Solana SBF programs, with generated account validation,
+goSVM compiles Go into SVM programs, with generated account validation,
 clients, and native Go tests. Share types and business logic between your
 on-chain program and an ordinary Go backend. The compiled program runs without
 a Go runtime, garbage collector, or scheduler.
@@ -42,10 +42,13 @@ including failed CPIs and rollback. This covers the classic-token, fixed-fee
 handler with events omitted at O2; it is a scoped port, not the complete
 Whirlpools contract. [Benchmark scope and evidence](docs/WHIRLPOOLS_133_TARGET.md).
 
+These measurements use the historical v1.51 experimental v3 backend.
+They do not measure the new Fogo/modern Solana target profiles.
+
 ## Try it
 
 Source installation is tested on **macOS arm64**, with Go and host Clang required.
-The backend installer downloads and verifies pinned Solana LLVM tools. Building
+Explicit profiles support Fogo v0 and modern Solana v3 with pinned LLVM tools. Building
 Go programs does not require Cargo or Rust.
 
 ```sh
@@ -54,14 +57,16 @@ cd goSVM
 bash scripts/install.sh "$HOME/.local/bin"
 export PATH="$HOME/.local/bin:$PATH"
 
-gosvm toolchain install
-gosvm doctor
-gosvm new my-swap
+# Import an existing official platform-tools v1.57 backend.
+gosvm toolchain install -target solana-v3 \
+  -llvm "$HOME/.cache/solana/v1.57/platform-tools/llvm"
+gosvm doctor -target solana-v3
+gosvm new -target solana-v3 my-swap
 cd my-swap
 
 gosvm check       # Check the supported Go subset
 gosvm test        # Run native Go tests
-gosvm build       # Compile to build/program.so
+gosvm build       # Compile into an isolated target directory
 ```
 
 The starter is a small arithmetic-only swap, with generated bindings and tests.
@@ -69,10 +74,10 @@ Edit `program.go` and rebuild. For multi-account applications, explore the
 [token swap](examples/full-swap/README.md) and [escrow](examples/escrow/README.md),
 or scaffold with `gosvm new -schema 2 -sdk 2 my-program`.
 
-For actual SBF execution, `gosvm test --sbf` uses a separately installed local
-validator (tested with Solana 3.0.15). `gosvm test --svm` provides faster local
-execution with a separately installed [experimental LiteSVM runner](docs/SVM_RUNNER_PACKAGING.md).
-Both run locally without a wallet or public-cluster deployment. Public signed
+For actual SBF execution, `gosvm test --svm` uses a separately installed runner
+compatible with the chosen profile. [Target setup and migration](docs/TARGET_PROFILES.md)
+explain the modern runner, backend pins and preserved historical validator workflow.
+Tests run locally without a wallet or public-cluster deployment. Public signed
 CLI and runner downloads are still planned; see [installation details](docs/DEVELOPMENT.md#start-a-go-project).
 
 ## Share code with your backend
@@ -108,7 +113,8 @@ supported. This is an experimental toolchain without a production audit.
   [token-swap lifecycle](examples/full-swap/README.md),
   [SOL escrow](examples/escrow/README.md), [Go backend](examples/full-swap-service/README.md).
 - **Build applications:** [multi-account schema](docs/SCHEMA2.md),
-  [SDK](docs/SDK2.md), [shared Go packages](docs/GO_PACKAGES.md),
+  [SDK](docs/SDK2.md), [target profiles](docs/TARGET_PROFILES.md),
+  [Bend libraries](docs/BEND_LIBRARIES.md), [shared Go packages](docs/GO_PACKAGES.md),
   [SVM test fixtures](docs/SVM_FIXTURES.md).
 - **Follow development:** [roadmap](ROADMAP.md),
   [independent developer trial](docs/MILESTONE2_TRIAL.md).

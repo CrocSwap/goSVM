@@ -1,0 +1,21 @@
+package program
+
+import "example.com/bend-mixed/bend"
+
+type Pool struct { Tag byte; Value uint32 }
+type SwapArgs struct { Tag byte; Enabled byte; Value uint32 }
+type SwapResult struct { State Pool; Code uint64 }
+
+func Swap(pool Pool,args SwapArgs) SwapResult {
+ result:=SwapResult{State:pool}
+ var input [6]byte
+ input[0]=args.Tag;input[1]=args.Enabled
+ for i:=uint64(0);i<4;i++ {input[i+2]=byte(args.Value>>(i*8))}
+ var output [5]byte
+ status,length:=bend.Evaluate(input[:],output[:])
+ if status!=0 {result.Code=100+uint64(status);return result}
+ if length!=5 {result.Code=107;return result}
+ result.State.Tag=output[0]
+ result.State.Value=uint32(output[1])|uint32(output[2])<<8|uint32(output[3])<<16|uint32(output[4])<<24
+ return result
+}

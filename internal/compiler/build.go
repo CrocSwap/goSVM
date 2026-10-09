@@ -1,8 +1,10 @@
 package compiler
 
 import (
+	"crypto/sha256"
 	_ "embed"
 	"fmt"
+	"gosvm/internal/targets"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,6 +19,9 @@ var linkerScript []byte
 //go:embed sbf-v3.ld
 var linkerScriptV3 []byte
 
+//go:embed sbf-modern-v3.ld
+var linkerScriptModernV3 []byte
+
 // Build loads the restricted import graph and invokes Clang/LLD, with no Go runtime or Cargo.
 func Build(source, output, llvm, arch string) error {
 	program, err := ReadProgram(source)
@@ -26,11 +31,28 @@ func Build(source, output, llvm, arch string) error {
 	return buildProgram(program, output, llvm, arch)
 }
 func buildProgram(program *Program, output, llvm, arch string) error {
+	libraryProfile := arch
 	cpu, script := "generic", linkerScript
+	modern := arch == target.Fogo || arch == target.Solana
+	if modern {
+		p, err := target.Resolve(arch)
+		if err != nil {
+			return err
+		}
+		if err = p.CheckBackend(llvm); err != nil {
+			return err
+		}
+		arch = p.Arch
+	} else if arch == target.Legacy {
+		arch = "v3"
+	}
 	switch arch {
 	case "v0":
 	case "v3":
 		cpu, script = "v3", linkerScriptV3
+		if modern {
+			script = linkerScriptModernV3
+		}
 	default:
 		return fmt.Errorf("unsupported SBF target %q", arch)
 	}
@@ -66,11 +88,50 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 		}
 		return nil
 	}
+	var linkedObjects []string
+	if len(program.Libraries) > 0 {
+		// Bind pure-library calls within the final image, rather than leaving
+		// preemptible function relocations for the SBF loader.
+		steps[1] = append(steps[1], "-Bsymbolic")
+	}
+	staged := map[string]bool{}
+	for _, binding := range program.Libraries {
+		objects, err := binding.Objects(libraryProfile)
+		if err != nil {
+			return err
+		}
+		for _, object := range objects {
+			data, ok := binding.Metadata[object]
+			if !ok {
+				return fmt.Errorf("missing captured library object %s", object)
+			}
+			digest := fmt.Sprintf("%x", sha256.Sum256(data))
+			if staged[digest] {
+				continue
+			}
+			staged[digest] = true
+			path := filepath.Join(dir, "library-"+digest+".o")
+			if err = os.WriteFile(path, data, 0644); err != nil {
+				return err
+			}
+			linkedObjects = append(linkedObjects, path)
+			steps[1] = append(steps[1], path)
+		}
+	}
+
 	if err = run(steps[0]); err != nil {
 		return err
 	}
-	if arch == "v0" {
+	if arch == "v0" || modern {
 		names, inspectErr := undefinedSymbols(filepath.Join(dir, "program.o"), false)
+		for _, object := range linkedObjects {
+			more, err := undefinedSymbols(object, false)
+			if err != nil {
+				return err
+			}
+			names = append(names, more...)
+		}
+
 		if inspectErr != nil {
 			return fmt.Errorf("inspect compiler helpers: %w", inspectErr)
 		}
@@ -84,7 +145,14 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 				return err
 			}
 			args := append([]string(nil), steps[0]...)
-			args[len(args)-3], args[len(args)-1] = helper, object
+			for i := 0; i < len(args)-1; i++ {
+				if args[i] == "-c" {
+					args[i+1] = helper
+				}
+				if args[i] == "-o" {
+					args[i+1] = object
+				}
+			}
 			if err = run(args); err != nil {
 				return err
 			}
@@ -101,6 +169,15 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 	data, err := os.ReadFile(filepath.Join(dir, "program.so"))
 	if err != nil {
 		return err
+	}
+	if modern {
+		flags := uint32(0)
+		if arch == "v3" {
+			flags = 3
+		}
+		if err = target.ValidateELF(data, flags, false); err != nil {
+			return err
+		}
 	}
 	return os.WriteFile(output, data, 0644)
 }

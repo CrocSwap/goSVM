@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "kind": "bend-library-v1",
+  "targetProfile": "fogo-v0",
+  "abiVersion": 1,
+  "source": "tests/mixed-library/PROOF.bend",
+  "root": "mixed.evaluate",
+  "bendCommit": "7561656155a4285c1e4ccfcb3505ab59524de973",
+  "symbol": "bend_library_v1_call_56d8740a662aed7c46c81322f7df5fc1f784b2f5b418dc3d661ef9ab604195b3",
+  "schemaFingerprint": "56d8740a662aed7c46c81322f7df5fc1f784b2f5b418dc3d661ef9ab604195b3",
+  "checkedFiles": [
+    "tests/mixed-library/PROOF.bend",
+    "tests/mixed-library/LAWS.bend",
+    "tests/mixed-library/mixed.bend",
+    ".deps/bend/bend2/base.bend"
+  ],
+  "emittedFunctions": [
+    "U32.is_lt",
+    "U32.add",
+    "mixed.decide",
+    "mixed.evaluate"
+  ],
+  "canonicalInputBytes": 6,
+  "canonicalOutputBytes": 5,
+  "frameLimitBytes": 4096,
+  "maxFrameBytes": 64,
+  "selection": {
+    "hostSource": "library.c",
+    "hostObject": "library.host.o",
+    "sbfSource": "library.c",
+    "sbfObject": "library.sbf.o",
+    "memoryObject": "library.sbf.memory.o",
+    "header": "library.h",
+    "bindings": "library.bindings.rs",
+    "schema": "library.schema.json"
+  },
+  "finalElfAuthorized": false,
+  "toolchains": {
+    "hostC": {
+      "path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+      "launcherPath": "/usr/bin/clang",
+      "launcherSha256": "b8763cf250e607a778bb4603cecb5b90338814d0a3dfcba0d57b1de242f610e9",
+      "compilerBinaryPath": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+      "compilerBinarySha256": "1590ac950a3d627817d09ade5cb60b2115f17a72182a3141e010b4bcc482a0c9",
+      "version": "Apple clang version 21.0.0 (clang-2100.3.34.2)"
+    },
+    "anzaClang": {
+      "path": "/Users/colkitt/sith/toys/crypto/bendSVM/.deps/platform-tools-v1.53/llvm/bin/clang-20",
+      "launcherPath": "/Users/colkitt/.cache/solana/v1.53/platform-tools/llvm/bin/clang",
+      "launcherSymlinkTarget": "clang-20",
+      "launcherSha256": "2763a1c1eca0c7b1f0513183d8880b01db3d0bfafc60ad49c7ee29c963eea4ae",
+      "compilerBinaryPath": "/Users/colkitt/sith/toys/crypto/bendSVM/.deps/platform-tools-v1.53/llvm/bin/clang-20",
+      "compilerBinarySha256": "2763a1c1eca0c7b1f0513183d8880b01db3d0bfafc60ad49c7ee29c963eea4ae",
+      "version": "clang version 20.1.7-rust-dev (https://github.com/anza-xyz/llvm-project.git afb02f33b18a65ab1a18105c4562d3fc25f6e156)",
+      "platformTools": "v1.53",
+      "cpu": "generic",
+      "sbpfVersion": 0
+    },
+    "anzaReadelf": {
+      "path": "/Users/colkitt/sith/toys/crypto/bendSVM/.deps/platform-tools-v1.53/llvm/bin/llvm-readobj",
+      "launcherPath": "/Users/colkitt/.cache/solana/v1.53/platform-tools/llvm/bin/llvm-readelf",
+      "launcherSymlinkTarget": "llvm-readobj",
+      "launcherSha256": "ab7e88ef8c81a2ebce08e8a821579206f1d8ee9d7fcd8720538b0d3488417c5b",
+      "compilerBinaryPath": "/Users/colkitt/sith/toys/crypto/bendSVM/.deps/platform-tools-v1.53/llvm/bin/llvm-readobj",
+      "compilerBinarySha256": "ab7e88ef8c81a2ebce08e8a821579206f1d8ee9d7fcd8720538b0d3488417c5b",
+      "version": "LLVM (http://llvm.org/):"
+    }
+  },
+  "dependencies": {
+    "bendCommit": "7561656155a4285c1e4ccfcb3505ab59524de973",
+    "bendChecker": {
+      "expectedCommit": "7561656155a4285c1e4ccfcb3505ab59524de973",
+      "observedCommitBefore": "7561656155a4285c1e4ccfcb3505ab59524de973",
+      "observedCommitAfter": "7561656155a4285c1e4ccfcb3505ab59524de973",
+      "cleanBefore": true,
+      "cleanAfter": true,
+      "path": ".deps/bend/bend2/bend.ts",
+      "sha256Before": "baf326d77e81c2ebe80c2bdd016c08732071a56ff951da0a67f68c26ac99e9d4",
+      "sha256After": "baf326d77e81c2ebe80c2bdd016c08732071a56ff951da0a67f68c26ac99e9d4"
+    },
+    "packageLockSha256": "0312d1664bd02c8036a88f6e00a96084603fde79aa9c02af58c03a7c2a8eda6c",
+    "cargoLockSha256": "29801e335ea270c6ffd35802bb7ba40bf4f44cfe1b381979f0e75c1dcdbb0871"
+  },
+  "inputs": {
+    ".deps/bend/bend2/base.bend": "b8c2734d45ec6b4ce70fee70ff06ef35e08fce885af8852d8eb77dbff020e946",
+    ".deps/bend/bend2/bend.ts": "baf326d77e81c2ebe80c2bdd016c08732071a56ff951da0a67f68c26ac99e9d4",
+    "Cargo.lock": "29801e335ea270c6ffd35802bb7ba40bf4f44cfe1b381979f0e75c1dcdbb0871",
+    "compiler/backend.ts": "540f42daad66903d9e117747fec84d4d4651d9024a801a8a2a58e593658177e9",
+    "compiler/codecs.ts": "79b91040b1bfe53595fb93eb2de8334689420bf6ab7d3ca0269c003446063e78",
+    "compiler/diagnostics.ts": "f08c450ec3aaca8e1abae4890968d2dde800f2b80346171a5c55ba21eec3b1de",
+    "compiler/library.ts": "21b3f66579f808744fbcd614c37a07f2dd19bb38406a7f98098db45a85155816",
+    "compiler/native-arithmetic.ts": "7ac1d5f9e1fe343fca3dcf10b9d0abd4bb2e69663724046fe20356f97594885f",
+    "compiler/primitives.ts": "ac60d1451d45b758af1205af74df2ca8fcd5b0867a366bf9bad938ae9211a4ac",
+    "compiler/schema.ts": "c519ee4bfcfb4f62490bd36d6016f043ed390d7bbde92066845f24bcb04337b7",
+    "compiler/tagged-sum-ir.ts": "2707f738e55361a17f54f1e9b4168124070879ccbeed503a15527a843f69ad41",
+    "compiler/type-evaluation.ts": "6a7627505744bca4a1518fa4c846f2020fa02acadc23af3caa70549f7b96000c",
+    "package-lock.json": "0312d1664bd02c8036a88f6e00a96084603fde79aa9c02af58c03a7c2a8eda6c",
+    "package.json": "5ba56b621304f77feb50e4ac9ec1b286c25f3adf68df00aa4caef5e11b5321d1",
+    "runtime/memory.c": "4df8dd715d94b0c74e90205d593756c5102a98f72555d9ab6bc02bc5ddb78f51",
+    "scripts/build-library.ts": "658fd0999c72ae9fa1cacfd2964e768460197e079e151c69954d1a99265d2f55",
+    "scripts/build.ts": "e1a426636892c97e2d8bc1ab1570b798954c6a9090bc8b162a62e7c94bdb7df1",
+    "tests/mixed-library/LAWS.bend": "ea4977515bbee845f11e9dbd480cddbb7b3ade7d190ecb25d534930460479604",
+    "tests/mixed-library/PROOF.bend": "6c5c69e6635a1a1b4463be2da03d00749640f63ea89162525f8e2896de661aa6",
+    "tests/mixed-library/mixed.bend": "29ab35fd59abaab57ec7b79dc9cedc34db0c7745e5da9343f56e1a0977166e6a"
+  },
+  "artifacts": {
+    "library.h": {
+      "bytes": 1132,
+      "sha256": "70e46f73e2804939f33e66bc660e0813cdd672086f6ddcbacac6cc2561803eb2"
+    },
+    "library.bindings.rs": {
+      "bytes": 1008,
+      "sha256": "626ff0cd4e9ffc2f75b967def0787770313d0f1c8faf6dc53da4b7f335a8ebba"
+    },
+    "library.c": {
+      "bytes": 8322,
+      "sha256": "0224e16856f5ff4b944a185420a4020534da70be97e2487563b619866563f408"
+    },
+    "library.schema.json": {
+      "bytes": 2101,
+      "sha256": "b065303b5aeee1b5d08813498c5832408f7a9586be7e79bc2bab85b77577730c"
+    },
+    "library.sbf.o": {
+      "bytes": 2152,
+      "sha256": "b00f221a9fc55ca0f345ba2d978a602bf273e42311af29218a6df62baee0f50e"
+    },
+    "library.host.o": {
+      "bytes": 1152,
+      "sha256": "fa0ef69b963ec781eb42d2c8c342d9b4091b1031d6485456773e169960a14114"
+    },
+    "library.sbf.memory.o": {
+      "bytes": 1248,
+      "sha256": "1ffc61813197c1f8114525948637fdb450b2acf3541f7fe2b2225b25877855bf"
+    },
+    "library.sbf.su": {
+      "bytes": 351,
+      "sha256": "4c3bb6740eba3568712dfc364233028f7228446bbeaa60715eee9444e8cb35ec"
+    },
+    "library.host.su": {
+      "bytes": 351,
+      "sha256": "4c3bb6740eba3568712dfc364233028f7228446bbeaa60715eee9444e8cb35ec"
+    },
+    "library.sbf.memory.su": {
+      "bytes": 108,
+      "sha256": "dff79c4dbc470088238542374fa7769744dd26768f886a025fdf9876e37d3c79"
+    }
+  }
+}

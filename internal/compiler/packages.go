@@ -8,6 +8,7 @@ import (
 	"go/parser"
 	"go/token"
 	"go/types"
+	"gosvm/internal/library"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -25,10 +26,11 @@ type PackageSources struct {
 // Program contains the entry package and only its on-chain import graph.
 // Metadata records module files used by resolution, for cache invalidation.
 type Program struct {
-	Entry    string
-	Packages []PackageSources
-	Metadata []Source
-	SDK      int // 0/2: current SDK; 1: exact legacy snapshot
+	Entry     string
+	Packages  []PackageSources
+	Metadata  []Source
+	Libraries []library.Binding
+	SDK       int // 0/2: current SDK; 1: exact legacy snapshot
 }
 
 // ReadProgram retains the file/directory input convention. Only user imports
@@ -118,6 +120,22 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 	var visit func(string, []Source, *listedPackage) error
 	visit = func(packagePath string, src []Source, listed *listedPackage) error {
 		seen[packagePath], active[packagePath] = true, true
+		if _, err := os.Stat(filepath.Join(listed.Dir, library.Filename)); err == nil {
+			b, err := library.Read(filepath.Join(listed.Dir, library.Filename))
+			if err != nil {
+				return err
+			}
+			b.ImportPath = packagePath
+			p.Libraries = append(p.Libraries, b)
+			for path, data := range b.Metadata {
+				if !metadata[path] {
+					metadata[path] = true
+					p.Metadata = append(p.Metadata, Source{path, data})
+				}
+			}
+		} else if !os.IsNotExist(err) {
+			return err
+		}
 		for _, module := range []*listedModule{listed.Module, replacement(listed.Module)} {
 			if module == nil || module.GoMod == "" || module.GoMod == resolver.modFile {
 				continue

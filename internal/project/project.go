@@ -27,6 +27,7 @@ const Validator = "3.0.15"
 var templates embed.FS
 
 type Config struct {
+	Target        string                   `json:"target,omitempty"`
 	Schema        int                      `json:"schema"`
 	Name          string                   `json:"name"`
 	Module        string                   `json:"module"`
@@ -80,8 +81,11 @@ func Load(dir string) (Config, error) {
 	if e = d.Decode(new(any)); e != io.EOF {
 		return c, fmt.Errorf("gosvm.json must contain exactly one JSON object")
 	}
-	if (c.Schema != Schema && c.Schema != MultiSchema) || c.PlatformTools != Tools || c.SBF != "v3" {
-		return c, fmt.Errorf("unsupported project versions; require schema 1 or 2, platform-tools %s, SBF v3", Tools)
+	if c.Schema != Schema && c.Schema != MultiSchema {
+		return c, fmt.Errorf("unsupported project schema; require schema 1 or 2")
+	}
+	if _, e := c.TargetProfile(); e != nil {
+		return c, e
 	}
 	if !nameRE.MatchString(c.Name) || !validModule(c.Module) {
 		return c, fmt.Errorf("invalid project name or Go module import path")

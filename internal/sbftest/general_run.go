@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -80,8 +79,8 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 	if e != nil {
 		return e
 	}
-	if len(image) < 64 || !bytes.Equal(image[:4], []byte{127, 'E', 'L', 'F'}) || binary.LittleEndian.Uint32(image[48:52]) != 3 {
-		return fmt.Errorf("fast SVM testing requires an SBF v3 main ELF")
+	if e = validateFastELF(image, opts.Profile); e != nil {
+		return e
 	}
 	programs := []any{map[string]any{"id": suite.ProgramID, "elf": base64.StdEncoding.EncodeToString(image)}}
 	images := map[string]string{"program": fmt.Sprintf("%x", sha256.Sum256(image))}
@@ -107,7 +106,7 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 			accounts = append(accounts, map[string]any{"pubkey": a.Address, "account": a.Initial.account()})
 		}
 	}
-	features, e := testvm.Features()
+	features, e := testvm.FeaturesFor(opts.Profile)
 	if e != nil {
 		return e
 	}
@@ -123,7 +122,7 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 		return e
 	}
 	startup := time.Now()
-	s, e := testvm.Start(ctx, runner)
+	s, e := testvm.StartTarget(ctx, runner, opts.Profile)
 	if e != nil {
 		return e
 	}
@@ -290,7 +289,7 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 	if e != nil {
 		return e
 	}
-	report, e := json.MarshalIndent(map[string]any{"schema": 1, "fixture_format": FixtureFormat, "runtime_engine": "litesvm", "runtime_version": testvm.RunnerVersion,
+	report, e := json.MarshalIndent(map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "fixture_format": FixtureFormat, "runtime_engine": "litesvm", "runtime_version": s.Identity,
 		"isolation": "initial VM checkpoint plus declared overrides before each scenario; ordered steps share state", "selection": opts.Pattern, "cases": results,
 		"elf_sha256": images["program"], "program_sha256": images, "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtureBytes)), "runner_sha256": fmt.Sprintf("%x", sha256.Sum256(runnerBytes)),
 		"runner": values[0], "native_programs": suite.NativePrograms, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}, "", "  ")

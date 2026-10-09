@@ -3,6 +3,7 @@ package compiler
 import (
 	"bytes"
 	"fmt"
+	"gosvm/internal/library"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,6 +18,18 @@ func ReadSources(path string) ([]Source, error) {
 	}
 	paths := []string{path}
 	if st.IsDir() {
+		if _, err := os.Stat(filepath.Join(path, library.Filename)); err == nil {
+			b, err := library.Read(filepath.Join(path, library.Filename))
+			if err != nil {
+				return nil, err
+			}
+			if len(b.Generated) == 0 {
+				return nil, fmt.Errorf("library package must be generated with gosvm library bind")
+			}
+			return []Source{{filepath.Join(path, "gosvm-library-stub.go"), b.Stub()}}, nil
+		} else if !os.IsNotExist(err) {
+			return nil, err
+		}
 		paths = nil
 		entries, err := os.ReadDir(path)
 		if err != nil {

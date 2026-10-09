@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "zero",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000100000000"
+      ],
+      "expected": "214125f28c448dc00002000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "forty",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000128000000"
+      ],
+      "expected": "214125f28c448dc0002a000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "forty-one",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000129000000"
+      ],
+      "expected": "214125f28c448dc00129000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "disabled",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000029000000"
+      ],
+      "expected": "214125f28c448dc00129000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "stop",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717010000000000"
+      ],
+      "expected": "214125f28c448dc00100000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "bad-bool",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000229000000"
+      ],
+      "expected": "214125f28c448dc00909000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "bad-tag",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717020000000000"
+      ],
+      "expected": "214125f28c448dc00909000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "bad-padding",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717010001000000"
+      ],
+      "expected": "214125f28c448dc00909000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "success-then-malformed-rollback",
+      "initial": "214125f28c448dc00909000000",
+      "instructions": [
+        "b8a708f64160a717000128000000",
+        "b8a708f64160a717000229000000"
+      ],
+      "expected": "214125f28c448dc00909000000",
+      "error": 104,
+      "error_index": 1
+    }
+  ]
+}

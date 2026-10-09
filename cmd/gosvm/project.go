@@ -16,21 +16,24 @@ import (
 	"gosvm/internal/compiler"
 	"gosvm/internal/project"
 	"gosvm/internal/sbftest"
+	"gosvm/internal/targets"
 	"gosvm/internal/testvm"
 	"gosvm/internal/toolchain"
 )
 
 const help = `gosvm experimental project tools
 
+  gosvm library bind       Generate Go/native bindings from a pinned pure-library contract
   gosvm new <directory>    Create a typed bounded-swap program and tests
-  gosvm toolchain install Download and verify the minimal backend (macOS arm64)
+  gosvm toolchain install Import the content-pinned modern backend; legacy downloads remain available
   gosvm toolchain status  Verify the managed backend
   gosvm runner install    Verify and install a pinned local runner package
   gosvm runner status     Verify the managed experimental runner
   gosvm doctor            Check Go, pinned LLVM, and optional validator
   gosvm generate          Generate account checks, codecs, client, and IDL
   gosvm check             Generate and check the on-chain Go subset (no LLVM)
-  gosvm build             Generate and build build/program.so
+  gosvm migrate-target    Explicitly migrate the target/toolchain configuration
+  gosvm build             Generate and build an isolated target output
   gosvm test              Generate and run ordinary native Go tests
   gosvm test --sbf        Also run byte-exact local-validator fixtures and CU
   gosvm test --svm        Also run fast compiled-ELF fixtures with an experimental runner
@@ -41,14 +44,17 @@ new accepts -module <import/path> and -schema 2 for the multi-state prototype.
 test forwards Go flags after --, for example:
   gosvm test -- -run TestSwap -count=1
 Project commands accept -dir <directory>. Build/test accept -llvm <directory>
-and -no-cache. SBF_LLVM overrides the default v1.51 backend directory.
+and -no-cache. -target selects fogo-v0, solana-v3, or legacy-v1.51-v3.
+SBF_LLVM overrides the selected profile backend directory.
 Build/test accept -timings to print JSON phase durations for workflow diagnostics.
 Fast tests accept -svm-run <fixture regex> and -svm-runner <binary path>.
 Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed cache, PATH.
 Use -svm-sysvars <JSON file> for explicit Clock/Rent values in fast tests.
 Use -svm-fixtures <JSON file> for general multi-account project fixtures.
-Fast-test reports are in build/svm-results.json; --sbf reports remain separate.
-Legacy: gosvm [-o program.so] [-emit-c] [-no-cache] source.go|directory
+Modern outputs/reports are under build/<target>/<tools>/<backend>/deps-<dependencies>/.
+Historical outputs retain build/program.so and build/svm-results.json.
+Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] source.go|directory
+Raw -arch v0|v3 retains historical low-level semantics.
 `
 
 func llvmDefault() string {
@@ -75,6 +81,9 @@ func backendCheck(llvm string) error {
 }
 func projectCommand(args []string) error {
 	command := args[0]
+	if command == "library" {
+		return libraryCommand(args[1:])
+	}
 	if command == "runner" {
 		return runnerCommand(args[1:])
 	}
@@ -88,12 +97,33 @@ func projectCommand(args []string) error {
 		fmt.Print(help)
 		return nil
 	}
+	if command == "migrate-target" {
+		fs := flag.NewFlagSet("gosvm migrate-target", flag.ContinueOnError)
+		name := fs.String("target", "", "explicit destination profile")
+		dir := fs.String("dir", ".", "project directory")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if fs.NArg() != 0 || *name == "" {
+			return fmt.Errorf("usage: gosvm migrate-target -target fogo-v0|solana-v3|legacy-v1.51-v3 [-dir project]")
+		}
+		root, err := project.Find(*dir)
+		if err != nil {
+			return err
+		}
+		if err = project.MigrateTarget(root, *name); err != nil {
+			return err
+		}
+		fmt.Println("Migrated target configuration; application source, layouts and clients unchanged")
+		return nil
+	}
 	if command == "version" {
-		fmt.Println("gosvm experimental (project schemas 1, 2; platform-tools v1.51; SBF v3)")
+		fmt.Println("gosvm experimental (fogo-v0, solana-v3; legacy-v1.51-v3 retained)")
 		return nil
 	}
 	if command == "new" {
 		fs := flag.NewFlagSet("gosvm new", flag.ContinueOnError)
+		profileName := fs.String("target", target.Solana, "target profile: solana-v3, fogo-v0, legacy-v1.51-v3")
 		module := fs.String("module", "", "Go module import path (default example.com/<name>)")
 		schema := fs.Int("schema", project.Schema, "project schema (1 bounded swap; 2 multi-state prototype)")
 		sdkVersion := fs.Int("sdk", 1, "SDK version (1 legacy; 2 bounded CPI/PDA, requires schema 2)")
@@ -106,13 +136,14 @@ func projectCommand(args []string) error {
 		if fs.NArg() != 1 {
 			return fmt.Errorf("usage: gosvm new [-module example.org/my/swap] [-schema 1|2] <directory>")
 		}
-		if e := project.NewModuleSDK(fs.Arg(0), *module, *schema, *sdkVersion); e != nil {
+		if e := project.NewModuleTarget(fs.Arg(0), *module, *schema, *sdkVersion, *profileName); e != nil {
 			return e
 		}
 		fmt.Printf("Created %s\nNext: cd %q && gosvm check && go test ./... && gosvm build\n", fs.Arg(0), fs.Arg(0))
 		return nil
 	}
 	fs := flag.NewFlagSet("gosvm "+command, flag.ContinueOnError)
+	profileName := fs.String("target", "", "explicit target override (does not modify configuration)")
 	dir := fs.String("dir", ".", "project directory")
 	llvmValue := llvmDefault()
 	sbfValue, noCacheValue := false, false
@@ -172,8 +203,50 @@ func projectCommand(args []string) error {
 		return findErr
 	}
 	if svmValue {
-		// Clear before generation/native tests/build, as any of them can fail.
 		if err := os.Remove(filepath.Join(*dir, "build/svm-results.json")); err != nil && !os.IsNotExist(err) {
+			return err
+		}
+	}
+	var selected target.Profile
+	if findErr == nil {
+		config, err := project.Load(*dir)
+		if err != nil {
+			return err
+		}
+		selected, err = config.TargetProfile()
+		if err != nil {
+			return err
+		}
+	} else {
+		selected, _ = target.Resolve(target.Legacy)
+	}
+	if *profileName != "" {
+		var err error
+		selected, err = target.Resolve(*profileName)
+		if err != nil {
+			return err
+		}
+	}
+	explicitLLVM := false
+	fs.Visit(func(f *flag.Flag) {
+		if f.Name == "llvm" {
+			explicitLLVM = true
+		}
+	})
+	if !explicitLLVM && selected.Tools != project.Tools {
+		*llvm = llvmForTools(selected.Tools)
+	}
+	outputDir := filepath.Join(*dir, "build")
+	if selected.Name != target.Legacy && (command == "build" || command == "test" && (*sbf || svmValue)) {
+		var err error
+		outputDir, err = selected.OutputDir(*dir, *llvm)
+		if err != nil {
+			return err
+		}
+	}
+	if svmValue {
+		// Clear before generation/native tests/build, as any of them can fail.
+		if err := os.Remove(filepath.Join(outputDir, "svm-results.json")); err != nil && !os.IsNotExist(err) {
 			return err
 		}
 	}
@@ -206,17 +279,17 @@ func projectCommand(args []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 			version, e := exec.CommandContext(ctx, path, "--version").CombinedOutput()
 			cancel()
-			if e != nil || strings.TrimSpace(string(version)) != testvm.RunnerVersion {
+			if e != nil || !testvm.RunnerCompatible(strings.TrimSpace(string(version)), selected.Name) {
 				fmt.Printf("SVM runner incompatible (optional): %s: %v %s\n", path, e, version)
 			} else {
 				fmt.Printf("OK optional SVM runner: %s (%s)\n", path, strings.TrimSpace(string(version)))
 			}
 		}
-		if e := backendCheck(*llvm); e != nil {
+		if e := selected.CheckBackend(*llvm); e != nil {
 			fmt.Println(e)
 			failed = true
 		} else {
-			fmt.Printf("OK LLVM 19.1.7: %s\n", *llvm)
+			fmt.Printf("OK %s / platform-tools %s / LLVM %s: %s\n", selected.Name, selected.Tools, selected.LLVM, *llvm)
 		}
 		if _, e := os.Stat(filepath.Join(*dir, "gosvm.json")); e == nil {
 			if _, e = project.Load(*dir); e != nil {
@@ -254,6 +327,18 @@ func projectCommand(args []string) error {
 	if e := timings.measure("generation", func() error { return project.Generate(*dir) }); e != nil {
 		return e
 	}
+	if selected.Name != target.Legacy && (command == "build" || command == "test" && (*sbf || svmValue)) {
+		key, err := compiler.DependencyKey(*dir)
+		if err != nil {
+			return err
+		}
+		outputDir = filepath.Join(outputDir, "deps-"+key[:16])
+		if svmValue {
+			if err := os.Remove(filepath.Join(outputDir, "svm-results.json")); err != nil && !os.IsNotExist(err) {
+				return err
+			}
+		}
+	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 	if command == "test" {
@@ -270,16 +355,16 @@ func projectCommand(args []string) error {
 			return nil
 		}
 	}
-	if e := timings.measure("backend_check", func() error { return backendCheck(*llvm) }); e != nil {
+	if e := timings.measure("backend_check", func() error { return selected.CheckBackend(*llvm) }); e != nil {
 		return e
 	}
-	output := filepath.Join(*dir, "build/program.so")
+	output := filepath.Join(outputDir, "program.so")
 	var e error
 	e = timings.measure("sbf_build", func() error {
 		if *noCache {
-			return compiler.Build(*dir, output, *llvm, "v3")
+			return compiler.Build(*dir, output, *llvm, selected.Name)
 		}
-		return compiler.BuildCached(*dir, output, *llvm, "v3")
+		return compiler.BuildCached(*dir, output, *llvm, selected.Name)
 	})
 	if e != nil {
 		return e
@@ -291,11 +376,13 @@ func projectCommand(args []string) error {
 	fmt.Printf("Built %s (%d bytes, %s)\n", output, st.Size(), time.Since(start).Round(time.Millisecond))
 	if svmValue {
 		e = timings.measure("svm_tests", func() error {
-			return sbftest.RunFast(ctx, *dir, output, os.Stdout, sbftest.FastOptions{Runner: svmRunner, Pattern: svmPattern, Sysvars: svmSysvars, Fixtures: svmFixtures})
+			return sbftest.RunFast(ctx, *dir, output, os.Stdout, sbftest.FastOptions{Runner: svmRunner, Pattern: svmPattern, Sysvars: svmSysvars, Fixtures: svmFixtures, Profile: selected.Name, PlatformTools: selected.Tools, ReportPath: filepath.Join(outputDir, "svm-results.json")})
 		})
 	}
 	if *sbf {
-		e = timings.measure("validator_tests", func() error { return sbftest.Run(ctx, *dir, output, os.Stdout) })
+		e = timings.measure("validator_tests", func() error {
+			return sbftest.RunProfileTo(ctx, *dir, output, filepath.Join(outputDir, "sbf-results.json"), os.Stdout, selected.Name)
+		})
 	}
 	timings.Passed = e == nil
 	return e
@@ -306,6 +393,8 @@ func toolchainCommand(args []string) error {
 		return fmt.Errorf("usage: gosvm toolchain install [-archive file.tar.bz2] | status")
 	}
 	fs := flag.NewFlagSet("gosvm toolchain "+args[0], flag.ContinueOnError)
+	profileName := fs.String("target", target.Legacy, "backend profile (legacy retains official archive installer)")
+	localLLVM := fs.String("llvm", "", "existing qualified modern backend directory to import")
 	archive := ""
 	if args[0] == "install" {
 		fs.StringVar(&archive, "archive", "", "use a local official archive (same SHA-256 verification)")
@@ -318,6 +407,33 @@ func toolchainCommand(args []string) error {
 	}
 	if fs.NArg() != 0 {
 		return fmt.Errorf("unexpected toolchain arguments")
+	}
+	p, err := target.Resolve(*profileName)
+	if err != nil {
+		return err
+	}
+	if p.Name != target.Legacy {
+		switch args[0] {
+		case "status":
+			if err = toolchain.VerifyModern(toolchain.ModernRoot()); err != nil {
+				return err
+			}
+			fmt.Println("Verified platform-tools", p.Tools, toolchain.ModernRoot())
+			return nil
+		case "install":
+			if archive != "" {
+				return fmt.Errorf("modern archive downloads are not qualified; use -llvm with an existing content-pinned v1.57 backend")
+			}
+			if *localLLVM == "" {
+				*localLLVM = llvmForTools(p.Tools)
+			}
+			return toolchain.InstallModern(context.Background(), toolchain.ModernRoot(), *localLLVM, os.Stdout)
+		default:
+			return fmt.Errorf("unknown toolchain command %q", args[0])
+		}
+	}
+	if *localLLVM != "" {
+		return fmt.Errorf("-llvm import applies to modern profiles only")
 	}
 	switch args[0] {
 	case "status":
@@ -351,4 +467,18 @@ func downloadBackend(ctx context.Context, url string, out io.Writer) error {
 	}
 	_, e = io.Copy(out, response.Body)
 	return e
+}
+
+func llvmForTools(version string) string {
+	if p := os.Getenv("SBF_LLVM"); p != "" {
+		return p
+	}
+	if version == project.Tools {
+		return llvmDefault()
+	}
+	if _, err := os.Stat(filepath.Join(toolchain.ModernRoot(), "receipt.json")); err == nil {
+		return filepath.Join(toolchain.ModernRoot(), "llvm")
+	}
+	home, _ := os.UserHomeDir()
+	return filepath.Join(home, ".cache/solana", version, "platform-tools/llvm")
 }

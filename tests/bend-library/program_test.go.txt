@@ -1,0 +1,30 @@
+package program
+import (
+ "bytes"
+ "testing"
+ "example.com/bend-mixed/bend"
+)
+func TestBendBusinessAndMalformed(t *testing.T){
+ for _,v:=range []struct{arg SwapArgs;want Pool;code uint64}{
+  {SwapArgs{0,1,0},Pool{0,2},0},
+  {SwapArgs{0,1,40},Pool{0,42},0},
+  {SwapArgs{0,1,41},Pool{1,41},0},
+  {SwapArgs{0,0,41},Pool{1,41},0},
+  {SwapArgs{1,0,0},Pool{1,0},0},
+  {SwapArgs{0,2,41},Pool{9,9},104},
+  {SwapArgs{2,0,0},Pool{9,9},104},
+  {SwapArgs{1,0,1},Pool{9,9},104},
+ } {got:=Swap(Pool{9,9},v.arg);if got.Code!=v.code || got.State!=v.want {t.Fatal(v,got)}}
+}
+func TestNativeCanonicalABI(t *testing.T){
+ input:=[]byte{0,1,40,0,0,0};output:=[]byte{9,9,9,9,9}
+ code,n:=bend.Evaluate(input,output);if code!=0 || n!=5 || !bytes.Equal(output,[]byte{0,42,0,0,0}) {t.Fatal(code,n,output)}
+ for _,v:=range []struct{input,output []byte;status uint32}{
+  {[]byte{0,2,0,0,0,0},[]byte{9,9,9,9,9},4},
+  {input,[]byte{9,9,9,9},5},
+  {input,nil,1},
+  {nil,[]byte{9,9,9,9,9},4},
+ } {before:=append([]byte(nil),v.output...);code,n:=bend.Evaluate(v.input,v.output);if code!=v.status || n!=0 || !bytes.Equal(before,v.output){t.Fatal(code,n,v.output)}}
+ overlap:=[]byte{0,1,40,0,0,0};before:=append([]byte(nil),overlap...)
+ code,n=bend.Evaluate(overlap,overlap[:5]);if code!=3 || n!=0 || !bytes.Equal(before,overlap){t.Fatal("alias",code,n,overlap)}
+}

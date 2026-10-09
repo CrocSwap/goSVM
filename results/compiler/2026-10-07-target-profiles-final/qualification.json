@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "host": "macOS arm64",
+  "backend_sha256": {
+    "clang": "67ebfa7313086cf01ddb42d6cdf3b4bba741dc2341a1e70796d018fe7b9ee697",
+    "ld.lld": "91db7cf05b55facfdb7178eb24d6e5eba1da369672f2b52ab1657165a6441630"
+  },
+  "additional_source_sha256": {
+    "tests/bend-library/sbf.json": "62107d91929bf233f0df9e0c91787c530a86a7e09fb41844c1a099df98fc45fb",
+    "tests/bend-library/program.go.txt": "03ac1bfa1dcefc7cd423fdcb0bac1df829d315a92d8b5d92301d68ee0a648ef7",
+    "tests/bend-library/program_test.go.txt": "957f0eb7fc121b20312a6f9f6bbf4ec6f2948252d9e63932682f18c7a90ad7af",
+    "tests/bend-library/README.md": "813e218d3a777a22b47d9b1595bf16df91f85deeea5c605d27bf1f8c9c22747e",
+    "examples/clock2/program.go": "754f5ea918450a15ea9a105c411feddec47210896ca383b1dc53ea819d7cf95b",
+    "examples/clock2/README.md": "f94b0d7afa5e628a33807cc31e00f527682f5f7811d26f843af7d4defbf2d4c4"
+  },
+  "bend_producer_manifest_sha256": "ec18012f5bb98cd19813b721f2ec343d628c679052828a3eb122ca1b335bc6de",
+  "bend_binding_contract_sha256": "d20b95ff9ca45061d581b6b37581379a8051a8c7c03f31e9358d0e9910e14e7c",
+  "modern_runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+  "cli_sha256": "f10063f67cdb50a4dad5ae790ea1662531586d3124bcc5e222e8cabb08b07a86",
+  "checks": {
+    "root_make_test": true,
+    "root_go_vet": true,
+    "modern_runner_unit_tests": 6,
+    "modern_backend_import": true,
+    "modern_backend_import_idempotent": true,
+    "tampered_backend_receipt_refused": true,
+    "repeated_elf_and_cu_identical": true,
+    "native_go_service": true
+  },
+  "generated_starter": {
+    "fogo-v0": {
+      "cases": [
+        {
+          "name": "swap",
+          "cu": 508,
+          "error": 0,
+          "committed": true
+        },
+        {
+          "name": "zero amount",
+          "cu": 290,
+          "error": 3,
+          "committed": true
+        },
+        {
+          "name": "slippage",
+          "cu": 304,
+          "error": 5,
+          "committed": true
+        },
+        {
+          "name": "invalid reserves",
+          "cu": 283,
+          "error": 2,
+          "committed": true
+        },
+        {
+          "name": "counter overflow",
+          "cu": 297,
+          "error": 4,
+          "committed": true
+        },
+        {
+          "name": "owner",
+          "cu": 106,
+          "error": 6002,
+          "committed": true
+        },
+        {
+          "name": "readonly",
+          "cu": 99,
+          "error": 6001,
+          "committed": true
+        },
+        {
+          "name": "missing account",
+          "cu": 42,
+          "error": 6000,
+          "committed": true
+        },
+        {
+          "name": "short state",
+          "cu": 118,
+          "error": 6003,
+          "committed": true
+        },
+        {
+          "name": "state discriminator",
+          "cu": 146,
+          "error": 6003,
+          "committed": true
+        },
+        {
+          "name": "instruction discriminator",
+          "cu": 172,
+          "error": 6004,
+          "committed": true
+        },
+        {
+          "name": "long instruction",
+          "cu": 148,
+          "error": 6004,
+          "committed": true
+        },
+        {
+          "name": "two swaps",
+          "cu": 1016,
+          "error": 0,
+          "committed": true
+        },
+        {
+          "name": "atomic rollback",
+          "cu": 812,
+          "error": 5,
+          "committed": true
+        }
+      ],
+      "elf_sha256": "7284effba372dbc5a5f53353dc5aae74826ec6b76f389eec1234f108c7ac3b9b",
+      "fixtures_sha256": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+      "runner_sha256": "bee1c54736539e973be42c6e76ccd37c9d8c54898830a666e2c49c4f78674479"
+    },
+    "solana-v3": {
+      "cases": [
+        {
+          "name": "swap",
+          "cu": 508,
+          "error": 0,
+          "committed": true
+        },
+        {
+          "name": "zero amount",
+          "cu": 290,
+          "error": 3,
+          "committed": true
+        },
+        {
+          "name": "slippage",
+          "cu": 304,
+          "error": 5,
+          "committed": true
+        },
+        {
+          "name": "invalid reserves",
+          "cu": 283,
+          "error": 2,
+          "committed": true
+        },
+        {
+          "name": "counter overflow",
+          "cu": 297,
+          "error": 4,
+          "committed": true
+        },
+        {
+          "name": "owner",
+          "cu": 106,
+          "error": 6002,
+          "committed": true
+        },
+        {
+          "name": "readonly",
+          "cu": 99,
+          "error": 6001,
+          "committed": true
+        },
+        {
+          "name": "missing account",
+          "cu": 42,
+          "error": 6000,
+          "committed": true
+        },
+        {
+          "name": "short state",
+          "cu": 118,
+          "error": 6003,
+          "committed": true
+        },
+        {
+          "name": "state discriminator",
+          "cu": 146,
+          "error": 6003,
+          "committed": true
+        },
+        {
+          "name": "instruction discriminator",
+          "cu": 172,
+          "error": 6004,
+          "committed": true
+        },
+        {
+          "name": "long instruction",
+          "cu": 148,
+          "error": 6004,
+          "committed": true
+        },
+        {
+          "name": "two swaps",
+          "cu": 1016,
+          "error": 0,
+          "committed": true
+        },
+        {
+          "name": "atomic rollback",
+          "cu": 812,
+          "error": 5,
+          "committed": true
+        }
+      ],
+      "elf_sha256": "48669f4ec07ca02c40afdc2b9ec273e063b578fd4489c8b31e00297c9e194574",
+      "fixtures_sha256": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30"
+    }
+  }
+}

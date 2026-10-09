@@ -6,7 +6,6 @@ import (
 	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -17,23 +16,24 @@ import (
 	"strings"
 	"time"
 
+	"gosvm/internal/targets"
 	"gosvm/internal/testvm"
 )
 
-type FastOptions struct{ Runner, Pattern, Sysvars, Fixtures string }
+type FastOptions struct{ Runner, Pattern, Sysvars, Fixtures, Profile, PlatformTools, ReportPath string }
 
 // RunFast executes schema-1 fixtures through one versioned stdio session. Cases
 // have independent seeded state; instructions within each transaction stay ordered.
 func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptions) error {
 	if opts.Fixtures != "" {
-		return RunGeneral(ctx, elf, opts.Fixtures, filepath.Join(dir, "build/svm-results.json"), out, opts)
+		return RunGeneral(ctx, elf, opts.Fixtures, fastReportPath(dir, opts), out, opts)
 	}
 	started := time.Now()
-	build := filepath.Join(dir, "build")
+	build := filepath.Dir(fastReportPath(dir, opts))
 	if e := os.MkdirAll(build, 0755); e != nil {
 		return e
 	}
-	reportPath := filepath.Join(build, "svm-results.json")
+	reportPath := fastReportPath(dir, opts)
 	if e := os.Remove(reportPath); e != nil && !os.IsNotExist(e) {
 		return e
 	}
@@ -49,14 +49,14 @@ func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptio
 	if e != nil {
 		return e
 	}
-	if len(elfBytes) < 64 || !bytes.Equal(elfBytes[:4], []byte{127, 'E', 'L', 'F'}) || binary.LittleEndian.Uint32(elfBytes[48:52]) != 3 {
-		return fmt.Errorf("fast SVM testing requires an SBF v3 ELF")
+	if e = validateFastELF(elfBytes, opts.Profile); e != nil {
+		return e
 	}
 	path, e := testvm.RunnerPath(opts.Runner)
 	if e != nil {
 		return e
 	}
-	features, e := testvm.Features()
+	features, e := testvm.FeaturesFor(opts.Profile)
 	if e != nil {
 		return e
 	}
@@ -84,7 +84,7 @@ func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptio
 	}
 	startup := time.Now()
 	fmt.Fprintf(out, "Testing %d compiled SBF fixtures with LiteSVM...\n", len(selected))
-	s, e := testvm.Start(ctx, path)
+	s, e := testvm.StartTarget(ctx, path, opts.Profile)
 	if e != nil {
 		return e
 	}
@@ -214,7 +214,7 @@ func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptio
 	if e != nil {
 		return e
 	}
-	report, e := json.MarshalIndent(map[string]any{"schema": 1, "runtime_engine": "litesvm", "runtime_version": testvm.RunnerVersion, "transport": "stdio schema 1; ordered batches of 4 calls; reset between fixtures", "isolation": "initial VM checkpoint restored before every fixture",
+	report, e := json.MarshalIndent(map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "runtime_engine": "litesvm", "runtime_version": s.Identity, "transport": "stdio schema 1; ordered batches of 4 calls; reset between fixtures", "isolation": "initial VM checkpoint restored before every fixture",
 		"elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "runner_sha256": fmt.Sprintf("%x", sha256.Sum256(runnerBytes)),
 		"selection": opts.Pattern, "cases": results, "runner": info, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}, "", "  ")
 	if e != nil {
@@ -253,4 +253,21 @@ func selectCases(s Suite, pattern string) ([]Case, error) {
 		return nil, fmt.Errorf("SVM selection %q matched no fixtures", pattern)
 	}
 	return selected, nil
+}
+
+func fastReportPath(dir string, opts FastOptions) string {
+	if opts.ReportPath != "" {
+		return opts.ReportPath
+	}
+	return filepath.Join(dir, "build/svm-results.json")
+}
+func validateFastELF(data []byte, name string) error {
+	if name == "" {
+		name = target.Legacy
+	}
+	p, err := target.Resolve(name)
+	if err != nil {
+		return err
+	}
+	return p.ValidateProgram(data)
 }

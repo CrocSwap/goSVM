@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"gosvm/internal/compiler"
+	"gosvm/internal/targets"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,7 +17,7 @@ func main() {
 	}
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
-		case "toolchain", "runner", "new", "generate", "check", "build", "test", "svm-test", "doctor", "help", "version":
+		case "toolchain", "runner", "new", "generate", "check", "build", "test", "svm-test", "doctor", "help", "version", "migrate-target", "library":
 			if err := projectCommand(os.Args[1:]); err != nil {
 				fmt.Fprintln(os.Stderr, "gosvm:", err)
 				os.Exit(1)
@@ -38,9 +39,35 @@ func legacy() {
 	llvm := flag.String("llvm", llvmDefault(), "Solana platform-tools/llvm directory")
 	emit := flag.Bool("emit-c", false, "emit C without compiling")
 	arch := flag.String("arch", "v3", "SBF version: v3 (default) or v0")
+	profileName := flag.String("target", "", "explicit profile; raw -arch retains historical semantics")
 	noCache := flag.Bool("no-cache", false, "rebuild even if source, compiler, backend and output match the last build")
 	flag.Parse()
-	if *arch != "v0" && *arch != "v3" {
+	emitArch := *arch
+	if *profileName != "" {
+		explicitArch, explicitLLVM := false, false
+		flag.Visit(func(f *flag.Flag) {
+			if f.Name == "arch" {
+				explicitArch = true
+			}
+			if f.Name == "llvm" {
+				explicitLLVM = true
+			}
+		})
+		if explicitArch {
+			fmt.Fprintln(os.Stderr, "choose -target or historical -arch")
+			os.Exit(2)
+		}
+		p, err := target.Resolve(*profileName)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+		*arch, emitArch = p.Name, p.Arch
+		if !explicitLLVM {
+			*llvm = llvmForTools(p.Tools)
+		}
+	}
+	if *profileName == "" && *arch != "v0" && *arch != "v3" {
 		fmt.Fprintln(os.Stderr, "unsupported target:", *arch)
 		os.Exit(2)
 	}
@@ -64,7 +91,7 @@ func legacy() {
 			err = os.MkdirAll(filepath.Dir(*output), 0755)
 		}
 		if err == nil {
-			if *arch == "v3" {
+			if emitArch == "v3" {
 				out = append([]byte("#define GOSVM_SBF_V3 1\n"), out...)
 			}
 			err = os.WriteFile(*output, append(out, []byte(compiler.ABI)...), 0644)

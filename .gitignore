@@ -500,3 +500,11 @@ target/
 /results/svm/2026-10-05-scenarios-complete/lifecycle.json
 /results/svm/2026-10-05-scenarios/lifecycle.json
 /results/svm/2026-10-05-workflow-complete/summary.json
+
+# Explicit-target qualification: retain source/pins/compact metrics, not raw artifacts.
+/results/compiler/2026-10-07-target-profiles-final/*.log
+/results/compiler/2026-10-07-target-profiles-final/*.raw.json
+/results/compiler/2026-10-07-target-profiles-final/clock-*.json
+/results/compiler/2026-10-07-target-profiles/
+/results/compiler/2026-10-07-target-profiles-qualified/
+/results/compiler/2026-10-07-target-profiles-acceptance/

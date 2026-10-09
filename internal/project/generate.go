@@ -178,7 +178,11 @@ func Process(c solana.Context) uint64 {
 		}
 	}
 	checked = append(checked, compiler.Source{Name: filepath.Join(dir, "zz_gosvm.go"), Data: generated})
-	if _, e = compiler.CompileSources(checked); e != nil {
+	program, e := compiler.ReadProgramWithSources(dir, checked)
+	if e != nil {
+		return e
+	}
+	if _, e = compiler.CompileProgram(program); e != nil {
 		return e
 	}
 	var client bytes.Buffer

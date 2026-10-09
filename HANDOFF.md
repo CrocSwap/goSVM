@@ -1,21 +1,105 @@
 # goSVM session handoff
 
-Updated October 6, 2026 (America/New_York). The original session was parked
+Updated October 9, 2026 (America/New_York). The original session was parked
 October 4 at the user's request because of weekly Codex usage resets. A new
-director has started the roadmap with the user's authorization. The active user
-performance objective is the 1.33× Whirlpools CU target, now achieved by the
+director has started the roadmap with the user's authorization. The user's prior
+performance objective was the 1.33× Whirlpools CU target, now achieved by the
 [1.280853× owner-side snapshot](docs/WHIRLPOOLS_133_TARGET.md). Independent
 developer acceptance remains the sole milestone-2 gate; see the
 [completion audit](docs/MILESTONE2_ACCEPTANCE.md).
 No scheduled task is implied.
+
+## New director resume checklist — October 9
+
+Read this handoff, [ROADMAP.md](ROADMAP.md), then
+[target profiles](docs/TARGET_PROFILES.md),
+[Bend consumer integration](docs/BEND_LIBRARIES.md) and
+[the October 7 acceptance report](results/compiler/2026-10-07-target-profiles-final/README.md).
+The report's `metrics.json` and `qualification.json` contain the exact pins and
+validation scope. Milestone 1 is closed by user decision; the independent developer
+trial remains the sole milestone-2 acceptance gate. The Whirlpools 1.33× objective
+was achieved and should not be restarted as unfinished work.
+
+**Working tree:** the target-profile/Bend implementation, modern runner, docs,
+acceptance evidence and README/banner changes remain uncommitted as of this check.
+Run `git status --short` before editing; preserve modified and untracked files.
+A new director in this same checkout can resume them. A fresh clone will need
+these changes committed or transferred first. Resume under the user's current
+instruction; roadmap entries are not scheduled tasks.
+
+**Collaboration contract and ownership:** GoSVM owns its frontend/SDK, profile
+selection, generated Go/cgo consumer, external-object linking and Go final-image
+qualification. The Bend owner supplies checked pure-library artifacts and the
+generated C/Rust interface. Its authoritative documents are
+`../bendSVM/docs/library-artifact-contract.md` and
+`../bendSVM/tests/mixed-library/fixture.md`; its broader session handoff is
+`../bendSVM/docs/HANDOFF.md`. The accepted producer generation is
+`../bendSVM/build/interop/fogo-v0/20261007T134003Z-0bdd2144/library.manifest.json`,
+SHA-256 `ec18012f5bb98cd19813b721f2ec343d628c679052828a3eb122ca1b335bc6de`
+(rechecked October 9). ABI v1 uses canonical bytes, fixed-width integers,
+status codes and a fingerprinted C symbol. The producer is explicitly v1.53 /
+fogo-v0; Go's caller is v1.57 / fogo-v0. Do not relabel the producer pin or treat
+`finalElfAuthorized:false` as final-image authorization.
+
+**What the collaboration has established:** Bend reported native ABI checks,
+15 Rust/Bend SBF cases, target-mismatch refusal and recursive-call refusal for
+the published generation. GoSVM separately validated native cgo calls and the
+actual linked Go/Bend image's nine scenarios × three, including malformed input
+and transaction rollback. These are separate Rust/Bend and Go/Bend consumers of
+the same ABI. A single final program combining Go, Bend and Rust, arbitrary
+Rust-library imports, and formal verification of the Go shell/compiler have not
+been established by this acceptance. Current GoSVM consumer support is the
+ordinary pure-library contract, not Bend's distinct qualified-SHA package contract.
+
+**Remaining coordination:** at the accepted checkpoint Bend solana-v3 objects
+were unavailable and GoSVM correctly refused them. Before consuming new outputs,
+obtain the Bend owner's explicit target/toolchain/artifact manifest and qualify
+the changed mixed final image in a fresh results directory. The same application
+already passes local runtime tests on both GoSVM profiles; actual Fogo/Solana
+network validation remains unperformed. A newer sibling handoff or producer
+artifact is new evidence, not an implicit update to the accepted pins here.
+
+**Local replay:** retained executables are `build/target-gosvm`,
+`build/modern-runtime-runner` and
+`results/compiler/2026-10-06-phoenix-dependencies-final/return-data-runner`.
+They are untracked/rebuildable; large temporary Go/Cargo caches were removed.
+Use `scripts/build-cli.sh`, `scripts/build_modern_runner.py` and the acceptance
+report's `scripts/verify_target_profiles.py` command to rebuild/rerun. Supply a
+new results directory and both explicit runner paths; keep historical evidence
+unchanged. Native tests of separate example/service modules remain separate from
+root `make test`.
+
+
+October 7: [explicit target profiles](docs/TARGET_PROFILES.md) now support
+`fogo-v0` and modern `solana-v3` through project build/test and low-level CLI,
+with content-pinned platform-tools v1.57 on macOS arm64. Existing target-less
+configurations retain exact v1.51 experimental-v3 semantics; `migrate-target`
+changes configuration explicitly while source, SDK, layouts and generated clients
+remain byte-identical. Outputs/receipts separate profile, toolchain/backend and
+frontend/SDK/imported-package/foreign-artifact dependencies. The historical runner
+is unchanged; a separate LiteSVM 0.13.0 / Agave 4.0 / SBPF 0.14.4 runner is rebuilt
+from pinned source with the equivalent rent-error precedence patch. The same
+54 scenarios / 66 transaction steps pass on both profiles × three, including
+Clock, current Rent, token/PDA CPI, lifecycle failures and rollback.
+[Pure Bend-library ABI v1](docs/BEND_LIBRARIES.md) consumer support validates the
+producer manifest/interface/target/artifact pins, generates cgo bindings using the
+selected native header/object and links captured SBF objects. The published
+v1.53 fogo-v0 producer with manifest SHA `ec18012f5bb98cd19813b721f2ec343d628c679052828a3eb122ca1b335bc6de`
+passes native ABI boundaries and the actual v1.57 Go/Bend image's nine scenarios
+× three, including malformed input and transaction rollback. V3 library use is
+refused because Bend has not published v3 objects. Root tests/vet, native service,
+modern runner unit tests and mutation/migration/backend checks pass. Full evidence
+and reproduction are in [the new acceptance report](results/compiler/2026-10-07-target-profiles-final/README.md).
+These are local runtime tests, not Fogo/Solana network validation, broad platform
+qualification or a reinterpretation of historical benchmark results.
 
 October 6: the user requested [artifact untracking](results/maintenance/2026-10-06-artifact-untracking/README.md).
 Generated archives/binaries, dumps, logs, large fixtures and raw execution
 reports remain unchanged locally, with checksums in the new inventory. Compact
 CU/error observations are retained alongside source, small fixtures and existing
 summaries. Old report links may require restoring local artifacts; historical
-Git blobs are preserved. The session's read-only `.git` requires applying the
-prepared cleanup bundle before this checkout's tracking changes take effect.
+Git blobs are preserved. The user subsequently applied the prepared cleanup bundle; tracking changes are
+now reflected in this checkout. Historical Git blobs remain preserved.
 
 October 6: the [Phoenix dependency proof](docs/PHOENIX_DEPENDENCIES.md) now passes
 freestanding v0 `__multi3` linking, rejection of unresolved non-syscall imports,

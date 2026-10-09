@@ -19,6 +19,7 @@ import (
 	"strings"
 	"time"
 
+	"gosvm/internal/targets"
 	"gosvm/internal/testvm"
 )
 
@@ -234,6 +235,18 @@ func pause(ctx context.Context, d time.Duration) error {
 // Run never contacts a remote cluster. All transaction keys are deterministic test
 // keys, and all state is seeded into a new temporary validator ledger.
 func Run(ctx context.Context, dir, elf string, out io.Writer) error {
+	return RunTo(ctx, dir, elf, filepath.Join(dir, "build/sbf-results.json"), out)
+}
+
+func RunTo(ctx context.Context, dir, elf, reportPath string, out io.Writer) error {
+	return RunProfileTo(ctx, dir, elf, reportPath, out, target.Legacy)
+}
+
+func RunProfileTo(ctx context.Context, dir, elf, reportPath string, out io.Writer, profileName string) error {
+	selected, e := target.Resolve(profileName)
+	if e != nil {
+		return e
+	}
 	started := time.Now()
 	suite, e := Load(filepath.Join(dir, "testdata/sbf.json"))
 	if e != nil {
@@ -274,12 +287,12 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 			return e
 		}
 	}
-	build := filepath.Join(dir, "build")
+	build := filepath.Dir(reportPath)
 	if e = os.MkdirAll(build, 0755); e != nil {
 		return e
 	}
 	// Never leave a previous passing report behind after a failed new test run.
-	if e = os.Remove(filepath.Join(build, "sbf-results.json")); e != nil && !os.IsNotExist(e) {
+	if e = os.Remove(reportPath); e != nil && !os.IsNotExist(e) {
 		return e
 	}
 	port := 0
@@ -428,7 +441,7 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 	if e != nil {
 		return e
 	}
-	metadata := map[string]any{"schema": 1, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "runtime_engine": testvm.Engine(), "runtime_version": strings.TrimSpace(string(version)), "cases": results,
+	metadata := map[string]any{"schema": 1, "target_profile": selected.Name, "platform_tools": selected.Tools, "network_validation": false, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "runtime_engine": testvm.Engine(), "runtime_version": strings.TrimSpace(string(version)), "cases": results,
 		"startup_seconds": startupSeconds, "fixture_seconds": time.Since(execution).Seconds(), "total_seconds": time.Since(started).Seconds()}
 	if testvm.IsRunner() {
 		var info any
@@ -443,5 +456,5 @@ func Run(ctx context.Context, dir, elf string, out io.Writer) error {
 	if e != nil {
 		return e
 	}
-	return os.WriteFile(filepath.Join(build, "sbf-results.json"), append(report, '\n'), 0644)
+	return os.WriteFile(reportPath, append(report, '\n'), 0644)
 }

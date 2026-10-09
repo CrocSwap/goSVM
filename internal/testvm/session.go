@@ -49,6 +49,25 @@ func RunnerPath(explicit string) (string, error) {
 	return path, nil
 }
 
+const ModernRunnerVersion = "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)"
+
+func FeaturesFor(profileName string) (json.RawMessage, error) {
+	if profileName == "solana-v3" && os.Getenv("GOSVM_TEST_FEATURES") == "" {
+		return json.RawMessage("null"), nil
+	}
+	return Features()
+}
+func RunnerCompatible(version, profileName string) bool {
+	switch profileName {
+	case "solana-v3":
+		return version == ModernRunnerVersion
+	case "fogo-v0":
+		return version == RunnerVersion || version == ModernRunnerVersion
+	default:
+		return version == RunnerVersion
+	}
+}
+
 const maxFrame = 16 * 1024 * 1024
 
 type Call struct {
@@ -58,6 +77,7 @@ type Call struct {
 	Params  any    `json:"params"`
 }
 type Session struct {
+	Identity  string
 	cmd       *exec.Cmd
 	input     io.WriteCloser
 	output    *bufio.Reader
@@ -69,18 +89,24 @@ type Session struct {
 	closing   sync.Once
 }
 
-func Start(ctx context.Context, path string) (*Session, error) {
+func Start(ctx context.Context, path string) (*Session, error) { return StartTarget(ctx, path, "") }
+
+func StartTarget(ctx context.Context, path, profileName string) (*Session, error) {
 	versionCtx, stop := context.WithTimeout(ctx, 3*time.Second)
 	version, e := exec.CommandContext(versionCtx, path, "--version").CombinedOutput()
 	stop()
 	if e != nil {
 		return nil, fmt.Errorf("runner version: %w: %s", e, version)
 	}
-	if string(bytes.TrimSpace(version)) != RunnerVersion {
+	identity := string(bytes.TrimSpace(version))
+	if !RunnerCompatible(identity, profileName) {
 		return nil, fmt.Errorf("require %s; found %s", RunnerVersion, version)
 	}
 	childCtx, cancel := context.WithCancel(ctx)
 	s, e := startSession(exec.CommandContext(childCtx, path, "--stdio"), cancel)
+	if s != nil {
+		s.Identity = identity
+	}
 	if e != nil {
 		cancel()
 	}

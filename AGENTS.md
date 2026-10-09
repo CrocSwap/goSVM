@@ -32,3 +32,10 @@ keep source, summaries, compact metrics, and reproduction instructions tracked.
 Follow [the artifact retention inventory](results/maintenance/2026-10-06-artifact-untracking/README.md).
 Do not delete historical evidence or change required vendored runtime assets as
 part of routine build cleanup.
+
+Current network/backend selection and explicit migration are documented in
+[target profiles](docs/TARGET_PROFILES.md); preserve target-less v1.51 projects'
+historical meaning. [Bend libraries](docs/BEND_LIBRARIES.md) consume pinned producer
+artifacts; current producer support is v1.53 fogo-v0 only. Local acceptance does
+not establish public-network compatibility. Keep modern runner/bootstrap outputs
+rebuildable and untracked.

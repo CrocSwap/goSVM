@@ -10,9 +10,8 @@ import (
 )
 
 // BuildCached keeps a small receipt beside the output. Source and frontend use
-// content hashes, backend executables use resolved paths/size/mtime (as in a
-// timestamp-based build system). Use an uncached build after deliberately
-// replacing a tool while preserving its size and modification timestamp.
+// content hashes, including backend executable bytes. Replaced tools cannot
+// reuse a receipt even when their size and modification timestamp are preserved.
 func BuildCached(source, output, llvm, arch string) error {
 	program, err := ReadProgram(source)
 	if err != nil {
@@ -78,6 +77,40 @@ func buildKey(source, llvm, arch string) (string, error) {
 	}
 	return buildProgramKey(program, llvm, arch)
 }
+
+// DependencyKey separates reusable output namespaces across frontend/SDK,
+// imported Go packages, module resolution and pinned foreign-library changes.
+// Application edits reuse that namespace and invalidate the normal build receipt.
+func DependencyKey(source string) (string, error) {
+	program, err := ReadProgram(source)
+	if err != nil {
+		return "", err
+	}
+	h := sha256.New()
+	fmt.Fprintf(h, "gosvm-dependencies-v1\x00%d\x00%x\n", program.SDK, sha256.Sum256([]byte(sdkSource(program.SDK))))
+	for _, unit := range program.Packages {
+		if unit.Path == program.Entry {
+			continue
+		}
+		fmt.Fprintf(h, "package:%s\x00", unit.Path)
+		for _, src := range unit.Sources {
+			fmt.Fprintf(h, "%s\x00%x\n", filepath.Base(src.Name), sha256.Sum256(src.Data))
+		}
+	}
+	for _, src := range program.Metadata {
+		fmt.Fprintf(h, "%s\x00%x\n", src.Name, sha256.Sum256(src.Data))
+	}
+	exe, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+	frontend, err := fileHash(exe)
+	if err != nil {
+		return "", err
+	}
+	fmt.Fprintln(h, frontend)
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
+}
 func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	compiler, err := os.Executable()
 	if err != nil {
@@ -115,7 +148,11 @@ func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		fmt.Fprintf(h, "%s\x00%d\x00%d\n", p, s.Size(), s.ModTime().UnixNano())
+		digest, err := fileHash(p)
+		if err != nil {
+			return "", err
+		}
+		fmt.Fprintf(h, "%s\x00%d\x00%d\x00%s\n", p, s.Size(), s.ModTime().UnixNano(), digest)
 	}
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

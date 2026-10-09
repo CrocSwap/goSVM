@@ -8,6 +8,7 @@ import (
 	"go/constant"
 	"go/token"
 	"go/types"
+	"gosvm/internal/library"
 	"strings"
 )
 
@@ -41,6 +42,7 @@ type generator struct {
 	fset *token.FileSet
 	info *types.Info
 	bytes.Buffer
+	externals      map[string]library.Binding
 	names          map[types.Object]string
 	arrays         []arrayType
 	memory         bool
@@ -116,6 +118,10 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		return nil, fmt.Errorf("require Process([]byte, []byte) uint64 or Process(solana.Context) uint64")
 	}
 	g.entry = entry
+	g.externals = map[string]library.Binding{}
+	for _, b := range program.Libraries {
+		g.externals[b.ImportPath+"."+b.Function] = b
+	}
 	// Reject recursion: this experiment has no stack-growth runtime.
 	funcs := map[types.Object]*ast.FuncDecl{}
 	for _, d := range decls {
@@ -193,6 +199,10 @@ func CompileProgram(program *Program) (out []byte, err error) {
 	if hasPointers || hasViews {
 		g.WriteString(pointerRuntime)
 		g.ensureMemory()
+	}
+	if len(program.Libraries) > 0 {
+		g.ensureMemory()
+		g.WriteString(libraryMemory)
 	}
 	if importer.hasSDK {
 		ownedLifecycle := false
@@ -311,7 +321,9 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.WriteString(g.signature(fn))
 			g.currentResults = g.info.Defs[fn.Name].Type().(*types.Signature).Results()
-			if !g.emitPackedStore(fn) {
+			if b, ok := g.externalFunction(g.info.Defs[fn.Name]); ok {
+				g.emitLibraryBody(fn, b)
+			} else if !g.emitPackedStore(fn) {
 				g.block(fn.Body)
 			}
 		}
