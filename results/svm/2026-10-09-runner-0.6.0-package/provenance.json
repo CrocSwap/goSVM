@@ -1,0 +1,36 @@
+{
+  "binary_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+  "build": {
+    "kind": "prebuilt",
+    "note": "Compiler of a supplied binary is not observable here; compare binary_sha256 with qualification evidence",
+    "path": "/Users/colkitt/sith/toys/crypto/goSVM/build/modern-runtime-runner"
+  },
+  "dynamic_dependencies": [
+    "\t/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)",
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)"
+  ],
+  "macho_build_version": [
+    "Load command 10",
+    "      cmd LC_BUILD_VERSION",
+    "  cmdsize 32",
+    " platform MACOS",
+    "    minos 11.0",
+    "      sdk 27.0",
+    "   ntools 1",
+    "     tool LD",
+    "  version 27037.1"
+  ],
+  "prepared_litesvm_sha256": "982a1c700e8b14d0768e25eaac33ac479487051505c54e33ba2ec9119be43b3c",
+  "rust_target": "aarch64-apple-darwin",
+  "schema": 1,
+  "scope": "Local experimental package; license inventory is not redistribution approval; no public release or notarization",
+  "source_sha256": {
+    "THIRD_PARTY_NOTICES": "f5e1619b0ea17cef5a04ea18bcf2c6d8e46746d0f79b9f9636abc1cd6bbd6bb3",
+    "benchmarks/svm-runner-modern/Cargo.lock": "25f7962a4388aad933fa28281e0b7d822509570f0805de655a1f080aba8826bd",
+    "benchmarks/svm-runner-modern/Cargo.toml": "c3727a99ecf6a4badb561bdac2d3cda898f860772bf8a9b65df7858bb909c611",
+    "benchmarks/svm-runner-modern/src/lib.rs": "746cccfa664d9a9abdab87d1a552e936e3a556e9214adf7b62d9db1497043a0a",
+    "benchmarks/svm-runner-modern/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "scripts/build_modern_runner.py": "e22e9a0c9a49779540a9628eeefe2b5b16ac78e703a6024e5c1966e6820c3488",
+    "scripts/package_modern_runner.py": "cfda00c1a7926cd3d8f0568478c3f761f0f4ceec254713c5745b8a8a55b63add"
+  }
+}
