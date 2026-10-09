@@ -12,26 +12,46 @@ its ABI fixture is `../bendSVM/tests/mixed-library/fixture.md`. Current GoSVM
 support accepts the explicit **fogo-v0 / Bend platform-tools v1.53** producer.
 The Go caller uses the separately pinned v1.57 backend. Their actual mixed image
 has [local acceptance evidence](../results/compiler/2026-10-07-target-profiles-final/README.md).
-Bend `solana-v3` objects are unavailable and are refused. Identical interface
+A Bend `solana-v3` producer at v1.57 is in progress on the Bend side; GoSVM accepts
+that pairing and has linked and run its development output locally (all nine
+fixture scenarios), but qualification waits for a published bundle. Identical interface
 fingerprints do not authorize relabelling objects or arbitrary compiler mixtures.
 Qualified SHA replacement libraries have a different selection/authorization
 contract and are outside this consumer.
 
-## Generate a package
+## Add a library to a project
 
 ```sh
-gosvm library bind \
-  -manifest ../bendSVM/build/interop/fogo-v0/20261007T134003Z-0bdd2144/library.manifest.json \
-  -sha256 ec18012f5bb98cd19813b721f2ec343d628c679052828a3eb122ca1b335bc6de \
-  -allow-library-tools v1.53 \
-  -package bend -function Evaluate -output my-program/bend
+gosvm library add -name bend \
+  ../bendSVM/build/interop/fogo-v0/20261007T134003Z-0bdd2144/library.manifest.json \
+  path/to/solana-v3/library.manifest.json
 ```
 
-The output must be a new directory. The binder copies selected artifacts and the
-original manifest, generates `bindings.go` and `gosvm.library.json`, and publishes
-the package atomically. It never rebuilds or rewrites Bend artifacts. Host objects
-are architecture/format-specific; regenerate with a compatible producer on each
-host. Native tests require cgo and the host compiler/linker.
+Pass one producer manifest per target. GoSVM reads each manifest's target and
+SHA-256, checks its contract, records the pins under `libraries` in `gosvm.json`
+and generates `libs/bend`, a Go package with each target's producer manifest and
+objects under `fogo-v0/` and `solana-v3/`:
+
+```json
+"libraries": {
+  "bend": {
+    "function": "Evaluate",
+    "bend": {
+      "fogo": {"manifest": "../bendSVM/.../library.manifest.json", "sha256": "ec18012f…"}
+    }
+  }
+}
+```
+
+`generate`, `build` and `test` regenerate `libs/<name>` when its pins change and
+otherwise revalidate it. A project target without a matching producer fails that
+target's build with the missing network named. Accepted producer pairings are
+fixed in the consumer: fogo-v0 from Bend's v1.53 producer (qualified with the
+v1.57 caller) and solana-v3 from v1.57, the caller's own backend.
+
+The lower-level `gosvm library bind -manifest … -sha256 … -allow-library-tools v1.53
+-package bend -function Evaluate -output dir` still binds a single producer into a
+new directory.
 
 Import the generated package normally in your application's module:
 
@@ -53,9 +73,9 @@ No arbitrary cgo packages or extern declarations become on-chain language featur
 
 ```sh
 cd my-program
-gosvm test                      # Ordinary native Go tests use selected header + host object.
-gosvm build -target fogo-v0      # On-chain call links the selected SBF object.
-gosvm test -target fogo-v0 --svm -svm-runner /path/to/qualified-v0-runner
+gosvm test          # Ordinary native Go tests use the selected header + host object.
+gosvm build         # Each target links its own selected SBF object.
+gosvm test --svm    # Runs the linked image for every target.
 ```
 
 ## What is checked

@@ -48,8 +48,9 @@ They do not measure the new Fogo/modern Solana target profiles.
 ## Try it
 
 Source installation is tested on **macOS arm64**, with Go and host Clang required.
-Explicit profiles support Fogo v0 and modern Solana v3 with pinned LLVM tools. Building
-Go programs does not require Cargo or Rust.
+One project builds for both Fogo and Solana; goSVM picks the instruction set,
+pinned compiler backend and test runtime for each network. Building Go programs
+does not require Cargo or Rust.
 
 ```sh
 git clone https://github.com/CrocSwap/goSVM.git
@@ -57,16 +58,15 @@ cd goSVM
 bash scripts/install.sh "$HOME/.local/bin"
 export PATH="$HOME/.local/bin:$PATH"
 
-# Import an existing official platform-tools v1.57 backend.
-gosvm toolchain install -target solana-v3 \
-  -llvm "$HOME/.cache/solana/v1.57/platform-tools/llvm"
-gosvm doctor -target solana-v3
-gosvm new -target solana-v3 my-swap
+gosvm toolchain install   # Download the pinned backend for Fogo and Solana
+gosvm doctor
+gosvm new my-swap         # Targets fogo and solana
 cd my-swap
 
-gosvm check       # Check the supported Go subset
-gosvm test        # Run native Go tests
-gosvm build       # Compile into an isolated target directory
+gosvm check               # Check the supported Go subset
+gosvm test                # Run native Go tests
+gosvm build               # build/fogo/program.so and build/solana/program.so
+gosvm deploy -network solana-devnet -check   # Confirm the cluster accepts it
 ```
 
 The starter is a small arithmetic-only swap, with generated bindings and tests.
@@ -74,11 +74,15 @@ Edit `program.go` and rebuild. For multi-account applications, explore the
 [token swap](examples/full-swap/README.md) and [escrow](examples/escrow/README.md),
 or scaffold with `gosvm new -schema 2 -sdk 2 my-program`.
 
-For actual SBF execution, `gosvm test --svm` uses a separately installed runner
-compatible with the chosen profile. [Target setup and migration](docs/TARGET_PROFILES.md)
-explain the modern runner, backend pins and preserved historical validator workflow.
-Tests run locally without a wallet or public-cluster deployment. Public signed
-CLI and runner downloads are still planned; see [installation details](docs/DEVELOPMENT.md#start-a-go-project).
+`gosvm test --svm` runs the compiled program for every target in a local SVM
+runtime, choosing the matching managed runner; runners are installed from
+pinned local packages for now (`gosvm runner install -archive ...`). `gosvm deploy`
+reads the cluster's live feature gates before deploying with a dedicated
+per-network payer, and `gosvm call` simulates or sends an instruction.
+Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with
+`gosvm library add`. [Targets, deployment and migration](docs/TARGET_PROFILES.md)
+cover the details. Public signed CLI and runner downloads are still planned; see
+[installation details](docs/DEVELOPMENT.md#start-a-go-project).
 
 ## Share code with your backend
 

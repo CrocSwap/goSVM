@@ -1,8 +1,23 @@
-# Explicit SVM target profiles
+# Fogo and Solana targets
 
-GoSVM selects the instruction set, ELF format, linker layout and pinned backend
-through an explicit project target. Application Go source, wire layouts, SDK
-API, IDL and generated clients remain identical across targets.
+Projects name networks; GoSVM maps each to a profile that selects the
+instruction set, ELF format, linker layout, pinned backend and local test
+runtime. Application Go source, wire layouts, SDK API, IDL and generated
+clients remain identical across targets.
+
+```json
+"targets": ["fogo", "solana"]
+```
+
+| Network | Profile in this compiler | Why |
+| --- | --- | --- |
+| `fogo` | `fogo-v0` | Fogo testnet/mainnet (`solana-core` 20.0.0) have no SBPF v1–v3 feature gates |
+| `solana` | `solana-v3` | SBPFv3 deployment (`5cC3foj…`) is active on mainnet (slot 428,976,000), devnet and testnet |
+
+Cluster state was read on October 9, 2026. A later compiler may remap a network
+name when its cluster changes (for example when SIMD-0500 disables v0–v2
+deployment); outputs, reports and deploy records always name the resolved profile,
+so an old artifact is never relabelled. `gosvm deploy` rechecks the live gates.
 
 | Profile | Backend | ISA / ELF | Purpose |
 | --- | --- | --- | --- |
@@ -37,20 +52,27 @@ gosvm toolchain install          # or -archive file.tar.bz2, or -llvm dir
 gosvm toolchain status
 gosvm doctor
 
-gosvm new -target fogo-v0 my-program
+gosvm new my-program             # targets fogo and solana
 cd my-program
 gosvm check
-gosvm test
-gosvm build
-gosvm build -target solana-v3
+gosvm test                       # native Go tests (once)
+gosvm build                      # every target
+gosvm test --svm                 # every target, each with its matching runner
+gosvm build -target solana       # one target for this command
 ```
 
-New projects default to `solana-v3`. `-target` on build/test/check/generate/doctor
-selects a profile for that invocation without changing `gosvm.json` or application
-files. `SBF_LLVM` or an explicit `-llvm` can select a backend directory, but modern
-builds still require its content pin. `GOSVM_CACHE` selects the managed cache root.
-Other archives and host binaries are refused; the historical v1.51 installer is
-unchanged and remains available through `-target legacy-v1.51-v3`.
+New projects target both networks (`-target fogo` or `-target solana` creates a
+single-target project). `-target` on build/test/check/generate/doctor selects one
+profile for that invocation without changing `gosvm.json` or application files;
+it accepts network names or full profile names. A failure on one target is
+reported and the remaining targets still run. `SBF_LLVM` or an explicit `-llvm`
+can select a backend directory, but modern builds still require its content pin.
+`GOSVM_CACHE` selects the managed cache root. Other archives and host binaries
+are refused; the historical v1.51 installer is unchanged and remains available
+through `-target legacy-v1.51-v3`.
+
+Each build publishes `build/fogo/program.so` and `build/solana/program.so`, copied
+from the isolated outputs below.
 
 Normal modern outputs are:
 
@@ -74,9 +96,12 @@ They never become modern Solana builds implicitly. Conflicting target/backend/IS
 fields are rejected. Change configuration explicitly:
 
 ```sh
-gosvm migrate-target -target fogo-v0 -dir my-existing-project
-# Or select solana-v3; only gosvm.json changes.
+gosvm migrate-target -target fogo,solana -dir my-existing-project
+# Or a single network/profile; only gosvm.json changes.
 ```
+
+A `targets` list records no single ISA: it requires `platform_tools` v1.57 and no
+`target`/`sbf` fields.
 
 Migration preserves source, SDK snapshot, generated Go, account/argument layouts,
 client interfaces and IDL. A schema-1 and schema-2 regression checks those bytes
@@ -125,3 +150,24 @@ qualify a modern Solana validator or a Fogo network.
 covers the same token swap, managed lifecycle, Clock controls and failures/rollback
 on both targets, plus the actual v0 Go/Bend image. **No Fogo or Solana public-network
 deployment or transaction acceptance has been established by this work.**
+
+## Deploy and call
+
+```sh
+gosvm deploy -network solana-devnet -check   # build, then read the cluster's feature gates
+gosvm deploy -network solana-devnet          # deploy (fund the printed payer first)
+gosvm call -network solana-devnet -data <hex>        # simulate; -send commits
+```
+
+Networks: `fogo-testnet`, `fogo-mainnet`, `solana-devnet`, `solana-testnet`,
+`solana-mainnet` (mainnets also require `-mainnet`). Deploy builds the network's
+target, refuses a cluster whose live feature accounts reject that format, then runs
+`solana program deploy` with `--skip-feature-verify` (older CLIs do not know current
+gates; GoSVM performed the check). The fee payer/upgrade authority is
+`deploy/keys/<network>-payer.json` and the program address keypair is
+`deploy/keys/<network>-program.json`; both are created on first use in a Git-ignored
+directory. GoSVM never falls back to the Solana CLI's configured keypair, which may
+belong to an unrelated production program. `deploy/<network>.json` records program
+ID, authority, ELF hash, profile and cluster genesis hash. `gosvm call` passes the
+payer as the instruction's only (signer) account and prints error, return data,
+compute units and logs.
