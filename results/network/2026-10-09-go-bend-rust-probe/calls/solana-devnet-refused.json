@@ -1,0 +1,23 @@
+{
+  "committed": true,
+  "compute_units": 278,
+  "error": {
+    "InstructionError": [
+      0,
+      {
+        "Custom": 200
+      }
+    ]
+  },
+  "input_hex": "80896b050708dd820129000000d00700006400000000000000",
+  "logs": [
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp invoke [1]",
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp consumed 278 of 200000 compute units",
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp failed: custom program error: 0xc8"
+  ],
+  "network": "solana-devnet",
+  "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+  "return_data_hex": "",
+  "return_program": "",
+  "signature": "5TdMYnp3YyUphCjdjiXAZApJt1qiKybu88AGEZFUeguFH3hVSmcF14XWUMHjJ3yA1nL4JAE6x9Q6kouv9Y9cNi5X"
+}

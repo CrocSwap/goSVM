@@ -61,11 +61,12 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   (`9db669ce…c37ee`) and the accepted fogo-v0 bundle; `scripts/verify_go_bend_rust.py`.
   `gosvm toolchain install -rust` installs the pinned Rust producer toolchain (1.4 GB).
 
-Open: network probe ([sources](tests/network-probe/README.md); project in ignored
-`build/network-probe`, payer keys inside) awaits funded payers — devnet
-`8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj`, Fogo testnet
-`4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE` (public faucets rate-limited
-airdrops from this host). Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
+- **Public networks.** [Go+Bend+Rust probe](results/network/2026-10-09-go-bend-rust-probe/README.md)
+  deployed natively (no Solana CLI) to Solana devnet (SBPFv3) and Fogo testnet
+  (SBPFv0); four committed calls each returned the expected data or error.
+  Program upgrade (`deploy` on an existing program) is not implemented.
+
+Open: Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
 needs a consumer pin addition and requalification when published.
 
 **Collaboration contract and ownership:** GoSVM owns its frontend/SDK, profile

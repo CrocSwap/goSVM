@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -17,8 +16,8 @@ import (
 )
 
 // deployCommand builds the network's target, confirms from live feature
-// accounts that the cluster accepts that program format, then deploys it with
-// the Solana CLI. Mainnet deployment requires an explicit -mainnet flag.
+// accounts that the cluster accepts that program format, then deploys it
+// natively through the upgradeable loader. Mainnets require -mainnet.
 func deployCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm deploy", flag.ContinueOnError)
 	name := fs.String("network", "", "fogo-testnet, fogo-mainnet, solana-devnet, solana-testnet or solana-mainnet")
@@ -84,9 +83,6 @@ func deployCommand(args []string) error {
 	if *check {
 		return nil
 	}
-	if _, err = exec.LookPath("solana"); err != nil {
-		return fmt.Errorf("deployment uses the Solana CLI; install it from https://solana.com/docs/intro/installation")
-	}
 	// Never fall back to the Solana CLI's configured keypair: it may be a
 	// production authority for an unrelated program.
 	if *payer == "" {
@@ -131,22 +127,14 @@ func deployCommand(args []string) error {
 	if created {
 		fmt.Printf("Created program keypair %s (address %s); keep it to redeploy at the same address\n", keyPath, network.Address(key))
 	}
-	// GoSVM checked the profile against live feature accounts above; older
-	// Solana CLIs do not know newer gates, so their local verification is skipped.
-	cmdArgs := []string{"program", "deploy", program, "--url", cluster.URL, "--keypair", *payer, "--program-id", keyPath, "--skip-feature-verify", "--output", "json"}
-	cmd := exec.Command("solana", cmdArgs...)
-	cmd.Stderr = os.Stderr
-	out, err := cmd.Output()
+	deployCtx, deployCancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer deployCancel()
+	signature, err := network.DeployV3(deployCtx, rpc, payerKey, key, data, filepath.Join(root, "deploy", "keys", cluster.Name+"-buffer.json"), os.Stdout)
 	if err != nil {
-		return fmt.Errorf("solana program deploy failed: %w\n%s", err, out)
+		return fmt.Errorf("deploy to %s: %w", cluster.Name, err)
 	}
-	var result struct {
-		ProgramID string `json:"programId"`
-		Signature string `json:"signature"`
-	}
-	json.Unmarshal(out, &result)
 	record := map[string]any{"network": cluster.Name, "url": cluster.URL, "genesis_hash": genesis, "target_profile": p.Name, "platform_tools": p.Tools,
-		"program_id": network.Address(key), "upgrade_authority": network.Address(payerKey), "signature": result.Signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
+		"program_id": network.Address(key), "upgrade_authority": network.Address(payerKey), "signature": signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
 	recordData, _ := json.MarshalIndent(record, "", "  ")
 	recordPath := filepath.Join(root, "deploy", cluster.Name+".json")
 	if err = os.WriteFile(recordPath, append(recordData, '\n'), 0644); err != nil {

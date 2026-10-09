@@ -1,0 +1,23 @@
+{
+  "committed": true,
+  "compute_units": 246,
+  "error": {
+    "InstructionError": [
+      0,
+      {
+        "Custom": 104
+      }
+    ]
+  },
+  "input_hex": "80896b050708dd820201000000d00700006400000000000000",
+  "logs": [
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW invoke [1]",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW consumed 246 of 200000 compute units",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW failed: custom program error: 0x68"
+  ],
+  "network": "fogo-testnet",
+  "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "return_data_hex": "",
+  "return_program": "",
+  "signature": "2kHmB7XxmMZFYXytRCRSG63ND3nSyYbq9An8otmjiAv9qaeAzjdTG7VfYQ6mfj84pmRm6TFvXRpKo8v8jHhWH3in"
+}

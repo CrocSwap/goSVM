@@ -1,0 +1,17 @@
+{
+  "committed": true,
+  "compute_units": 666,
+  "error": null,
+  "input_hex": "80896b050708dd82010a000000d00700006400000000000000",
+  "logs": [
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW invoke [1]",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW consumed 666 of 200000 compute units",
+    "Program return: G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW +QYAAAAAAAA=",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW success"
+  ],
+  "network": "fogo-testnet",
+  "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "return_data_hex": "f906000000000000",
+  "return_program": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "signature": "49UbhHPNHrycFj1RvndwY7Hjzxf4mjvN8CfggP4Zary1PVMAq8mWRykCZkWSo7sbvidMXWCR6QCTrHYuBEuQEc4p"
+}

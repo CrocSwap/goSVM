@@ -1,0 +1,17 @@
+{
+  "committed": true,
+  "compute_units": 650,
+  "error": null,
+  "input_hex": "80896b050708dd82010a000000d00700006400000000000000",
+  "logs": [
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp invoke [1]",
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp consumed 650 of 200000 compute units",
+    "Program return: Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp +QYAAAAAAAA=",
+    "Program Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp success"
+  ],
+  "network": "solana-devnet",
+  "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+  "return_data_hex": "f906000000000000",
+  "return_program": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+  "signature": "rh5qrH6aE4JbjsXSzEpHvT7P8T7jCXxKDvY4nrw9MqbB4KDgjz6aoUCbzTCi8LmeCiBitVZSEYMJqboHtbgrox6"
+}

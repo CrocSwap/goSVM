@@ -173,13 +173,18 @@ gosvm call -network solana-devnet -data <hex>        # simulate; -send commits
 
 Networks: `fogo-testnet`, `fogo-mainnet`, `solana-devnet`, `solana-testnet`,
 `solana-mainnet` (mainnets also require `-mainnet`). Deploy builds the network's
-target, refuses a cluster whose live feature accounts reject that format, then runs
-`solana program deploy` with `--skip-feature-verify` (older CLIs do not know current
-gates; GoSVM performed the check). The fee payer/upgrade authority is
+target and refuses a cluster whose live feature accounts reject that format. It
+then deploys natively through the upgradeable loader: a fresh buffer, chunked
+writes, then `DeployWithMaxDataLen` with the payer as upgrade authority. No Solana
+CLI is needed; Solana CLI 3.0.15 cannot parse SBPFv3 headers anyway. Upgrading an
+existing program is not implemented yet. The fee payer/upgrade authority is
 `deploy/keys/<network>-payer.json` and the program address keypair is
 `deploy/keys/<network>-program.json`; both are created on first use in a Git-ignored
-directory. GoSVM never falls back to the Solana CLI's configured keypair, which may
-belong to an unrelated production program. `deploy/<network>.json` records program
-ID, authority, ELF hash, profile and cluster genesis hash. `gosvm call` passes the
+directory. GoSVM never uses the Solana CLI's configured keypair, which may belong
+to an unrelated production program. `deploy/<network>.json` records program ID,
+authority, ELF hash, profile and cluster genesis hash. `gosvm call` passes the
 payer as the instruction's only (signer) account and prints error, return data,
 compute units and logs.
+
+[Public-network validation](../results/network/2026-10-09-go-bend-rust-probe/README.md):
+a Go+Bend+Rust probe on Solana devnet and Fogo testnet.

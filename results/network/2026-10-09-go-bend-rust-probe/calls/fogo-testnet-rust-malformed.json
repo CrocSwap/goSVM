@@ -1,0 +1,23 @@
+{
+  "committed": true,
+  "compute_units": 382,
+  "error": {
+    "InstructionError": [
+      0,
+      {
+        "Custom": 304
+      }
+    ]
+  },
+  "input_hex": "80896b050708dd820101000000000000006400000000000000",
+  "logs": [
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW invoke [1]",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW consumed 382 of 200000 compute units",
+    "Program G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW failed: custom program error: 0x130"
+  ],
+  "network": "fogo-testnet",
+  "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "return_data_hex": "",
+  "return_program": "",
+  "signature": "FRgXghdM4PRn79Jww5ZXRwimJHpAUGnZ6cnhoFyhFKtxM9QBjwmvXMd2es8WnBUvuZEKExP4g4DwKYWU2JjSDBf"
+}

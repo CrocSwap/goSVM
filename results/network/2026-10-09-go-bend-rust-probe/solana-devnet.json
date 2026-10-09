@@ -1,0 +1,13 @@
+{
+  "deployed_at": "2026-10-09T19:25:22Z",
+  "elf_bytes": 15888,
+  "elf_sha256": "fd6b76f3c8fe61848be010c3f691c29583bf9612f49fc5c5fea136ab6cce54e3",
+  "genesis_hash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+  "network": "solana-devnet",
+  "platform_tools": "v1.57",
+  "program_id": "Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp",
+  "signature": "3JbK1bPPv8rsxumoPSn7y3EGswtkijaTpqFnadTU48X9hEnQngGF1UR584fmykyHw5DLjiRqfxP6qsWtEPxn4xfF",
+  "target_profile": "solana-v3",
+  "upgrade_authority": "8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj",
+  "url": "https://api.devnet.solana.com"
+}

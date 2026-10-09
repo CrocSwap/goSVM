@@ -1,0 +1,13 @@
+{
+  "deployed_at": "2026-10-09T19:26:18Z",
+  "elf_bytes": 16840,
+  "elf_sha256": "7c8f81bc7de9c0410f4f86a0c03ef6b84a8308dffe0209d718f49cfacfe0ad5f",
+  "genesis_hash": "9GGSFo95raqzZxWqKM5tGYvJp5iv4Dm565S4r8h5PEu9",
+  "network": "fogo-testnet",
+  "platform_tools": "v1.57",
+  "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "signature": "8aBXZRYEegVstsZJuyEvVT2pZ2CjRDQiZsRTcocjXE2PgufwbSqodwSCGiap6DjQcheWPXqYLWSe5Nbqcf8VruF",
+  "target_profile": "fogo-v0",
+  "upgrade_authority": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+  "url": "https://testnet.fogo.io"
+}
