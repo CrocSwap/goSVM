@@ -38,6 +38,7 @@ const help = `gosvm experimental project tools
   gosvm test --sbf        Also run byte-exact local-validator fixtures and CU
   gosvm test --svm        Also run fast compiled-ELF fixtures with an experimental runner
   gosvm svm-test          Run general fixtures against an already-compiled ELF
+  gosvm deploy -network N Check the cluster accepts the target, then deploy (fogo-testnet, solana-devnet, ...)
 
 Projects are discovered from the current directory or a parent.
 new accepts -module <import/path> and -schema 2 for the multi-state prototype.
@@ -85,6 +86,9 @@ func projectCommand(args []string) error {
 	command := args[0]
 	if command == "library" {
 		return libraryCommand(args[1:])
+	}
+	if command == "deploy" {
+		return deployCommand(args[1:])
 	}
 	if command == "runner" {
 		return runnerCommand(args[1:])
