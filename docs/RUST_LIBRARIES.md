@@ -7,8 +7,8 @@ object per target profile, a native host object, a C header, a schema and one
 producer manifest per profile. Go keeps accounts, syscalls and CPI; the Rust
 library only computes.
 
-This is the producer half. Linking into a Go program requires the consumer to
-accept `kind: "gosvm-rust-library-v1"`; see *Consumer contract* below.
+Projects declare a crate as a library and GoSVM builds and binds it for every
+configured target; see *Use in a project* below.
 
 ## Authoring
 
@@ -41,11 +41,34 @@ The fingerprint is SHA-256 over the ABI kind/version, root
 (`<crate>::<function>`), widths and the optional `schema` text. The symbol is
 `gosvm_rust_v1_call_<fingerprint>`. Changing any of these changes the symbol.
 
-## Build
+## Toolchain
+
+```sh
+gosvm toolchain install -rust    # once; or -archive <official v1.57 archive copy>
+```
+
+This installs the content-pinned platform-tools v1.57 tree into GoSVM's cache
+(see [target profiles](TARGET_PROFILES.md#install-and-select)); no separate
+Solana tools are needed. Without it the producer falls back to
+`~/.cache/solana/v1.57/platform-tools`, under the same pins.
+
+## Use in a project
+
+```sh
+gosvm library add -name quote -function Quote -rust path/to/crate
+gosvm build                      # also generate / test
+```
+
+`library add` records the crate in `gosvm.json` and generates `libs/quote`
+(import `<module>/libs/quote`). `generate`, `build` and `test` build the crate for
+every target, cached under `build/rust-libraries` and reused while the crate is
+unchanged.
+
+## Low-level build
 
 ```sh
 gosvm library build-rust -crate path/to/crate -output path/to/new-dir \
-  [-targets fogo-v0,solana-v3] [-platform-tools ~/.cache/solana/v1.57/platform-tools]
+  [-targets fogo-v0,solana-v3] [-platform-tools dir]
 ```
 
 The output directory must not exist. It contains `fogo-v0/` and `solana-v3/`, each

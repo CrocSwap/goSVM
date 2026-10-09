@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	target "gosvm/internal/targets"
+	"gosvm/internal/toolchain"
 )
 
 const (
@@ -32,15 +33,9 @@ const (
 	RustPanicSymbol = "gosvm_rust_v1_library_panic_path_is_reachable"
 )
 
-// Pins for the platform-tools v1.57 Rust compiler (macOS arm64). Version text
-// alone is insufficient; the producer refuses other executables.
-var RustToolHashes = map[string]string{
-	"rustc":           "a6bab6b6060c911f3f3e601532e6064500a7f7d53645bc62692c633a0541797a",
-	"cargo":           "ce68aedc3093d7b0b19fc038118f3ffedadf0f894458d8740bd09ba646beb291",
-	"librustc_driver": "621370872b31267369a4ad86befe581ce0dcec67f1fa6fe27851c6d6e4f01709",
-	"llvm-objcopy":    "6e529415860a722b7409c06c782edd68cbb43719d07f0a62602cdeb8c3bc98f1",
-	"llvm-ar":         "e525674eb8e7700f9ce50216baec1b5ed04ae561a37c563bfa4b38a64bb2714d",
-}
+// RustToolHashes pins the platform-tools v1.57 Rust compiler (macOS arm64);
+// the map is shared with the managed toolchain installer.
+var RustToolHashes = target.RustToolHashes
 
 // RustTools is the platform-tools pin of GoSVM-built Rust library objects.
 const RustTools = target.ModernTools
@@ -58,7 +53,7 @@ var rustForbiddenMembers = map[string]bool{"memcpy": true, "memset": true, "memm
 type RustOptions struct {
 	Crate         string   // directory containing Cargo.toml
 	Output        string   // new directory; receives <profile>/library.manifest.json
-	PlatformTools string   // platform-tools v1.57 root (default ~/.cache/solana/v1.57/platform-tools)
+	PlatformTools string   // platform-tools v1.57 root (default DefaultPlatformTools())
 	Targets       []string // default fogo-v0 and solana-v3
 }
 
@@ -146,7 +141,12 @@ func RustFingerprint(root string, input, output uint64, schema string) string {
 	return fmt.Sprintf("%x", sha256.Sum256(canonical))
 }
 
+// DefaultPlatformTools prefers the managed full tree installed by
+// "gosvm toolchain install -rust", else Solana's v1.57 platform-tools cache.
 func DefaultPlatformTools() string {
+	if p := toolchain.RustPlatformTools(); p != "" {
+		return p
+	}
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, ".cache", "solana", target.ModernTools, "platform-tools")
 }
@@ -165,6 +165,16 @@ func fileHash(path string) (string, error) {
 	return fmt.Sprintf("%x", sha256.Sum256(data)), nil
 }
 
+// RustInstallCommand installs the managed Rust producer toolchain.
+const RustInstallCommand = "gosvm toolchain install -rust"
+
+// CheckRustTools verifies a platform-tools root for the Rust producer (content
+// pins and rustc identity) without building anything.
+func CheckRustTools(root string) error {
+	_, err := checkRustTools(root)
+	return err
+}
+
 func checkRustTools(root string) (rustTools, error) {
 	t := rustTools{root: root, rustc: filepath.Join(root, "rust", "bin", "rustc"), cargo: filepath.Join(root, "rust", "bin", "cargo"), llvm: filepath.Join(root, "llvm"), hashes: map[string]string{}}
 	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
@@ -172,16 +182,16 @@ func checkRustTools(root string) (rustTools, error) {
 	}
 	drivers, _ := filepath.Glob(filepath.Join(root, "rust", "lib", "librustc_driver-*.dylib"))
 	if len(drivers) != 1 {
-		return t, fmt.Errorf("Rust library producer: platform-tools %s Rust compiler not found under %s", target.ModernTools, root)
+		return t, fmt.Errorf("Rust library producer: platform-tools %s Rust compiler not found under %s; run: %s", target.ModernTools, root, RustInstallCommand)
 	}
 	paths := map[string]string{"rustc": t.rustc, "cargo": t.cargo, "librustc_driver": drivers[0], "llvm-objcopy": filepath.Join(t.llvm, "bin", "llvm-objcopy"), "llvm-ar": filepath.Join(t.llvm, "bin", "llvm-ar")}
 	for name, path := range paths {
 		h, err := fileHash(path)
 		if err != nil {
-			return t, fmt.Errorf("Rust library producer requires platform-tools %s: %w", target.ModernTools, err)
+			return t, fmt.Errorf("Rust library producer requires platform-tools %s: %w; run: %s", target.ModernTools, err, RustInstallCommand)
 		}
 		if h != RustToolHashes[name] {
-			return t, fmt.Errorf("Rust library producer: %s does not match the platform-tools %s content pin", path, target.ModernTools)
+			return t, fmt.Errorf("Rust library producer: %s does not match the platform-tools %s content pin; run: %s", path, target.ModernTools, RustInstallCommand)
 		}
 		t.hashes[name] = h
 	}

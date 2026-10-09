@@ -161,39 +161,11 @@ func InstallModernArchive(ctx context.Context, root, archive string, out io.Writ
 
 func installModernArchive(ctx context.Context, root, archive string, out io.Writer, download Download, pkg modernPackage) error {
 	return publishModern(ctx, root, out, pkg, func(tmp, stage string) (Receipt, error) {
-		file := archive
-		if file == "" {
-			if download == nil {
-				return Receipt{}, fmt.Errorf("no downloader configured")
-			}
-			file = filepath.Join(tmp, "platform-tools.tar.bz2")
-			fmt.Fprintf(out, "Downloading official platform-tools %s (%.0f MB); only Clang and LLD will be retained.\n", target.ModernTools, float64(pkg.Size)/1e6)
-			f, err := os.OpenFile(file, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
-			if err != nil {
-				return Receipt{}, err
-			}
-			w := &archiveWriter{w: f, out: out, size: pkg.Size, last: time.Now()}
-			copyErr := download(ctx, pkg.URL, w)
-			closeErr := f.Close()
-			if copyErr != nil {
-				return Receipt{}, copyErr
-			}
-			if closeErr != nil {
-				return Receipt{}, closeErr
-			}
-		}
-		fmt.Fprintln(out, "Verifying SHA-256 and extracting Clang and LLD...")
-		if info, err := os.Stat(file); err != nil {
-			return Receipt{}, err
-		} else if info.Size() != pkg.Size {
-			return Receipt{}, fmt.Errorf("backend archive size %d; expected %d", info.Size(), pkg.Size)
-		}
-		digest, err := hashFile(file)
+		file, err := obtainArchive(ctx, tmp, archive, out, download, pkg.URL, pkg.SHA, pkg.Size,
+			fmt.Sprintf("Downloading official platform-tools %s (%.0f MB); only Clang and LLD will be retained.", target.ModernTools, float64(pkg.Size)/1e6),
+			"Verifying SHA-256 and extracting Clang and LLD...")
 		if err != nil {
 			return Receipt{}, err
-		}
-		if digest != pkg.SHA {
-			return Receipt{}, fmt.Errorf("backend archive SHA-256 mismatch: got %s", digest)
 		}
 		f, err := os.Open(file)
 		if err != nil {
@@ -217,58 +189,110 @@ func installModernArchive(ctx context.Context, root, archive string, out io.Writ
 	})
 }
 
+// obtainArchive downloads into tmp (archive == "") or uses a local copy, and
+// verifies the pinned size and SHA-256 before anything decompresses it.
+func obtainArchive(ctx context.Context, tmp, archive string, out io.Writer, download Download, url, sha string, size int64, downloading, verifying string) (string, error) {
+	file := archive
+	if file == "" {
+		if download == nil {
+			return "", fmt.Errorf("no downloader configured")
+		}
+		file = filepath.Join(tmp, "platform-tools.tar.bz2")
+		fmt.Fprintln(out, downloading)
+		f, err := os.OpenFile(file, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+		if err != nil {
+			return "", err
+		}
+		w := &archiveWriter{w: f, out: out, size: size, last: time.Now()}
+		copyErr := download(ctx, url, w)
+		closeErr := f.Close()
+		if copyErr != nil {
+			return "", copyErr
+		}
+		if closeErr != nil {
+			return "", closeErr
+		}
+	}
+	fmt.Fprintln(out, verifying)
+	if info, err := os.Stat(file); err != nil {
+		return "", err
+	} else if info.Size() != size {
+		return "", fmt.Errorf("backend archive size %d; expected %d", info.Size(), size)
+	}
+	digest, err := hashFile(file)
+	if err != nil {
+		return "", err
+	}
+	if digest != sha {
+		return "", fmt.Errorf("backend archive SHA-256 mismatch: got %s", digest)
+	}
+	return file, nil
+}
+
 // publishModern stages a backend privately and publishes it by rename after the
 // receipt verifies. One installer per root; failures never leave a partial root.
 func publishModern(ctx context.Context, root string, out io.Writer, pkg modernPackage, fill func(tmp, stage string) (Receipt, error)) error {
-	if root == "" {
-		return fmt.Errorf("cannot resolve user cache directory; set GOSVM_CACHE")
+	verify := func(dir string) (Receipt, error) { return verifyModern(dir, pkg) }
+	r, installed, err := publish(ctx, root, verify, fill)
+	if err != nil {
+		return err
 	}
-	if _, err := os.Stat(root); err == nil {
-		if _, err = verifyModern(root, pkg); err != nil {
-			return err
-		}
+	if !installed {
 		fmt.Fprintln(out, "Qualified backend already installed and verified:", root)
 		return nil
+	}
+	fmt.Fprintf(out, "Installed content-pinned platform-tools %s backend (%s): %s\n", target.ModernTools, r.Source, root)
+	return nil
+}
+
+// publish verifies an existing root (installed=false) or fills a private stage,
+// writes its receipt, verifies it, and publishes it by rename.
+func publish(ctx context.Context, root string, verify func(string) (Receipt, error), fill func(tmp, stage string) (Receipt, error)) (Receipt, bool, error) {
+	if root == "" {
+		return Receipt{}, false, fmt.Errorf("cannot resolve user cache directory; set GOSVM_CACHE")
+	}
+	if _, err := os.Stat(root); err == nil {
+		r, err := verify(root)
+		return r, false, err
 	} else if !os.IsNotExist(err) {
-		return err
+		return Receipt{}, false, err
 	}
 	if err := os.MkdirAll(filepath.Dir(root), 0755); err != nil {
-		return err
+		return Receipt{}, false, err
 	}
 	lock := root + ".lock"
 	if err := os.Mkdir(lock, 0700); err != nil {
-		return fmt.Errorf("modern installer busy (or interrupted earlier); lock: %s: %w", lock, err)
+		return Receipt{}, false, fmt.Errorf("modern installer busy (or interrupted earlier); lock: %s: %w", lock, err)
 	}
 	defer os.Remove(lock)
 	tmp, err := os.MkdirTemp(filepath.Dir(root), ".modern-")
 	if err != nil {
-		return err
+		return Receipt{}, false, err
 	}
 	defer os.RemoveAll(tmp)
 	stage := filepath.Join(tmp, "backend")
 	if err = os.MkdirAll(stage, 0755); err != nil {
-		return err
+		return Receipt{}, false, err
 	}
 	r, err := fill(tmp, stage)
 	if err != nil {
-		return err
+		return r, false, err
 	}
 	b, err := json.MarshalIndent(r, "", "  ")
 	if err != nil {
-		return err
+		return r, false, err
 	}
 	if err = os.WriteFile(filepath.Join(stage, "receipt.json"), append(b, '\n'), 0644); err != nil {
-		return err
+		return r, false, err
 	}
-	if _, err = verifyModern(stage, pkg); err != nil {
-		return err
+	if _, err = verify(stage); err != nil {
+		return r, false, err
 	}
 	if err = ctx.Err(); err != nil {
-		return err
+		return r, false, err
 	}
 	if err = os.Rename(stage, root); err != nil {
-		return err
+		return r, false, err
 	}
-	fmt.Fprintf(out, "Installed content-pinned platform-tools %s backend (%s): %s\n", target.ModernTools, r.Source, root)
-	return nil
+	return r, true, nil
 }

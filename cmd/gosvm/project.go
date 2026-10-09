@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"gosvm/internal/compiler"
+	"gosvm/internal/library"
 	"gosvm/internal/project"
 	"gosvm/internal/sbftest"
 	"gosvm/internal/targets"
@@ -27,8 +28,9 @@ const help = `gosvm experimental project tools
   gosvm library build-rust Build a pure no_std Rust crate into ABI v1 library artifacts
   gosvm new <directory>    Create a typed bounded-swap program and tests
   gosvm toolchain install Download the pinned platform-tools v1.57 backend (fogo-v0, solana-v3)
-                          (-archive local copy, -llvm import, -target legacy-v1.51-v3)
-  gosvm toolchain status  Verify the managed backend
+                          (-archive local copy, -llvm import, -target legacy-v1.51-v3,
+                          -rust also the full tree for Rust libraries)
+  gosvm toolchain status  Verify the managed backend and the optional Rust toolchain
   gosvm runner install    Install a pinned local runner package: -archive <0.5.0 or 0.6.0 package>
   gosvm runner status     Verify the managed runners (0.6.0 solana-v3; 0.5.0 fogo-v0/legacy)
   gosvm doctor            Check Go, backends and runners for fogo-v0/solana-v3, with fixes
@@ -343,6 +345,7 @@ func projectCommand(args []string) error {
 				fmt.Printf("OK managed platform-tools %s content pins (%s)\n", target.ModernTools, r.Source)
 			}
 		}
+		fmt.Println(rustProducerStatus())
 		if failed {
 			return fmt.Errorf("required tools missing; see diagnostics above")
 		}
@@ -492,14 +495,15 @@ func copyAtomic(src, dst string) error {
 
 func toolchainCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gosvm toolchain install [-archive file.tar.bz2 | -llvm dir] [-target legacy-v1.51-v3] | status")
+		return fmt.Errorf("usage: gosvm toolchain install [-archive file.tar.bz2 | -llvm dir] [-target legacy-v1.51-v3] [-rust] | status")
 	}
 	fs := flag.NewFlagSet("gosvm toolchain "+args[0], flag.ContinueOnError)
 	profileName := fs.String("target", target.Solana, "fogo-v0 / solana-v3 (shared platform-tools v1.57 backend) or legacy-v1.51-v3")
 	localLLVM := fs.String("llvm", "", "import Clang/LLD from an existing platform-tools v1.57 llvm directory instead of downloading")
-	archive := ""
+	archive, rust := "", false
 	if args[0] == "install" {
 		fs.StringVar(&archive, "archive", "", "use a local copy of the official archive (same size/SHA-256/content verification)")
+		fs.BoolVar(&rust, "rust", false, "also install the full platform-tools v1.57 tree for Rust libraries (one download)")
 	}
 	if e := fs.Parse(args[1:]); e != nil {
 		if e == flag.ErrHelp {
@@ -514,9 +518,13 @@ func toolchainCommand(args []string) error {
 	if err != nil {
 		return err
 	}
+	if rust && (p.Name == target.Legacy || *localLLVM != "") {
+		return fmt.Errorf("-rust installs the platform-tools %s tree from the official archive; it cannot be combined with -llvm or the legacy target", target.ModernTools)
+	}
 	if p.Name != target.Legacy {
 		switch args[0] {
 		case "status":
+			fmt.Println(rustProducerStatus())
 			r, err := toolchain.ReadModern(toolchain.ModernRoot())
 			if err != nil {
 				return fmt.Errorf("managed platform-tools %s backend (fogo-v0, solana-v3) unavailable: %w; run gosvm toolchain install", p.Tools, err)
@@ -526,6 +534,9 @@ func toolchainCommand(args []string) error {
 		case "install":
 			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 			defer stop()
+			if rust {
+				return toolchain.InstallRustArchive(ctx, archive, os.Stdout, downloadBackend)
+			}
 			if *localLLVM != "" {
 				if archive != "" {
 					return fmt.Errorf("choose either -archive or -llvm")
@@ -554,6 +565,21 @@ func toolchainCommand(args []string) error {
 	default:
 		return fmt.Errorf("unknown toolchain command %q", args[0])
 	}
+}
+
+// rustProducerStatus describes the optional Rust library producer toolchain.
+func rustProducerStatus() string {
+	const optional = "optional; only needed for Rust libraries"
+	if toolchain.RustInstalled() {
+		if _, e := toolchain.ReadRust(toolchain.RustRoot()); e != nil {
+			return fmt.Sprintf("DAMAGED managed Rust library producer toolchain (%s): %v\n  fix: remove %s and run %s", optional, e, toolchain.RustRoot(), library.RustInstallCommand)
+		}
+		return fmt.Sprintf("OK Rust library producer: managed platform-tools %s tree: %s", target.ModernTools, toolchain.RustPlatformTools())
+	}
+	if root := library.DefaultPlatformTools(); library.CheckRustTools(root) == nil {
+		return fmt.Sprintf("OK Rust library producer: platform-tools %s (unmanaged): %s", target.ModernTools, root)
+	}
+	return fmt.Sprintf("MISSING Rust library producer toolchain (%s)\n  fix: %s", optional, library.RustInstallCommand)
 }
 
 // backendInstallCommand is the exact command that installs a profile's backend.

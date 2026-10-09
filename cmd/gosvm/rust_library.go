@@ -13,7 +13,7 @@ func rustLibraryCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm library build-rust", flag.ContinueOnError)
 	crate := fs.String("crate", ".", "Rust crate directory with [package.metadata.gosvm-library]")
 	output := fs.String("output", "", "new output directory (receives <profile>/library.manifest.json)")
-	tools := fs.String("platform-tools", "", "platform-tools v1.57 root (default ~/.cache/solana/v1.57/platform-tools)")
+	tools := fs.String("platform-tools", "", "platform-tools v1.57 root (default: gosvm toolchain install -rust tree, else ~/.cache/solana/v1.57/platform-tools)")
 	targets := fs.String("targets", "fogo-v0,solana-v3", "comma-separated target profiles")
 	if err := fs.Parse(args); err != nil {
 		return err
