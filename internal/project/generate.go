@@ -53,6 +53,9 @@ func Generate(dir string) error {
 	if e != nil {
 		return e
 	}
+	if e = SyncLibraries(dir, c); e != nil {
+		return e
+	}
 	if c.Schema == MultiSchema {
 		return generateMulti(dir, c)
 	}

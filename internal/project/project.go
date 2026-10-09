@@ -27,22 +27,23 @@ const Validator = "3.0.15"
 var templates embed.FS
 
 type Config struct {
-	Target        string                   `json:"target,omitempty"`
-	Targets       []string                 `json:"targets,omitempty"`
-	Schema        int                      `json:"schema"`
-	Name          string                   `json:"name"`
-	Module        string                   `json:"module"`
-	PlatformTools string                   `json:"platform_tools"`
-	SBF           string                   `json:"sbf"`
-	State         string                   `json:"state"`
-	Instruction   string                   `json:"instruction"`
-	Handler       string                   `json:"handler"`
-	Result        string                   `json:"result"`
-	SDKHash       string                   `json:"sdk_sha256"`
-	SDKVersion    int                      `json:"sdk_version,omitempty"`
-	Imports       map[string]string        `json:"imports,omitempty"`
-	Layouts       []WireDeclaration        `json:"layouts,omitempty"`
-	Instructions  []InstructionDeclaration `json:"instructions,omitempty"`
+	Target        string                        `json:"target,omitempty"`
+	Targets       []string                      `json:"targets,omitempty"`
+	Schema        int                           `json:"schema"`
+	Name          string                        `json:"name"`
+	Module        string                        `json:"module"`
+	PlatformTools string                        `json:"platform_tools"`
+	SBF           string                        `json:"sbf"`
+	State         string                        `json:"state"`
+	Instruction   string                        `json:"instruction"`
+	Handler       string                        `json:"handler"`
+	Result        string                        `json:"result"`
+	SDKHash       string                        `json:"sdk_sha256"`
+	SDKVersion    int                           `json:"sdk_version,omitempty"`
+	Imports       map[string]string             `json:"imports,omitempty"`
+	Layouts       []WireDeclaration             `json:"layouts,omitempty"`
+	Instructions  []InstructionDeclaration      `json:"instructions,omitempty"`
+	Libraries     map[string]LibraryDeclaration `json:"libraries,omitempty"`
 }
 
 func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.LegacySource))) }
@@ -104,6 +105,9 @@ func Load(dir string) (Config, error) {
 			}
 		}
 	} else if e := validateMultiConfig(c); e != nil {
+		return c, e
+	}
+	if e := validateLibraries(c); e != nil {
 		return c, e
 	}
 	files := sdkFiles(c.SDKVersion)

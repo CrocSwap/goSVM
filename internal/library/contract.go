@@ -25,9 +25,12 @@ type Artifact struct {
 	SHA256 string `json:"sha256"`
 }
 type Object struct {
-	Tools   string     `json:"platform_tools"`
-	Object  Artifact   `json:"object"`
-	Support []Artifact `json:"support,omitempty"`
+	// Producer pins this target's producer manifest; packages bound before
+	// multi-target support use the contract-level Producer instead.
+	Producer *Artifact  `json:"producer,omitempty"`
+	Tools    string     `json:"platform_tools"`
+	Object   Artifact   `json:"object"`
+	Support  []Artifact `json:"support,omitempty"`
 }
 type Host struct {
 	GOOS   string   `json:"goos"`
@@ -35,7 +38,7 @@ type Host struct {
 	Object Artifact `json:"object"`
 }
 type Contract struct {
-	Producer    Artifact          `json:"producer"`
+	Producer    *Artifact         `json:"producer,omitempty"`
 	Schema      int               `json:"schema"`
 	ABI         string            `json:"abi"`
 	Root        string            `json:"root"`
@@ -163,7 +166,7 @@ func (b *Binding) Validate() error {
 		if err != nil {
 			return err
 		}
-		if p.Name == target.Legacy || object.Tools != "v1.53" {
+		if p.Name != name || ProducerTools[name] == "" || object.Tools != ProducerTools[name] {
 			return fmt.Errorf("library %s requires an explicitly allowed producer target/toolchain pin", name)
 		}
 		for _, a := range append([]Artifact{object.Object}, object.Support...) {
@@ -233,7 +236,11 @@ func (b *Binding) checkExport(a Artifact) error {
 func (b Binding) Objects(profile string) ([]string, error) {
 	object, ok := b.Targets[profile]
 	if !ok {
-		return nil, fmt.Errorf("Bend library %s has no compatible %s object (v3 availability must be supplied by its producer)", b.Root, profile)
+		network := profile
+		if p, err := target.Resolve(profile); err == nil && p.Network() != "" {
+			network = p.Network()
+		}
+		return nil, fmt.Errorf("library %s (%s) has no %s build (no compatible %s object); add its %s producer manifest with gosvm library add, or build with -target for the networks it supports", b.Package, b.Root, network, profile, network)
 	}
 	paths := []string{filepath.Join(b.Dir, object.Object.Path)}
 	// GoSVM owns memory helpers; Bend memory objects are validated/pinned but

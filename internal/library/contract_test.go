@@ -124,3 +124,53 @@ func TestPublishedBendContract(t *testing.T) {
 		t.Fatal("accepted extra native C source")
 	}
 }
+
+// Packages bound before multi-target support keep a flat layout with one
+// contract-level producer; they must continue to validate unchanged.
+func TestPublishedBendContractFlatLayout(t *testing.T) {
+	manifest := os.Getenv("BEND_LIBRARY_MANIFEST")
+	if manifest == "" {
+		t.Skip("set BEND_LIBRARY_MANIFEST and BEND_LIBRARY_SHA256 for producer integration")
+	}
+	dir := filepath.Join(t.TempDir(), "bend")
+	if err := GenerateBend(manifest, os.Getenv("BEND_LIBRARY_SHA256"), "bend", "Evaluate", "v1.53", dir); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(dir, Filename)
+	b, err := Read(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	flat := func(a Artifact) Artifact {
+		os.Rename(filepath.Join(dir, a.Path), filepath.Join(dir, filepath.Base(a.Path)))
+		return Artifact{filepath.Base(a.Path), a.SHA256}
+	}
+	c := b.Contract
+	object := c.Targets["fogo-v0"]
+	producer := flat(*object.Producer)
+	c.Producer, object.Producer = &producer, nil
+	object.Object = flat(object.Object)
+	for i := range object.Support {
+		object.Support[i] = flat(object.Support[i])
+	}
+	c.Targets["fogo-v0"] = object
+	c.Interface, c.Header, c.Host.Object = flat(c.Interface), flat(c.Header), flat(c.Host.Object)
+	source, err := nativeSource(c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	os.WriteFile(filepath.Join(dir, "bindings.go"), source, 0644)
+	c.Generated["bindings.go"] = fmt.Sprintf("%x", sha256.Sum256(source))
+	data, _ := json.Marshal(c)
+	os.WriteFile(path, data, 0644)
+	if _, err = Read(path); err != nil {
+		t.Fatal("flat single-producer package no longer validates:", err)
+	}
+	object.Producer = &producer
+	c.Targets["fogo-v0"] = object
+	data, _ = json.Marshal(c)
+	os.WriteFile(path, data, 0644)
+	if _, err = Read(path); err == nil {
+		t.Fatal("accepted ambiguous producer pins")
+	}
+}

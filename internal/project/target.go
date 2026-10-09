@@ -92,11 +92,16 @@ func MigrateTarget(dir, name string) error {
 		}
 		c.Target, c.Targets, c.PlatformTools, c.SBF = p.Name, nil, p.Tools, p.Arch
 	}
+	return Save(dir, c)
+}
+
+// Save atomically replaces gosvm.json.
+func Save(dir string, c Config) error {
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return err
 	}
-	f, err := os.CreateTemp(dir, ".gosvm-target-")
+	f, err := os.CreateTemp(dir, ".gosvm-config-")
 	if err != nil {
 		return err
 	}

@@ -1,30 +1,34 @@
 package library
 
 import (
-	"crypto/sha256"
-	"encoding/json"
 	"fmt"
 	"go/format"
 	"os"
 	"path/filepath"
 )
 
-// Generate binds an already agreed artifact contract; it never rebuilds or
-// re-labels Bend objects and never assumes that a v3 artifact exists.
+// GenerateBend binds one agreed producer contract; it never rebuilds or
+// re-labels Bend objects and never assumes that another target exists.
 func GenerateBend(manifest, digest, pkg, function, allowedTools, output string) error {
-	b, err := ImportBend(manifest, digest, pkg, function, allowedTools)
+	m, _, err := readProducer(manifest, digest)
 	if err != nil {
 		return err
 	}
-	if len(b.Generated) != 0 {
-		return fmt.Errorf("bind a producer contract, not an already generated package")
+	if allowedTools != m.Toolchains.Clang.Tools {
+		return fmt.Errorf("binding producer tools %s requires -allow-library-tools %s", m.Toolchains.Clang.Tools, m.Toolchains.Clang.Tools)
 	}
 	if _, err = os.Lstat(output); err == nil {
 		return fmt.Errorf("%s already exists", output)
 	} else if !os.IsNotExist(err) {
 		return err
 	}
-	if err = os.MkdirAll(filepath.Dir(output), 0755); err != nil {
+	return GenerateBendTargets(map[string]ProducerPin{m.Target: {manifest, digest}}, pkg, function, output)
+}
+
+// GenerateBendTargets publishes one Go package bound to a producer per target.
+// An existing output is replaced only after the new package fully validates.
+func GenerateBendTargets(pins map[string]ProducerPin, pkg, function, output string) error {
+	if err := os.MkdirAll(filepath.Dir(output), 0755); err != nil {
 		return err
 	}
 	stage, err := os.MkdirTemp(filepath.Dir(output), ".gosvm-library-")
@@ -32,35 +36,16 @@ func GenerateBend(manifest, digest, pkg, function, allowedTools, output string) 
 		return err
 	}
 	defer os.RemoveAll(stage)
-	for path, data := range b.Metadata {
-
-		rel, err := filepath.Rel(b.Dir, path)
-		if err != nil {
-			return err
-		}
-		dest := filepath.Join(stage, rel)
-		if err = os.MkdirAll(filepath.Dir(dest), 0755); err != nil {
-			return err
-		}
-		if err = os.WriteFile(dest, data, 0644); err != nil {
-			return err
-		}
-	}
-	// Cgo synchronously borrows byte-only slices. output_len is aligned owned
-	// scalar storage, separate from both input/output; no pointer is retained.
-	goSource, err := nativeSource(b.Contract)
-	if err != nil {
+	if err = stageBend(pins, pkg, function, stage); err != nil {
 		return err
 	}
-	b.Generated = map[string]string{"bindings.go": fmt.Sprintf("%x", sha256.Sum256(goSource))}
-	if err = os.WriteFile(filepath.Join(stage, "bindings.go"), goSource, 0644); err != nil {
-		return err
-	}
-	data, err := json.MarshalIndent(b.Contract, "", "  ")
-	if err != nil {
-		return err
-	}
-	if err = os.WriteFile(filepath.Join(stage, Filename), append(data, '\n'), 0644); err != nil {
+	if _, err = os.Lstat(output); err == nil {
+		old := stage + ".old"
+		if err = os.Rename(output, old); err != nil {
+			return err
+		}
+		defer os.RemoveAll(old)
+	} else if !os.IsNotExist(err) {
 		return err
 	}
 	return os.Rename(stage, output)
