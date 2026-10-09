@@ -68,7 +68,11 @@ func (p Profile) CheckBackend(llvm string) error {
 		path := filepath.Join(llvm, "bin", name)
 		b, err := exec.Command(path, "--version").CombinedOutput()
 		if err != nil {
-			return fmt.Errorf("%s requires platform-tools %s: %s: %w", p.Name, p.Tools, path, err)
+			fix := "gosvm toolchain install"
+			if p.Name == Legacy {
+				fix += " -target " + Legacy
+			}
+			return fmt.Errorf("%s needs the platform-tools %s backend (%s: %v); run: %s", p.Name, p.Tools, path, err, fix)
 		}
 		if !strings.Contains(string(b), p.LLVM) {
 			return fmt.Errorf("%s requires platform-tools %s / LLVM %s, got %s", p.Name, p.Tools, p.LLVM, b)

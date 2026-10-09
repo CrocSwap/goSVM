@@ -73,18 +73,6 @@ func llvmDefault() string {
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, ".cache/solana", project.Tools, "platform-tools/llvm")
 }
-func backendCheck(llvm string) error {
-	for _, tool := range []string{"clang", "ld.lld"} {
-		b, e := exec.Command(filepath.Join(llvm, "bin", tool), "--version").CombinedOutput()
-		if e != nil {
-			return fmt.Errorf("backend %s unavailable at %s; run gosvm toolchain install (macOS arm64), or set SBF_LLVM to platform-tools %s: %w", tool, llvm, project.Tools, e)
-		}
-		if !strings.Contains(string(b), "19.1.7") {
-			return fmt.Errorf("backend %s is not the expected platform-tools %s LLVM 19.1.7: %s", tool, project.Tools, b)
-		}
-	}
-	return nil
-}
 func projectCommand(args []string) error {
 	command := args[0]
 	if command == "library" {
