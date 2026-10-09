@@ -22,8 +22,5 @@ cp <goSVM>/tests/go-bend-rust/sbf.json testdata/sbf.json
 gosvm test --svm      # native Go/Bend/Rust tests, then both targets' linked images
 ```
 
-October 9 local development run: 9/9 cases on fogo-v0 (runner 0.5.0) and on
-solana-v3 (runner 0.6.0); images 11,856 and 11,088 bytes. The solana-v3 Bend
-object was Bend's in-progress v1.57 test output, not a published bundle, so
-this is development evidence; qualification awaits Bend's published v3 bundle
-and a fresh results directory.
+Qualified October 9 with Bend's published bundles: 9/9 × 3 on each target; see
+[the results](../../results/compiler/2026-10-09-go-bend-rust-targets/README.md).

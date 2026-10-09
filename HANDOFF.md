@@ -56,18 +56,17 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   `deploy/keys/` (never the CLI keypair — on this host that is a production
   upgrade authority for another project, pointed at Fogo mainnet).
   `gosvm call` simulates/sends with return data, CU and logs.
-- **Evidence (development, local).** [Go+Bend+Rust fixture](tests/go-bend-rust/README.md):
-  9/9 on fogo-v0 and solana-v3, including rollback. Its solana-v3 Bend object is
-  Bend's in-progress v1.57 test output (`build/target-profiles/2026-10-09T18-26-33…`
-  in bendSVM, SHA `aa29e309…`), not a published bundle; formal qualification
-  awaits Bend's published v3 bundle and a fresh results directory.
+- **Evidence (local).** [Go+Bend and Go+Bend+Rust qualification](results/compiler/2026-10-09-go-bend-rust-targets/README.md):
+  9 cases × 3 runs per fixture per target, with Bend's published solana-v3 bundle
+  (`9db669ce…c37ee`) and the accepted fogo-v0 bundle; `scripts/verify_go_bend_rust.py`.
+  `gosvm toolchain install -rust` installs the pinned Rust producer toolchain (1.4 GB).
 
 Open: network probe ([sources](tests/network-probe/README.md); project in ignored
 `build/network-probe`, payer keys inside) awaits funded payers — devnet
 `8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj`, Fogo testnet
 `4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE` (public faucets rate-limited
-airdrops from this host). Managed Rust toolchain install (`toolchain install -rust`)
-was in progress. Bend's published v3 bundle and fogo-v0 pin decision are pending.
+airdrops from this host). Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
+needs a consumer pin addition and requalification when published.
 
 **Collaboration contract and ownership:** GoSVM owns its frontend/SDK, profile
 selection, generated Go/cgo consumer, external-object linking and Go final-image

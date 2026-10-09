@@ -12,9 +12,9 @@ its ABI fixture is `../bendSVM/tests/mixed-library/fixture.md`. Current GoSVM
 support accepts the explicit **fogo-v0 / Bend platform-tools v1.53** producer.
 The Go caller uses the separately pinned v1.57 backend. Their actual mixed image
 has [local acceptance evidence](../results/compiler/2026-10-07-target-profiles-final/README.md).
-A Bend `solana-v3` producer at v1.57 is in progress on the Bend side; GoSVM accepts
-that pairing and has linked and run its development output locally (all nine
-fixture scenarios), but qualification waits for a published bundle. Identical interface
+Bend's published `solana-v3` / v1.57 bundle (SHA-256 `9db669ce…c37ee`) is also
+[qualified locally](../results/compiler/2026-10-09-go-bend-rust-targets/README.md),
+alone and together with a Rust library, on both targets. Identical interface
 fingerprints do not authorize relabelling objects or arbitrary compiler mixtures.
 Qualified SHA replacement libraries have a different selection/authorization
 contract and are outside this consumer.
