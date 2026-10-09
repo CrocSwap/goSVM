@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/json"
 	"flag"
@@ -129,17 +130,44 @@ func deployCommand(args []string) error {
 	}
 	deployCtx, deployCancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer deployCancel()
-	signature, err := network.DeployV3(deployCtx, rpc, payerKey, key, data, filepath.Join(root, "deploy", "keys", cluster.Name+"-buffer.json"), os.Stdout)
+	bufferPath := filepath.Join(root, "deploy", "keys", cluster.Name+"-buffer.json")
+	if err = rpc.ReclaimBuffers(deployCtx, payerKey, os.Stdout); err != nil {
+		return err
+	}
+	exists, _, _, err := rpc.Deployed(deployCtx, []byte(key.Public().(ed25519.PublicKey)))
+	if err != nil {
+		return err
+	}
+	action := "Deployed"
+	var signature string
+	if exists {
+		action = "Upgraded"
+		signature, err = network.UpgradeV3(deployCtx, rpc, payerKey, []byte(key.Public().(ed25519.PublicKey)), data, bufferPath, os.Stdout)
+		if err == nil && signature == "" {
+			return nil
+		}
+	} else {
+		signature, err = network.DeployV3(deployCtx, rpc, payerKey, key, data, bufferPath, os.Stdout)
+	}
 	if err != nil {
 		return fmt.Errorf("deploy to %s: %w", cluster.Name, err)
 	}
 	record := map[string]any{"network": cluster.Name, "url": cluster.URL, "genesis_hash": genesis, "target_profile": p.Name, "platform_tools": p.Tools,
 		"program_id": network.Address(key), "upgrade_authority": network.Address(payerKey), "signature": signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
-	recordData, _ := json.MarshalIndent(record, "", "  ")
 	recordPath := filepath.Join(root, "deploy", cluster.Name+".json")
+	// Keep earlier deployments of this program as history.
+	if old, err := os.ReadFile(recordPath); err == nil && exists {
+		var previous map[string]any
+		if json.Unmarshal(old, &previous) == nil && previous["program_id"] == record["program_id"] {
+			history, _ := previous["history"].([]any)
+			delete(previous, "history")
+			record["history"] = append(history, previous)
+		}
+	}
+	recordData, _ := json.MarshalIndent(record, "", "  ")
 	if err = os.WriteFile(recordPath, append(recordData, '\n'), 0644); err != nil {
 		return err
 	}
-	fmt.Printf("Deployed %s to %s at %s\nRecord: %s\n", p.Network(), cluster.Name, network.Address(key), recordPath)
+	fmt.Printf("%s %s on %s at %s\nRecord: %s\n", action, p.Network(), cluster.Name, network.Address(key), recordPath)
 	return nil
 }

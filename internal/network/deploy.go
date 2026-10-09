@@ -22,6 +22,10 @@ const (
 	SysvarClock   = "SysvarC1ock11111111111111111111111111111111"
 	// Bytes of program data per Write transaction, within the 1,232-byte packet.
 	writeChunk = 900
+	// SIMD-0431: extensions must add at least 10 KiB unless reaching the maximum.
+	minimumExtend     = 10 * 1024
+	maxAccountData    = 10 * 1024 * 1024
+	programDataHeader = 45
 )
 
 // Meta is one instruction account reference.
@@ -218,19 +222,33 @@ func (r RPC) rent(ctx context.Context, size int) (uint64, error) {
 	return lamports, err
 }
 
-// send submits signed transactions and waits until each is confirmed or fails.
-func (r RPC) send(ctx context.Context, txs [][]byte, sigs []string) error {
-	for _, tx := range txs {
+// sendRaw submits one signed transaction, retrying transient RPC failures.
+// Resubmitting identical bytes is safe: the signature deduplicates it.
+func (r RPC) sendRaw(ctx context.Context, tx []byte) error {
+	var err error
+	for attempt := 0; attempt < 5; attempt++ {
 		var sig string
-		if err := r.Call(ctx, "sendTransaction", []any{base64.StdEncoding.EncodeToString(tx), map[string]any{"encoding": "base64", "preflightCommitment": "confirmed"}}, &sig); err != nil {
-			return err
+		if err = r.Call(ctx, "sendTransaction", []any{base64.StdEncoding.EncodeToString(tx), map[string]any{"encoding": "base64", "preflightCommitment": "confirmed"}}, &sig); err == nil {
+			return nil
+		}
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(time.Duration(attempt+1) * time.Second):
 		}
 	}
+	return err
+}
+
+// await polls until every signature is confirmed (true) or the timeout passes
+// (returned as still pending). A failed transaction is an error.
+func (r RPC) await(ctx context.Context, sigs []string, timeout time.Duration) (map[string]bool, error) {
 	pending := map[string]bool{}
 	for _, s := range sigs {
 		pending[s] = true
 	}
-	for len(pending) > 0 {
+	deadline := time.Now().Add(timeout)
+	for len(pending) > 0 && time.Now().Before(deadline) {
 		var list []string
 		for s := range pending {
 			list = append(list, s)
@@ -241,18 +259,17 @@ func (r RPC) send(ctx context.Context, txs [][]byte, sigs []string) error {
 				ConfirmationStatus string          `json:"confirmationStatus"`
 			} `json:"value"`
 		}
-		if err := r.Call(ctx, "getSignatureStatuses", []any{list}, &st); err != nil {
-			return err
-		}
-		for i, v := range st.Value {
-			if v == nil {
-				continue
-			}
-			if len(v.Err) > 0 && string(v.Err) != "null" {
-				return fmt.Errorf("transaction %s failed: %s", list[i], v.Err)
-			}
-			if v.ConfirmationStatus == "confirmed" || v.ConfirmationStatus == "finalized" {
-				delete(pending, list[i])
+		if err := r.Call(ctx, "getSignatureStatuses", []any{list}, &st); err == nil {
+			for i, v := range st.Value {
+				if v == nil {
+					continue
+				}
+				if len(v.Err) > 0 && string(v.Err) != "null" {
+					return pending, fmt.Errorf("transaction %s failed: %s", list[i], v.Err)
+				}
+				if v.ConfirmationStatus == "confirmed" || v.ConfirmationStatus == "finalized" {
+					delete(pending, list[i])
+				}
 			}
 		}
 		if len(pending) == 0 {
@@ -260,9 +277,41 @@ func (r RPC) send(ctx context.Context, txs [][]byte, sigs []string) error {
 		}
 		select {
 		case <-ctx.Done():
-			return fmt.Errorf("%d transactions unconfirmed: %w", len(pending), ctx.Err())
+			return pending, ctx.Err()
 		case <-time.After(time.Second):
 		}
+	}
+	return pending, nil
+}
+
+// send submits signed transactions and waits until each is confirmed or fails.
+// Unconfirmed transactions are resubmitted unchanged until their blockhash
+// expires; they are never re-signed, so none can execute twice.
+func (r RPC) send(ctx context.Context, txs [][]byte, sigs []string) error {
+	pending := map[string]bool{}
+	for _, s := range sigs {
+		pending[s] = true
+	}
+	for round := 0; round < 6 && len(pending) > 0; round++ {
+		for i, tx := range txs {
+			if pending[sigs[i]] {
+				if err := r.sendRaw(ctx, tx); err != nil && round == 0 {
+					return err
+				}
+			}
+		}
+		var list []string
+		for s := range pending {
+			list = append(list, s)
+		}
+		left, err := r.await(ctx, list, 15*time.Second)
+		if err != nil {
+			return err
+		}
+		pending = left
+	}
+	if len(pending) > 0 {
+		return fmt.Errorf("%d transactions unconfirmed after their blockhash expired; rerun the command", len(pending))
 	}
 	return nil
 }
@@ -282,16 +331,9 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 		return "", err
 	}
 	if existing.Value != nil {
-		return "", fmt.Errorf("program %s already exists; upgrades are not implemented yet", Base58(programKey))
+		return "", fmt.Errorf("program %s already exists; use UpgradeV3", Base58(programKey))
 	}
-	os.Remove(bufferPath)
-	buffer, _, err := EnsureKeypair(bufferPath)
-	if err != nil {
-		return "", err
-	}
-	bufferKey := []byte(buffer.Public().(ed25519.PublicKey))
-	bufferSize := 37 + len(elf)
-	bufferRent, err := r.rent(ctx, bufferSize)
+	bufferKey, err := r.writeBuffer(ctx, payer, elf, bufferPath, out)
 	if err != nil {
 		return "", err
 	}
@@ -303,44 +345,12 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 	if err != nil {
 		return "", err
 	}
-	initialize := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, false, false}}, []byte{0, 0, 0, 0}}
-	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, bufferKey, bufferRent, uint64(bufferSize), loader), initialize}, buffer)
-	if err != nil {
-		return "", err
-	}
-	fmt.Fprintf(out, "Creating buffer %s (%d bytes)\n", Base58(bufferKey), bufferSize)
-	if err = r.send(ctx, [][]byte{tx}, []string{sig}); err != nil {
-		return "", err
-	}
-	var txs [][]byte
-	var sigs []string
-	for offset := 0; offset < len(elf); offset += writeChunk {
-		end := min(offset+writeChunk, len(elf))
-		data := make([]byte, 16, 16+end-offset)
-		binary.LittleEndian.PutUint32(data, 1)
-		binary.LittleEndian.PutUint32(data[4:], uint32(offset))
-		binary.LittleEndian.PutUint64(data[8:], uint64(end-offset))
-		data = append(data, elf[offset:end]...)
-		write := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, true, false}}, data}
-		tx, sig, err := Sign(payer, hash, []Instruction{write})
-		if err != nil {
-			return "", err
-		}
-		txs, sigs = append(txs, tx), append(sigs, sig)
-	}
-	fmt.Fprintf(out, "Writing %d chunks\n", len(txs))
-	if err = r.send(ctx, txs, sigs); err != nil {
-		return "", err
-	}
-	if hash, err = r.blockhash(ctx); err != nil {
-		return "", err
-	}
 	deployData := make([]byte, 12)
 	binary.LittleEndian.PutUint32(deployData, 2)
 	binary.LittleEndian.PutUint64(deployData[4:], uint64(len(elf)))
 	deploy := Instruction{loader, []Meta{{payerKey, true, true}, {ProgramDataAddress(programKey), false, true}, {programKey, false, true}, {bufferKey, false, true},
 		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {mustKey(SystemProgram), false, false}, {payerKey, true, false}}, deployData}
-	tx, sig, err = Sign(payer, hash, []Instruction{createAccount(payerKey, programKey, programRent, 36, loader), deploy}, program)
+	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, programKey, programRent, 36, loader), deploy}, program)
 	if err != nil {
 		return "", err
 	}
@@ -350,4 +360,282 @@ func DeployV3(ctx context.Context, r RPC, payer, program ed25519.PrivateKey, elf
 	}
 	os.Remove(bufferPath) // The loader consumed the buffer.
 	return sig, nil
+}
+
+// writeBuffer creates a loader-v3 buffer owned by the payer (its keypair kept at
+// bufferPath until the caller consumes it) and writes the ELF in chunks.
+func (r RPC) writeBuffer(ctx context.Context, payer ed25519.PrivateKey, elf []byte, bufferPath string, out io.Writer) ([]byte, error) {
+	loader := mustKey(LoaderV3)
+	payerKey := []byte(payer.Public().(ed25519.PublicKey))
+	os.Remove(bufferPath)
+	buffer, _, err := EnsureKeypair(bufferPath)
+	if err != nil {
+		return nil, err
+	}
+	bufferKey := []byte(buffer.Public().(ed25519.PublicKey))
+	bufferSize := 37 + len(elf)
+	bufferRent, err := r.rent(ctx, bufferSize)
+	if err != nil {
+		return nil, err
+	}
+	hash, err := r.blockhash(ctx)
+	if err != nil {
+		return nil, err
+	}
+	initialize := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, false, false}}, []byte{0, 0, 0, 0}}
+	tx, sig, err := Sign(payer, hash, []Instruction{createAccount(payerKey, bufferKey, bufferRent, uint64(bufferSize), loader), initialize}, buffer)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Fprintf(out, "Creating buffer %s (%d bytes)\n", Base58(bufferKey), bufferSize)
+	if err = r.send(ctx, [][]byte{tx}, []string{sig}); err != nil {
+		return nil, err
+	}
+	// Writes are idempotent (same offset, same bytes), so a chunk that is still
+	// unconfirmed after a round is re-signed with a fresh blockhash and resent.
+	var offsets []int
+	for offset := 0; offset < len(elf); offset += writeChunk {
+		offsets = append(offsets, offset)
+	}
+	fmt.Fprintf(out, "Writing %d chunks\n", len(offsets))
+	for round := 0; len(offsets) > 0; round++ {
+		if round == 6 {
+			return nil, fmt.Errorf("%d buffer chunks unconfirmed; rerun the command (the buffer is reclaimed automatically)", len(offsets))
+		}
+		if round > 0 {
+			if hash, err = r.blockhash(ctx); err != nil {
+				return nil, err
+			}
+		}
+		bySig := map[string]int{}
+		var sigs []string
+		for _, offset := range offsets {
+			end := min(offset+writeChunk, len(elf))
+			data := make([]byte, 16, 16+end-offset)
+			binary.LittleEndian.PutUint32(data, 1)
+			binary.LittleEndian.PutUint32(data[4:], uint32(offset))
+			binary.LittleEndian.PutUint64(data[8:], uint64(end-offset))
+			data = append(data, elf[offset:end]...)
+			write := Instruction{loader, []Meta{{bufferKey, false, true}, {payerKey, true, false}}, data}
+			tx, sig, err := Sign(payer, hash, []Instruction{write})
+			if err != nil {
+				return nil, err
+			}
+			r.sendRaw(ctx, tx) // A chunk that fails to send is retried next round.
+			bySig[sig] = offset
+			sigs = append(sigs, sig)
+		}
+		left, err := r.await(ctx, sigs, 30*time.Second)
+		if err != nil {
+			return nil, err
+		}
+		offsets = offsets[:0]
+		for sig := range left {
+			offsets = append(offsets, bySig[sig])
+		}
+	}
+	return bufferKey, nil
+}
+
+// Account returns an account's owner and data, or ok=false if it does not exist.
+func (r RPC) Account(ctx context.Context, address []byte) (owner string, data []byte, ok bool, err error) {
+	var res struct {
+		Value *struct {
+			Owner string   `json:"owner"`
+			Data  []string `json:"data"`
+		} `json:"value"`
+	}
+	if err = r.Call(ctx, "getAccountInfo", []any{Base58(address), map[string]any{"encoding": "base64", "commitment": "confirmed"}}, &res); err != nil || res.Value == nil {
+		return "", nil, false, err
+	}
+	data, err = base64.StdEncoding.DecodeString(res.Value.Data[0])
+	return res.Value.Owner, data, true, err
+}
+
+// Deployed reports whether a loader-v3 program exists at programKey and, if so,
+// its upgrade authority (nil when immutable) and deployed program-data bytes.
+func (r RPC) Deployed(ctx context.Context, programKey []byte) (exists bool, authority, programData []byte, err error) {
+	owner, data, ok, err := r.Account(ctx, programKey)
+	if err != nil || !ok {
+		return false, nil, nil, err
+	}
+	if owner != LoaderV3 || len(data) < 36 || binary.LittleEndian.Uint32(data) != 2 {
+		return true, nil, nil, fmt.Errorf("%s is not an upgradeable (loader-v3) program", Base58(programKey))
+	}
+	address := ProgramDataAddress(programKey)
+	if !bytes.Equal(data[4:36], address) {
+		return true, nil, nil, fmt.Errorf("%s points at unexpected program data %s", Base58(programKey), Base58(data[4:36]))
+	}
+	owner, data, ok, err = r.Account(ctx, address)
+	if err != nil {
+		return true, nil, nil, err
+	}
+	if !ok || owner != LoaderV3 || len(data) < programDataHeader || binary.LittleEndian.Uint32(data) != 3 {
+		return true, nil, nil, fmt.Errorf("invalid program data account %s", Base58(address))
+	}
+	if data[12] == 1 {
+		authority = data[13:45]
+	}
+	return true, authority, data[programDataHeader:], nil
+}
+
+// Unchanged reports whether deployed program data already holds exactly elf
+// (followed only by zero padding).
+func Unchanged(deployed, elf []byte) bool {
+	if len(deployed) < len(elf) || !bytes.Equal(deployed[:len(elf)], elf) {
+		return false
+	}
+	for _, b := range deployed[len(elf):] {
+		if b != 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// ExtendBytes returns how many bytes to add so capacity holds size, respecting
+// the 10 KiB minimum extension and the maximum account size (0: no extension).
+func ExtendBytes(capacity, size int) (int, error) {
+	if size <= capacity {
+		return 0, nil
+	}
+	headroom := maxAccountData - (programDataHeader + capacity)
+	need := size - capacity
+	if need > headroom {
+		return 0, fmt.Errorf("program of %d bytes exceeds the maximum program data size", size)
+	}
+	return min(max(need, minimumExtend), headroom), nil
+}
+
+func (r RPC) slot(ctx context.Context) (uint64, error) {
+	var slot uint64
+	err := r.Call(ctx, "getSlot", []any{map[string]any{"commitment": "confirmed"}}, &slot)
+	return slot, err
+}
+
+// UpgradeV3 replaces a deployed program's code with elf, signed by its upgrade
+// authority (the payer). It extends program data first when elf is larger, in
+// a separate transaction, then waits for a later slot before upgrading. The
+// returned signature is empty when the deployed code is already identical.
+func UpgradeV3(ctx context.Context, r RPC, payer ed25519.PrivateKey, programKey, elf []byte, bufferPath string, out io.Writer) (string, error) {
+	loader := mustKey(LoaderV3)
+	payerKey := []byte(payer.Public().(ed25519.PublicKey))
+	exists, authority, deployed, err := r.Deployed(ctx, programKey)
+	if err != nil {
+		return "", err
+	}
+	if !exists {
+		return "", fmt.Errorf("program %s does not exist; deploy it first", Base58(programKey))
+	}
+	if authority == nil {
+		return "", fmt.Errorf("program %s is immutable (no upgrade authority)", Base58(programKey))
+	}
+	if !bytes.Equal(authority, payerKey) {
+		return "", fmt.Errorf("program %s upgrade authority is %s, not the payer %s", Base58(programKey), Base58(authority), Base58(payerKey))
+	}
+	if Unchanged(deployed, elf) {
+		fmt.Fprintf(out, "Program %s already runs this exact build; nothing to upgrade\n", Base58(programKey))
+		return "", nil
+	}
+	programData := ProgramDataAddress(programKey)
+	extend, err := ExtendBytes(len(deployed), len(elf))
+	if err != nil {
+		return "", err
+	}
+	if extend > 0 {
+		data := make([]byte, 8)
+		binary.LittleEndian.PutUint32(data, 6)
+		binary.LittleEndian.PutUint32(data[4:], uint32(extend))
+		ix := Instruction{loader, []Meta{{programData, false, true}, {programKey, false, true}, {mustKey(SystemProgram), false, false}, {payerKey, true, true}}, data}
+		hash, err := r.blockhash(ctx)
+		if err != nil {
+			return "", err
+		}
+		tx, sig, err := Sign(payer, hash, []Instruction{ix})
+		if err != nil {
+			return "", err
+		}
+		fmt.Fprintf(out, "Extending program data by %d bytes\n", extend)
+		if err = r.send(ctx, [][]byte{tx}, []string{sig}); err != nil {
+			return "", err
+		}
+		// The loader refuses further changes in the slot that extended it.
+		start, err := r.slot(ctx)
+		if err != nil {
+			return "", err
+		}
+		for {
+			now, err := r.slot(ctx)
+			if err != nil {
+				return "", err
+			}
+			if now > start {
+				break
+			}
+			select {
+			case <-ctx.Done():
+				return "", ctx.Err()
+			case <-time.After(400 * time.Millisecond):
+			}
+		}
+	}
+	bufferKey, err := r.writeBuffer(ctx, payer, elf, bufferPath, out)
+	if err != nil {
+		return "", err
+	}
+	hash, err := r.blockhash(ctx)
+	if err != nil {
+		return "", err
+	}
+	upgrade := Instruction{loader, []Meta{{programData, false, true}, {programKey, false, true}, {bufferKey, false, true}, {payerKey, false, true},
+		{mustKey(SysvarRent), false, false}, {mustKey(SysvarClock), false, false}, {payerKey, true, false}}, []byte{3, 0, 0, 0}}
+	tx, sig, err := Sign(payer, hash, []Instruction{upgrade})
+	if err != nil {
+		return "", err
+	}
+	fmt.Fprintf(out, "Upgrading program %s\n", Base58(programKey))
+	if err = r.send(ctx, [][]byte{tx}, []string{sig}); err != nil {
+		return "", err
+	}
+	os.Remove(bufferPath) // The loader consumed the buffer; its lamports went to the payer.
+	return sig, nil
+}
+
+// ReclaimBuffers closes leftover loader-v3 buffers whose authority is the
+// payer (from interrupted deployments), returning their lamports to the payer.
+// Closing needs only the authority's signature. RPCs that refuse the account
+// scan are skipped silently.
+func (r RPC) ReclaimBuffers(ctx context.Context, payer ed25519.PrivateKey, out io.Writer) error {
+	payerKey := []byte(payer.Public().(ed25519.PublicKey))
+	filter := base64.StdEncoding.EncodeToString(append([]byte{1, 0, 0, 0, 1}, payerKey...))
+	var accounts []struct {
+		Pubkey  string `json:"pubkey"`
+		Account struct {
+			Lamports uint64 `json:"lamports"`
+		} `json:"account"`
+	}
+	if err := r.Call(ctx, "getProgramAccounts", []any{LoaderV3, map[string]any{"encoding": "base64", "commitment": "confirmed",
+		"dataSlice": map[string]any{"offset": 0, "length": 0}, "filters": []any{map[string]any{"memcmp": map[string]any{"offset": 0, "bytes": filter, "encoding": "base64"}}}}}, &accounts); err != nil {
+		return nil
+	}
+	for _, a := range accounts {
+		buffer, err := DecodeBase58(a.Pubkey)
+		if err != nil {
+			return err
+		}
+		hash, err := r.blockhash(ctx)
+		if err != nil {
+			return err
+		}
+		closeIx := Instruction{mustKey(LoaderV3), []Meta{{buffer, false, true}, {payerKey, false, true}, {payerKey, true, false}}, []byte{5, 0, 0, 0}}
+		tx, sig, err := Sign(payer, hash, []Instruction{closeIx})
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(out, "Reclaiming %.6f from leftover buffer %s\n", float64(a.Account.Lamports)/1e9, a.Pubkey)
+		if err = r.send(ctx, [][]byte{tx}, []string{sig}); err != nil {
+			return err
+		}
+	}
+	return nil
 }

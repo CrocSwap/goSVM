@@ -176,8 +176,14 @@ Networks: `fogo-testnet`, `fogo-mainnet`, `solana-devnet`, `solana-testnet`,
 target and refuses a cluster whose live feature accounts reject that format. It
 then deploys natively through the upgradeable loader: a fresh buffer, chunked
 writes, then `DeployWithMaxDataLen` with the payer as upgrade authority. No Solana
-CLI is needed; Solana CLI 3.0.15 cannot parse SBPFv3 headers anyway. Upgrading an
-existing program is not implemented yet. The fee payer/upgrade authority is
+CLI is needed; Solana CLI 3.0.15 cannot parse SBPFv3 headers anyway.
+
+Running `gosvm deploy` again redeploys at the same address. The payer must be the
+program's upgrade authority. An identical build sends nothing. A larger build first
+extends the program data (at least 10 KiB, per SIMD-0431) in its own transaction,
+then waits a slot. A new buffer is then written and `Upgrade` replaces the code,
+with the buffer's lamports returned to the payer. Each deploy first closes leftover
+buffers from interrupted runs. The record keeps earlier deployments under `history`. The fee payer/upgrade authority is
 `deploy/keys/<network>-payer.json` and the program address keypair is
 `deploy/keys/<network>-program.json`; both are created on first use in a Git-ignored
 directory. GoSVM never uses the Solana CLI's configured keypair, which may belong

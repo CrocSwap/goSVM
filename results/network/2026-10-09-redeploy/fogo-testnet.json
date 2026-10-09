@@ -1,0 +1,41 @@
+{
+  "deployed_at": "2026-10-09T19:41:29Z",
+  "elf_bytes": 16840,
+  "elf_sha256": "7c8f81bc7de9c0410f4f86a0c03ef6b84a8308dffe0209d718f49cfacfe0ad5f",
+  "genesis_hash": "9GGSFo95raqzZxWqKM5tGYvJp5iv4Dm565S4r8h5PEu9",
+  "history": [
+    {
+      "deployed_at": "2026-10-09T19:26:18Z",
+      "elf_bytes": 16840,
+      "elf_sha256": "7c8f81bc7de9c0410f4f86a0c03ef6b84a8308dffe0209d718f49cfacfe0ad5f",
+      "genesis_hash": "9GGSFo95raqzZxWqKM5tGYvJp5iv4Dm565S4r8h5PEu9",
+      "network": "fogo-testnet",
+      "platform_tools": "v1.57",
+      "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+      "signature": "8aBXZRYEegVstsZJuyEvVT2pZ2CjRDQiZsRTcocjXE2PgufwbSqodwSCGiap6DjQcheWPXqYLWSe5Nbqcf8VruF",
+      "target_profile": "fogo-v0",
+      "upgrade_authority": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+      "url": "https://testnet.fogo.io"
+    },
+    {
+      "deployed_at": "2026-10-09T19:40:48Z",
+      "elf_bytes": 16856,
+      "elf_sha256": "d6d1f507e4893581095a83372a83a079d176530cb4dded7595a30204812da2e9",
+      "genesis_hash": "9GGSFo95raqzZxWqKM5tGYvJp5iv4Dm565S4r8h5PEu9",
+      "network": "fogo-testnet",
+      "platform_tools": "v1.57",
+      "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+      "signature": "VVTFH8tZUx1UH5uwSyEZwxatdRRCapoNK2haoA9zy3GiynwU53WmSgGNF87xTpe6RfV8SovqJmHvqGkdZ7SFU8m",
+      "target_profile": "fogo-v0",
+      "upgrade_authority": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+      "url": "https://testnet.fogo.io"
+    }
+  ],
+  "network": "fogo-testnet",
+  "platform_tools": "v1.57",
+  "program_id": "G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW",
+  "signature": "mUL1kRGK98Ei9z6aukYvYEJ4XoijgztFt4mrT54tM8gzQzK3DhzKHTjr8g7SA5yhcyMLfaKuveV8faAmetLxxsP",
+  "target_profile": "fogo-v0",
+  "upgrade_authority": "4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE",
+  "url": "https://testnet.fogo.io"
+}

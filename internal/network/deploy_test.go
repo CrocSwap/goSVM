@@ -25,3 +25,24 @@ func TestProgramDataAddress(t *testing.T) {
 		t.Fatal(got)
 	}
 }
+
+func TestUpgradeDecisions(t *testing.T) {
+	elf := []byte{1, 2, 3}
+	if !Unchanged([]byte{1, 2, 3, 0, 0}, elf) || Unchanged([]byte{1, 2, 3, 0, 9}, elf) || Unchanged([]byte{1, 2}, elf) || Unchanged([]byte{1, 2, 4}, elf) {
+		t.Fatal("unchanged detection")
+	}
+	for _, c := range []struct{ capacity, size, want int }{
+		{100, 100, 0},
+		{100, 50, 0},
+		{100, 101, minimumExtend},
+		{100, 100 + 20000, 20000},
+		{maxAccountData - programDataHeader - 10, maxAccountData - programDataHeader - 5, 10},
+	} {
+		if got, err := ExtendBytes(c.capacity, c.size); err != nil || got != c.want {
+			t.Fatal(c, got, err)
+		}
+	}
+	if _, err := ExtendBytes(100, maxAccountData); err == nil {
+		t.Fatal("accepted oversize program")
+	}
+}

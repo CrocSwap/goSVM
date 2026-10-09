@@ -64,7 +64,9 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
 - **Public networks.** [Go+Bend+Rust probe](results/network/2026-10-09-go-bend-rust-probe/README.md)
   deployed natively (no Solana CLI) to Solana devnet (SBPFv3) and Fogo testnet
   (SBPFv0); four committed calls each returned the expected data or error.
-  Program upgrade (`deploy` on an existing program) is not implemented.
+  [Redeploy](results/network/2026-10-09-redeploy/README.md) upgrades in place
+  (no-op if identical, extends when larger, reclaims leftover buffers); verified
+  on both networks.
 
 Open: Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
 needs a consumer pin addition and requalification when published.
