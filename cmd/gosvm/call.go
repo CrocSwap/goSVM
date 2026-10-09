@@ -14,8 +14,8 @@ import (
 	"gosvm/internal/project"
 )
 
-// callCommand invokes a deployed program with instruction data and no
-// accounts. It simulates by default; -send commits a transaction.
+// callCommand invokes a deployed program with instruction data, passing the
+// payer as the only (signer) account. It simulates by default; -send commits a transaction.
 func callCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm call", flag.ContinueOnError)
 	name := fs.String("network", "", "network the program was deployed to")

@@ -48,7 +48,8 @@ func DecodeBase58(s string) ([]byte, error) {
 }
 
 // Transaction builds a signed legacy transaction: the payer invokes program
-// with data and no accounts.
+// with data, passing the payer itself as the only (signer) account, which
+// schema-2 instructions can declare as a signer.
 func Transaction(payer ed25519.PrivateKey, program, blockhash []byte, data []byte) ([]byte, string) {
 	shortvec := func(n int) []byte {
 		var b []byte
@@ -68,7 +69,8 @@ func Transaction(payer ed25519.PrivateKey, program, blockhash []byte, data []byt
 	msg = append(msg, blockhash...)
 	msg = append(msg, shortvec(1)...)
 	msg = append(msg, 1)
-	msg = append(msg, shortvec(0)...)
+	msg = append(msg, shortvec(1)...)
+	msg = append(msg, 0)
 	msg = append(msg, shortvec(len(data))...)
 	msg = append(msg, data...)
 	sig := ed25519.Sign(payer, msg)
