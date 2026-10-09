@@ -26,14 +26,15 @@ type Cluster struct {
 	URL     string
 	Profile string
 	Mainnet bool
+	Faucet  string
 }
 
 var clusters = map[string]Cluster{
-	"fogo-testnet":   {"fogo-testnet", "https://testnet.fogo.io", target.Fogo, false},
-	"fogo-mainnet":   {"fogo-mainnet", "https://mainnet.fogo.io", target.Fogo, true},
-	"solana-devnet":  {"solana-devnet", "https://api.devnet.solana.com", target.Solana, false},
-	"solana-testnet": {"solana-testnet", "https://api.testnet.solana.com", target.Solana, false},
-	"solana-mainnet": {"solana-mainnet", "https://api.mainnet-beta.solana.com", target.Solana, true},
+	"fogo-testnet":   {"fogo-testnet", "https://testnet.fogo.io", target.Fogo, false, "https://faucet.fogo.io"},
+	"fogo-mainnet":   {"fogo-mainnet", "https://mainnet.fogo.io", target.Fogo, true, "transfer FOGO to it"},
+	"solana-devnet":  {"solana-devnet", "https://api.devnet.solana.com", target.Solana, false, "https://faucet.solana.com or solana airdrop -u devnet"},
+	"solana-testnet": {"solana-testnet", "https://api.testnet.solana.com", target.Solana, false, "https://faucet.solana.com or solana airdrop -u testnet"},
+	"solana-mainnet": {"solana-mainnet", "https://api.mainnet-beta.solana.com", target.Solana, true, "transfer SOL to it"},
 }
 
 func Names() []string {

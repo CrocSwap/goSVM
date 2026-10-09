@@ -22,8 +22,7 @@ func callCommand(args []string) error {
 	dir := fs.String("dir", ".", "project directory (for the deploy record)")
 	programID := fs.String("program", "", "program ID (default: from deploy/<network>.json)")
 	data := fs.String("data", "", "instruction data, hex")
-	home, _ := os.UserHomeDir()
-	payer := fs.String("keypair", filepath.Join(home, ".config/solana/id.json"), "fee payer keypair")
+	payer := fs.String("keypair", "", "fee payer keypair (default: the project's deploy/keys/<network>-payer.json)")
 	url := fs.String("url", "", "override the network's RPC URL")
 	send := fs.Bool("send", false, "submit and confirm a transaction instead of simulating")
 	if err := fs.Parse(args); err != nil {
@@ -41,6 +40,13 @@ func callCommand(args []string) error {
 	}
 	if *url != "" {
 		cluster.URL = *url
+	}
+	if *payer == "" {
+		root, err := project.Find(*dir)
+		if err != nil {
+			return fmt.Errorf("pass -keypair, or run inside a project with a deploy payer: %w", err)
+		}
+		*payer = filepath.Join(root, "deploy", "keys", cluster.Name+"-payer.json")
 	}
 	if *programID == "" {
 		root, err := project.Find(*dir)

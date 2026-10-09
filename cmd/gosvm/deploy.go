@@ -23,7 +23,7 @@ func deployCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm deploy", flag.ContinueOnError)
 	name := fs.String("network", "", "fogo-testnet, fogo-mainnet, solana-devnet, solana-testnet or solana-mainnet")
 	dir := fs.String("dir", ".", "project directory")
-	payer := fs.String("keypair", "", "fee payer / upgrade authority keypair (default: Solana CLI configured keypair)")
+	payer := fs.String("keypair", "", "fee payer / upgrade authority keypair (default: deploy/keys/<network>-payer.json, created if missing)")
 	url := fs.String("url", "", "override the network's RPC URL")
 	mainnet := fs.Bool("mainnet", false, "confirm a mainnet deployment")
 	check := fs.Bool("check", false, "only build and check the cluster accepts the program; do not deploy")
@@ -87,6 +87,42 @@ func deployCommand(args []string) error {
 	if _, err = exec.LookPath("solana"); err != nil {
 		return fmt.Errorf("deployment uses the Solana CLI; install it from https://solana.com/docs/intro/installation")
 	}
+	// Never fall back to the Solana CLI's configured keypair: it may be a
+	// production authority for an unrelated program.
+	if *payer == "" {
+		*payer = filepath.Join(root, "deploy", "keys", cluster.Name+"-payer.json")
+		k, created, err := network.EnsureKeypair(*payer)
+		if err != nil {
+			return err
+		}
+		if created {
+			fmt.Printf("Created deployment payer %s (address %s)\n", *payer, network.Address(k))
+		}
+	}
+	payerKey, err := network.Keypair(*payer)
+	if err != nil {
+		return err
+	}
+	data, err := os.ReadFile(program)
+	if err != nil {
+		return err
+	}
+	var balance struct {
+		Value uint64 `json:"value"`
+	}
+	var rent uint64
+	if err = rpc.Call(ctx, "getBalance", []any{network.Address(payerKey)}, &balance); err != nil {
+		return err
+	}
+	// Program data account (ELF + 45-byte header), a same-size temporary buffer
+	// (refunded) and the 36-byte program account, plus a fee margin.
+	if err = rpc.Call(ctx, "getMinimumBalanceForRentExemption", []any{len(data) + 45}, &rent); err != nil {
+		return err
+	}
+	need := 2*rent + 10_000_000
+	if balance.Value < need {
+		return fmt.Errorf("payer %s has %.6f on %s; deployment needs about %.6f. Fund it (%s), then rerun", network.Address(payerKey), float64(balance.Value)/1e9, cluster.Name, float64(need)/1e9, cluster.Faucet)
+	}
 	keyPath := filepath.Join(root, "deploy", "keys", cluster.Name+"-program.json")
 	key, created, err := network.EnsureKeypair(keyPath)
 	if err != nil {
@@ -97,10 +133,7 @@ func deployCommand(args []string) error {
 	}
 	// GoSVM checked the profile against live feature accounts above; older
 	// Solana CLIs do not know newer gates, so their local verification is skipped.
-	cmdArgs := []string{"program", "deploy", program, "--url", cluster.URL, "--program-id", keyPath, "--skip-feature-verify", "--output", "json"}
-	if *payer != "" {
-		cmdArgs = append(cmdArgs, "--keypair", *payer)
-	}
+	cmdArgs := []string{"program", "deploy", program, "--url", cluster.URL, "--keypair", *payer, "--program-id", keyPath, "--skip-feature-verify", "--output", "json"}
 	cmd := exec.Command("solana", cmdArgs...)
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
@@ -112,12 +145,8 @@ func deployCommand(args []string) error {
 		Signature string `json:"signature"`
 	}
 	json.Unmarshal(out, &result)
-	data, err := os.ReadFile(program)
-	if err != nil {
-		return err
-	}
 	record := map[string]any{"network": cluster.Name, "url": cluster.URL, "genesis_hash": genesis, "target_profile": p.Name, "platform_tools": p.Tools,
-		"program_id": network.Address(key), "signature": result.Signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
+		"program_id": network.Address(key), "upgrade_authority": network.Address(payerKey), "signature": result.Signature, "elf_sha256": fmt.Sprintf("%x", sha256.Sum256(data)), "elf_bytes": len(data), "deployed_at": time.Now().UTC().Format(time.RFC3339)}
 	recordData, _ := json.MarshalIndent(record, "", "  ")
 	recordPath := filepath.Join(root, "deploy", cluster.Name+".json")
 	if err = os.WriteFile(recordPath, append(recordData, '\n'), 0644); err != nil {
