@@ -20,12 +20,54 @@ validation scope. Milestone 1 is closed by user decision; the independent develo
 trial remains the sole milestone-2 acceptance gate. The Whirlpools 1.33× objective
 was achieved and should not be restarted as unfinished work.
 
-**Working tree:** the target-profile/Bend implementation, modern runner, docs,
-acceptance evidence and README/banner changes remain uncommitted as of this check.
-Run `git status --short` before editing; preserve modified and untracked files.
-A new director in this same checkout can resume them. A fresh clone will need
-these changes committed or transferred first. Resume under the user's current
-instruction; roadmap entries are not scheduled tasks.
+**Working tree:** the October 7 work is committed as `0f4343d` on branch
+`targets-and-libraries` (not merged to `main`; no remote push). Later October 9
+work follows on that branch. Run `git status --short` before editing. Resume
+under the user's current instruction; roadmap entries are not scheduled tasks.
+
+## October 9: Fogo/Solana and Go+Bend+Rust ergonomics
+
+The user's stated exit criteria before moving to core-language work: (1) Fogo and
+Solana support where users are minimally aware of ISA/toolchain/runner details;
+(2) ergonomic Go+Bend+Rust in one program. They chose: include real-network
+validation (throwaway funded keys, approval per deploy); Rust joins as pure ABI v1
+libraries with Go as the shell; Bend-side changes go as a request to the Bend
+session ([request](docs/coordination/2026-10-09-bend-request.md)).
+
+Implemented on `targets-and-libraries` (root tests/vet pass):
+
+- **Network targets.** `"targets": ["fogo", "solana"]` (new-project default) maps to
+  `fogo-v0` / `solana-v3`. Live cluster reads on October 9: Fogo testnet/mainnet
+  (`solana-core` 20.0.0) have no SBPF v1–v3 gates; SBPFv3 gate `5cC3foj…` is active
+  on Solana mainnet (slot 428,976,000), devnet and testnet. Solana CLI 3.0.15 only
+  knows an obsolete v3 feature ID and wrongly shows v3 inactive. `build` and
+  `test --svm` cover every target and publish `build/<network>/program.so`.
+- **Zero-path setup.** `gosvm toolchain install` downloads the pinned official v1.57
+  archive (matches the content pins); runners 0.5.0 (fogo-v0) and 0.6.0 (solana-v3)
+  are managed and auto-selected per target. The 0.6.0 package is retained in
+  [results/svm/2026-10-09-runner-0.6.0-package](results/svm/2026-10-09-runner-0.6.0-package/README.md);
+  there is still no public runner download.
+- **Declarative libraries.** `gosvm library add -name X <bend manifests…>` or
+  `-rust <crate>` records pins in `gosvm.json` and generates `libs/X` with a
+  producer and objects per target. Accepted pairings: Bend fogo-v0/v1.53,
+  Bend solana-v3/v1.57, GoSVM-built Rust v1.57 ([Rust libraries](docs/RUST_LIBRARIES.md)).
+- **Deploy/call.** `gosvm deploy -network fogo-testnet|solana-devnet|…` checks live
+  feature gates, then deploys via the Solana CLI with a per-network payer in
+  `deploy/keys/` (never the CLI keypair — on this host that is a production
+  upgrade authority for another project, pointed at Fogo mainnet).
+  `gosvm call` simulates/sends with return data, CU and logs.
+- **Evidence (development, local).** [Go+Bend+Rust fixture](tests/go-bend-rust/README.md):
+  9/9 on fogo-v0 and solana-v3, including rollback. Its solana-v3 Bend object is
+  Bend's in-progress v1.57 test output (`build/target-profiles/2026-10-09T18-26-33…`
+  in bendSVM, SHA `aa29e309…`), not a published bundle; formal qualification
+  awaits Bend's published v3 bundle and a fresh results directory.
+
+Open: network probe ([sources](tests/network-probe/README.md); project in ignored
+`build/network-probe`, payer keys inside) awaits funded payers — devnet
+`8syNaLRgUoJyFD3iv5cCiVGArNY2UKe7jJGsAyXd8mzj`, Fogo testnet
+`4voYp8sydV9T6FmYB5mSGPMn44qxuqrXGcAdUh2N6jbE` (public faucets rate-limited
+airdrops from this host). Managed Rust toolchain install (`toolchain install -rust`)
+was in progress. Bend's published v3 bundle and fogo-v0 pin decision are pending.
 
 **Collaboration contract and ownership:** GoSVM owns its frontend/SDK, profile
 selection, generated Go/cgo consumer, external-object linking and Go final-image
