@@ -5,12 +5,51 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gosvm/internal/targets"
 )
 
-// An absent profile retains exactly the historical v1.51 experimental-v3 meaning.
+// TargetProfile is the default profile: the only target, or the first of targets.
 func (c Config) TargetProfile() (target.Profile, error) {
+	ps, err := c.TargetProfiles()
+	if err != nil {
+		return target.Profile{}, err
+	}
+	return ps[0], nil
+}
+
+// TargetProfiles resolves every configured target. A "targets" list names
+// networks (fogo, solana) sharing one modern backend, so it records no single
+// ISA. An absent target retains exactly the historical v1.51 experimental-v3 meaning.
+func (c Config) TargetProfiles() ([]target.Profile, error) {
+	if len(c.Targets) != 0 {
+		if c.Target != "" || c.SBF != "" || c.PlatformTools != target.ModernTools {
+			return nil, fmt.Errorf("targets requires platform_tools %s and no target/sbf fields", target.ModernTools)
+		}
+		var ps []target.Profile
+		seen := map[string]bool{}
+		for _, name := range c.Targets {
+			p, err := target.Resolve(name)
+			if err != nil {
+				return nil, err
+			}
+			if p.Tools != target.ModernTools || seen[p.Name] {
+				return nil, fmt.Errorf("targets must list distinct modern networks (fogo, solana); got %q", name)
+			}
+			seen[p.Name] = true
+			ps = append(ps, p)
+		}
+		return ps, nil
+	}
+	p, err := c.singleProfile()
+	if err != nil {
+		return nil, err
+	}
+	return []target.Profile{p}, nil
+}
+
+func (c Config) singleProfile() (target.Profile, error) {
 	name := c.Target
 	if name == "" {
 		if c.PlatformTools != Tools || c.SBF != "v3" {
@@ -29,16 +68,30 @@ func (c Config) TargetProfile() (target.Profile, error) {
 }
 
 // MigrateTarget changes configuration only, preserving source, layouts and clients.
+// A comma-separated list of networks (e.g. "fogo,solana") selects several targets.
 func MigrateTarget(dir, name string) error {
-	p, err := target.Resolve(name)
-	if err != nil {
-		return err
+	names := strings.Split(name, ",")
+	var c Config
+	var err error
+	if len(names) > 1 {
+		probe := Config{Targets: names, PlatformTools: target.ModernTools}
+		if _, err = probe.TargetProfiles(); err != nil {
+			return err
+		}
+		if c, err = Load(dir); err != nil {
+			return err
+		}
+		c.Target, c.Targets, c.PlatformTools, c.SBF = "", names, target.ModernTools, ""
+	} else {
+		p, err := target.Resolve(name)
+		if err != nil {
+			return err
+		}
+		if c, err = Load(dir); err != nil {
+			return err
+		}
+		c.Target, c.Targets, c.PlatformTools, c.SBF = p.Name, nil, p.Tools, p.Arch
 	}
-	c, err := Load(dir)
-	if err != nil {
-		return err
-	}
-	c.Target, c.PlatformTools, c.SBF = p.Name, p.Tools, p.Arch
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return err
@@ -62,8 +115,10 @@ func MigrateTarget(dir, name string) error {
 }
 
 func NewModuleTarget(path, module string, schema, sdkVersion int, name string) error {
-	if _, err := target.Resolve(name); err != nil {
-		return err
+	for _, n := range strings.Split(name, ",") {
+		if _, err := target.Resolve(n); err != nil {
+			return err
+		}
 	}
 	if err := NewModuleSDK(path, module, schema, sdkVersion); err != nil {
 		return err

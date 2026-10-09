@@ -25,7 +25,25 @@ type Profile struct {
 	Flags uint32 `json:"elf_flags"`
 }
 
+// Network names are what projects normally write. Each compiler release maps
+// them to its current qualified profile; outputs and reports record the
+// resolved profile, so a later remapping never relabels an old artifact.
+var networks = map[string]string{"fogo": Fogo, "solana": Solana}
+
+// Network returns the short network name for a modern profile ("" for legacy).
+func (p Profile) Network() string {
+	for short, name := range networks {
+		if name == p.Name {
+			return short
+		}
+	}
+	return ""
+}
+
 func Resolve(name string) (Profile, error) {
+	if full, ok := networks[name]; ok {
+		name = full
+	}
 	switch name {
 	case Legacy:
 		return Profile{Legacy, "v1.51", "v3", "19.1.7", 3}, nil
@@ -34,7 +52,7 @@ func Resolve(name string) (Profile, error) {
 	case Fogo:
 		return Profile{Fogo, ModernTools, "v0", "22.1.2", 0}, nil
 	default:
-		return Profile{}, fmt.Errorf("unknown target profile %q; choose fogo-v0, solana-v3, or %s", name, Legacy)
+		return Profile{}, fmt.Errorf("unknown target profile %q; choose fogo, solana, or %s", name, Legacy)
 	}
 }
 

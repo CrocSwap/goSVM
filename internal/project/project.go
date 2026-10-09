@@ -28,6 +28,7 @@ var templates embed.FS
 
 type Config struct {
 	Target        string                   `json:"target,omitempty"`
+	Targets       []string                 `json:"targets,omitempty"`
 	Schema        int                      `json:"schema"`
 	Name          string                   `json:"name"`
 	Module        string                   `json:"module"`
@@ -84,7 +85,7 @@ func Load(dir string) (Config, error) {
 	if c.Schema != Schema && c.Schema != MultiSchema {
 		return c, fmt.Errorf("unsupported project schema; require schema 1 or 2")
 	}
-	if _, e := c.TargetProfile(); e != nil {
+	if _, e := c.TargetProfiles(); e != nil {
 		return c, e
 	}
 	if !nameRE.MatchString(c.Name) || !validModule(c.Module) {

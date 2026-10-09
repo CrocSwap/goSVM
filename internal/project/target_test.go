@@ -67,3 +67,43 @@ func TestExplicitTargetMigrationPreservesApplicationAndWire(t *testing.T) {
 		}
 	}
 }
+
+func TestNetworkTargetsResolveAndValidate(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "app")
+	if err := NewModuleTarget(dir, "example.com/app", Schema, 1, "fogo,solana"); err != nil {
+		t.Fatal(err)
+	}
+	c, err := Load(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ps, err := c.TargetProfiles()
+	if err != nil || len(ps) != 2 || ps[0].Name != target.Fogo || ps[1].Name != target.Solana {
+		t.Fatal(ps, err)
+	}
+	if ps[0].Network() != "fogo" || ps[1].Network() != "solana" {
+		t.Fatal(ps[0].Network(), ps[1].Network())
+	}
+	if c.Target != "" || c.SBF != "" || c.PlatformTools != target.ModernTools {
+		t.Fatalf("multi-target config records a single ISA: %+v", c)
+	}
+	for _, bad := range []Config{
+		{Targets: []string{"fogo", "fogo-v0"}, PlatformTools: target.ModernTools},
+		{Targets: []string{"fogo", target.Legacy}, PlatformTools: target.ModernTools},
+		{Targets: []string{"fogo"}, PlatformTools: target.ModernTools, SBF: "v0"},
+		{Targets: []string{"solana"}, PlatformTools: Tools},
+		{Targets: []string{"solana"}, Target: target.Solana, PlatformTools: target.ModernTools},
+		{Targets: []string{"eclipse"}, PlatformTools: target.ModernTools},
+	} {
+		if _, err := bad.TargetProfiles(); err == nil {
+			t.Fatalf("accepted %+v", bad)
+		}
+	}
+	// A single network name keeps the explicit single-profile form.
+	if err = MigrateTarget(dir, "solana"); err != nil {
+		t.Fatal(err)
+	}
+	if c, err = Load(dir); err != nil || c.Target != target.Solana || c.SBF != "v3" || len(c.Targets) != 0 {
+		t.Fatal(c, err)
+	}
+}
