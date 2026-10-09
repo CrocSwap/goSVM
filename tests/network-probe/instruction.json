@@ -1,0 +1,1 @@
+{"name": "Probe", "handler": "Probe", "args": "model.ProbeArgs", "bundle": "ProbeAccounts", "version": 1, "accounts": [{"name": "Payer", "kind": "signer", "access": "read"}]}

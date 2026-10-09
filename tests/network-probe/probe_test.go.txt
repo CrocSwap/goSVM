@@ -1,0 +1,32 @@
+package program
+
+import (
+	"encoding/binary"
+	"encoding/hex"
+	"testing"
+
+	"example.com/probe/client"
+	"example.com/probe/model"
+	"gosvm/solana"
+)
+
+func TestProbeReturnsQuote(t *testing.T) {
+	for _, c := range []struct {
+		args model.ProbeArgs
+		code uint64
+		out  uint64
+	}{
+		{model.ProbeArgs{Enabled: 1, Value: 10, Reserve: 2000, Amount: 100}, 0, 1785},
+		{model.ProbeArgs{Enabled: 1, Value: 41, Reserve: 2000, Amount: 100}, 200, 0},
+		{model.ProbeArgs{Enabled: 2, Value: 1, Reserve: 2000, Amount: 100}, 104, 0},
+		{model.ProbeArgs{Enabled: 1, Value: 1, Reserve: 0, Amount: 100}, 304, 0},
+	} {
+		var returned []byte
+		ctx := solana.Context{WriteReturnData: func(b []byte) { returned = b }}
+		_, code := Probe(ctx, ProbeAccounts{}, c.args)
+		if code != c.code || (code == 0 && (len(returned) != 8 || binary.LittleEndian.Uint64(returned) != c.out)) {
+			t.Fatal(c, code, returned)
+		}
+		t.Logf("data=%s code=%d return=%x", hex.EncodeToString(client.EncodeInstructionProbe(c.args)), code, returned)
+	}
+}
