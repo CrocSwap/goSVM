@@ -22,12 +22,12 @@ func GenerateBend(manifest, digest, pkg, function, allowedTools, output string) 
 	} else if !os.IsNotExist(err) {
 		return err
 	}
-	return GenerateBendTargets(map[string]ProducerPin{m.Target: {manifest, digest}}, pkg, function, output)
+	return GenerateLibrary(map[string]ProducerPin{m.Target: {manifest, digest}}, pkg, function, output)
 }
 
-// GenerateBendTargets publishes one Go package bound to a producer per target.
+// GenerateLibrary publishes one Go package bound to a producer (Bend or Rust) per target.
 // An existing output is replaced only after the new package fully validates.
-func GenerateBendTargets(pins map[string]ProducerPin, pkg, function, output string) error {
+func GenerateLibrary(pins map[string]ProducerPin, pkg, function, output string) error {
 	if err := os.MkdirAll(filepath.Dir(output), 0755); err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func GenerateBendTargets(pins map[string]ProducerPin, pkg, function, output stri
 		return err
 	}
 	defer os.RemoveAll(stage)
-	if err = stageBend(pins, pkg, function, stage); err != nil {
+	if err = stageLibrary(pins, pkg, function, stage); err != nil {
 		return err
 	}
 	if _, err = os.Lstat(output); err == nil {

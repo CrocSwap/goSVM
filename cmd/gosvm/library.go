@@ -9,17 +9,19 @@ import (
 	"gosvm/internal/project"
 )
 
-// libraryAdd records Bend producer manifests in gosvm.json and generates libs/<name>.
+// libraryAdd records Bend producer manifests or a Rust crate in gosvm.json and
+// generates libs/<name>.
 func libraryAdd(args []string) error {
 	fs := flag.NewFlagSet("gosvm library add", flag.ContinueOnError)
 	name := fs.String("name", "", "Go package name; the library is imported as <module>/libs/<name>")
 	function := fs.String("function", "", "exported Go function name (default Evaluate for a new library)")
 	dir := fs.String("dir", ".", "project directory")
+	crate := fs.String("rust", "", "Rust crate directory with [package.metadata.gosvm-library], built for every target")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
-	if *name == "" || fs.NArg() == 0 {
-		return fmt.Errorf("usage: gosvm library add -name <package> [-function F] library.manifest.json...")
+	if *name == "" || (fs.NArg() == 0) == (*crate == "") {
+		return fmt.Errorf("usage: gosvm library add -name <package> [-function F] (-rust crate-dir | bend-library.manifest.json...)")
 	}
 	root, err := project.Find(*dir)
 	if err != nil {
@@ -31,6 +33,13 @@ func libraryAdd(args []string) error {
 	}
 	if *function == "" && c.Libraries[*name].Function == "" {
 		*function = "Evaluate"
+	}
+	if *crate != "" {
+		if err = project.AddRustLibrary(root, *name, *function, *crate); err != nil {
+			return err
+		}
+		fmt.Printf("Bound Rust crate %s for every target; import %q\n", *crate, c.Module+"/libs/"+*name)
+		return nil
 	}
 	added, err := project.AddBendLibrary(root, *name, *function, fs.Args())
 	if err != nil {
@@ -48,7 +57,7 @@ func libraryCommand(args []string) error {
 		return rustLibraryCommand(args[1:])
 	}
 	if len(args) == 0 || args[0] != "bind" {
-		return fmt.Errorf("usage: gosvm library add -name <package> [-function F] library.manifest.json...\n       gosvm library bind -manifest contract.json -output package-directory")
+		return fmt.Errorf("usage: gosvm library add -name <package> [-function F] (-rust crate-dir | bend-library.manifest.json...)\n       gosvm library bind -manifest contract.json -output package-directory")
 	}
 	fs := flag.NewFlagSet("gosvm library bind", flag.ContinueOnError)
 	digest := fs.String("sha256", "", "pinned producer manifest SHA-256 (required)")

@@ -108,7 +108,7 @@ func (b *Binding) artifact(a Artifact) ([]byte, error) {
 	return data, nil
 }
 func (b *Binding) Validate() error {
-	if b.Schema != 1 || b.ABI != "bend-library-v1" || !hashRE.MatchString(b.Fingerprint) || b.Root == "" || b.Symbol != "bend_library_v1_call_"+b.Fingerprint || !identRE.MatchString(b.Package) || !token.IsIdentifier(b.Package) || b.Package == "main" || !identRE.MatchString(b.Function) || !token.IsExported(b.Function) || b.InputBytes == 0 || b.OutputBytes == 0 || b.InputBytes > 1024 || b.OutputBytes > 1024 || len(b.Targets) == 0 {
+	if b.Schema != 1 || SymbolPrefix[b.ABI] == "" || !hashRE.MatchString(b.Fingerprint) || b.Root == "" || b.Symbol != SymbolPrefix[b.ABI]+b.Fingerprint || !identRE.MatchString(b.Package) || !token.IsIdentifier(b.Package) || b.Package == "main" || !identRE.MatchString(b.Function) || !token.IsExported(b.Function) || b.InputBytes == 0 || b.OutputBytes == 0 || b.InputBytes > 1024 || b.OutputBytes > 1024 || len(b.Targets) == 0 {
 		return fmt.Errorf("incompatible Bend library interface; require pinned pure ABI v1, canonical bounded widths, package/function and fingerprinted symbol")
 	}
 	if err := b.validateProducer(); err != nil {
@@ -166,7 +166,7 @@ func (b *Binding) Validate() error {
 		if err != nil {
 			return err
 		}
-		if p.Name != name || ProducerTools[name] == "" || object.Tools != ProducerTools[name] {
+		if p.Name != name || AcceptedTools(b.ABI, name) == "" || object.Tools != AcceptedTools(b.ABI, name) {
 			return fmt.Errorf("library %s requires an explicitly allowed producer target/toolchain pin", name)
 		}
 		for _, a := range append([]Artifact{object.Object}, object.Support...) {

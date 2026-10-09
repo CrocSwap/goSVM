@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"gosvm/internal/library"
 )
 
 func TestLibraryDeclarationsValidate(t *testing.T) {
@@ -48,5 +50,33 @@ func TestAddBendLibrary(t *testing.T) {
 	}
 	if err = Generate(dir); err != nil {
 		t.Fatal(err)
+	}
+}
+
+// A declared Rust crate is built for every project target and bound; the build
+// is reused while the crate is unchanged. Skips without platform-tools v1.57 Rust.
+func TestAddRustLibrary(t *testing.T) {
+	crate, _ := filepath.Abs("../library/testdata/rust/quote")
+	if _, err := os.Stat(filepath.Join(library.DefaultPlatformTools(), "rust/bin/cargo")); err != nil {
+		t.Skip("platform-tools v1.57 Rust unavailable")
+	}
+	dir := filepath.Join(t.TempDir(), "app")
+	if err := NewModuleTarget(dir, "example.com/app", Schema, 1, "fogo,solana"); err != nil {
+		t.Fatal(err)
+	}
+	if err := AddRustLibrary(dir, "quote", "Quote", crate); err != nil {
+		t.Fatal(err)
+	}
+	b, err := library.Read(filepath.Join(LibraryDir(dir, "quote"), library.Filename))
+	if err != nil || b.ABI != library.RustKind || len(b.Targets) != 2 {
+		t.Fatal(b.Targets, err)
+	}
+	builds, _ := filepath.Glob(filepath.Join(dir, "build/rust-libraries/quote/*"))
+	if err = Generate(dir); err != nil {
+		t.Fatal(err)
+	}
+	again, _ := filepath.Glob(filepath.Join(dir, "build/rust-libraries/quote/*"))
+	if len(builds) != 1 || len(again) != 1 || builds[0] != again[0] {
+		t.Fatal("unchanged crate was rebuilt", builds, again)
 	}
 }

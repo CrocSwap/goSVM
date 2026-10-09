@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "accepted",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a717010a0000006400000000000000"
+      ],
+      "expected": "214125f28c448dc0d0070000f906000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "boundary-forty",
+      "initial": "214125f28c448dc0881300000700000000000000",
+      "instructions": [
+        "b8a708f64160a7170128000000e803000000000000"
+      ],
+      "expected": "214125f28c448dc088130000be12000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "bend-refused",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a71701290000006400000000000000"
+      ],
+      "expected": "214125f28c448dc0d00700000700000000000000",
+      "error": 200,
+      "error_index": 0
+    },
+    {
+      "name": "bend-disabled",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a71700030000006400000000000000"
+      ],
+      "expected": "214125f28c448dc0d00700000700000000000000",
+      "error": 200,
+      "error_index": 0
+    },
+    {
+      "name": "bend-malformed-bool",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a71702030000006400000000000000"
+      ],
+      "expected": "214125f28c448dc0d00700000700000000000000",
+      "error": 104,
+      "error_index": 0
+    },
+    {
+      "name": "rust-malformed-reserve",
+      "initial": "214125f28c448dc0000000000700000000000000",
+      "instructions": [
+        "b8a708f64160a71701030000006400000000000000"
+      ],
+      "expected": "214125f28c448dc0000000000700000000000000",
+      "error": 304,
+      "error_index": 0
+    },
+    {
+      "name": "u128-boundary",
+      "initial": "214125f28c448dc0ffffffff0000000000000000",
+      "instructions": [
+        "b8a708f64160a7170100000000ffffffffffffffff"
+      ],
+      "expected": "214125f28c448dc0fffffffffeffffff00000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "zero-amount",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a71701050000000000000000000000"
+      ],
+      "expected": "214125f28c448dc0d00700000000000000000000",
+      "error": 0,
+      "error_index": 0
+    },
+    {
+      "name": "success-then-malformed-rollback",
+      "initial": "214125f28c448dc0d00700000700000000000000",
+      "instructions": [
+        "b8a708f64160a717010a0000006400000000000000",
+        "b8a708f64160a71702010000000100000000000000"
+      ],
+      "expected": "214125f28c448dc0d00700000700000000000000",
+      "error": 104,
+      "error_index": 1
+    }
+  ]
+}

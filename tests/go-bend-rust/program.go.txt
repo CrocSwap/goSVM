@@ -1,0 +1,65 @@
+package program
+
+import (
+	"example.com/trio/libs/bend"
+	"example.com/trio/libs/quote"
+)
+
+// Pool is serialized field-by-field in declaration order, never by Go memory layout.
+type Pool struct {
+	Reserve uint32
+	Last    uint64
+}
+
+type SwapArgs struct {
+	Enabled byte
+	Value   uint32
+	Amount  uint64
+}
+
+type SwapResult struct {
+	State Pool
+	Code  uint64
+}
+
+// Swap: Go owns state and errors; Bend's checked policy admits the request
+// value; Rust quotes Amount against (admitted value, Reserve).
+func Swap(pool Pool, args SwapArgs) SwapResult {
+	result := SwapResult{State: pool}
+	var request [6]byte
+	request[1] = args.Enabled
+	for i := uint64(0); i < 4; i++ {
+		request[2+i] = byte(args.Value >> (i * 8))
+	}
+	var decision [5]byte
+	status, length := bend.Evaluate(request[:], decision[:])
+	if status != 0 || length != 5 {
+		result.Code = 100 + uint64(status)
+		return result
+	}
+	admitted := uint32(decision[1]) | uint32(decision[2])<<8 | uint32(decision[3])<<16 | uint32(decision[4])<<24
+	if decision[0] != 0 {
+		result.Code = 200
+		return result
+	}
+	var input [16]byte
+	for i := uint64(0); i < 8; i++ {
+		input[i] = byte(args.Amount >> (i * 8))
+	}
+	for i := uint64(0); i < 4; i++ {
+		input[8+i] = byte(admitted >> (i * 8))
+		input[12+i] = byte(pool.Reserve >> (i * 8))
+	}
+	var output [8]byte
+	status, length = quote.Quote(input[:], output[:])
+	if status != 0 || length != 8 {
+		result.Code = 300 + uint64(status)
+		return result
+	}
+	out := uint64(0)
+	for i := uint64(0); i < 8; i++ {
+		out = out | uint64(output[i])<<(i*8)
+	}
+	result.State.Last = out
+	return result
+}

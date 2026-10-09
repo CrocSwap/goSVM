@@ -1,0 +1,20 @@
+package program
+
+import "testing"
+
+func TestSwapComposesBendAndRust(t *testing.T) {
+	pool := Pool{Reserve: 2000}
+	// Bend admits 10 -> 12; Rust quotes 100*2000/(12+100) = 1785.
+	if r := Swap(pool, SwapArgs{Enabled: 1, Value: 10, Amount: 100}); r.Code != 0 || r.State.Last != 1785 {
+		t.Fatal(r)
+	}
+	if r := Swap(pool, SwapArgs{Enabled: 1, Value: 41, Amount: 100}); r.Code != 200 {
+		t.Fatal("Bend refusal", r)
+	}
+	if r := Swap(pool, SwapArgs{Enabled: 2, Value: 1, Amount: 100}); r.Code != 104 {
+		t.Fatal("Bend malformed bool", r)
+	}
+	if r := Swap(Pool{}, SwapArgs{Enabled: 1, Value: 1, Amount: 100}); r.Code != 304 {
+		t.Fatal("Rust malformed zero reserve", r)
+	}
+}

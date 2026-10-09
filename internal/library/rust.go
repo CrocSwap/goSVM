@@ -42,6 +42,9 @@ var RustToolHashes = map[string]string{
 	"llvm-ar":         "e525674eb8e7700f9ce50216baec1b5ed04ae561a37c563bfa4b38a64bb2714d",
 }
 
+// RustTools is the platform-tools pin of GoSVM-built Rust library objects.
+const RustTools = target.ModernTools
+
 const rustCommit = "ae660768afd467d131776918a1627e18920b230c"
 
 // The final GoSVM image supplies these helpers exactly once (memcpy/memset from
@@ -805,4 +808,26 @@ func validateRustHost(path, symbol string) error {
 		return fmt.Errorf("host object does not export %s", symbol)
 	}
 	return nil
+}
+
+// RustBuildKey identifies a crate's source tree, target set and the producer's
+// pinned compiler, so an unchanged crate reuses its previous build.
+func RustBuildKey(crate string, targets []string) (string, error) {
+	inputs, err := hashTree(crate)
+	if err != nil {
+		return "", err
+	}
+	names := make([]string, 0, len(inputs))
+	for name := range inputs {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	sorted := append([]string(nil), targets...)
+	sort.Strings(sorted)
+	h := sha256.New()
+	fmt.Fprintf(h, "gosvm-rust-build-v1\x00%s\x00%s\x00%s\n", RustTools, rustCommit, strings.Join(sorted, ","))
+	for _, name := range names {
+		fmt.Fprintf(h, "%s\x00%s\n", name, inputs[name])
+	}
+	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }

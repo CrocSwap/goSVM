@@ -32,15 +32,40 @@ type Producer struct {
 		SHA256 string `json:"sha256"`
 	} `json:"artifacts"`
 	Toolchains struct {
-		Clang struct {
-			Tools   string `json:"platformTools"`
-			CPU     string `json:"cpu"`
-			Version uint32 `json:"sbpfVersion"`
-		} `json:"anzaClang"`
+		Clang producerTools `json:"anzaClang"`
+		Rust  producerTools `json:"rust"`
 	} `json:"toolchains"`
 }
 
-// ProducerTools records the producer platform-tools pin GoSVM accepts per
+type producerTools struct {
+	Tools   string `json:"platformTools"`
+	CPU     string `json:"cpu"`
+	Version uint32 `json:"sbpfVersion"`
+}
+
+// tools is the SBF compiler record for the producer's kind.
+func (m Producer) tools() producerTools {
+	if m.Kind == RustKind {
+		return m.Toolchains.Rust
+	}
+	return m.Toolchains.Clang
+}
+
+// SymbolPrefix is each accepted producer kind's fingerprinted ABI symbol prefix.
+var SymbolPrefix = map[string]string{"bend-library-v1": "bend_library_v1_call_", RustKind: RustSymbolPrefix}
+
+// AcceptedTools returns the producer platform-tools pin accepted for a kind and target.
+func AcceptedTools(kind, profile string) string {
+	if kind == RustKind {
+		if _, ok := producerISA[profile]; ok {
+			return RustTools
+		}
+		return ""
+	}
+	return ProducerTools[profile]
+}
+
+// ProducerTools records the Bend producer platform-tools pin GoSVM accepts per
 // target. fogo-v0 is Bend's v1.53 producer, qualified with the v1.57 caller;
 // solana-v3 is produced by the caller's own v1.57 backend. Any other pairing
 // needs a new qualification before it is listed here.
@@ -65,7 +90,7 @@ func readProducer(path, digest string) (Producer, []byte, error) {
 		return m, nil, err
 	}
 	if !hashRE.MatchString(digest) || fmt.Sprintf("%x", sha256.Sum256(data)) != digest {
-		return m, nil, fmt.Errorf("Bend producer manifest SHA-256 mismatch: %s", path)
+		return m, nil, fmt.Errorf("library producer manifest SHA-256 mismatch: %s", path)
 	}
 	if err = json.Unmarshal(data, &m); err != nil {
 		return m, nil, err
@@ -76,8 +101,9 @@ func readProducer(path, digest string) (Producer, []byte, error) {
 // check validates the producer's contract kind and its target/toolchain pairing.
 func (m Producer) check(profile string) error {
 	isa, ok := producerISA[profile]
-	if m.Version != 1 || m.Kind != "bend-library-v1" || m.ABI != 1 || m.Authorized == nil || *m.Authorized || !ok || m.Target != profile || m.Toolchains.Clang.Tools != ProducerTools[profile] || m.Toolchains.Clang.CPU != isa.CPU || m.Toolchains.Clang.Version != isa.Version {
-		return fmt.Errorf("unsupported Bend producer target/toolchain contract %q/%q; accepted pairs are fogo-v0/v1.53 and solana-v3/v1.57, finalElfAuthorized must be false", m.Target, m.Toolchains.Clang.Tools)
+	t := m.tools()
+	if m.Version != 1 || SymbolPrefix[m.Kind] == "" || m.ABI != 1 || m.Authorized == nil || *m.Authorized || !ok || m.Target != profile || t.Tools == "" || t.Tools != AcceptedTools(m.Kind, profile) || t.CPU != isa.CPU || t.Version != isa.Version || m.Symbol != SymbolPrefix[m.Kind]+m.Fingerprint {
+		return fmt.Errorf("unsupported %s producer target/toolchain contract %q/%q; accepted: Bend fogo-v0/v1.53 or solana-v3/v1.57, Rust %s; finalElfAuthorized must be false", m.Kind, m.Target, t.Tools, RustTools)
 	}
 	return nil
 }
@@ -88,24 +114,24 @@ func ImportBend(path, digest, pkg, function, allowedTools string) (Binding, erro
 	if err != nil {
 		return Binding{}, err
 	}
-	if allowedTools != m.Toolchains.Clang.Tools {
-		return Binding{}, fmt.Errorf("binding producer tools %s requires -allow-library-tools %s", m.Toolchains.Clang.Tools, m.Toolchains.Clang.Tools)
+	if allowedTools != m.tools().Tools {
+		return Binding{}, fmt.Errorf("binding producer tools %s requires -allow-library-tools %s", m.tools().Tools, m.tools().Tools)
 	}
 	stage, err := os.MkdirTemp("", "gosvm-library-")
 	if err != nil {
 		return Binding{}, err
 	}
 	defer os.RemoveAll(stage)
-	if err = stageBend(map[string]ProducerPin{m.Target: {path, digest}}, pkg, function, stage); err != nil {
+	if err = stageLibrary(map[string]ProducerPin{m.Target: {path, digest}}, pkg, function, stage); err != nil {
 		return Binding{}, err
 	}
 	return Read(filepath.Join(stage, Filename))
 }
 
-// stageBend copies each target's pinned producer manifest and selected
+// stageLibrary copies each target's pinned producer manifest and selected
 // artifacts into dir/<profile>/, then writes the generated package. Objects
 // are copied byte-for-byte; nothing is rebuilt or relabelled.
-func stageBend(pins map[string]ProducerPin, pkg, function, dir string) error {
+func stageLibrary(pins map[string]ProducerPin, pkg, function, dir string) error {
 	if len(pins) == 0 {
 		return fmt.Errorf("library requires at least one producer manifest")
 	}
@@ -114,7 +140,7 @@ func stageBend(pins map[string]ProducerPin, pkg, function, dir string) error {
 		profiles = append(profiles, name)
 	}
 	sort.Strings(profiles)
-	c := Contract{Schema: 1, ABI: "bend-library-v1", Package: pkg, Function: function,
+	c := Contract{Schema: 1, Package: pkg, Function: function,
 		Host: Host{GOOS: runtime.GOOS, GOARCH: runtime.GOARCH}, Targets: map[string]Object{}}
 	for i, name := range profiles {
 		p, err := target.Resolve(name)
@@ -129,8 +155,8 @@ func stageBend(pins map[string]ProducerPin, pkg, function, dir string) error {
 			return fmt.Errorf("producer manifest for %s targets %s", p.Name, m.Target)
 		}
 		if i == 0 {
-			c.Root, c.Symbol, c.Fingerprint, c.InputBytes, c.OutputBytes = m.Root, m.Symbol, m.Fingerprint, m.Input, m.Output
-		} else if m.Root != c.Root || m.Symbol != c.Symbol || m.Fingerprint != c.Fingerprint || m.Input != c.InputBytes || m.Output != c.OutputBytes {
+			c.ABI, c.Root, c.Symbol, c.Fingerprint, c.InputBytes, c.OutputBytes = m.Kind, m.Root, m.Symbol, m.Fingerprint, m.Input, m.Output
+		} else if m.Kind != c.ABI || m.Root != c.Root || m.Symbol != c.Symbol || m.Fingerprint != c.Fingerprint || m.Input != c.InputBytes || m.Output != c.OutputBytes {
 			return fmt.Errorf("producer manifests disagree on the library interface (%s)", p.Name)
 		}
 		if err = os.MkdirAll(filepath.Join(dir, p.Name), 0755); err != nil {
@@ -148,14 +174,14 @@ func stageBend(pins map[string]ProducerPin, pkg, function, dir string) error {
 			}
 			record, ok := m.Artifacts[base]
 			if !ok || filepath.Base(base) != base || base == "." || base == ".." {
-				return fmt.Errorf("invalid selected Bend artifact %s", kind)
+				return fmt.Errorf("invalid selected library artifact %s", kind)
 			}
 			data, err := os.ReadFile(filepath.Join(filepath.Dir(pins[name].Manifest), base))
 			if err != nil {
 				return err
 			}
 			if int64(len(data)) != record.Bytes || fmt.Sprintf("%x", sha256.Sum256(data)) != record.SHA256 {
-				return fmt.Errorf("Bend artifact size/hash mismatch: %s", base)
+				return fmt.Errorf("library artifact size/hash mismatch: %s", base)
 			}
 			if err = os.WriteFile(filepath.Join(dir, p.Name, base), data, 0644); err != nil {
 				return err
@@ -165,7 +191,7 @@ func stageBend(pins map[string]ProducerPin, pkg, function, dir string) error {
 		if i == 0 {
 			c.Interface, c.Header, c.Host.Object = selected["schema"], selected["header"], selected["hostObject"]
 		}
-		object := Object{Producer: &manifest, Tools: m.Toolchains.Clang.Tools, Object: selected["sbfObject"]}
+		object := Object{Producer: &manifest, Tools: m.tools().Tools, Object: selected["sbfObject"]}
 		if a, ok := selected["memoryObject"]; ok {
 			object.Support = []Artifact{a}
 		}
@@ -230,7 +256,7 @@ func (b *Binding) validateProducer() error {
 			producer = b.Producer
 		}
 		if producer == nil || (object.Producer != nil) == (b.Producer != nil) {
-			return fmt.Errorf("Bend binding requires exactly one pinned producer manifest per target")
+			return fmt.Errorf("library binding requires exactly one pinned producer manifest per target")
 		}
 		data, err := b.artifact(*producer)
 		if err != nil {
@@ -243,10 +269,10 @@ func (b *Binding) validateProducer() error {
 		if err = m.check(name); err != nil {
 			return err
 		}
-		if m.Root != b.Root || m.Symbol != b.Symbol || m.Fingerprint != b.Fingerprint || m.Input != b.InputBytes || m.Output != b.OutputBytes {
-			return fmt.Errorf("binding differs from pinned Bend producer interface/target")
+		if m.Kind != b.ABI || m.Root != b.Root || m.Symbol != b.Symbol || m.Fingerprint != b.Fingerprint || m.Input != b.InputBytes || m.Output != b.OutputBytes {
+			return fmt.Errorf("binding differs from pinned producer interface/target")
 		}
-		if object.Tools != m.Toolchains.Clang.Tools {
+		if object.Tools != m.tools().Tools {
 			return fmt.Errorf("binding reinterprets producer toolchain")
 		}
 		// Artifacts sit beside their producer manifest. The shared header/schema
