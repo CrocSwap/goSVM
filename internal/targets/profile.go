@@ -63,6 +63,17 @@ var ModernBackendHashes = map[string]string{
 	"ld.lld": "91db7cf05b55facfdb7178eb24d6e5eba1da369672f2b52ab1657165a6441630",
 }
 
+// RustToolHashes pins the platform-tools v1.57 Rust library producer tools
+// (macOS arm64), keyed by logical name. Version text alone is insufficient;
+// the producer and the managed full-tree installer refuse other bytes.
+var RustToolHashes = map[string]string{
+	"rustc":           "a6bab6b6060c911f3f3e601532e6064500a7f7d53645bc62692c633a0541797a",
+	"cargo":           "ce68aedc3093d7b0b19fc038118f3ffedadf0f894458d8740bd09ba646beb291",
+	"librustc_driver": "621370872b31267369a4ad86befe581ce0dcec67f1fa6fe27851c6d6e4f01709",
+	"llvm-objcopy":    "6e529415860a722b7409c06c782edd68cbb43719d07f0a62602cdeb8c3bc98f1",
+	"llvm-ar":         "e525674eb8e7700f9ce50216baec1b5ed04ae561a37c563bfa4b38a64bb2714d",
+}
+
 func (p Profile) CheckBackend(llvm string) error {
 	for _, name := range []string{"clang", "ld.lld"} {
 		path := filepath.Join(llvm, "bin", name)

@@ -47,8 +47,20 @@ to install unless they equal the content pins. One install serves `fogo-v0` and
 `official-archive` or `qualified-local-backend`). `gosvm doctor` reports backend
 and runner state for both profiles with the exact fix command.
 
+[Rust libraries](RUST_LIBRARIES.md) need the complete platform-tools tree
+(rustc, cargo, their SBF sysroots, LLVM utilities). `gosvm toolchain install -rust`
+extracts it from the same pinned archive (one download also installs the
+Clang/LLD backend if missing) into a separate managed root,
+`<cache>/toolchains/v1.57-full/darwin-arm64` (about 1.4 GB). Every directory,
+file and symlink is kept; paths and links must stay inside the tree. The install
+is staged, published by rename with a receipt, and refused unless Clang, LLD,
+rustc, cargo, the rustc driver, llvm-objcopy and llvm-ar equal their content
+pins. It is optional; plain `gosvm toolchain install` still keeps only Clang and
+LLD. `status` and `doctor` report it.
+
 ```sh
 gosvm toolchain install          # or -archive file.tar.bz2, or -llvm dir
+gosvm toolchain install -rust    # optional: full tree for Rust libraries
 gosvm toolchain status
 gosvm doctor
 

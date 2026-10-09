@@ -195,3 +195,20 @@ func TestBuildRustRefusals(t *testing.T) {
 		})
 	}
 }
+
+// Without a Rust toolchain the producer names the managed install command, and
+// the default root falls back to Solana's cache when nothing is managed.
+func TestRustToolchainMissing(t *testing.T) {
+	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
+		t.Skip("platform-tools v1.57 is qualified on macOS arm64 only")
+	}
+	t.Setenv("GOSVM_CACHE", t.TempDir())
+	home, _ := os.UserHomeDir()
+	if DefaultPlatformTools() != filepath.Join(home, ".cache/solana/v1.57/platform-tools") {
+		t.Fatal(DefaultPlatformTools())
+	}
+	_, err := BuildRust(RustOptions{Crate: "testdata/rust/quote", Output: filepath.Join(t.TempDir(), "out"), PlatformTools: t.TempDir()})
+	if err == nil || !strings.Contains(err.Error(), "run: gosvm toolchain install -rust") {
+		t.Fatalf("error lacks fix: %v", err)
+	}
+}
