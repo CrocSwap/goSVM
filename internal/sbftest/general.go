@@ -42,10 +42,19 @@ type FixtureProgram struct {
 
 // Native aliases reference an allowlisted runtime builtin, without an ELF.
 // Keep this explicit: bundled SBF programs still require pinned images.
+// ComputeBudget instructions (for example RequestHeapFrame) are processed by
+// the runtime before the transaction's other instructions run.
 type FixtureNativeProgram struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
 }
+
+// nativePrograms are the runtime builtins fixtures may alias.
+var nativePrograms = map[string]bool{
+	"11111111111111111111111111111111":            true, // System
+	"ComputeBudget111111111111111111111111111111": true, // ComputeBudget
+}
+
 type FixtureState struct {
 	Data       string `json:"data"`
 	Owner      string `json:"owner"`
@@ -235,8 +244,8 @@ func (s FixtureSuite) validate() (fixtureKeys, error) {
 	}
 	programs := map[string]bool{"program": true}
 	for _, p := range s.NativePrograms {
-		if p.Address != "11111111111111111111111111111111" {
-			return k, fmt.Errorf("%s: only the native System program is supported", p.Name)
+		if !nativePrograms[p.Address] {
+			return k, fmt.Errorf("%s: only the native System and ComputeBudget programs are supported", p.Name)
 		}
 		if e = add(p.Name, p.Address, false); e != nil {
 			return k, e

@@ -58,6 +58,9 @@ func TestRangeAcceptedForms(t *testing.T) {
 		"int key uses":         `var a [4]byte; for i := range a { if i < len(a) && i != 2 { a[i] = s[i] >> i }; s[uint64(i)+1] = byte(i); i = 0 }`,
 		"break continue":       `for i := range s { if i == 1 { continue }; if i == 2 { break } }`,
 		"local address":        `for _, v := range s { p := &v; *p = 1 }`,
+		"word slice":           `for range []uint64{1} {}`,
+		"value escapes":        `var p *byte; for _, v := range s { p = &v }; _ = p`,
+		"key escapes":          `var p *uint8; for i := range uint8(3) { p = &i }; _ = p`,
 		"nested":               `for i := range s { for j := range uint8(2) { s[i] = j } }`,
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -77,7 +80,6 @@ func TestRangeRejections(t *testing.T) {
 		"string":             {`for range "ab" {}`, "range over strings unsupported"},
 		"map":                {`for range map[uint64]uint64{} {}`, "range over maps unsupported"},
 		"channel":            {`for range make(chan uint64) {}`, "range over channels unsupported"},
-		"word slice":         {`for range []uint64{1} {}`, "range over slices requires byte slices"},
 		"signed count":       {`for range int64(3) {}`, "unsupported type int64"},
 		"field target":       {`var b B; for b.N = range uint64(3) {}`, "range assignment targets must be local variables"},
 		"index target":       {`for s[0] = range uint8(3) {}`, "range assignment targets must be local variables"},
@@ -92,8 +94,6 @@ func TestRangeRejections(t *testing.T) {
 		"int key complement": {`for i := range s { s[0] = byte(^i) }`, "signed arithmetic unsupported"},
 		"len complement":     {`s[0] = byte(^len(s))`, "signed arithmetic unsupported"},
 		"int assign key":     {`var x int; for x = range 3 {}; _ = x`, "use explicitly typed unsigned integers; int variables are unsupported"},
-		"value escapes":      {`var p *byte; for _, v := range s { p = &v }; _ = p`, "reference escapes its lexical storage scope; heap allocation unsupported"},
-		"key escapes":        {`var p *uint8; for i := range uint8(3) { p = &i }; _ = p`, "reference escapes its lexical storage scope; heap allocation unsupported"},
 		"labeled":            {`L: for range s { break L }`, "unsupported statement *ast.LabeledStmt"},
 		"labeled continue":   {`L: for range s { continue L }`, "unsupported statement *ast.LabeledStmt"},
 	} {
@@ -120,8 +120,8 @@ func TestUint16Checks(t *testing.T) {
 		"constant":        {`const C uint16 = 65535;func Process(s, i []byte) uint64 { return uint64(C) }`, ""},
 		"array boundary":  {`type K [512]uint16;func Process(s, i []byte) uint64 { var k K; return uint64(len(k)) }`, ""},
 		"array limit":     {`type K [513]uint16;func Process(s, i []byte) uint64 { return 0 }`, "array storage exceeds experimental 1024-byte per-value limit"},
-		"slice":           {`func Process(s, i []byte) uint64 { var w []uint16; _ = w; return 0 }`, "unsupported type []uint16"},
-		"view":            {`func Process(s, i []byte) uint64 { var k [4]uint16; w := k[:]; return uint64(w[0]) }`, "slice views require byte/uint8 elements"},
+		"slice":           {`func Process(s, i []byte) uint64 { var w []uint16; _ = w; return 0 }`, ""},
+		"view":            {`func Process(s, i []byte) uint64 { var k [4]uint16; w := k[:]; return uint64(w[0]) }`, ""},
 		"signed":          {`func Process(s, i []byte) uint64 { var x int16; _ = x; return 0 }`, "unsupported type int16"},
 		"element message": {`type K [2]int16;func Process(s, i []byte) uint64 { return 0 }`, "array elements must be byte, uint16, uint32, uint64, bool, or named versions of those scalars"},
 	} {

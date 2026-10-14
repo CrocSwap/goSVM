@@ -106,10 +106,12 @@ facilities in its own code, without installing the compiler or SBF tools.
 
 The compiler supports multi-file programs, user packages, unsigned integers
 (`uint8`/`uint16`/`uint32`/`uint64`), structs, fixed-size scalar arrays, multiple
-return values, methods, `range` loops, constrained pointers, and borrowed byte slices. It lowers Go through checked C and Solana
+return values, methods, `range` loops, constrained pointers, borrowed byte slices,
+and bounded [heap allocation](docs/GO_ALLOCATION.md) (`new`, `make`, `append`,
+`copy`, slices of any element type). It lowers Go through checked C and Solana
 Clang/LLD to SBF.
 
-Full Go language support is outside the current scope: allocation, maps,
+Full Go language support is outside the current scope: garbage collection, maps,
 interfaces, generics, goroutines, and on-chain standard-library imports other than
 [`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
 toolchain without a production audit.

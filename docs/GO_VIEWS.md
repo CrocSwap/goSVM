@@ -2,14 +2,17 @@
 
 The compiler supports two- and three-index views of existing byte slices and
 addressable byte arrays, including pointers to arrays. Views share their backing
-storage and retain Go length/capacity behavior. Local backing storage cannot
-escape its function or lexical scope. There is no allocation or `append`.
+storage and retain Go length/capacity behavior. A local array whose view escapes
+its function or lexical scope moves to the heap. Views of any element type,
+`make`, `append` and the rest of [allocation](GO_ALLOCATION.md) are covered
+there; this page describes the original byte views.
 
 ## Bounds and capacity
 
 Supported forms include `s[:]`, `s[low:high]`, `s[low:high:maximum]`, array-field
-views, pointer-to-array views and reslicing a view within its capacity. Elements
-must be `byte`/`uint8`; named slice types and other element types remain rejected.
+views, pointer-to-array views and reslicing a view within its capacity. The same
+forms work for every admitted element type ([allocation](GO_ALLOCATION.md));
+named slice types remain rejected.
 The existing 1,024-byte per-array limit still applies.
 
 A two-index slice defaults low to zero and high to length, preserving capacity
@@ -48,16 +51,16 @@ unsupported.
 The [borrow analysis](GO_POINTERS.md) tracks view origins through declarations,
 assignments, returned results, method receivers, forwarded calls and conversions.
 A function can return a view of incoming slice or pointed array/struct storage.
-It cannot return a view of a local array or of a copied value parameter/receiver,
-or return an element pointer derived from that storage. Keeping a block/loop
-array's view in an outer variable is also rejected. The conservative union of
-origins may reject a native-Go program that would safely heap-allocate or later
-overwrite the reference.
+Returning a view of a local array or of a copied value parameter/receiver, or an
+element pointer derived from it, or keeping a block/loop array's view in an outer
+variable, moves that array to the invocation heap instead of failing
+([escape rules](GO_ALLOCATION.md#escape-rules)). The conservative union of
+origins may move an array that native Go would keep on the stack.
 
-Slice fields, pointer-element slices, arbitrary allocation, `make`, `new`,
-`append`, interfaces and general heap escapes remain outside the subset. Borrowed
-descriptors and multiple-result aggregates have freestanding memory-copy helpers;
-no Go runtime or allocator is linked.
+Slice fields, pointer-element slices, `make`, `new` and `append` are now part of
+[allocation](GO_ALLOCATION.md); interfaces remain outside the subset. Programs
+without allocation link no allocator; borrowed descriptors and multiple-result
+aggregates keep their freestanding memory-copy helpers.
 
 ## Account buffers and native fixtures
 
@@ -76,7 +79,7 @@ current account state when needed. Borrowing proof alone is not an account
 validation, CPI freshness or custody policy.
 
 The internal descriptor carries capacity only when the reachable source graph
-uses slicing or slice `cap`. Historical programs without those features keep
+uses slicing, slice `cap` or [allocation](GO_ALLOCATION.md). Historical programs without those features keep
 their existing descriptor representation and tested ELFs. That representation is
 an internal compiler detail, never an account wire layout or client API.
 
@@ -85,8 +88,9 @@ an internal compiler detail, never an account wire layout or client API.
 [Compiler tests](../internal/compiler/views_test.go) compare 1,000 random
 native-Go/generated-C cases and 149 edge/boundary cases. Additional checks cover
 SDK capacities, nil arguments/assignments/returns/method calls, a 24-result
-borrowed-descriptor aggregate, full 1 KiB backing storage, and rejected local,
-block, loop, copied receiver and converted/forwarded escapes.
+borrowed-descriptor aggregate and full 1 KiB backing storage. The local, block,
+loop, copied receiver and converted/forwarded escapes once rejected here now move
+to the heap ([alloc_moves_test.go](../internal/compiler/alloc_moves_test.go)).
 
 The [shared view model](../examples/slice-views/model/model.go),
 [native oracle](../examples/slice-views/program.go) and

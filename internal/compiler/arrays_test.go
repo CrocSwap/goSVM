@@ -125,7 +125,6 @@ func TestArrayRejections(t *testing.T) {
 		"context element":  `import "gosvm/solana";type K [2]solana.Context;func Process(c solana.Context)uint64{return 0}`,
 		"slice element":    `type K [2][]byte;func Process(s,i []byte)uint64{return 0}`,
 		"slice conversion": `func Process(s,i []byte)uint64{a:=[24]byte(s);return uint64(a[0])}`,
-		"word slice":       `func Process(s,i []byte)uint64{a:=[32]uint64{};b:=a[:];return b[0]}`,
 		// Value ranges over arrays are supported (range_test.go); an index-only
 		// range over a literal is not.
 		"literal range":   `func Process(s,i []byte)uint64{for j:=range [32]byte{} {s[j]=0};return 0}`,

@@ -81,7 +81,7 @@ int main(void){u64 x,y,a;while(scanf("%llu %llu %llu",&x,&y,&a)==3){u8 s[16],i[8
 func TestRejectUnsupported(t *testing.T) {
 	for name, source := range map[string]string{
 		"imports":            `import "fmt";func Process(s,i []byte) uint64 {fmt.Println("x");return 0}`,
-		"heap":               `func Process(s,i []byte) uint64 {x:=make([]byte,1);return uint64(x[0])}`,
+		"map":                `func Process(s,i []byte) uint64 {x:=make(map[uint64]byte);return uint64(x[0])}`,
 		"signed":             `func Process(s,i []byte) uint64 {x:=1;return uint64(x)}`,
 		"goroutine":          `func f(){};func Process(s,i []byte) uint64 {go f();return 0}`,
 		"defer":              `func f(){};func Process(s,i []byte) uint64 {defer f();return 0}`,

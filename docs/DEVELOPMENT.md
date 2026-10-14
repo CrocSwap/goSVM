@@ -469,7 +469,8 @@ Native tests can construct it with callbacks.
 
 Also supported: named unsigned scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
-and returns. Struct fields are unsigned scalars, bools, scalar arrays, or other value structs.
+and returns. Struct fields are unsigned scalars, bools, scalar arrays, other value
+structs, pointers or slices.
 Struct comparisons/conversions, embedding, aliases, and build constraints are
 rejected explicitly. Wire layout is generated independently of C or Go layout.
 
@@ -487,16 +488,23 @@ native service can use ordinary Go facilities outside that graph. See
 
 Value/pointer methods and constrained pointers now support caller-owned scalar,
 struct and array storage, mutable aliases, returned caller borrows, direct method
-calls and method expressions. Local/block escapes, pointer fields/elements,
-pointers-to-pointers, named pointer types and method values are rejected. See
+calls and method expressions. Escaping locals move to the heap; pointer-element
+arrays, pointers-to-pointers, named pointer types and method values are rejected. See
 [borrowing and verified semantics](../docs/GO_POINTERS.md). Increment/decrement also
 supports fields, dereferences and indexed elements.
 
 Borrowed byte views now support two/three-index slicing, reslicing within
 capacity, slice len/cap and nil comparisons, caller-borrowing results and alias
-updates. SDK buffers have capacity equal to their supplied lengths. Local/block
-escapes are rejected; no allocation or append is provided. See
+updates. SDK buffers have capacity equal to their supplied lengths. See
 [view semantics and SBF evidence](../docs/GO_VIEWS.md).
+
+Bounded, invocation-scoped heap allocation supports `new`, `make`, `append`
+(Go 1.22's exact capacity growth), `copy`, slice literals, slices of any admitted
+element (`[]uint64`, `[]Struct`, `[][32]byte`, `[]*T`, `[][]byte`), pointer and
+slice struct fields, and locals whose references escape, which move to the heap.
+The budget is 32 KiB by default and up to 256 KiB with `heap_bytes` (clients then
+send `RequestHeapFrame`); running out aborts. See
+[allocation semantics and SBF evidence](../docs/GO_ALLOCATION.md).
 
 `import "math/bits"` is available on-chain, the one standard-library exception:
 the 64- and 32-bit carry, multiply and divide functions and the 64-, 32-, 16-
@@ -506,7 +514,7 @@ rejected. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
 
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables
-and arithmetic, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
+and arithmetic, globals, `init`, named slices, interfaces, maps,
 strings, generics, closures/function values, recursion, named results, variadics,
 range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds and
 division failures abort; there is no recovery or stack growth. LLVM/VM stack limits

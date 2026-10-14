@@ -64,8 +64,11 @@ Each `language` side has:
   `type_switch`, `fallthrough`, `for_three_clause`, `for_condition_only`,
   `for_infinite`, `for_range` with `for_range_array|slice|int|other`, `break`,
   `continue`, `labels`, `goto`, `defer`, `go`, `select`), constants
-  (`const_typed`, `const_untyped`) and literals (`int_literals`,
-  `char_literals`, `string_literals`, excluding import paths). An SDK method
+  (`const_typed`, `const_untyped`), literals (`int_literals`,
+  `char_literals`, `string_literals`, excluding import paths) and allocation
+  builtins (`new_calls`, `make_calls`, `append_calls`, `append_spreads` for
+  `append(s, t...)`, `copy_calls`; added October 14, 2026, additive, schema
+  unchanged; they also count in `builtin_calls` and `builtins`). An SDK method
   call counts as both `method_calls` and `sdk_calls`.
 - `operators`: binary, unary (`!`, `unary-`, `unary^`, `unary+`), compound
   assignment (`+=`, …) and `++`/`--` occurrences; `&x` is `address_of`, not an

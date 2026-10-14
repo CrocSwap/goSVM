@@ -54,7 +54,7 @@ loop, including from a nested switch, and executes the loop post statement once.
 | unsigned integer `n` (`uint8`/`uint16`/`uint32`/`uint64`) | type of `n` | `for i := range n`, `for range n` |
 | untyped constant or `len`/`cap` result | `int` | `for i := range 10`, `for i := range len(s)` |
 | fixed scalar array, or pointer to one | `int` | `i`, `i, v`, `_, v`, none |
-| byte slice or byte view | `int` | `i`, `i, v`, `_, v`, none |
+| slice or view of any element type ([allocation](GO_ALLOCATION.md)) | `int` | `i`, `i, v`, `_, v`, none |
 
 ```go
 for i, v := range key {          // key is a [32]byte: v reads a copy
@@ -79,13 +79,14 @@ for j := range uint64(len(data)) / 8 { // j is uint64
   composite literals are rejected in this index-only position; range over the
   operand itself.
 - Every iteration has fresh iteration variables. Assigning to `i` or `v` never
-  changes the iteration, and `&v` may be taken within the body but cannot escape
-  the loop (the usual lexical borrow rule).
+  changes the iteration. `&v` may be taken; if it escapes the loop, each
+  iteration's `v` is moved to the heap ([escape rules](GO_ALLOCATION.md#escape-rules)),
+  so every kept pointer is distinct, as in Go 1.22.
 - `for i = range n` and `for i, v = range x` assign to existing local variables;
   other targets (fields, elements, dereferences) are rejected. After the loop the
   variables hold the last assigned values, or are unchanged if no iteration ran.
 - Unlabeled `break` and `continue` behave as in other loops. Labels, and range
-  over strings, maps, channels, functions and non-byte slices, are rejected.
+  over strings, maps, channels and functions, are rejected.
 
 **The `int` key.** Array, slice, untyped-constant and `len` ranges produce an
 `int` key. It is the only `int` variable the subset admits, and its uses are

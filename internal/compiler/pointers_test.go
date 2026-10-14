@@ -57,26 +57,12 @@ func TestPointerValuesDifferential(t *testing.T) {
 
 func TestPointerLifetimeRejections(t *testing.T) {
 	for name, source := range map[string]string{
-		"loop back edge":          `func bad(in *uint64)*uint64{var n uint64;p:=in;q:=in;for j:=uint64(0);j<3;j++{q=p;p=&n};return q};func Process(s,i []byte)uint64{var n uint64;return *bad(&n)}`,
-		"named pointer":           `type P *uint64;func Process(s,i []byte)uint64{var p P;return *p}`,
-		"local return":            `func bad()*uint64{var n uint64;return &n};func Process(s,i []byte)uint64{return *bad()}`,
-		"parameter copy":          `func bad(n uint64)*uint64{return &n};func Process(s,i []byte)uint64{return *bad(1)}`,
-		"literal return":          `type V struct{N uint64};func bad()*V{return &V{N:1}};func Process(s,i []byte)uint64{return bad().N}`,
-		"forwarded local":         `func keep(p *uint64)*uint64{return p};func bad()*uint64{var n uint64;return keep(&n)};func Process(s,i []byte)uint64{return *bad()}`,
-		"tuple local":             `func keep(p *uint64)(uint64,*uint64){return 0,p};func bad()(uint64,*uint64){var n uint64;return keep(&n)};func Process(s,i []byte)uint64{_,p:=bad();return *p}`,
-		"block escape":            `func Process(s,i []byte)uint64{var p *uint64;{var n uint64;p=&n};return *p}`,
-		"loop escape":             `func Process(s,i []byte)uint64{var p *uint64;for j:=uint64(0);j<1;j++ {var n uint64;p=&n};return *p}`,
-		"conditional escape":      `func Process(s,i []byte)uint64{var p *uint64;if len(i)>0{n:=uint64(i[0]);p=&n};return *p}`,
-		"block tuple":             `func keep(p *uint64)(*uint64,uint64){return p,1};func Process(s,i []byte)uint64{var p *uint64;var n uint64;{local:=uint64(1);p,n=keep(&local)};return *p+n}`,
-		"receiver copy":           `type V struct{N uint64};func(v V)Bad()*uint64{return &v.N};func Process(s,i []byte)uint64{v:=V{};return *v.Bad()}`,
-		"callee local method":     `type V struct{N uint64};func(v *V)Field()*uint64{return &v.N};func bad()*uint64{v:=V{};return v.Field()};func Process(s,i []byte)uint64{return *bad()}`,
-		"method expression local": `type V struct{N uint64};func(v *V)Field()*uint64{return &v.N};func bad()*uint64{v:=V{};return (*V).Field(&v)};func Process(s,i []byte)uint64{return *bad()}`,
-		"pointer fields":          `type V struct{P *uint64};func Process(s,i []byte)uint64{return 0}`,
-		"pointer pointer":         `func Process(s,i []byte)uint64{var p *uint64;pp:=&p;return **pp}`,
-		"pointer slice":           `func Process(s,i []byte)uint64{p:=&s;return uint64(len(*p))}`,
-		"context pointer":         `import "gosvm/solana";func Process(c solana.Context)uint64{p:=&c;return solana.Count(*p)}`,
-		"method value":            `type V struct{N uint64};func(v V)Read()uint64{return v.N};func Process(s,i []byte)uint64{v:=V{};f:=v.Read;return f()}`,
-		"method recursion":        `type V uint64;func(v V)Read()uint64{return v.Read()};func Process(s,i []byte)uint64{return V(1).Read()}`,
+		"named pointer":    `type P *uint64;func Process(s,i []byte)uint64{var p P;return *p}`,
+		"pointer pointer":  `func Process(s,i []byte)uint64{var p *uint64;pp:=&p;return **pp}`,
+		"pointer slice":    `func Process(s,i []byte)uint64{p:=&s;return uint64(len(*p))}`,
+		"context pointer":  `import "gosvm/solana";func Process(c solana.Context)uint64{p:=&c;return solana.Count(*p)}`,
+		"method value":     `type V struct{N uint64};func(v V)Read()uint64{return v.N};func Process(s,i []byte)uint64{v:=V{};f:=v.Read;return f()}`,
+		"method recursion": `type V uint64;func(v V)Read()uint64{return v.Read()};func Process(s,i []byte)uint64{return V(1).Read()}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Compile("pointer-reject.go", []byte("package p;"+source))
@@ -100,9 +86,19 @@ func TestImportedMethodsAndBorrowedResults(t *testing.T) {
 	if out, err := exec.Command(host).CombinedOutput(); err != nil {
 		t.Fatalf("imported methods/borrowed results: %v %s", err, out)
 	}
-	p.Packages[0] = unit("app", `package app;import "dep";func bad()*uint64{v:=dep.Value{};_,p:=dep.Forward(&v);return p};func Process(s,i []byte)uint64{return *bad()}`)
-	if _, err := CompileProgram(p); err == nil || !strings.Contains(err.Error(), "reference escapes") {
-		t.Fatalf("imported borrow summary lost local origin: %v", err)
+	// The imported summary carries the local origin through, so the local
+	// escapes and is moved to the heap (docs/GO_ALLOCATION.md).
+	p.Packages[0] = unit("app", `package app;import "dep";func bad()*uint64{v:=dep.Value{N:4};_,p:=dep.Forward(&v);return p};func Process(s,i []byte)uint64{return *bad()}`)
+	checked, err := Check(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	moved := false
+	for _, fn := range checked.Functions {
+		moved = moved || fn.Object.Name() == "bad" && len(fn.HeapVars) == 1 && fn.HeapVars[0].Name() == "v"
+	}
+	if !moved {
+		t.Fatal("imported borrow summary lost local origin: v was not moved to the heap")
 	}
 }
 

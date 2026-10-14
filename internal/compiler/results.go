@@ -112,6 +112,9 @@ func (g *generator) captureTarget(e ast.Expr) string {
 			return fmt.Sprintf("*%s_at(%s,%s)", g.arrayName(e, a), targetPointer, index)
 		}
 		target, index := g.expr(e.X), g.expr(e.Index)
+		if !isByteSlice(g.info.Types[e.X].Type) {
+			return g.element(e, g.info.Types[e.X].Type, target, index)
+		}
 		return fmt.Sprintf("*at(%s,%s)", target, index)
 	default:
 		g.unchecked(e)
@@ -151,6 +154,10 @@ func (g *generator) assignMany(node ast.Node, lhs []ast.Expr, rhs []ast.Expr, to
 			if id, ok := lhs[i].(*ast.Ident); ok && id.Name == "_" {
 				continue
 			}
+			if g.moved[defs[i]] {
+				g.declareMoved(lhs[i], defs[i], value)
+				continue
+			}
 			if _, ok := defs[i].Type().Underlying().(*types.Array); ok {
 				g.names[defs[i]] = value
 				continue
@@ -175,6 +182,10 @@ func (g *generator) multiDeclaration(v *ast.ValueSpec) {
 			continue
 		}
 		o := g.info.Defs[id]
+		if g.moved[o] {
+			g.declareMoved(v, o, "{0}")
+			continue
+		}
 		g.line("%s %s={0};", g.variable(v, o.Type()), g.name(o))
 	}
 }

@@ -53,6 +53,11 @@ type generator struct {
 	currentResults *types.Tuple
 	continueLabels []string
 	next           int
+	moved          map[types.Object]bool      // heap-moved locals (Function.HeapVars)
+	movedLits      map[*ast.CompositeLit]bool // heap-moved &T{...} (Function.HeapLiterals)
+	forward        map[types.Type]bool        // structs forward-declared for pointer fields
+	defined        map[types.Type]bool        // structs whose definition was emitted
+	movedParams    map[*ast.FuncDecl][]types.Object
 }
 
 // Source is a Go file in a single on-chain package.
@@ -86,7 +91,21 @@ func CompileProgram(program *Program) ([]byte, error) {
 // Check rules out is reported as an internal error, never translated.
 func emitC(program *CheckedProgram) (out []byte, err error) {
 	defer recoverCompileError(&err)
-	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2}
+	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2,
+		moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, forward: map[types.Type]bool{}, defined: map[types.Type]bool{},
+		movedParams: map[*ast.FuncDecl][]types.Object{}}
+	for _, fn := range program.Functions {
+		sig := fn.Object.Type().(*types.Signature)
+		for _, v := range fn.HeapVars {
+			g.moved[v] = true
+			if v == sig.Recv() || isParameter(sig, v) {
+				g.movedParams[fn.Decl] = append(g.movedParams[fn.Decl], v)
+			}
+		}
+		for _, lit := range fn.HeapLiterals {
+			g.movedLits[lit] = true
+		}
+	}
 	g.entry = program.Process
 	g.externals = libraryBindings(program.Libraries)
 	files := program.Files
@@ -118,6 +137,13 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			return true
 		})
 	}
+	// Allocation needs slice capacities and the pointer/memory helpers. Only
+	// programs that use it get the heap runtime, so the C of every other
+	// program is byte-identical to earlier compilers.
+	hasHeap := usesAllocation(program)
+	if hasHeap {
+		hasViews, hasPointers = true, true
+	}
 	if hasViews {
 		g.WriteString("#define GOSVM_SLICE_VIEWS 1\n")
 	}
@@ -133,6 +159,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	if hasPointers || hasViews {
 		g.WriteString(pointerRuntime)
 		g.ensureMemory()
+	}
+	if hasHeap {
+		g.WriteString(heapRuntimeFor(program.Program.HeapBytes))
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
@@ -187,11 +216,25 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 				g.emitArray(node, a)
 			} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
 				emitType(node, f.Type())
+			} else if p, ok := pointer(f.Type()); ok {
+				// A pointer field may refer to a struct defined later, or to
+				// this struct itself: declare its tag first.
+				if pointee, ok := p.Elem().(*types.Named); ok {
+					if _, isStruct := pointee.Underlying().(*types.Struct); isStruct && !g.defined[pointee] && !g.forward[pointee] {
+						g.forward[pointee] = true
+						name := g.name(pointee.Obj())
+						g.line("typedef struct %s %s;", name, name)
+					}
+				}
 			} else {
 				g.variable(node, f.Type())
 			}
 		}
-		g.line("typedef struct {")
+		if g.forward[t] {
+			g.line("struct %s {", g.name(named.Obj()))
+		} else {
+			g.line("typedef struct {")
+		}
 		// C11 has no empty structs; Go's zero-sized value has no observable layout here.
 		if st.NumFields() == 0 {
 			g.line("u8 unused;")
@@ -200,7 +243,12 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			f := st.Field(i)
 			g.line("%s %s;", g.variable(node, f.Type()), g.name(f))
 		}
-		g.line("} %s;", g.name(named.Obj()))
+		if g.forward[t] {
+			g.line("};")
+		} else {
+			g.line("} %s;", g.name(named.Obj()))
+		}
+		g.defined[t] = true
 	}
 	// Anonymous arrays in signatures, locals and literals need the same wrapper
 	// as named arrays with identical underlying types. Visit in source order;
@@ -244,6 +292,11 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			g.currentResults = g.info.Defs[fn.Name].Type().(*types.Signature).Results()
 			if b, ok := externalBinding(g.externals, g.info.Defs[fn.Name]); ok {
 				g.emitLibraryBody(fn, b)
+			} else if len(g.movedParams[fn]) > 0 {
+				g.line("{")
+				g.movedPrologue(fn)
+				g.block(fn.Body)
+				g.line("}")
 			} else if !g.emitPackedStore(fn) {
 				g.block(fn.Body)
 			}
@@ -262,7 +315,18 @@ func (g *generator) unchecked(n ast.Node) {
 	panic(compileError(fmt.Sprintf("%s: internal error: construct was not certified by Check", g.fset.Position(n.Pos()))))
 }
 func (g *generator) line(format string, args ...any) { fmt.Fprintf(&g.Buffer, format+"\n", args...) }
+
+// name is how C code refers to an object; a heap-moved variable is reached
+// through its pointer.
 func (g *generator) name(o types.Object) string {
+	if g.moved[o] {
+		return "(*" + g.rawName(o) + ")"
+	}
+	return g.rawName(o)
+}
+
+// rawName is the object's C identifier.
+func (g *generator) rawName(o types.Object) string {
 	if o == g.entry {
 		return "go_Process"
 	}
@@ -286,8 +350,8 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	if isContext(t) {
 		return "Context *"
 	}
-	if s, ok := t.(*types.Slice); ok && types.Identical(s.Elem(), types.Typ[types.Uint8]) {
-		return "slice"
+	if _, ok := t.(*types.Slice); ok {
+		return "slice" // every element type shares the descriptor; see element()
 	}
 	if a, ok := t.Underlying().(*types.Array); ok {
 		return g.arrayName(n, a)
@@ -327,12 +391,18 @@ func (g *generator) signature(fn *ast.FuncDecl) string {
 		ret = g.variable(fn, sig.Results().At(0).Type())
 	}
 	args := []string{}
+	parameter := func(o types.Object) string {
+		if g.moved[o] {
+			return g.movedParameter(o)
+		}
+		return g.name(o)
+	}
 	if recv := sig.Recv(); recv != nil {
-		args = append(args, g.variable(fn, recv.Type())+" "+g.name(recv))
+		args = append(args, g.variable(fn, recv.Type())+" "+parameter(recv))
 	}
 	for i := 0; i < sig.Params().Len(); i++ {
 		p := sig.Params().At(i)
-		args = append(args, g.variable(fn, p.Type())+" "+g.name(p))
+		args = append(args, g.variable(fn, p.Type())+" "+parameter(p))
 	}
 	if len(args) == 0 {
 		args = append(args, "void")
@@ -383,11 +453,18 @@ func (g *generator) expr(e ast.Expr) string {
 		if a, ok := tv.Type.Underlying().(*types.Array); ok {
 			return g.arrayLiteral(e, a)
 		}
-		st, ok := tv.Type.Underlying().(*types.Struct)
+		if s, ok := tv.Type.(*types.Slice); ok {
+			return g.sliceLiteral(e, s)
+		}
+		literal := tv.Type
+		if p, ok := pointer(literal); ok {
+			literal = p.Elem() // an elided &T{...} element, boxed below
+		}
+		st, ok := literal.Underlying().(*types.Struct)
 		if !ok {
 			g.unchecked(e)
 		}
-		r := g.temp(e, tv.Type, "{0}")
+		r := g.temp(e, literal, "{0}")
 		for i, elt := range e.Elts {
 			field := i
 			value := elt
@@ -402,8 +479,11 @@ func (g *generator) expr(e ast.Expr) string {
 					}
 				}
 			}
-			v := g.expr(value)
+			v := g.exprAs(value, st.Field(field).Type())
 			g.line("%s.%s = %s;", r, g.name(st.Field(field)), v)
+		}
+		if literal != tv.Type {
+			return g.box(e, literal, r)
 		}
 		return r
 	case *ast.SelectorExpr:
@@ -434,6 +514,9 @@ func (g *generator) expr(e ast.Expr) string {
 			return g.temp(e, tv.Type, fmt.Sprintf("*%s_at(&%s,%s)", g.arrayName(e, a), x, i))
 		}
 		x, i := g.expr(e.X), g.expr(e.Index)
+		if !isByteSlice(g.info.Types[e.X].Type) {
+			return g.temp(e, tv.Type, g.element(e, g.info.Types[e.X].Type, x, i))
+		}
 		return g.temp(e, tv.Type, fmt.Sprintf("*at(%s,%s)", x, i))
 	case *ast.BinaryExpr:
 		sliceType := g.info.Types[e.X].Type
@@ -515,7 +598,7 @@ func (g *generator) expr(e ast.Expr) string {
 			}
 		}
 		if g.info.Types[e.Fun].IsType() {
-			if s, ok := tv.Type.(*types.Slice); ok && types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+			if _, ok := tv.Type.(*types.Slice); ok {
 				if len(e.Args) != 1 {
 					g.unchecked(e)
 				}
@@ -552,6 +635,9 @@ func (g *generator) expr(e ast.Expr) string {
 			builtinName = callee.Name
 		default:
 			g.unchecked(e)
+		}
+		if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
+			return g.allocBuiltin(e, b.Name())
 		}
 		args := g.callValues(e)
 		if _, ok := o.(*types.TypeName); ok {
@@ -629,6 +715,10 @@ func (g *generator) stmt(s ast.Stmt) {
 			}
 			v := g.exprAs(s.Rhs[0], o.Type())
 			if s.Tok == token.DEFINE {
+				if g.moved[o] {
+					g.declareMoved(lhs, o, v)
+					return
+				}
 				if _, ok := o.Type().Underlying().(*types.Array); ok {
 					// Array expressions already own a by-value temporary. Make it
 					// the new variable's storage instead of copying a second time.
@@ -641,11 +731,11 @@ func (g *generator) stmt(s ast.Stmt) {
 			}
 		case *ast.StarExpr:
 			target := g.fieldTarget(lhs)
-			v := g.expr(s.Rhs[0])
+			v := g.exprAs(s.Rhs[0], g.info.Types[lhs].Type)
 			g.line("%s = %s;", target, v)
 		case *ast.SelectorExpr:
 			target := g.fieldTarget(lhs)
-			v := g.expr(s.Rhs[0])
+			v := g.exprAs(s.Rhs[0], g.info.Types[lhs].Type)
 			g.line("%s = %s;", target, v)
 		case *ast.IndexExpr:
 			if _, ok := pointer(g.info.Types[lhs.X].Type); ok {
@@ -662,6 +752,11 @@ func (g *generator) stmt(s ast.Stmt) {
 				return
 			}
 			x, i := g.expr(lhs.X), g.expr(lhs.Index)
+			if !isByteSlice(g.info.Types[lhs.X].Type) {
+				v := g.exprAs(s.Rhs[0], g.info.Types[lhs].Type)
+				g.line("%s = %s;", g.element(lhs, g.info.Types[lhs.X].Type, x, i), v)
+				return
+			}
 			v := g.expr(s.Rhs[0])
 			g.line("*at(%s,%s) = %s;", x, i, v)
 		default:
@@ -685,10 +780,14 @@ func (g *generator) stmt(s ast.Stmt) {
 			rhs := "{0}"
 			if len(v.Values) == 1 {
 				rhs = g.exprAs(v.Values[0], o.Type())
-				if _, ok := o.Type().Underlying().(*types.Array); ok {
+				if _, ok := o.Type().Underlying().(*types.Array); ok && !g.moved[o] {
 					g.names[o] = rhs
 					continue
 				}
+			}
+			if g.moved[o] {
+				g.declareMoved(v, o, rhs)
+				continue
 			}
 			g.line("%s %s = %s;", g.variable(v, o.Type()), g.name(o), rhs)
 		}
@@ -759,6 +858,16 @@ func (g *generator) fieldTarget(e ast.Expr) string {
 			return g.checkedPointer(e, p, g.expr(e.X)) + "->" + g.name(f)
 		}
 		return g.fieldTarget(e.X) + "." + g.name(f)
+	case *ast.IndexExpr:
+		t := g.info.Types[e.X].Type
+		if _, ok := t.(*types.Slice); !ok {
+			g.unchecked(e)
+		}
+		x, i := g.expr(e.X), g.expr(e.Index)
+		if isByteSlice(t) {
+			return fmt.Sprintf("(*at(%s,%s))", x, i)
+		}
+		return g.element(e, t, x, i)
 	default:
 		g.unchecked(e)
 	}

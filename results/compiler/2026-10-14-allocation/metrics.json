@@ -1,0 +1,35 @@
+{
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "runner": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0, Agave 4.0)"
+  },
+  "schema": 1,
+  "targets": {
+    "fogo-v0": {
+      "heap32-fits-32760_cu": 175,
+      "heap32_aborts": 14,
+      "heap32_cases": 105,
+      "heap32_elf_sha256": "21ac0e94af7bea70e7077a715d7ff9af5f588d6574b4167127f97c7a874c2e05",
+      "heap64-frame-fits-40000_cu": 336,
+      "heap64-frame-fits-65528_cu": 336,
+      "heap64_cases": 6,
+      "heap64_elf_sha256": "f1d481d894842464e324fb87e927aee441cc5d51ed1428fdb307b246551be3ef",
+      "max_vector_cu": 28514,
+      "profile": "fogo-v0"
+    },
+    "solana-v3": {
+      "heap32-fits-32760_cu": 169,
+      "heap32_aborts": 14,
+      "heap32_cases": 105,
+      "heap32_elf_sha256": "4e6b6ee00d926abb9729a3e3d3b57e43b1ed4862706eeb0645758b6731b5f1f9",
+      "heap64-frame-fits-40000_cu": 331,
+      "heap64-frame-fits-65528_cu": 331,
+      "heap64_cases": 6,
+      "heap64_elf_sha256": "91005d64ba33c4559698a7f63a50b903655d957cf8336e88a267ead3bb73b573",
+      "max_vector_cu": 28506,
+      "profile": "solana-v3"
+    }
+  }
+}

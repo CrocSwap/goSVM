@@ -137,7 +137,12 @@ var ConstructNames = []string{
 	"break", "continue", "labels", "goto", "defer", "go", "select",
 	"const_typed", "const_untyped",
 	"int_literals", "char_literals", "string_literals",
+	// Allocation (added October 14, 2026; additive within gosvm-features-v1).
+	"new_calls", "make_calls", "append_calls", "append_spreads", "copy_calls",
 }
+
+// allocationConstructs counts the allocation builtins by name.
+var allocationConstructs = map[string]string{"new": "new_calls", "make": "make_calls", "append": "append_calls", "copy": "copy_calls"}
 
 var operatorClass = map[string]string{
 	"+": "arithmetic", "-": "arithmetic", "*": "arithmetic", "/": "arithmetic", "%": "arithmetic",
@@ -738,6 +743,12 @@ func (w *walker) call(n *ast.CallExpr) {
 		if b, ok := w.tp.Info.Uses[id].(*types.Builtin); ok {
 			w.count("builtin_calls")
 			w.side.Builtins[b.Name()]++
+			if name, ok := allocationConstructs[b.Name()]; ok {
+				w.count(name)
+				if b.Name() == "append" && n.Ellipsis.IsValid() {
+					w.count("append_spreads")
+				}
+			}
 			return
 		}
 	}
