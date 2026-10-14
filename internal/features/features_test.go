@@ -369,3 +369,63 @@ func Process(s, i []byte) uint64 {
 		t.Errorf("full swap must report an empty generics list: %+v", fs.Generics)
 	}
 }
+
+// checkedReport is report plus ApplyCheck, as the CLI produces it.
+func checkedReport(t *testing.T, path string) *Usage {
+	t.Helper()
+	program, err := compiler.ReadProgram(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	u := report(t, path)
+	cp, err := compiler.Check(program)
+	ApplyCheck(u, cp, err)
+	return u
+}
+
+// The uses summary flags each feature beyond the original subset; full swap
+// (the pinned baseline) uses none of them.
+func TestUsesSummary(t *testing.T) {
+	if got := checkedReport(t, filepath.Join("..", "..", "examples", "full-swap")).Uses; got != (Uses{Checked: true}) {
+		t.Errorf("full swap uses: %+v", got)
+	}
+	for name, tc := range map[string]struct {
+		src  string
+		want Uses
+	}{
+		"len results only": {`func Process(s, i []byte) uint64 { if len(s) > 2 { return uint64(len(i)) }; return 0 }`,
+			Uses{Checked: true}},
+		"signed operation": {`func Process(s, i []byte) uint64 { n := len(s); n++; return uint64(n) }`,
+			Uses{Checked: true, SignedIntegers: true}},
+		"signed type": {`func Process(s, i []byte) uint64 { var x int32 = 3; return uint64(x) }`,
+			Uses{Checked: true, SignedIntegers: true}},
+		"heap move": {`type N struct{ v uint64; next *N }
+func link(v uint64) *N { n := N{v: v}; return &n }
+func Process(s, i []byte) uint64 { return link(7).v }`,
+			Uses{Checked: true, Allocation: true, HeapMovedLocals: 1}},
+		"allocation and range": {`func Process(s, i []byte) uint64 { a := make([]uint16, 3); var t uint64; for _, v := range a { t = t + uint64(v) }; return t }`,
+			Uses{Checked: true, Allocation: true, Uint16: true, Range: true}},
+		"math/bits and generics": {`import "math/bits"
+func Id[T any](x T) T { return x }
+func Process(s, i []byte) uint64 { h, _ := bits.Mul64(Id(uint64(3)), 4); return h }`,
+			Uses{Checked: true, MathBits: true, Generics: true}},
+		"interface value rejected": {`func Process(s, i []byte) uint64 { var x any = s; _ = x; return 0 }`,
+			Uses{Interfaces: true}},
+	} {
+		dir := t.TempDir()
+		if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte("package main\n"+tc.src+"\n"), 0644); err != nil {
+			t.Fatal(err)
+		}
+		got := checkedReport(t, dir).Uses
+		if tc.want.Checked {
+			got.CheckError = ""
+		}
+		if !tc.want.Checked && got.CheckError == "" {
+			t.Errorf("%s: expected a Check error", name)
+		}
+		got.CheckError = ""
+		if got != tc.want {
+			t.Errorf("%s: %+v, want %+v", name, got, tc.want)
+		}
+	}
+}

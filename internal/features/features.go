@@ -49,6 +49,84 @@ type Usage struct {
 	// distinct instantiations the program needs, as the compiler would
 	// monomorphize them. Added within gosvm-features-v1.
 	Generics []GenericUse `json:"generics"`
+	// Uses summarizes which language features beyond the original subset the
+	// program uses, so a backend that supports only a subset can name why a
+	// program is outside it. Added within gosvm-features-v1.
+	Uses Uses `json:"uses"`
+}
+
+// Uses is the per-program feature summary. Each flag is derived from the
+// counters in Language, StdlibCalls and Generics over handwritten and
+// generated files; HeapMovedLocals and HeapMovedLiterals come from the
+// compiler's Check and are filled by ApplyCheck.
+type Uses struct {
+	// Allocation: new/make/append/copy, slice literals, or locals the compiler
+	// moves to the heap because their address escapes.
+	Allocation bool `json:"allocation"`
+	// Interfaces: any value of interface type (not a type-parameter constraint).
+	Interfaces bool `json:"interfaces"`
+	// SignedIntegers: a signed type written in source, a conversion to one, or
+	// a non-constant arithmetic/shift/bitwise operation with a signed result.
+	// int values used only as len/cap/count results (compared, converted,
+	// indexed) do not count.
+	SignedIntegers bool `json:"signed_integers"`
+	MathBits       bool `json:"math_bits"`
+	Generics       bool `json:"generics"`
+	Uint16         bool `json:"uint16"`
+	Range          bool `json:"range"`
+	// Checked reports whether compiler.Check accepted the program; CheckError
+	// is its diagnostic otherwise. Both are set by ApplyCheck.
+	Checked    bool   `json:"checked"`
+	CheckError string `json:"check_error,omitempty"`
+	// HeapMovedLocals and HeapMovedLiterals count escaping locals and &T{}
+	// literals Check moves to the heap (across all functions and instances).
+	HeapMovedLocals   int `json:"heap_moved_locals"`
+	HeapMovedLiterals int `json:"heap_moved_literals"`
+}
+
+// ApplyCheck records Check's verdict and heap moves in u.Uses.
+func ApplyCheck(u *Usage, cp *compiler.CheckedProgram, err error) {
+	if err != nil {
+		u.Uses.Checked, u.Uses.CheckError = false, err.Error()
+		return
+	}
+	u.Uses.Checked = true
+	u.Uses.HeapMovedLocals, u.Uses.HeapMovedLiterals = 0, 0
+	for _, f := range cp.Functions {
+		u.Uses.HeapMovedLocals += len(f.HeapVars)
+		u.Uses.HeapMovedLiterals += len(f.HeapLiterals)
+	}
+	if u.Uses.HeapMovedLocals+u.Uses.HeapMovedLiterals > 0 {
+		u.Uses.Allocation = true
+	}
+}
+
+// summarize derives the Uses flags from the collected counters.
+func summarize(u *Usage) {
+	sum := func(name string) int {
+		return u.Language.Handwritten.Constructs[name] + u.Language.Generated.Constructs[name]
+	}
+	has := func(m func(*Side) map[string]int, keys ...string) bool {
+		for _, side := range []*Side{u.Language.Handwritten, u.Language.Generated} {
+			for _, k := range keys {
+				if m(side)[k] > 0 {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	types := func(s *Side) map[string]int { return s.IntegerTypes }
+	values := func(s *Side) map[string]int { return s.IntegerValues }
+	conversions := func(s *Side) map[string]int { return s.Conversions }
+	signed := []string{"int8", "int16", "int32", "int64", "int"}
+	u.Uses.Allocation = sum("new_calls")+sum("make_calls")+sum("append_calls")+sum("copy_calls")+sum("slice_literals") > 0
+	u.Uses.Interfaces = sum("interface_values") > 0
+	u.Uses.SignedIntegers = has(types, signed...) || has(conversions, signed...) || sum("signed_operations") > 0
+	u.Uses.MathBits = len(u.StdlibCalls) > 0
+	u.Uses.Generics = len(u.Generics) > 0 || sum("type_parameters") > 0
+	u.Uses.Uint16 = has(types, "uint16") || has(values, "uint16")
+	u.Uses.Range = sum("for_range") > 0
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -161,6 +239,10 @@ var ConstructNames = []string{
 	"explicit_instantiations", "inferred_instantiations", "type_instantiations",
 	// Allocation (added within gosvm-features-v1).
 	"new_calls", "make_calls", "append_calls", "append_spreads", "copy_calls",
+	// Feature summary inputs (added within gosvm-features-v1): non-constant
+	// arithmetic/shift/bitwise operations with a signed integer result, and
+	// expressions whose value has an interface type.
+	"signed_operations", "interface_values",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -324,6 +406,7 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 		return nil, err
 	}
 	u.Generics = generics
+	summarize(u)
 	return u, nil
 }
 
@@ -567,7 +650,38 @@ func (w *walker) file(f *ast.File) {
 			if tv, ok := w.tp.Info.Types[e]; ok && tv.IsValue() {
 				if b, ok := tv.Type.Underlying().(*types.Basic); ok && b.Info()&types.IsInteger != 0 && b.Info()&types.IsUntyped == 0 {
 					w.side.IntegerValues[integerName(b)]++
+					if b.Info()&types.IsUnsigned == 0 && tv.Value == nil {
+						switch x := e.(type) {
+						case *ast.BinaryExpr:
+							if c := operatorClass[x.Op.String()]; c == "arithmetic" || c == "shift" || c == "bitwise" {
+								w.count("signed_operations")
+							}
+						case *ast.UnaryExpr:
+							if x.Op.String() == "-" || x.Op.String() == "^" {
+								w.count("signed_operations")
+							}
+						}
+					}
 				}
+				if _, isParam := tv.Type.(*types.TypeParam); !isParam && types.IsInterface(tv.Type) && tv.Type != types.Typ[types.UntypedNil] {
+					w.count("interface_values")
+				}
+			}
+		}
+		// ++, -- and compound assignments on signed operands are signed
+		// operations too.
+		var signedTarget ast.Expr
+		switch n := n.(type) {
+		case *ast.IncDecStmt:
+			signedTarget = n.X
+		case *ast.AssignStmt:
+			if n.Tok != token.ASSIGN && n.Tok != token.DEFINE && len(n.Lhs) == 1 {
+				signedTarget = n.Lhs[0]
+			}
+		}
+		if signedTarget != nil {
+			if isSignedInteger(w.typeOf(signedTarget)) {
+				w.count("signed_operations")
 			}
 		}
 		switch n := n.(type) {

@@ -70,6 +70,8 @@ func packageFeatures(path string) (*features.Usage, error) {
 	if err != nil {
 		return nil, err
 	}
+	checked, checkErr := compiler.Check(program)
+	features.ApplyCheck(u, checked, checkErr)
 	u.Program.Module = goModule(path)
 	return u, nil
 }

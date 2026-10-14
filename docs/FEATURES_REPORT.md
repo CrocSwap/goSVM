@@ -39,6 +39,7 @@ construct counter is present even when zero.
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
 | `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
 | `generics[]` | every generic function, method and type declared in program code: `name` (`pkg/path.F`, `pkg/path.T.M`, `pkg/path.T`), `package`, `kind` (`function`, `method`, `type`), `count` and the sorted canonical `instances` the compiler would monomorphize (added October 14, 2026; additive, schema unchanged; see [generics](GO_GENERICS.md)) |
+| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`; `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations` and `interface_values`): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Lets a backend that supports a subset reject a program with a named reason |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as

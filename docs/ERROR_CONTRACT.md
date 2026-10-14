@@ -47,6 +47,25 @@ These are **not** traps:
 - Other `math/bits` calls never fail. [GO_BITS.md](GO_BITS.md) specifies their
   exact results, including `Add64`/`Sub64` carry inputs other than 0 and 1.
 
+## Contracted runtime behaviour
+
+Besides traps and codes, these observable results are part of the contract,
+because fixtures compare them byte for byte:
+
+- **Append growth.** `append` grows capacity exactly as Go 1.22's
+  `runtime.growslice`: `nextslicecap`, then `roundupsize` with Go 1.22's malloc
+  size classes, including the 8-byte malloc header for pointer-holding element
+  types above 512 bytes. `cap()` after an append, whether an append reuses the
+  backing array, and the heap bytes a growth consumes all follow from it. The
+  full rule is in [GO_ALLOCATION.md](GO_ALLOCATION.md#append-growth).
+- **Heap accounting.** The allocator is a bump allocator over the heap region
+  with no free. The first 8 bytes of the budget hold the in-use count, each
+  allocation consumes its size rounded up to 8 bytes, and the out-of-memory
+  trap fires at the first allocation that does not fit (32 KiB default, so
+  32,760 usable bytes; `heap_bytes` up to 256 KiB). Locals moved to the heap by
+  escape analysis consume budget the same way; `gosvm features` reports them.
+  See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
+
 ## Error codes
 
 A nonzero `Process` result is returned unchanged as the transaction's custom
@@ -157,3 +176,5 @@ Handler results propagate unchanged.
   or changed: negative signed `make` lengths and capacities, indexes and slice
   bounds use the traps above, and instances of generic code allocate and trap
   exactly as the equivalent hand-written code.
+- 2026-10-14: append growth and heap accounting recorded as contracted
+  behaviour at Qushta's request (documentation only, no behaviour change).
