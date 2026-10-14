@@ -45,6 +45,24 @@ type Usage struct {
 	// StdlibCalls are calls into standard-library packages the compiler
 	// provides on-chain (math/bits). Added within gosvm-features-v1.
 	StdlibCalls []CallSite `json:"stdlib_calls"`
+	// Generics lists every generic declaration in program code with the
+	// distinct instantiations the program needs, as the compiler would
+	// monomorphize them. Added within gosvm-features-v1.
+	Generics []GenericUse `json:"generics"`
+}
+
+// GenericUse is one generic function, method or type and its instantiations.
+type GenericUse struct {
+	// Name is "pkg/path.F", "pkg/path.T.M" or "pkg/path.T".
+	Name    string `json:"name"`
+	Package string `json:"package"`
+	// Kind is "function", "method" or "type".
+	Kind string `json:"kind"`
+	// Count is the number of distinct instantiations (len(Instances)).
+	Count int `json:"count"`
+	// Instances are the canonical instantiations, sorted, for example
+	// "example.org/app.Min[uint64]".
+	Instances []string `json:"instances"`
 }
 
 // Program identifies the measured program. Module and Targets are filled by
@@ -138,6 +156,9 @@ var ConstructNames = []string{
 	"const_typed", "const_untyped",
 	"int_literals", "char_literals", "string_literals",
 	"signed_division", "signed_shift_counts",
+	// Generics (added within gosvm-features-v1).
+	"generic_functions", "generic_methods", "generic_types", "type_parameters",
+	"explicit_instantiations", "inferred_instantiations", "type_instantiations",
 }
 
 var operatorClass = map[string]string{
@@ -287,7 +308,75 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	u.SDKCalls = flatten(sdkCalls)
 	u.LibraryCalls = flatten(libCalls)
 	u.StdlibCalls = flatten(stdCalls)
+	var program []*ast.File
+	for _, in := range inputs {
+		if in.info.Kind != LibraryStub {
+			program = append(program, in.file)
+		}
+	}
+	generics, err := genericUses(tp, program)
+	if err != nil {
+		return nil, err
+	}
+	u.Generics = generics
 	return u, nil
+}
+
+// genericUses lists the program's generic declarations with the
+// instantiations compiler.Instantiations finds.
+func genericUses(tp *compiler.TypedProgram, files []*ast.File) ([]GenericUse, error) {
+	uses := map[string]*GenericUse{}
+	add := func(name, pkg, kind string) {
+		if uses[name] == nil {
+			uses[name] = &GenericUse{Name: name, Package: pkg, Kind: kind, Instances: []string{}}
+		}
+	}
+	for _, f := range files {
+		for _, d := range f.Decls {
+			switch d := d.(type) {
+			case *ast.FuncDecl:
+				fn, ok := tp.Info.Defs[d.Name].(*types.Func)
+				if !ok || fn.Pkg() == nil {
+					continue
+				}
+				sig := fn.Type().(*types.Signature)
+				if sig.TypeParams().Len() > 0 {
+					add(fn.Pkg().Path()+"."+fn.Name(), fn.Pkg().Path(), "function")
+				} else if sig.RecvTypeParams().Len() > 0 {
+					recv := sig.Recv().Type()
+					if p, ok := recv.(*types.Pointer); ok {
+						recv = p.Elem()
+					}
+					add(fn.Pkg().Path()+"."+recv.(*types.Named).Obj().Name()+"."+fn.Name(), fn.Pkg().Path(), "method")
+				}
+			case *ast.GenDecl:
+				for _, spec := range d.Specs {
+					if ts, ok := spec.(*ast.TypeSpec); ok && ts.TypeParams != nil {
+						if tn, ok := tp.Info.Defs[ts.Name].(*types.TypeName); ok && tn.Pkg() != nil {
+							add(tn.Pkg().Path()+"."+tn.Name(), tn.Pkg().Path(), "type")
+						}
+					}
+				}
+			}
+		}
+	}
+	instances, err := compiler.Instantiations(tp)
+	if err != nil {
+		return nil, fmt.Errorf("features: %w", err)
+	}
+	for _, inst := range instances {
+		if use := uses[inst.Generic]; use != nil {
+			use.Instances = append(use.Instances, inst.Key)
+		}
+	}
+	out := []GenericUse{}
+	for _, use := range uses {
+		sort.Strings(use.Instances)
+		use.Count = len(use.Instances)
+		out = append(out, *use)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
+	return out, nil
 }
 
 // Marshal renders the report deterministically (sorted map keys, indented).
@@ -450,6 +539,24 @@ func integerName(b *types.Basic) string {
 
 func (w *walker) file(f *ast.File) {
 	elseIf := map[ast.Stmt]bool{}
+	// Generic function names with written type arguments (F[T] or pkg.F[T]).
+	explicit := map[*ast.Ident]bool{}
+	ast.Inspect(f, func(n ast.Node) bool {
+		var x ast.Expr
+		switch n := n.(type) {
+		case *ast.IndexExpr:
+			x = n.X
+		case *ast.IndexListExpr:
+			x = n.X
+		}
+		switch x := x.(type) {
+		case *ast.Ident:
+			explicit[x] = true
+		case *ast.SelectorExpr:
+			explicit[x.Sel] = true
+		}
+		return true
+	})
 	ast.Inspect(f, func(n ast.Node) bool {
 		if e, ok := n.(ast.Expr); ok {
 			if tv, ok := w.tp.Info.Types[e]; ok && tv.IsValue() {
@@ -460,6 +567,18 @@ func (w *walker) file(f *ast.File) {
 		}
 		switch n := n.(type) {
 		case *ast.Ident:
+			if _, ok := w.tp.Info.Instances[n]; ok {
+				switch w.tp.Info.Uses[n].(type) {
+				case *types.TypeName:
+					w.count("type_instantiations")
+				case *types.Func:
+					if explicit[n] {
+						w.count("explicit_instantiations")
+					} else {
+						w.count("inferred_instantiations")
+					}
+				}
+			}
 			if tn, ok := w.tp.Info.Uses[n].(*types.TypeName); ok && tn.Parent() == types.Universe {
 				if b, ok := tn.Type().(*types.Basic); ok && b.Info()&types.IsInteger != 0 {
 					w.side.IntegerTypes[b.Name()]++
@@ -467,9 +586,19 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.FuncDecl:
 			w.funcDecl(n)
+			if n.Type.TypeParams != nil {
+				w.count("generic_functions")
+				w.typeParams(n.Type.TypeParams)
+			} else if fn, ok := w.tp.Info.Defs[n.Name].(*types.Func); ok && fn.Type().(*types.Signature).RecvTypeParams().Len() > 0 {
+				w.count("generic_methods")
+			}
 		case *ast.FuncLit:
 			w.count("function_literals")
 		case *ast.TypeSpec:
+			if n.TypeParams != nil {
+				w.count("generic_types")
+				w.typeParams(n.TypeParams)
+			}
 			switch {
 			case n.Assign.IsValid():
 				w.count("type_aliases")
@@ -594,7 +723,9 @@ func (w *walker) file(f *ast.File) {
 				}
 			}
 		case *ast.IndexExpr:
-			w.count("index_expressions")
+			if !w.instantiation(n.X) {
+				w.count("index_expressions")
+			}
 		case *ast.SelectorExpr:
 			if s := w.tp.Info.Selections[n]; s != nil && s.Kind() == types.FieldVal {
 				w.count("field_selections")
@@ -738,8 +869,41 @@ func (w *walker) funcDecl(n *ast.FuncDecl) {
 	}
 }
 
+// typeParams counts the type parameter names a declaration introduces.
+func (w *walker) typeParams(list *ast.FieldList) {
+	for _, field := range list.List {
+		for range field.Names {
+			w.count("type_parameters")
+		}
+	}
+}
+
+// instantiation reports whether x (the operand of F[T]) names a generic
+// function or type, so that F[T] instantiates rather than indexes.
+func (w *walker) instantiation(x ast.Expr) bool {
+	switch x := x.(type) {
+	case *ast.Ident:
+		_, ok := w.tp.Info.Instances[x]
+		return ok
+	case *ast.SelectorExpr:
+		_, ok := w.tp.Info.Instances[x.Sel]
+		return ok
+	}
+	return false
+}
+
 func (w *walker) call(n *ast.CallExpr) {
 	fun := ast.Unparen(n.Fun)
+	switch f := fun.(type) {
+	case *ast.IndexExpr:
+		if w.instantiation(f.X) {
+			fun = f.X
+		}
+	case *ast.IndexListExpr:
+		if w.instantiation(f.X) {
+			fun = f.X
+		}
+	}
 	if tv, ok := w.tp.Info.Types[fun]; ok && tv.IsType() {
 		w.count("conversions")
 		w.side.Conversions[w.typeString(tv.Type)]++

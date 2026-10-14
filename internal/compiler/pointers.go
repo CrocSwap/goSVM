@@ -77,13 +77,13 @@ func (g *generator) arrayPointer(e ast.Expr) string {
 	return "&" + g.expr(e)
 }
 func (g *generator) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, selection *types.Selection) string {
-	fn := selection.Obj().(*types.Func)
+	fn := g.method(selector)
 	sig := fn.Type().(*types.Signature)
 	receiver := sig.Recv().Type()
 	var args []string
 	if selection.Kind() == types.MethodExpr {
 		args = g.callValues(call)
-		actual := selection.Type().(*types.Signature).Params().At(0).Type()
+		actual := g.info.Types[selector].Type.(*types.Signature).Params().At(0).Type()
 		if p, ok := pointer(actual); ok {
 			if _, wantPointer := pointer(receiver); !wantPointer {
 				args[0] = g.temp(call, receiver, "*"+g.checkedPointer(call, p, args[0]))
@@ -153,8 +153,9 @@ type borrowAnalysis struct {
 }
 
 // checkBorrows proves that no pointer or slice outlives the storage it refers
-// to and returns each function's result summary, keyed by its object.
-func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Function) map[types.Object]borrowSummary {
+// to and returns each function's result summary, keyed by its object. Each
+// instance of a generic declaration has its own summary.
+func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Function, gp *genericProgram) map[types.Object]borrowSummary {
 	summaries := map[types.Object]borrowSummary{}
 	var check func(types.Object)
 	check = func(object types.Object) {
@@ -165,11 +166,8 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		ast.Inspect(fn.Body, func(n ast.Node) bool {
 			if c, ok := n.(*ast.CallExpr); ok {
 				var target types.Object
-				switch e := c.Fun.(type) {
-				case *ast.Ident:
-					target = f.info.Uses[e]
-				case *ast.SelectorExpr:
-					target = f.info.Uses[e.Sel]
+				if id := callIdent(f.callFun(c.Fun)); id != nil {
+					target = f.callee(id)
 				}
 				if funcs[target] != nil {
 					check(target)
@@ -177,6 +175,7 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 			}
 			return true
 		})
+		defer gp.rethrow(funcs[object].Instance.context()) // name the instantiation in this body's diagnostics
 		sig := object.Type().(*types.Signature)
 		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len())}
 		for i := range a.results {
@@ -261,10 +260,15 @@ func scopeWithin(child, parent *types.Scope) bool {
 	}
 	return false
 }
+
+// scopeAt is the innermost scope of the analyzed function containing pos.
+// Instances of a generic declaration share its positions, so only scopes
+// within the function's own scope are considered.
 func (a *borrowAnalysis) scopeAt(pos token.Pos) *types.Scope {
 	var result *types.Scope
+	function := a.f.info.Scopes[a.fn.Type]
 	for _, scope := range a.f.info.Scopes {
-		if scope.Contains(pos) && (result == nil || scopeWithin(scope, result)) {
+		if scope.Contains(pos) && scopeWithin(scope, function) && (result == nil || scopeWithin(scope, result)) {
 			result = scope
 		}
 	}
@@ -357,11 +361,11 @@ func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	}
 	var object types.Object
 	var args []borrowSet
-	switch e := call.Fun.(type) {
+	switch e := a.f.callFun(call.Fun).(type) {
 	case *ast.Ident:
-		object = a.f.info.Uses[e]
+		object = a.f.callee(e)
 	case *ast.SelectorExpr:
-		object = a.f.info.Uses[e.Sel]
+		object = a.f.callee(e.Sel)
 		if selection := a.f.info.Selections[e]; selection != nil && selection.Kind() == types.MethodVal {
 			recv := object.Type().(*types.Signature).Recv().Type()
 			if _, wantPointer := pointer(recv); wantPointer {

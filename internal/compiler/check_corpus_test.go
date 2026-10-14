@@ -97,6 +97,16 @@ var corpusChanges = map[int]corpusEntry{
 	233: {Error: "pointer-reject.go:1:45: " + pointerElementRule},
 	42:  {Error: "bad.go:1:16: " + structFieldRule},
 	257: {Error: "pointer-reject.go:1:16: " + structFieldRule},
+	// Generics became supported (docs/GO_GENERICS.md): the instantiation
+	// f[uint64] is emitted as its own function, and an unused generic type
+	// emits nothing.
+	27:  {CSHA256: "b4b469cbd78f41a300064e2a6d229a2e0788dd4542820fcae073fd414f7651a0"}, // s03.go: was "generics and bodyless functions are unsupported"
+	106: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // s00.go: was "generic types unsupported"
+	// Interface values are still rejected at the same position; the message
+	// now says interfaces are only usable as constraints.
+	140: {Error: "s42.go:2:40: interface values unsupported (interface{}); " + interfaceRule},
+	198: {Error: "s43.go:2:1: interface values unsupported (interface{}); " + interfaceRule},
+	272: {Error: "control-reject.go:1:11: interface values unsupported (error); " + interfaceRule},
 }
 
 const (
@@ -104,6 +114,8 @@ const (
 	pointerElementRule = "pointer elements must be integer/bool scalars, value structs or scalar arrays"
 	structFieldRule    = "struct fields must be integer scalars, bools, scalar arrays, or value structs"
 )
+
+const interfaceRule = "interfaces are only usable as type parameter constraints"
 
 // Check must accept exactly the programs the pre-Check compiler accepted and
 // reject the rest with the identical first error; CompileProgram must still

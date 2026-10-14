@@ -317,6 +317,38 @@ func TestAlias(t *testing.T) {
 	runNative(t, dir)
 }
 
+// Generic types are not wire types: neither a generic layout type nor a
+// field of an instantiated generic type is accepted.
+func TestSchema2RejectsGenericWireTypes(t *testing.T) {
+	for _, tc := range []struct {
+		name, field, layout, want string
+	}{
+		{"layout", "", "model.Boxed", "cannot use generic type model.Boxed[T any] without instantiation"},
+		{"instance layout", "", "model.Boxed[uint64]", `wire type "model.Boxed[uint64]" must name an exported type in a declared shared-package import`},
+		{"field", "\n Inner Boxed[uint64]", "", "wire field Inner has generic type example.org/multi-state/model.Boxed[uint64]; generic types are unsupported in wire layouts"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := multiStarter(t)
+			path := filepath.Join(dir, "model/model.go")
+			b, err := os.ReadFile(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			b = append(b, []byte("\ntype Boxed[T any] struct{ V T }\n")...)
+			b = bytes.Replace(b, []byte("Balance uint64"), []byte("Balance uint64"+tc.field), 1)
+			if err := os.WriteFile(path, b, 0600); err != nil {
+				t.Fatal(err)
+			}
+			if tc.layout != "" {
+				editMultiConfig(t, dir, func(c *Config) { c.Layouts[0].Type = tc.layout })
+			}
+			if err := Generate(dir); err == nil || !strings.Contains(err.Error(), tc.want) {
+				t.Fatalf("got %v want %q", err, tc.want)
+			}
+		})
+	}
+}
+
 func TestSchema2NamedScalarArrayWire(t *testing.T) {
 	dir := multiStarter(t)
 	path := filepath.Join(dir, "model/model.go")

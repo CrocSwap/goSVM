@@ -556,6 +556,9 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 	}
 	active[t] = true
 	defer delete(active, t)
+	if named, ok := t.(*types.Named); ok && named.TypeArgs().Len() > 0 {
+		return f, fmt.Errorf("wire field %s has generic type %s; generic types are unsupported in wire layouts", name, t)
+	}
 	switch u := t.Underlying().(type) {
 	case *types.Basic:
 		switch u.Kind() {

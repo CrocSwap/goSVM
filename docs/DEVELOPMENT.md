@@ -510,9 +510,16 @@ the 64- and 32-bit and `uint` carry, multiply and divide functions and the 64-,
 results and its divide panics as aborts. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
 
+Generics are monomorphized: generic functions, generic structs and named arrays
+with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`),
+`comparable`, `any` and method constraints. Each instantiation is checked and
+emitted as its own function or struct with a deterministic name derived from its
+type arguments, at most 64 per generic declaration. Interfaces are only usable as
+constraints. See [generics semantics, naming and SBF evidence](../docs/GO_GENERICS.md).
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
-strings, generics, closures/function values, recursion, named results, variadics,
+floating-point and complex types, globals, `init`, allocation, append, non-byte/named slices, slice fields, interface values, maps,
+strings, closures/function values, recursion, named results, variadics,
 range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
 division and negative-shift failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go

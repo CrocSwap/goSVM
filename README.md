@@ -107,11 +107,12 @@ facilities in its own code, without installing the compiler or SBF tools.
 The compiler supports multi-file programs, user packages, signed and unsigned
 [integers](docs/GO_INTEGERS.md) (`int8`…`int64`, `uint8`…`uint64`, `int`, `uint`)
 with Go's exact semantics, structs, fixed-size scalar arrays, multiple
-return values, methods, `range` loops, constrained pointers, and borrowed byte slices. It lowers Go through checked C and Solana
-Clang/LLD to SBF.
+return values, methods, `range` loops, constrained pointers, borrowed byte slices,
+and [generics](docs/GO_GENERICS.md) (monomorphized at compile time). It lowers Go
+through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: allocation, maps,
-interfaces, generics, goroutines, and on-chain standard-library imports other than
+interface values, goroutines, and on-chain standard-library imports other than
 [`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
 toolchain without a production audit.
 [Language details](docs/DEVELOPMENT.md#supported-subset-and-remaining-blockers).

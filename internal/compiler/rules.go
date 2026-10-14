@@ -16,6 +16,9 @@ type frontend struct {
 	info    *types.Info
 	arrays  []arrayType  // array value types declared so far, in declaration order
 	results []resultType // multiple-result tuples declared so far
+	// instantiated resolves generic callees to their instances
+	// (CheckedProgram.Instantiated); empty for programs without generics.
+	instantiated map[*ast.Ident]*Instance
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
@@ -84,6 +87,9 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 			types.Int8, types.Int16, types.Int32, types.Int64, types.Int:
 			return
 		}
+	}
+	if _, ok := t.Underlying().(*types.Interface); ok {
+		f.fail(n, "interface values unsupported (%s); interfaces are only usable as type parameter constraints", t)
 	}
 	f.fail(n, "unsupported type %s", t)
 }

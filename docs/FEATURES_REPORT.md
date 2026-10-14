@@ -38,6 +38,7 @@ construct counter is present even when zero.
 | `sdk_calls[]` | calls to `gosvm/solana` or `gosvm/sdk/...` functions and methods |
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
 | `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
+| `generics[]` | every generic function, method and type declared in program code: `name` (`pkg/path.F`, `pkg/path.T.M`, `pkg/path.T`), `package`, `kind` (`function`, `method`, `type`), `count` and the sorted canonical `instances` the compiler would monomorphize (added October 14, 2026; additive, schema unchanged; see [generics](GO_GENERICS.md)) |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as
@@ -65,12 +66,18 @@ Each `language` side has:
   `for_infinite`, `for_range` with `for_range_array|slice|int|other`, `break`,
   `continue`, `labels`, `goto`, `defer`, `go`, `select`), constants
   (`const_typed`, `const_untyped`), literals (`int_literals`,
-  `char_literals`, `string_literals`, excluding import paths), and signed
+  `char_literals`, `string_literals`, excluding import paths), signed
   integer operations whose lowering differs from the unsigned one
   (`signed_division`: non-constant `/` and `%` on signed operands;
   `signed_shift_counts`: shifts by a non-constant signed count, which trap
-  when negative; both added within gosvm-features-v1). An SDK method
-  call counts as both `method_calls` and `sdk_calls`.
+  when negative), and generics (`generic_functions`, `generic_methods`
+  declared on generic types, `generic_types`, `type_parameters` declared, and
+  generic function names written with type arguments,
+  `explicit_instantiations`, or without, `inferred_instantiations`, plus
+  instantiated generic type expressions, `type_instantiations`); all added
+  within gosvm-features-v1 on October 14, 2026. An SDK method call counts as
+  both `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of
+  `F`, and `F[T]` is not an `index_expressions` entry.
 - `operators`: binary, unary (`!`, `unary-`, `unary^`, `unary+`), compound
   assignment (`+=`, …) and `++`/`--` occurrences; `&x` is `address_of`, not an
   operator. `operator_classes` groups them as `arithmetic`, `shift`,
