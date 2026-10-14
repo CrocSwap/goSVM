@@ -59,6 +59,14 @@ Check does not lower SDK calls. Calls into `gosvm/solana` and the `gosvm/sdk/*`
 packages are ordinary typed calls. The C backend maps the SDK intrinsics onto its
 runtime templates (`*.c.txt`). Another backend needs its own lowering for them.
 
+`math/bits` calls look the same: they are standard-library calls in the typed
+program (`types.Func` with `Pkg().Path() == "math/bits"`), are not listed in
+`Function.Callees`, and have no Go body in the checked program. Check has
+already certified that each is a supported function and that `RotateLeft*`'s
+count is a constant (its `types.TypeAndValue.Value`). The C backend lowers them
+to `bits.c.txt`; another backend needs its own lowering, with the results and
+traps in [GO_BITS.md](GO_BITS.md). `UintSize` is an untyped constant (64).
+
 ## `project.LoadSchema`
 
 `func LoadSchema(dir string) (*ResolvedSchema, error)` in

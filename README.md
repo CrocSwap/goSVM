@@ -108,8 +108,9 @@ pointers, and borrowed byte slices. It lowers Go through checked C and Solana
 Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: allocation, maps,
-interfaces, generics, goroutines, and on-chain standard-library imports are not
-supported. This is an experimental toolchain without a production audit.
+interfaces, generics, goroutines, and on-chain standard-library imports other than
+[`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
+toolchain without a production audit.
 [Language details](docs/DEVELOPMENT.md#supported-subset-and-remaining-blockers).
 
 ## Explore

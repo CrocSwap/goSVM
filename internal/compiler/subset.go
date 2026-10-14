@@ -53,6 +53,9 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			c.declareResults(fn, c.info.Defs[fn.Name].Type().(*types.Signature).Results())
 		}
 	}
+	for _, call := range bitsResults(c.info, files) {
+		c.declareResults(call, c.info.Types[call].Type.(*types.Tuple))
+	}
 	for _, d := range decls {
 		switch d := d.(type) {
 		case *ast.FuncDecl:
@@ -663,6 +666,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 		}
 		if imported.Imported().Path() == "gosvm/solana" {
 			c.sdkCall(e, callee)
+			return
+		}
+		if imported.Imported().Path() == bitsPath {
+			c.bitsCall(e, callee)
 			return
 		}
 		o = c.info.Uses[callee.Sel]

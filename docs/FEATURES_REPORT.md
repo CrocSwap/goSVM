@@ -37,6 +37,7 @@ construct counter is present even when zero.
 | `language.handwritten`, `language.generated` | per-kind usage (below) |
 | `sdk_calls[]` | calls to `gosvm/solana` or `gosvm/sdk/...` functions and methods |
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
+| `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as
@@ -80,7 +81,8 @@ Each `language` side has:
 - `arrays`: fixed array type expressions written in source, with `type`,
   `elem`, `length`, `count`.
 
-Each `sdk_calls`/`library_calls` entry has `name` (`types.Func.FullName`, for
+A `math/bits` call also counts as `cross_package_calls` in `constructs`. Each
+`sdk_calls`/`library_calls`/`stdlib_calls` entry has `name` (`types.Func.FullName`, for
 example `gosvm/sdk/token.Transfer` or `(*gosvm/sdk/pda.Seeds).AddKey`),
 `package`, `method`, `count`, `handwritten`, `generated`, and `positions`
 (`file:line`, one per call).

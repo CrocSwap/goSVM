@@ -92,7 +92,7 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 	}
 	userImports := false
 	for _, im := range imports {
-		if im.path != "gosvm/solana" {
+		if !compilerImport(im.path) {
 			userImports = true
 		}
 	}
@@ -160,7 +160,7 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 			return e
 		}
 		for _, im := range imports {
-			if im.path == "gosvm/solana" {
+			if compilerImport(im.path) {
 				continue
 			}
 			if im.path == p.Entry || active[im.path] {
@@ -322,6 +322,11 @@ func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
 	}
 	return &pkg, nil
 }
+
+// compilerImport reports whether the compiler itself provides the package
+// (the SDK boundary and math/bits), so it needs no module resolution.
+func compilerImport(path string) bool { return path == "gosvm/solana" || path == bitsPath }
+
 func internalImportAllowed(from, to string) bool {
 	parts := strings.Split(to, "/")
 	for i, part := range parts {
@@ -347,6 +352,7 @@ type programImporter struct {
 	decls     []ast.Decl
 	sdk       sdkImporter
 	hasSDK    bool
+	bits      *types.Package // math/bits declarations, once imported
 	entryPath string
 }
 
@@ -354,6 +360,16 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	if path == "gosvm/solana" {
 		p.hasSDK = true
 		return p.sdk.Import(path)
+	}
+	if path == bitsPath {
+		if p.bits == nil {
+			pkg, err := importBits()
+			if err != nil {
+				return nil, err
+			}
+			p.bits = pkg
+		}
+		return p.bits, nil
 	}
 	if pkg := p.checked[path]; pkg != nil {
 		return pkg, nil

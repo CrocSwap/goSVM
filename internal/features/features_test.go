@@ -230,3 +230,35 @@ func TestDeterministicOutput(t *testing.T) {
 		t.Fatal("report bytes differ between runs")
 	}
 }
+
+func TestStdlibCalls(t *testing.T) {
+	dir := t.TempDir()
+	src := `package program
+
+import wide "math/bits"
+
+func Process(s, i []byte) uint64 {
+	hi, lo := wide.Mul64(uint64(len(s)), 3)
+	q, _ := wide.Div64(0, lo, 7)
+	return hi + q + uint64(wide.LeadingZeros64(lo)) + wide.UintSize
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(src), 0644); err != nil {
+		t.Fatal(err)
+	}
+	u := report(t, dir)
+	if len(u.SDKCalls) != 0 || len(u.StdlibCalls) != 3 {
+		t.Fatalf("stdlib calls: %+v sdk %+v", u.StdlibCalls, u.SDKCalls)
+	}
+	div := u.StdlibCalls[0]
+	if div.Name != "math/bits.Div64" || div.Package != "math/bits" || div.Count != 1 || div.Handwritten != 1 || div.Positions[0] != "program.go:7" {
+		t.Errorf("div64: %+v", div)
+	}
+	h := u.Language.Handwritten
+	if h.Constructs["cross_package_calls"] != 3 || h.Constructs["sdk_calls"] != 0 || len(h.Imports) != 1 || h.Imports[0] != "math/bits" {
+		t.Errorf("constructs: %v imports %v", h.Constructs["cross_package_calls"], h.Imports)
+	}
+	if fs := fullSwap(t); fs.StdlibCalls == nil || len(fs.StdlibCalls) != 0 {
+		t.Errorf("full swap must report an empty stdlib_calls list: %+v", fs.StdlibCalls)
+	}
+}

@@ -1,0 +1,175 @@
+
+// math/bits runtime, emitted only for programs that call math/bits. Adapted
+// from Go's math/bits (Go Authors, BSD-3-Clause; see THIRD_PARTY_NOTICES and
+// third_party/Go-LICENSE). Every helper uses 64-bit integer operations only:
+// no 128-bit types, compiler libcalls, lookup tables or VM syscalls other than
+// abort. int results (counts) are i64, as for len.
+typedef struct { u64 r0, r1; } gosvm_bits_u64x2;
+typedef struct { u32 r0, r1; } gosvm_bits_u32x2;
+
+static __attribute__((unused)) i64 gosvm_bits_Len64(u64 x) {
+    i64 n = 0;
+    if (x >> 32) { x >>= 32; n += 32; }
+    if (x >> 16) { x >>= 16; n += 16; }
+    if (x >> 8) { x >>= 8; n += 8; }
+    if (x >> 4) { x >>= 4; n += 4; }
+    if (x >> 2) { x >>= 2; n += 2; }
+    if (x >> 1) { x >>= 1; n += 1; }
+    return n + (i64)x;
+}
+static __attribute__((unused)) i64 gosvm_bits_Len32(u32 x) { return gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_Len8(u8 x) { return gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_LeadingZeros64(u64 x) { return 64 - gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_LeadingZeros32(u32 x) { return 32 - gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_LeadingZeros8(u8 x) { return 8 - gosvm_bits_Len64(x); }
+
+// x&-x isolates the lowest set bit; its length minus one is the zero count.
+static __attribute__((unused)) i64 gosvm_bits_TrailingZeros64(u64 x) {
+    if (x == 0) return 64;
+    return gosvm_bits_Len64(x & (0 - x)) - 1;
+}
+static __attribute__((unused)) i64 gosvm_bits_TrailingZeros32(u32 x) {
+    if (x == 0) return 32;
+    return gosvm_bits_TrailingZeros64(x);
+}
+static __attribute__((unused)) i64 gosvm_bits_TrailingZeros8(u8 x) {
+    if (x == 0) return 8;
+    return gosvm_bits_TrailingZeros64(x);
+}
+
+static __attribute__((unused)) i64 gosvm_bits_OnesCount64(u64 x) {
+    x = (x >> 1 & 0x5555555555555555ULL) + (x & 0x5555555555555555ULL);
+    x = (x >> 2 & 0x3333333333333333ULL) + (x & 0x3333333333333333ULL);
+    x = ((x >> 4) + x) & 0x0f0f0f0f0f0f0f0fULL;
+    x += x >> 8;
+    x += x >> 16;
+    x += x >> 32;
+    return (i64)(x & 127);
+}
+static __attribute__((unused)) i64 gosvm_bits_OnesCount32(u32 x) { return gosvm_bits_OnesCount64(x); }
+static __attribute__((unused)) i64 gosvm_bits_OnesCount8(u8 x) { return gosvm_bits_OnesCount64(x); }
+
+// s is k mod width, folded from the constant k at compile time.
+static __attribute__((unused)) u64 gosvm_bits_RotateLeft64(u64 x, u64 s) {
+    return s == 0 ? x : x << s | x >> (64 - s);
+}
+static __attribute__((unused)) u32 gosvm_bits_RotateLeft32(u32 x, u64 s) {
+    return s == 0 ? x : (u32)((u64)x << s | (u64)x >> (32 - s));
+}
+static __attribute__((unused)) u8 gosvm_bits_RotateLeft8(u8 x, u64 s) {
+    return s == 0 ? x : (u8)((u64)x << s | (u64)x >> (8 - s));
+}
+
+static __attribute__((unused)) u64 gosvm_bits_ReverseBytes64(u64 x) {
+    x = (x >> 8 & 0x00ff00ff00ff00ffULL) | (x & 0x00ff00ff00ff00ffULL) << 8;
+    x = (x >> 16 & 0x0000ffff0000ffffULL) | (x & 0x0000ffff0000ffffULL) << 16;
+    return x >> 32 | x << 32;
+}
+static __attribute__((unused)) u32 gosvm_bits_ReverseBytes32(u32 x) {
+    x = (x >> 8 & 0x00ff00ffU) | (x & 0x00ff00ffU) << 8;
+    return x >> 16 | x << 16;
+}
+static __attribute__((unused)) u64 gosvm_bits_Reverse64(u64 x) {
+    x = (x >> 1 & 0x5555555555555555ULL) | (x & 0x5555555555555555ULL) << 1;
+    x = (x >> 2 & 0x3333333333333333ULL) | (x & 0x3333333333333333ULL) << 2;
+    x = (x >> 4 & 0x0f0f0f0f0f0f0f0fULL) | (x & 0x0f0f0f0f0f0f0f0fULL) << 4;
+    return gosvm_bits_ReverseBytes64(x);
+}
+static __attribute__((unused)) u32 gosvm_bits_Reverse32(u32 x) {
+    x = (x >> 1 & 0x55555555U) | (x & 0x55555555U) << 1;
+    x = (x >> 2 & 0x33333333U) | (x & 0x33333333U) << 2;
+    x = (x >> 4 & 0x0f0f0f0fU) | (x & 0x0f0f0f0fU) << 4;
+    return gosvm_bits_ReverseBytes32(x);
+}
+static __attribute__((unused)) u8 gosvm_bits_Reverse8(u8 x) {
+    u64 v = x;
+    v = (v >> 1 & 0x55) | (v & 0x55) << 1;
+    v = (v >> 2 & 0x33) | (v & 0x33) << 2;
+    v = (v >> 4 & 0x0f) | (v & 0x0f) << 4;
+    return (u8)v;
+}
+
+// Add64/Sub64 match the compiled standard library on amd64 and arm64, where
+// the Go compiler replaces the package code with an add-with-carry instruction
+// that treats any nonzero carry (borrow) input as 1. For carry 0 or 1, the
+// documented inputs, this is also exactly the package formula.
+static __attribute__((unused)) gosvm_bits_u64x2 gosvm_bits_Add64(u64 x, u64 y, u64 carry) {
+    u64 sum = x + y + (u64)(carry != 0);
+    return (gosvm_bits_u64x2){sum, ((x & y) | ((x | y) & ~sum)) >> 63};
+}
+static __attribute__((unused)) gosvm_bits_u64x2 gosvm_bits_Sub64(u64 x, u64 y, u64 borrow) {
+    u64 diff = x - y - (u64)(borrow != 0);
+    return (gosvm_bits_u64x2){diff, ((~x & y) | (~(x ^ y) & diff)) >> 63};
+}
+// Add32/Sub32 are never replaced by the Go compiler: the package formula, for
+// every carry (borrow) value.
+static __attribute__((unused)) gosvm_bits_u32x2 gosvm_bits_Add32(u32 x, u32 y, u32 carry) {
+    u64 sum = (u64)x + (u64)y + (u64)carry;
+    return (gosvm_bits_u32x2){(u32)sum, (u32)(sum >> 32)};
+}
+static __attribute__((unused)) gosvm_bits_u32x2 gosvm_bits_Sub32(u32 x, u32 y, u32 borrow) {
+    u32 diff = x - y - borrow;
+    return (gosvm_bits_u32x2){diff, ((~x & y) | (~(x ^ y) & diff)) >> 31};
+}
+
+static __attribute__((unused)) gosvm_bits_u64x2 gosvm_bits_Mul64(u64 x, u64 y) {
+    u64 x0 = x & 0xffffffffULL, x1 = x >> 32;
+    u64 y0 = y & 0xffffffffULL, y1 = y >> 32;
+    u64 w0 = x0 * y0;
+    u64 t = x1 * y0 + (w0 >> 32);
+    u64 w1 = t & 0xffffffffULL, w2 = t >> 32;
+    w1 += x0 * y1;
+    return (gosvm_bits_u64x2){x1 * y1 + w2 + (w1 >> 32), x * y};
+}
+static __attribute__((unused)) gosvm_bits_u32x2 gosvm_bits_Mul32(u32 x, u32 y) {
+    u64 p = (u64)x * (u64)y;
+    return (gosvm_bits_u32x2){(u32)(p >> 32), (u32)p};
+}
+
+// Go's Div64 (Hacker's Delight divlu): two 64-by-32-bit digit steps, so no
+// 128-bit division helper is needed. Traps where Go panics: y == 0 (divide
+// error) or y <= hi (quotient overflow).
+static __attribute__((unused)) gosvm_bits_u64x2 gosvm_bits_Div64(u64 hi, u64 lo, u64 y) {
+    if (y == 0) abort();
+    if (y <= hi) abort();
+    if (hi == 0) return (gosvm_bits_u64x2){lo / y, lo % y};
+    u64 s = (u64)gosvm_bits_LeadingZeros64(y);
+    y <<= s;
+    const u64 two32 = 0x100000000ULL, mask32 = 0xffffffffULL;
+    u64 yn1 = y >> 32, yn0 = y & mask32;
+    // Go defines lo>>64 as 0; C leaves a full-width shift undefined.
+    u64 un32 = hi << s | (s == 0 ? 0 : lo >> (64 - s));
+    u64 un10 = lo << s;
+    u64 un1 = un10 >> 32, un0 = un10 & mask32;
+    u64 q1 = un32 / yn1;
+    u64 rhat = un32 - q1 * yn1;
+    while (q1 >= two32 || q1 * yn0 > two32 * rhat + un1) {
+        q1--;
+        rhat += yn1;
+        if (rhat >= two32) break;
+    }
+    u64 un21 = un32 * two32 + un1 - q1 * y;
+    u64 q0 = un21 / yn1;
+    rhat = un21 - q0 * yn1;
+    while (q0 >= two32 || q0 * yn0 > two32 * rhat + un0) {
+        q0--;
+        rhat += yn1;
+        if (rhat >= two32) break;
+    }
+    return (gosvm_bits_u64x2){q1 * two32 + q0, (un21 * two32 + un0 - q0 * y) >> s};
+}
+// Rem64 reduces hi first, so it traps only for y == 0 (no quotient overflow).
+static __attribute__((unused)) u64 gosvm_bits_Rem64(u64 hi, u64 lo, u64 y) {
+    if (y == 0) abort();
+    return gosvm_bits_Div64(hi % y, lo, y).r1;
+}
+static __attribute__((unused)) gosvm_bits_u32x2 gosvm_bits_Div32(u32 hi, u32 lo, u32 y) {
+    if (y != 0 && y <= hi) abort();
+    if (y == 0) abort();
+    u64 z = (u64)hi << 32 | (u64)lo;
+    return (gosvm_bits_u32x2){(u32)(z / y), (u32)(z % y)};
+}
+static __attribute__((unused)) u32 gosvm_bits_Rem32(u32 hi, u32 lo, u32 y) {
+    if (y == 0) abort();
+    return (u32)(((u64)hi << 32 | (u64)lo) % y);
+}
