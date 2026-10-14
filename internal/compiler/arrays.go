@@ -80,30 +80,15 @@ func (g *generator) ensureMemory() {
 }
 
 func (g *generator) arrayName(node ast.Node, a *types.Array) string {
-	for _, entry := range g.arrays {
-		if types.Identical(entry.typ, a) {
-			return entry.name
-		}
-	}
-	g.fail(node, "array type was not declared before use")
-	return ""
+	return g.lookupArray(node, a).name
 }
 
+// emitArray declares the C wrapper for an array type arrayRule admitted.
 func (g *generator) emitArray(node ast.Node, a *types.Array) {
-	for _, entry := range g.arrays {
-		if types.Identical(entry.typ, a) {
-			return
-		}
-	}
-	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.Bool) {
-		g.fail(node, "array elements must be byte, uint32, uint64, bool, or named versions of those scalars")
+	if g.declaredArray(a) {
+		return
 	}
 	element := g.variable(node, a.Elem())
-	size := (&types.StdSizes{WordSize: 8, MaxAlign: 8}).Sizeof(a.Elem())
-	if a.Len() > maxArrayBytes/size {
-		g.fail(node, "array storage exceeds experimental %d-byte per-value limit", maxArrayBytes)
-	}
 	g.ensureMemory()
 	g.next++
 	name := fmt.Sprintf("array%d", g.next)
@@ -128,7 +113,7 @@ func (g *generator) arrayLiteral(e *ast.CompositeLit, a *types.Array) string {
 			var valid bool
 			index, valid = constant.Int64Val(g.info.Types[kv.Key].Value)
 			if !valid || index < 0 || index >= a.Len() {
-				g.fail(kv, "invalid array literal index")
+				g.unchecked(kv)
 			}
 			value = kv.Value
 		}

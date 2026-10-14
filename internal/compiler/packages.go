@@ -339,7 +339,7 @@ func internalImportAllowed(from, to string) bool {
 // programImporter shares one type universe and one Info map across all packages,
 // preserving named-type identity rather than flattening import names into text.
 type programImporter struct {
-	g         *generator
+	f         *frontend
 	units     map[string]PackageSources
 	checked   map[string]*types.Package
 	active    map[string]bool
@@ -370,28 +370,28 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	sort.Slice(sources, func(i, j int) bool { return sources[i].Name < sources[j].Name })
 	var files []*ast.File
 	for _, source := range sources {
-		file, err := parser.ParseFile(p.g.fset, source.Name, source.Data, 0)
+		file, err := parser.ParseFile(p.f.fset, source.Name, source.Data, 0)
 		if err != nil {
 			return nil, err
 		}
 		for _, im := range file.Imports {
 			if im.Name != nil && (im.Name.Name == "." || im.Name.Name == "_") {
-				p.g.fail(im, "dot and blank imports unsupported")
+				p.f.fail(im, "dot and blank imports unsupported")
 			}
 			dependency, _ := strconv.Unquote(im.Path.Value)
 			if !internalImportAllowed(path, dependency) {
-				p.g.fail(im, "use of internal package %q not allowed", dependency)
+				p.f.fail(im, "use of internal package %q not allowed", dependency)
 			}
 		}
 		files = append(files, file)
 	}
 	conf := types.Config{Sizes: &types.StdSizes{WordSize: 8, MaxAlign: 8}, Importer: p}
-	pkg, err := conf.Check(path, p.g.fset, files, p.g.info)
+	pkg, err := conf.Check(path, p.f.fset, files, p.f.info)
 	if err != nil {
 		return nil, err
 	}
 	if path != p.entryPath && pkg.Name() == "main" {
-		return nil, fmt.Errorf("%s: package %q is a program, not importable", p.g.fset.Position(files[0].Package), path)
+		return nil, fmt.Errorf("%s: package %q is a program, not importable", p.f.fset.Position(files[0].Package), path)
 	}
 	p.checked[path], p.active[path] = pkg, false
 	p.files = append(p.files, files...)

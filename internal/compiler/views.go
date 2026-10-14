@@ -15,9 +15,6 @@ static inline slice gosvm_view(slice s,u64 lo,u64 hi,u64 maximum) {
 
 func (g *generator) sliceView(e *ast.SliceExpr) string {
 	// All supported views retain byte storage; no copy or allocation occurs.
-	if s, ok := g.info.Types[e].Type.(*types.Slice); !ok || !types.Identical(s.Elem(), types.Typ[types.Uint8]) {
-		g.fail(e, "slice views require byte/uint8 elements")
-	}
 	var base string
 	if a, ok := arrayValue(g.info.Types[e.X].Type); ok {
 		var address string

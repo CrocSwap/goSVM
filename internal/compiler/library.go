@@ -2,17 +2,9 @@ package compiler
 
 import (
 	"go/ast"
-	"go/types"
 	"gosvm/internal/library"
 )
 
-func (g *generator) externalFunction(o types.Object) (library.Binding, bool) {
-	if o == nil || o.Pkg() == nil {
-		return library.Binding{}, false
-	}
-	b, ok := g.externals[o.Pkg().Path()+"."+o.Name()]
-	return b, ok
-}
 func (g *generator) emitLibraryBody(fn *ast.FuncDecl, b library.Binding) {
 	// The generated native wrapper has this exact signature. The synthetic source
 	// participates in ordinary type/borrow checking; only its body is replaced.
