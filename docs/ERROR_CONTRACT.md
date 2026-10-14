@@ -94,8 +94,9 @@ Checks run in this order; within each phase, accounts follow declaration order
 1. Instruction discriminator and length: 6004.
 2. Account count: 6000.
 3. Writable, signer and executable flags: 6001.
-4. Program ID length (6002), then per account: key length and fixed address
-   (6005), owner (6002).
+4. Program ID length (6002, only when an account declares `owner:
+   "program_id"`), then per account: key length and fixed address (6005),
+   owner (6002).
 5. Duplicate keys not declared as aliases: 6006.
 6. Initialization target and payer empty: 6009.
 7. Owned state length and discriminator: 6003.
@@ -103,11 +104,20 @@ Checks run in this order; within each phase, accounts follow declaration order
 9. Relations, including token mint and authority: 6007.
 10. Close authority: 6007.
 11. PDA re-derivation: 6008.
-12. Initialization (`system.Create` codes), handler, post-handler close
-    (`CloseAccount` codes), write-back of writable state.
+12. Initialization (`system.Create` codes), in declaration order.
+13. The handler; a nonzero result returns unchanged.
+14. Post-handler close of declared `close` accounts (`CloseAccount` codes).
+15. Write-back of writable, non-closed state, in declaration order. For
+    instructions with init or close declarations, each such account is first
+    re-read and re-checked: length (6003), owner (6002), then the
+    discriminator (6003), or, for a newly initialized account, the
+    discriminator is written. Read-only state, token accounts and other
+    references are never written back.
 
 Handler results propagate unchanged.
 
 ## Changelog
 
 - 2026-10-14: contract established at `da6bf04` plus this document.
+- 2026-10-14: steps 4 and 12–15 spelled out to match existing generated code
+  (no behaviour change).
