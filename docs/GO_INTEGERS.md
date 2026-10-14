@@ -53,10 +53,12 @@ These follow the Go specification.
   (`var x int8 = 128`), constant negative shift counts (`x << -1`) and constant
   division by zero are compile errors with the `go/types` message.
 
-Still rejected: `uintptr`, floating-point and complex types, strings, and
+Still rejected: `uintptr`, floating-point and complex types, and
 builtins other than `len`, `cap` and the [allocation](GO_ALLOCATION.md)
 builtins `new`, `make`, `append` and `copy` (including `min` and `max`).
-Compound assignment (`x += 1`) is still rejected, for every type.
+Compound assignment (`x += 1`) is still rejected for every integer type
+(`+=` is admitted only on [strings](GO_STRINGS.md)). `string(x)` converts any
+integer type to its UTF-8 rune encoding.
 
 With [allocation](GO_ALLOCATION.md), slices of every integer type (`[]int8`,
 `[]int`, `[]uint`) work like any other slice. `make` lengths and capacities,

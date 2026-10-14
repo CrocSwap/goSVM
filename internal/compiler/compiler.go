@@ -148,7 +148,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	// programs that use it get the heap runtime, so the C of every other
 	// program is byte-identical to earlier compilers.
 	// Interface values box into the heap and need its runtime too.
-	hasHeap := usesAllocation(program) || g.ifaces.used
+	// So do string concatenations and conversions (docs/GO_STRINGS.md).
+	hasHeap := usesAllocation(program) || g.ifaces.used || program.usesStrings && stringAllocates(g.info, files)
 	if hasHeap {
 		hasViews, hasPointers = true, true
 	}
@@ -176,6 +177,14 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	if hasHeap {
 		g.WriteString(heapRuntimeFor(program.Program.HeapBytes))
+	}
+	if program.usesStrings {
+		// Only programs with string values get the string runtime, so the C
+		// of every other program is byte-identical to earlier compilers.
+		g.WriteString(stringRuntime)
+		if hasHeap {
+			g.WriteString(stringHeapRuntime)
+		}
 	}
 	if g.ifaces.used {
 		g.WriteString(ifaceRuntime)
@@ -409,6 +418,8 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	}
 	if b, ok := t.Underlying().(*types.Basic); ok {
 		switch b.Kind() {
+		case types.String, types.UntypedString:
+			return "gosvm_string"
 		case types.Uint8:
 			return "u8"
 		case types.Uint16:
@@ -505,6 +516,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		return "0"
 	}
 	if tv.Value != nil {
+		if tv.Value.Kind() == constant.String {
+			return stringLiteral(tv.Value) // read-only data; nothing is allocated
+		}
 		if tv.Value.Kind() == constant.Bool {
 			if constant.BoolVal(tv.Value) {
 				return "1"
@@ -532,6 +546,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		return g.temp(e, tv.Type, g.name(o))
 	case *ast.SliceExpr:
+		if isString(g.info.Types[e.X].Type) {
+			return g.stringSlice(e)
+		}
 		return g.sliceView(e)
 	case *ast.StarExpr:
 		return g.pointed(e.X)
@@ -600,6 +617,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 			return g.temp(e, tv.Type, fmt.Sprintf("*%s_at(&%s,%s)", g.arrayName(e, a), x, i))
 		}
 		x, i := g.expr(e.X), g.expr(e.Index)
+		if isString(g.info.Types[e.X].Type) {
+			return g.temp(e, tv.Type, fmt.Sprintf("gosvm_str_at(%s,(u64)%s)", x, i))
+		}
 		if !isByteSlice(g.info.Types[e.X].Type) {
 			return g.temp(e, tv.Type, g.element(e, g.info.Types[e.X].Type, x, i))
 		}
@@ -638,6 +658,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		if _, ok := g.info.Types[e.X].Type.Underlying().(*types.Struct); ok {
 			g.unchecked(e)
+		}
+		if isString(g.info.Types[e.X].Type) {
+			return g.stringBinary(e, tv)
 		}
 		x := g.expr(e.X)
 		if e.Op == token.LAND || e.Op == token.LOR {
@@ -696,6 +719,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 			}
 		}
 		if g.info.Types[e.Fun].IsType() {
+			if kind := classifyConversion(g.info, e); kind != notStringConversion {
+				return g.stringConversion(e, kind)
+			}
 			if isIface(tv.Type) {
 				return g.expr(e.Args[0]) // converted, or copied from an interface value
 			}
@@ -797,6 +823,10 @@ func (g *generator) stmt(s ast.Stmt) {
 	case *ast.ExprStmt:
 		g.expr(s.X)
 	case *ast.AssignStmt:
+		if s.Tok == token.ADD_ASSIGN && len(s.Lhs) == 1 && isString(g.info.Types[s.Lhs[0]].Type) {
+			g.stringAddAssign(s)
+			return
+		}
 		if s.Tok != token.DEFINE && s.Tok != token.ASSIGN {
 			g.unchecked(s)
 		}

@@ -77,6 +77,8 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 			} else if s.Tag != nil {
 				if a, ok := g.info.Types[s.Tag].Type.Underlying().(*types.Array); ok {
 					g.line("%s=%s_equal(%s,%s);", matched, g.arrayName(s.Tag, a), tag, value)
+				} else if isString(g.info.Types[s.Tag].Type) {
+					g.line("%s=gosvm_str_eq(%s,%s);", matched, tag, value)
 				} else {
 					g.line("%s=(%s==%s);", matched, tag, value)
 				}
@@ -127,7 +129,16 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 	key, value := rangeTarget(s.Key), rangeTarget(s.Value)
 	var bound string
 	var element func(string) string
-	if a, ok := arrayValue(xt); ok {
+	str, next, r := "", "", ""
+	if isString(xt) {
+		// The string is evaluated once; each iteration decodes the rune at
+		// the counter and steps to the next one (U+FFFD, width 1, for an
+		// invalid encoding), whether or not a value variable is present.
+		str = g.expr(s.X)
+		g.next++
+		next, r = fmt.Sprintf("next%d", g.next), fmt.Sprintf("rune%d", g.next)
+		element = func(string) string { return r }
+	} else if a, ok := arrayValue(xt); ok {
 		bound = fmt.Sprintf("%dULL", a.Len())
 		if value == nil {
 			g.rangeOperandCalls(s.X)
@@ -158,7 +169,13 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 	}
 	g.next++
 	counter := fmt.Sprintf("range%d", g.next)
-	g.line("for (u64 %s=0;%s<%s;%s++) {", counter, counter, bound, counter)
+	if str != "" {
+		g.line("for (u64 %s=0,%s=0;%s<(u64)%s.len;%s=%s) {", counter, next, counter, str, counter, next)
+		g.line("i64 %s;", r)
+		g.line("%s = gosvm_decoderune(%s,%s,&%s);", next, str, counter, r)
+	} else {
+		g.line("for (u64 %s=0;%s<%s;%s++) {", counter, counter, bound, counter)
+	}
 	object := func(id *ast.Ident) types.Object {
 		if s.Tok == token.DEFINE {
 			return g.info.Defs[id]

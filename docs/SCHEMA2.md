@@ -59,7 +59,10 @@ fields are byte/uint16/uint32/uint64 and int8/int16/int32/int64 (including named
 versions; little-endian, 1/2/4/8 bytes, signed values in two's complement, no
 alignment padding), bounded scalar arrays, and nested exported value structs.
 `int` and `uint` are rejected because their size depends on the platform
-(`wire field Delta: int is platform-sized; use int64`). Embedding, tags, boolean
+(`wire field Delta: int is platform-sized; use int64`). [Strings](GO_STRINGS.md)
+are rejected because their length varies (`wire field Name: string has a
+variable length; wire layouts are fixed-size, use a [N]byte array`); handlers
+may still use strings internally, and `idl.json` is unaffected. Embedding, tags, boolean
 wire fields, pointer/slice fields, arrays of structs and nested arrays are
 rejected. `idl.json` and `layouts.json` name signed fields by their Go type
 (`"type": "int16"`).

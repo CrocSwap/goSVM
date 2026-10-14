@@ -42,7 +42,7 @@ func TestIntegerChecksReject(t *testing.T) {
 		"float":             {`func Process(s, i []byte) uint64 { var f float64; _ = f; return 0 }`, "unsupported type float64"},
 		"uintptr":           {`func Process(s, i []byte) uint64 { var p uintptr; _ = p; return 0 }`, "unsupported type uintptr"},
 		"complex":           {`func Process(s, i []byte) uint64 { var c complex64; _ = c; return 0 }`, "unsupported type complex64"},
-		"string":            {`func Process(s, i []byte) uint64 { r := 'a'; _ = r; x := "s"; _ = x; return 0 }`, "unsupported type string"},
+		"string":            {`func Process(s, i []byte) uint64 { r := 'a'; _ = r; x := "s"; _ = x; return 0 }`, ""},
 		"constant range":    {`func Process(s, i []byte) uint64 { var x int8 = 128; return uint64(x) }`, "cannot use 128 (untyped int constant) as int8 value in variable declaration (overflows)"},
 		"negative uint":     {`func Process(s, i []byte) uint64 { var x uint = -1; return uint64(x) }`, "cannot use -1 (untyped int constant) as uint value in variable declaration (overflows)"},
 		"negative shift":    {`func Process(s, i []byte) uint64 { x := int64(i[0]); return uint64(x << -1) }`, "invalid operation: negative shift count -1 (untyped int constant)"},

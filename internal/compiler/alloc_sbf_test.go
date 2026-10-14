@@ -37,6 +37,7 @@ type allocCase struct {
 	name   string
 	in     []byte
 	frame  uint32 // RequestHeapFrame bytes; 0 sends none
+	units  uint32 // SetComputeUnitLimit; 0 sends none (the default limit)
 	output []byte // expected account data; nil when the transaction fails
 	err    string // expected error JSON when output is nil
 	log    string // a log line the failure must produce exactly once
@@ -87,7 +88,14 @@ func allocFixtures(cases []allocCase) ([]byte, error) {
 			frame[0] = 1 // RequestHeapFrame(u32)
 			binary.LittleEndian.PutUint32(frame[1:], c.frame)
 			step.Instructions = append(step.Instructions, sbftest.FixtureInstruction{Program: "compute_budget", Data: hex.EncodeToString(frame)})
-			index = 1
+			index++
+		}
+		if c.units != 0 {
+			limit := make([]byte, 5)
+			limit[0] = 2 // SetComputeUnitLimit(u32)
+			binary.LittleEndian.PutUint32(limit[1:], c.units)
+			step.Instructions = append(step.Instructions, sbftest.FixtureInstruction{Program: "compute_budget", Data: hex.EncodeToString(limit)})
+			index++
 		}
 		step.Instructions = append(step.Instructions, sbftest.FixtureInstruction{Program: "program", Accounts: []sbftest.FixtureMeta{{Account: "out", Writable: true}}, Data: hex.EncodeToString(c.in)})
 		expected := initial

@@ -16,7 +16,8 @@ fails with no custom error code and the transaction rolls back.
 - Division or modulo by zero, for every integer type, signed or unsigned.
 - A negative shift count (a signed count below zero), where Go panics
   ([integers](GO_INTEGERS.md)).
-- Array index, slice index or slice-expression bounds out of range.
+- Array index, slice index or slice-expression bounds out of range, including
+  a string index or string slice bounds ([strings](GO_STRINGS.md)).
 - Nil pointer dereference, field access or method receiver, including a
   value-receiver method called through a nil `*T` held in an interface.
 - Account index out of range in SDK account accessors.
@@ -24,9 +25,9 @@ fails with no custom error code and the transaction rolls back.
   and `Rem64`/`Rem32`/`Rem` with `y == 0`, where Go panics
   ([math/bits](GO_BITS.md)).
 - Out of memory: an allocation (`new`, `make`, a growing `append`, a slice
-  literal, an escaping `&T{...}`, a local moved to the heap or a conversion to
-  an interface) needs more than the remaining invocation heap budget
-  ([allocation](GO_ALLOCATION.md)).
+  literal, an escaping `&T{...}`, a local moved to the heap, a conversion to
+  an interface, or a string concatenation or conversion) needs more than the
+  remaining invocation heap budget ([allocation](GO_ALLOCATION.md)).
 - `make` length or capacity out of range: `len > cap`, a negative length or
   capacity of any signed integer type, or a capacity larger than 2^48 bytes,
   where Go panics `makeslice: len out of range` or `cap out of range`.
@@ -77,6 +78,14 @@ because fixtures compare them byte for byte:
   Converting a value to an interface allocates its Go size rounded up to 8
   bytes, except pointers and zero-size values, which allocate nothing
   ([interfaces](GO_INTERFACES.md#boxing-cost)).
+  String literals and constant expressions allocate nothing; a concatenation
+  allocates its total length rounded up to 8 bytes, or nothing when at most one
+  operand is non-empty; `string(b)` allocates `len(b)` rounded up (nothing when
+  empty), `string(rune)` 8 bytes and `string([]rune)` its encoded length
+  rounded up; `[]byte(s)` and `[]rune(s)` allocate Go 1.22's `rawbyteslice`
+  and `rawruneslice` sizes, which are also their capacities, and `[]byte` of a
+  constant exactly its length (capacity `len`). The full table is in
+  [GO_STRINGS.md](GO_STRINGS.md#allocation).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
 ## Error codes
@@ -197,3 +206,8 @@ Handler results propagate unchanged.
   abort; boxing allocates as recorded under heap accounting; a value-receiver
   method through a nil `*T` in an interface and boxing beyond the budget use
   the existing nil-pointer and out-of-memory traps.
+- 2026-10-14: addition (strings and `error`), no trap added and no existing
+  behaviour changed: string index and slice bounds use the bounds trap, string
+  concatenations and conversions allocate as recorded under heap accounting
+  and use the out-of-memory trap, and `[]byte(s)`/`[]rune(s)` capacities are
+  contracted with it; `error` values use the interface traps.

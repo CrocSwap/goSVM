@@ -89,7 +89,8 @@ for j := range uint64(len(data)) / 8 { // j is uint64
   other targets (fields, elements, dereferences) are rejected. After the loop the
   variables hold the last assigned values, or are unchanged if no iteration ran.
 - Unlabeled `break` and `continue` behave as in other loops. Labels, and range
-  over strings, maps, channels and functions, are rejected.
+  over maps, channels and functions, are rejected. Range over a string decodes
+  UTF-8 runes ([strings](GO_STRINGS.md)).
 
 **The `int` key.** Array, slice, untyped-constant and `len` ranges produce an
 `int` key. It is an ordinary `int` value ([integers](GO_INTEGERS.md)): copy it,
@@ -107,9 +108,10 @@ platform-tools v1.57 or the managed runners are not installed).
 The explicit error representation is an unsigned status code: zero means success,
 and a nonzero handler status is returned unchanged by the adapter. The SDK's
 encoded runtime/CPI statuses remain unchanged; an ordinary small handler code is
-a Solana custom error. Built-in `error` (its `Error()` returns a string), named results/naked returns,
-variadics and compound assignments remain unsupported. This is not an `error`
-interface implementation. Runtime arithmetic/bounds failures still abort.
+a Solana custom error. Named results/naked returns, variadics and compound
+assignments (except `+=` on strings) remain unsupported. The built-in `error`
+interface is available inside handlers since [strings](GO_STRINGS.md#error)
+were added, but `Process` still returns this status code. Runtime arithmetic/bounds failures still abort.
 
 [Validation](../results/compiler/2026-10-05-control-values/README.md) includes
 1,000 randomized ordinary-Go/generated-C vectors, 10 edge/error vectors, imported

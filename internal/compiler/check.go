@@ -103,6 +103,8 @@ type CheckedProgram struct {
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
 	ifaces  *ifaceProgram
+	// usesStrings reports that some checked value has a string type.
+	usesStrings bool
 }
 
 // Function is one checked function or method declaration.
@@ -327,6 +329,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	}
 	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}, gp: gp, typeInstances: checked.TypeInstances}
 	c.program(checked.lowered, lowered)
+	checked.usesStrings = f.usesStrings
 	return checked, nil
 }
 

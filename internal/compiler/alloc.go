@@ -75,6 +75,8 @@ func containsReferences(t types.Type) bool {
 	switch u := t.Underlying().(type) {
 	case *types.Pointer, *types.Slice, *types.Interface:
 		return true
+	case *types.Basic:
+		return u.Info()&types.IsString != 0 // a string holds a data pointer
 	case *types.Array:
 		return containsReferences(u.Elem())
 	case *types.Struct:
@@ -388,6 +390,9 @@ func (g *generator) allocBuiltin(e *ast.CallExpr, name string) string {
 		base := g.exprAs(e.Args[0], s)
 		if e.Ellipsis.IsValid() {
 			extra := g.exprAs(e.Args[1], s)
+			if isString(g.info.Types[e.Args[1]].Type) {
+				extra = g.temp(e.Args[1], s, asSlice(extra)) // append(b, s...)
+			}
 			r := g.temp(e, s, fmt.Sprintf("gosvm_grow(%s,(u64)%s.len,sizeof(%s),%d)", base, extra, elem, scan))
 			g.line("gosvm_move(%s.ptr+((u64)%s.len-(u64)%s.len)*sizeof(%s),%s.ptr,(u64)%s.len*sizeof(%s));", r, r, extra, elem, extra, extra, elem)
 			return r
@@ -408,6 +413,9 @@ func (g *generator) allocBuiltin(e *ast.CallExpr, name string) string {
 		t := g.info.Types[e.Args[0]].Type
 		dst := g.exprAs(e.Args[0], t)
 		src := g.exprAs(e.Args[1], t)
+		if isString(g.info.Types[e.Args[1]].Type) {
+			src = asSlice(src) // copy(b, s)
+		}
 		elem := g.variable(e, t.(*types.Slice).Elem())
 		return g.temp(e, tv.Type, fmt.Sprintf("gosvm_copy(%s,%s,sizeof(%s))", dst, src, elem))
 	}

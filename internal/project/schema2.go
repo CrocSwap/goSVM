@@ -565,6 +565,9 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 		case types.Int, types.Uint:
 			// Platform-sized types have no fixed wire width.
 			return f, fmt.Errorf("wire field %s: %s is platform-sized; use %s64", name, t, u.Name())
+		case types.String:
+			// Wire layouts are fixed-size; a string's length varies.
+			return f, fmt.Errorf("wire field %s: %s has a variable length; wire layouts are fixed-size, use a [N]byte array", name, t)
 		}
 		f.Size = wireSize(u)
 		if f.Size == 0 {

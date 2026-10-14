@@ -103,6 +103,8 @@ func (g *generator) emitArray(node ast.Node, a *types.Array) {
 	if isIface(a.Elem()) {
 		// Elements compare in order; an uncomparable dynamic type aborts.
 		g.line("for (u64 i=0;i<%dULL;i++) { if (!gosvm_iface_eq(a.items[i],b.items[i])) return 0; }", a.Len())
+	} else if isString(a.Elem()) {
+		g.line("for (u64 i=0;i<%dULL;i++) { if (!gosvm_str_eq(a.items[i],b.items[i])) return 0; }", a.Len())
 	} else {
 		g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", a.Len())
 	}

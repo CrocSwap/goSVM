@@ -3,6 +3,7 @@
 The first milestone 2 compiler increment supports fixed-size arrays of any
 [integer type](GO_INTEGERS.md) (`byte`, `uint16`, `uint32`, `uint64`, `uint`,
 `int8`, `int16`, `int32`, `int64`, `int`), `bool`, named versions of those scalar types,
+[strings](GO_STRINGS.md) (`[4]string`; equality compares elements bytewise in order)
 and [interface values](GO_INTERFACES.md) (`[4]any`; equality compares elements in
 order and aborts for an uncomparable dynamic type, as Go panics). Named array
 types such as `type PublicKey [32]byte` are supported. This is compiler support;

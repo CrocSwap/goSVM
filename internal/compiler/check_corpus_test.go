@@ -102,11 +102,10 @@ var corpusChanges = map[int]corpusEntry{
 	106: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // s00.go: was "generic types unsupported"
 	// Interface values became supported (docs/GO_INTERFACES.md): an empty
 	// type switch on a nil interface{} and an unused interface{} parameter
-	// compile; error stays rejected at the same position, because its
-	// Error() method returns a string.
+	// compile. error stayed rejected (its Error() method returns a string)
+	// until strings were added; entry 272 is listed with them below.
 	140: {CSHA256: "b76a35c879f61af5b2046c6dbab39bdc742bb1ddb506c94d72836761bb03bb63"}, // s42.go `var x interface{}; switch x.(type) {}`: was "unsupported type interface{}" (generics reworded it to name the constraint rule)
 	198: {CSHA256: "5ecfd0b8d3130ec2399c4dc682be098180ba51f249066bb862c4579f49461f3c"}, // s43.go `func f(x interface{})`: likewise
-	272: {Error: "control-reject.go:1:11: " + errorRule},                               // `func pair() (uint64, error)`: was "unsupported type error", then the constraint-rule message
 	// Invocation-heap allocation (docs/GO_ALLOCATION.md): escaping locals move
 	// to the heap instead of being rejected, and new/make/append/copy, slice
 	// literals, slices of any element type, non-byte views and pointer/slice
@@ -143,6 +142,12 @@ var corpusChanges = map[int]corpusEntry{
 	288: {CSHA256: "da0fd08a96472bf2a18d478b819ecd80e02e8de101e88dcafda861c8f88da98a"}, // s30.go []uint64 parameter: was "unsupported type []uint64"
 	304: {CSHA256: "1867a3a4f4cfba2e88fe7f58882361492a7aeb580f4c9f83e145b3a47c430657"}, // converted local view: was "reference escapes local storage; ..."
 	307: {CSHA256: "73616bde6d18a3643f5c8b6880b50b27cfdd16b0eb0994184fb05c3ef0b2d2bb"}, // s73.go [4]uint64 view: was "slice views require byte/uint8 elements"
+	// Strings and error became supported (docs/GO_STRINGS.md): the error
+	// result and the []byte("abc") conversion compile, and a standard-library
+	// import names math/bits as the only one available.
+	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"},                                                       // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
+	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"},                                                       // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
+	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; the only standard-library package on-chain is math/bits)`}, // was "...; use a module-backed program for user packages"
 }
 
 const (

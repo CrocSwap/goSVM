@@ -1,0 +1,125 @@
+{
+  "fresh_rebuild": {
+    "fogo-v0/clock2": {
+      "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "identical": true,
+      "matches_reference": true
+    },
+    "fogo-v0/full-swap": {
+      "elf_sha256": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+      "identical": true,
+      "matches_reference": true
+    },
+    "solana-v3/clock2": {
+      "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+      "identical": true,
+      "matches_reference": true
+    },
+    "solana-v3/full-swap": {
+      "elf_sha256": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+      "identical": true,
+      "matches_reference": true
+    }
+  },
+  "host_differential": {
+    "go_panics": 3341,
+    "heap_bytes": 32768,
+    "vectors": 14116
+  },
+  "host_heap_boundaries": 105,
+  "host_integer_conversions": {
+    "types": 10,
+    "values": 226
+  },
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "runner": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0, Agave 4.0)"
+  },
+  "schema": 1,
+  "targets": {
+    "fogo-v0": {
+      "aborts": 100,
+      "cases": 518,
+      "elf_sha256": "998161cc8173226d9f8bad90d937d1093aa82ee7d5150de7c127e367d154b0ba",
+      "heap-kind0-32-32-510-fits_cu": 110630,
+      "heap-kind0-32-32-511-oom_cu": 110687,
+      "heap-kind0-5-3-4093-fits_cu": 876380,
+      "heap-kind0-5-3-4094-oom_cu": 876437,
+      "heap-kind1-32-32-1021-fits_cu": 95423,
+      "heap-kind1-32-32-1022-oom_cu": 95444,
+      "heap-kind1-5-3-4093-fits_cu": 430243,
+      "heap-kind1-5-3-4094-oom_cu": 430264,
+      "heap-kind2-32-32-1021-fits_cu": 126053,
+      "heap-kind2-32-32-1022-oom_cu": 126098,
+      "heap-kind2-5-3-4093-fits_cu": 475266,
+      "heap-kind2-5-3-4094-oom_cu": 475293,
+      "heap-kind3-32-32-4087-fits_cu": 290647,
+      "heap-kind3-32-32-4088-oom_cu": 290662,
+      "heap-kind3-5-3-4093-fits_cu": 291081,
+      "heap-kind3-5-3-4094-oom_cu": 291096,
+      "heap-kind4-32-32-255-fits_cu": 401330,
+      "heap-kind4-32-32-256-oom_cu": 402124,
+      "heap-kind4-5-3-1364-fits_cu": 430138,
+      "heap-kind4-5-3-1365-oom_cu": 430296,
+      "heap-kind5-32-32-6000-fits_cu": 486470,
+      "heap-kind5-5-3-6000-fits_cu": 486478,
+      "heap-kind6-32-32-2043-fits_cu": 78104,
+      "heap-kind6-32-32-2044-oom_cu": 78111,
+      "heap-kind6-5-3-2046-fits_cu": 78226,
+      "heap-kind6-5-3-2047-oom_cu": 78233,
+      "heap-kind7-32-32-2043-fits_cu": 282404,
+      "heap-kind7-32-32-2044-oom_cu": 282422,
+      "heap-kind7-5-3-2046-fits_cu": 282826,
+      "heap-kind7-5-3-2047-oom_cu": 282844,
+      "heap_cases": 30,
+      "heap_out_of_memory": 14,
+      "max_vector_cu": 97102,
+      "profile": "fogo-v0",
+      "vector_aborts": 86,
+      "vectors": 488
+    },
+    "solana-v3": {
+      "aborts": 100,
+      "cases": 518,
+      "elf_sha256": "70174787036a5e222b60cdbbb6a2fcc7963667e60e9b7680cd56b32fce8737ca",
+      "heap-kind0-32-32-510-fits_cu": 108581,
+      "heap-kind0-32-32-511-oom_cu": 108635,
+      "heap-kind0-5-3-4093-fits_cu": 859977,
+      "heap-kind0-5-3-4094-oom_cu": 860031,
+      "heap-kind1-32-32-1021-fits_cu": 77036,
+      "heap-kind1-32-32-1022-oom_cu": 77042,
+      "heap-kind1-5-3-4093-fits_cu": 311515,
+      "heap-kind1-5-3-4094-oom_cu": 311521,
+      "heap-kind2-32-32-1021-fits_cu": 127065,
+      "heap-kind2-32-32-1022-oom_cu": 127112,
+      "heap-kind2-5-3-4093-fits_cu": 479328,
+      "heap-kind2-5-3-4094-oom_cu": 479357,
+      "heap-kind3-32-32-4087-fits_cu": 262029,
+      "heap-kind3-32-32-4088-oom_cu": 262034,
+      "heap-kind3-5-3-4093-fits_cu": 262399,
+      "heap-kind3-5-3-4094-oom_cu": 262404,
+      "heap-kind4-32-32-255-fits_cu": 401576,
+      "heap-kind4-32-32-256-oom_cu": 402372,
+      "heap-kind4-5-3-1364-fits_cu": 431471,
+      "heap-kind4-5-3-1365-oom_cu": 431631,
+      "heap-kind5-32-32-6000-fits_cu": 468461,
+      "heap-kind5-5-3-6000-fits_cu": 468447,
+      "heap-kind6-32-32-2043-fits_cu": 71966,
+      "heap-kind6-32-32-2044-oom_cu": 71970,
+      "heap-kind6-5-3-2046-fits_cu": 72057,
+      "heap-kind6-5-3-2047-oom_cu": 72061,
+      "heap-kind7-32-32-2043-fits_cu": 276266,
+      "heap-kind7-32-32-2044-oom_cu": 276282,
+      "heap-kind7-5-3-2046-fits_cu": 276657,
+      "heap-kind7-5-3-2047-oom_cu": 276673,
+      "heap_cases": 30,
+      "heap_out_of_memory": 14,
+      "max_vector_cu": 97035,
+      "profile": "solana-v3",
+      "vector_aborts": 86,
+      "vectors": 488
+    }
+  }
+}

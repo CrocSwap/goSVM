@@ -482,6 +482,9 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 			return values[0]
 		}
 	case *ast.SliceExpr:
+		if isString(a.f.info.Types[e.X].Type) {
+			return borrowSet{} // a string: read-only data or heap bytes
+		}
 		if memoryValue(a.f.info.Types[e.X].Type) {
 			return a.expr(e.X)
 		}
@@ -545,6 +548,10 @@ func (a *borrowAnalysis) builtin(call *ast.CallExpr, name string) []borrowSet {
 }
 func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	if a.f.info.Types[call.Fun].IsType() && memoryValue(a.f.info.Types[call].Type) && len(call.Args) == 1 {
+		if isString(a.f.info.Types[call.Args[0]].Type) {
+			a.expr(call.Args[0])
+			return []borrowSet{{heapRoot: true}} // []byte(s), []rune(s) copy to the heap
+		}
 		return []borrowSet{a.expr(call.Args[0])}
 	}
 	if id, ok := call.Fun.(*ast.Ident); ok {

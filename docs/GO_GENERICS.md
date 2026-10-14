@@ -58,10 +58,11 @@ func Process(s, i []byte) uint64 {
   the heap ([allocation](GO_ALLOCATION.md#with-generics-and-signed-integers)).
 
 Every type argument must be a type the subset can store: an integer scalar
-(signed or unsigned), `bool`, a named scalar, a value struct (including one
-with pointer, slice or interface fields), a scalar array of at most 1,024
-bytes, a slice of an admitted element, a pointer to an admitted element, or an
-interface type other than `error`. Each instance's body must
+(signed or unsigned), `bool`, a [string](GO_STRINGS.md) or named string, a
+named scalar, a value struct (including one with pointer, slice, string or
+interface fields), a scalar array of at most 1,024 bytes, a slice of an
+admitted element, a pointer to an admitted element, or an interface type
+(including `error`). Each instance's body must
 then satisfy every subset rule with the arguments substituted; for example
 `Eq[T comparable]` instantiated with a struct is rejected because struct
 comparison is unsupported, while `Eq[[4]byte]` is accepted.
@@ -125,8 +126,8 @@ instance and type-instance symbol; as for all code, local temporaries
   `too many instantiations of Id (limit 64)` (methods: `B.M`).
 - **Type arguments.** A disallowed type argument is rejected at the
   instantiation site, naming it:
-  `g.go:3:40: instantiation Id[string]: type argument string for T: unsupported type string`
-  (`Id[error]` is rejected the same way, naming the `error` rule).
+  `g.go:3:40: instantiation Id[complex128]: type argument complex128 for T: unsupported type complex128`.
+  [Strings](GO_STRINGS.md) and `error` are valid type arguments.
   An untyped constant argument infers `int`, which is rejected as storage
   (`Id[int]`); convert the argument (`Id(uint64(1))`).
 - **Instance bodies.** A subset or borrow violation that occurs only for some

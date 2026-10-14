@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go/ast"
+	"go/build"
 	"go/parser"
 	"go/token"
 	"go/types"
@@ -383,6 +384,9 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	}
 	unit, ok := p.units[path]
 	if !ok {
+		if standardPackage(path) {
+			return nil, fmt.Errorf("unsupported import %q; the only standard-library package on-chain is math/bits", path)
+		}
 		return nil, fmt.Errorf("unsupported import %q; use a module-backed program for user packages", path)
 	}
 	p.active[path] = true
@@ -419,4 +423,19 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		p.decls = append(p.decls, file.Decls...)
 	}
 	return pkg, nil
+}
+
+// standardPackage reports whether path names a package of the Go standard
+// library (errors, fmt, strings, ...), which on-chain programs cannot import
+// apart from math/bits.
+func standardPackage(path string) bool {
+	first, _, _ := strings.Cut(path, "/")
+	if strings.Contains(first, ".") {
+		return false
+	}
+	if build.Default.GOROOT == "" {
+		return false
+	}
+	info, err := os.Stat(filepath.Join(build.Default.GOROOT, "src", filepath.FromSlash(path)))
+	return err == nil && info.IsDir()
 }

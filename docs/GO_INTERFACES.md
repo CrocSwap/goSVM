@@ -5,8 +5,8 @@ implicit and explicit conversions, dynamic dispatch through value and pointer
 receivers, type assertions, type switches and comparisons. Converting a
 non-pointer value to an interface copies it to the invocation heap
 ([allocation](GO_ALLOCATION.md)), so the conversion costs a fixed, documented
-number of heap bytes. `error` is not supported: its `Error()` method returns a
-string, and strings are not in the subset.
+number of heap bytes. The predeclared `error` is an ordinary interface: its
+`Error()` method returns a [string](GO_STRINGS.md#error).
 
 ```go
 type Shape interface {
@@ -56,8 +56,9 @@ Interfaces used only as type-parameter constraints change nothing.
 | Signed values | Every [integer type](GO_INTEGERS.md) can be boxed, asserted, compared and switched on; untyped constants convert with Go's default types (`var a any = -1` holds an `int`) |
 
 Values that can be stored in an interface are exactly the subset's storable
-values: integers, `bool`, named scalars, value structs, scalar arrays and arrays
-of interfaces, pointers, slices and interface values. A pointer to a local
+values: integers, `bool`, [strings](GO_STRINGS.md), named scalars, value
+structs, scalar, string and interface arrays, pointers, slices and interface
+values. A pointer to a local
 stored in an interface moves that local to the heap
 ([escape analysis](#escape-analysis)).
 
@@ -91,7 +92,8 @@ Converting a value of type `T` to an interface:
 
 Examples: `uint8`, `int16`, `uint32`, `uint64`, `bool`, `int` and `[5]byte`
 cost 8 bytes; `[3]uint64` 24; a `struct{ W, H uint64 }` 16; a `[]byte` (its
-24-byte header; the elements are shared, not copied) 24; an interface-to-
+24-byte header; the elements are shared, not copied) 24; a `string` (its
+16-byte header; the bytes are shared) 16; an interface-to-
 interface conversion, a comparison with a concrete value, an assertion, a type
 switch and a method call allocate nothing. Each conversion allocates afresh,
 including conversions of constants. Allocation follows the
@@ -170,11 +172,8 @@ out-of-memory trap.
 
 ## Limits and rejections
 
-- `error` values are rejected wherever a value of type `error` appears:
-  `error values unsupported; error's Error() returns a string, and strings are
-  not in the on-chain subset`.
 - An interface used as a value must have storable method parameters and
-  results: `interface method String: unsupported type string`; variadic
+  results: `interface method Value: unsupported type float64`; variadic
   methods: `interface method M: variadics are unsupported`.
 - `solana.Context` cannot be converted: `Context values cannot be converted to
   interfaces`.
@@ -232,8 +231,9 @@ reports `interface_conversions`, `dynamic_calls`, `type_assertions` and
   and determinism.
 - Programs without interface values emit byte-identical C: the frozen corpus
   (`TestCorpusMatchesPreCheckCompiler`) matches except for three recorded
-  interface programs (two now compile; `error` keeps its position with the new
-  message), and the full-swap ELFs are unchanged (fogo-v0 `4697a9f5…`,
+  interface programs (two now compile; `error` kept its position with the new
+  message until [strings](GO_STRINGS.md) made it compile too), and the
+  full-swap ELFs are unchanged (fogo-v0 `4697a9f5…`,
   solana-v3 `2b5f21d9…`).
 
 The local runners are not a public network; see

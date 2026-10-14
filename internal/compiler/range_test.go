@@ -88,7 +88,6 @@ func TestRangeAcceptedForms(t *testing.T) {
 
 func TestRangeRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
-		"string":           {`for range "ab" {}`, "range over strings unsupported"},
 		"map":              {`for range map[uint64]uint64{} {}`, "range over maps unsupported"},
 		"channel":          {`for range make(chan uint64) {}`, "range over channels unsupported"},
 		"field target":     {`var b B; for b.N = range uint64(3) {}`, "range assignment targets must be local variables"},

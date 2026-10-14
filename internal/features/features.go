@@ -74,6 +74,10 @@ type Uses struct {
 	Generics       bool `json:"generics"`
 	Uint16         bool `json:"uint16"`
 	Range          bool `json:"range"`
+	// Strings: any non-constant value of a string type (string constants
+	// folded into constant expressions do not count). Added within
+	// gosvm-features-v1.
+	Strings bool `json:"strings"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -127,6 +131,7 @@ func summarize(u *Usage) {
 	u.Uses.Generics = len(u.Generics) > 0 || sum("type_parameters") > 0
 	u.Uses.Uint16 = has(types, "uint16") || has(values, "uint16")
 	u.Uses.Range = sum("for_range") > 0
+	u.Uses.Strings = sum("string_values") > 0
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -249,6 +254,11 @@ var ConstructNames = []string{
 	// values, and x.(T) type assertions (type switch guards excluded; type
 	// switches are type_switch).
 	"interface_conversions", "dynamic_calls", "type_assertions",
+	// Strings (added within gosvm-features-v1): non-constant expressions
+	// of a string type, non-constant string + operators and += on strings,
+	// non-constant conversions between strings and byte or rune slices or
+	// from integers (not string-to-string), and range over a string.
+	"string_values", "string_concatenations", "string_conversions", "string_ranges",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -616,6 +626,15 @@ func (w *walker) typeOf(e ast.Expr) types.Type {
 }
 
 // isSignedInteger reports whether t is a typed signed integer type.
+// isString reports whether t is a string type (or an untyped string).
+func isString(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	b, ok := t.Underlying().(*types.Basic)
+	return ok && b.Info()&types.IsString != 0
+}
+
 func isSignedInteger(t types.Type) bool {
 	if t == nil {
 		return false
@@ -679,6 +698,9 @@ func (w *walker) file(f *ast.File) {
 				}
 				if _, isParam := tv.Type.(*types.TypeParam); !isParam && types.IsInterface(tv.Type) && tv.Type != types.Typ[types.UntypedNil] {
 					w.count("interface_values")
+				}
+				if isString(tv.Type) && tv.Value == nil {
+					w.count("string_values")
 				}
 			}
 		}
@@ -822,6 +844,9 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.BinaryExpr:
 			w.op(n.Op.String())
+			if n.Op == token.ADD && w.tp.Info.Types[n].Value == nil && isString(w.typeOf(n)) {
+				w.count("string_concatenations")
+			}
 			if w.tp.Info.Types[n].Value == nil {
 				switch n.Op {
 				case token.QUO, token.REM:
@@ -874,6 +899,9 @@ func (w *walker) file(f *ast.File) {
 			default:
 				w.count("compound_assignments")
 				w.op(n.Tok.String())
+				if n.Tok == token.ADD_ASSIGN && len(n.Lhs) == 1 && isString(w.typeOf(n.Lhs[0])) {
+					w.count("string_concatenations")
+				}
 			}
 			if len(n.Lhs) > 1 && len(n.Rhs) == 1 {
 				w.count("multi_value_assignments")
@@ -916,6 +944,9 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.RangeStmt:
 			w.count("for_range")
+			if isString(w.typeOf(n.X)) {
+				w.count("string_ranges")
+			}
 			kind := "for_range_other"
 			if t := w.typeOf(n.X); t != nil {
 				u := t.Underlying()
@@ -1040,6 +1071,13 @@ func (w *walker) call(n *ast.CallExpr) {
 	if tv, ok := w.tp.Info.Types[fun]; ok && tv.IsType() {
 		w.count("conversions")
 		w.side.Conversions[w.typeString(tv.Type)]++
+		if len(n.Args) == 1 && w.tp.Info.Types[n].Value == nil {
+			from := w.typeOf(n.Args[0])
+			_, toSlice := tv.Type.Underlying().(*types.Slice)
+			if isString(tv.Type) && !isString(from) || isString(from) && toSlice {
+				w.count("string_conversions")
+			}
+		}
 		return
 	}
 	var id *ast.Ident

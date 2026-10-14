@@ -104,16 +104,11 @@ func isIface(t types.Type) bool {
 	return ok
 }
 
-const errorRule = "error values unsupported; error's Error() returns a string, and strings are not in the on-chain subset"
-
 // interfaceRule admits an interface value type. A dynamic call passes and
 // returns every method's parameters and results, so they must be storable
-// values; variadic methods are rejected. error is rejected: its method
-// returns a string.
+// values; variadic methods are rejected. The predeclared error is an
+// ordinary interface: its Error() returns a string.
 func (f *frontend) interfaceRule(n ast.Node, t types.Type) {
-	if types.Identical(t, types.Universe.Lookup("error").Type()) {
-		f.fail(n, errorRule)
-	}
 	it := t.Underlying().(*types.Interface)
 	if f.ifaceChecked == nil {
 		f.ifaceChecked = map[*types.Interface]bool{}
@@ -472,6 +467,9 @@ func (s *ifaceScan) rangeAssign(n *ast.RangeStmt) {
 		key = xt
 		if u.Info()&types.IsUntyped != 0 {
 			key = types.Typ[types.Int]
+		}
+		if u.Info()&types.IsString != 0 {
+			key, value = types.Typ[types.Int], runeType
 		}
 	case *types.Array:
 		key, value = types.Typ[types.Int], u.Elem()
@@ -1214,6 +1212,9 @@ func (g *generator) dynamicCall(call *ast.CallExpr, selector *ast.SelectorExpr) 
 func (g *generator) valueEqual(n ast.Node, t types.Type, x, y string) string {
 	if isIface(t) {
 		return fmt.Sprintf("gosvm_iface_eq(%s,%s)", x, y)
+	}
+	if isString(t) {
+		return fmt.Sprintf("gosvm_str_eq(%s,%s)", x, y)
 	}
 	switch u := t.Underlying().(type) {
 	case *types.Array:

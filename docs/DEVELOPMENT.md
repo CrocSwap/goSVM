@@ -537,15 +537,26 @@ receivers, type assertions (single and comma-ok), type switches, comparisons
 (an uncomparable identical dynamic type aborts), and interfaces in fields,
 slices, arrays and behind pointers, including generic dynamic types. Converting
 a non-pointer value boxes a copy on the heap (its Go size rounded up to 8
-bytes). `error` is rejected because strings are unsupported. See
+bytes). See
 [interface semantics, boxing cost and SBF evidence](../docs/GO_INTERFACES.md)
 and the [interface fixture](../examples/iface-values/program.go), checked
 against ordinary Go on the host and on SBF.
 
+Strings have Go's semantics: literals in read-only data, `len`, indexing and
+slicing (shared bytes) with bounds aborts, concatenation and `+=`, bytewise
+comparisons, conversions to and from `[]byte`, `[]rune` and runes (invalid
+runes become U+FFFD), `range` with Go's UTF-8 decoding, `switch`, and strings in
+fields, arrays, slices, pointers, interfaces and generic code (`~string`).
+Concatenations and conversions allocate a documented number of heap bytes. With
+strings, the predeclared `error` interface works like any interface value. See
+[string semantics, allocation and SBF evidence](../docs/GO_STRINGS.md) and the
+[string fixture](../examples/string-values/program.go).
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, named slices, `error` values, maps,
-strings, closures/function and method values, recursion (including through dynamic calls), named results, variadics,
-range over strings/maps/channels/functions, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
+floating-point and complex types, globals, `init`, named slices, maps,
+closures/function and method values, recursion (including through dynamic calls), named results, variadics,
+compound assignment other than `+=` on strings,
+range over maps/channels/functions, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
 uncomparable interface comparison and nil interface call failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go

@@ -27,8 +27,10 @@ declared scalar arrays (`[][32]byte`), pointers (`[]*Node`), slices
 (`[][]byte`) and [interface values](GO_INTERFACES.md) (`[]any`, `[]Shape`;
 their growth uses Go's pointer-holding size classes). Elements must not contain zero-length arrays or empty structs
 (their Go and C sizes could differ). Named slice types, slices of
-`solana.Context`, arrays of pointers or slices, pointers to slices or pointers,
-maps, strings and `append`/`copy` with strings remain rejected. `[]int`,
+`solana.Context`, arrays of pointers or slices, pointers to slices or pointers
+and maps remain rejected. Slices of [strings](GO_STRINGS.md) (`[]string`, a
+16-byte pointer-holding element) and `append(b, s...)`/`copy(b, s)` with a
+string source are supported. `[]int`,
 `[]int8` and the other signed slices are ordinary slices, and `copy`'s result
 is an ordinary `int`.
 
@@ -66,6 +68,19 @@ goSVM's allocator is a bump allocator over that region:
 Heap storage lives until the invocation ends. It is not visible to other
 instructions, CPI callees or later transactions; persistent state still belongs
 in account data.
+
+### Strings
+
+[String](GO_STRINGS.md#allocation) literals and constant expressions live in
+read-only data and allocate nothing; so do `len`, indexing, slicing (which
+shares bytes), comparisons, `switch` and `range`. A concatenation allocates its
+total length rounded up to 8 bytes, or nothing when at most one operand is
+non-empty; `string(b)` allocates `len(b)` rounded up (nothing when empty);
+`string(rune)` 8 bytes; `[]byte(s)` and `[]rune(s)` follow Go 1.22's
+`rawbyteslice` and `rawruneslice` (capacity and bytes `roundupsize` of the
+size); `[]byte` of a constant allocates exactly its length (rounded up to 8).
+Programs with strings carry the heap runtime only when a string operation
+allocates.
 
 ### Interface boxing
 
@@ -209,8 +224,8 @@ fogo-v0 and solana-v3 ([mixed_test.go](../internal/compiler/mixed_test.go)).
 Allocation adds two aborts to the [failure contract](ERROR_CONTRACT.md):
 
 - **Out of memory**: `new`, `make`, a growing `append`, a slice literal, an
-  escaping `&T{...}`, a moved local or an interface conversion needs more than
-  the remaining budget.
+  escaping `&T{...}`, a moved local, an interface conversion, or a string
+  concatenation or conversion needs more than the remaining budget.
 - **make length or capacity out of range**: `len > cap`, a negative signed
   length, or a capacity whose size exceeds Go's 2^48-byte `maxAlloc` (Go panics
   `makeslice: len out of range` or `cap out of range`).
@@ -227,7 +242,7 @@ admitted elements. Programs that allocate always carry capacities. The heap
 runtime (allocator, `growslice`, `makeslice`, `memmove`) is emitted only for
 programs that call `new`/`make`/`append`/`copy`, write a slice literal or
 elided `&T{...}`, move a local, use a non-byte slice or a pointer/slice
-field, or use interface values. An alternative backend must reproduce the allocator layout and budget
+field, use interface values, or concatenate or convert strings. An alternative backend must reproduce the allocator layout and budget
 (observable only through out-of-memory boundaries), the growth rule and the
 heap moves; see [BACKEND_INTERFACE.md](BACKEND_INTERFACE.md).
 

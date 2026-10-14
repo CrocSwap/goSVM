@@ -130,8 +130,6 @@ func TestAllocationRejections(t *testing.T) {
 		"int slice":           {`var w []int; _ = w`, ""},
 		"empty struct slice":  {`var w []E; _ = w`, "slice elements must not contain zero-length arrays or empty structs"},
 		"zero array slice":    {`var w [][0]byte; _ = w`, "slice elements must not contain zero-length arrays or empty structs"},
-		"string spread":       {`b := append([]byte(nil), "ab"...); _ = b`, "unsupported type untyped string"},
-		"copy string":         {`n := uint64(copy(s, "ab")); _ = n`, "unsupported type untyped string"},
 		"clear":               {`clear(s)`, builtinRule},
 		"min":                 {`x := min(s[0], 1); _ = x`, builtinRule},
 		"panic":               {`panic(1)`, builtinRule},

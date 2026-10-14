@@ -23,6 +23,9 @@ type frontend struct {
 	// types and calls); empty for programs without interface values.
 	ifaces       *ifaceProgram
 	ifaceChecked map[*types.Interface]bool // interface types interfaceRule admitted
+	// usesStrings is set when typeRule admits a string type: the program
+	// needs the string representation (docs/GO_STRINGS.md).
+	usesStrings bool
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
@@ -55,7 +58,8 @@ func recoverCompileError(err *error) {
 // already-certified types to C.
 
 // typeRule admits integer scalars (uint8, uint16, uint32, uint64, uint, int8,
-// int16, int32, int64, int), bool, untyped integer/bool constants, slices of
+// int16, int32, int64, int), bool, strings, untyped integer/bool/string
+// constants, slices of
 // admitted elements (sliceRule), solana.Context, value structs, declared
 // scalar arrays, declared multiple-result tuples and pointers to admitted
 // elements.
@@ -94,6 +98,9 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 		case types.Uint8, types.Uint16, types.Uint32, types.Uint64, types.Uint, types.UntypedInt, types.Bool, types.UntypedBool,
 			types.Int8, types.Int16, types.Int32, types.Int64, types.Int:
 			return
+		case types.String, types.UntypedString:
+			f.usesStrings = true
+			return
 		}
 	}
 	if isIface(t) {
@@ -125,9 +132,10 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
-	// Interface elements are admitted too (the message predates them).
+	// Interface and string elements are admitted too (the message predates
+	// them).
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !isIface(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool) || b.Info()&types.IsUntyped != 0) {
+	if !isIface(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
 		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())
@@ -141,7 +149,7 @@ func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
 // except constants of a signed type, which go/types has already checked
 // against that type's range.
 func (f *frontend) constantRule(e ast.Expr, t types.Type, v constant.Value) {
-	if v.Kind() == constant.Bool || isSigned(t) {
+	if v.Kind() == constant.Bool || v.Kind() == constant.String || isSigned(t) {
 		return
 	}
 	if _, ok := constant.Uint64Val(v); !ok {

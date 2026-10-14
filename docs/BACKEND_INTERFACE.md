@@ -208,6 +208,49 @@ uncomparable identical dynamic type aborts) and the three interface traps. The
 type IDs, the two-word layout and the dispatch code are the built-in backend's
 choice.
 
+## Strings
+
+Strings ([GO_STRINGS.md](GO_STRINGS.md)) add no field to `CheckedProgram`
+(additive section). They are ordinary `types.Basic` values (`types.String`,
+`types.UntypedString` for constants, or a named type with that underlying) in
+the typed program, and the operations are ordinary syntax: `+` and `+=`
+(`*ast.AssignStmt` with `token.ADD_ASSIGN`, the only compound assignment Check
+admits, and only on strings), comparisons, `s[i]` (`*ast.IndexExpr`, a `byte`),
+`s[lo:hi]` (`*ast.SliceExpr`), `len`, conversions (`*ast.CallExpr` whose `Fun`
+is a type: `string`/named string from a string, a `[]byte`-like or
+`[]rune`-like slice or an integer; `[]byte`/`[]rune`-like from a string),
+`append(b, s...)`, `copy(b, s)`, `*ast.RangeStmt` over a string (key `int`,
+value `rune`), `switch` on a string, and string constants (`TypeAndValue.Value`
+of kind `constant.String`). The predeclared `error` is an ordinary interface
+value (its method slot is `Error() (string)`); conversions to it are listed in
+`Conversions` like any other.
+
+A backend must reproduce what is observable:
+
+- bytewise `==` and ordering, the bounds trap for an index or `lo <= hi <=
+  len(s)`;
+- Go's UTF-8 decoding for `range` and `[]rune(s)` (an invalid, overlong,
+  surrogate or truncated encoding is U+FFFD with width 1) and encoding for
+  `string(x)` and `string(rs)` (negative values, surrogates and values above
+  U+10FFFF encode U+FFFD);
+- the heap bytes of each allocating operation (the out-of-memory point) and the
+  capacities of `[]byte(s)` (Go 1.22 `rawbyteslice`, or `len(c)` for a
+  constant `c`) and `[]rune(s)` (`rawruneslice`), both contracted in
+  [ERROR_CONTRACT.md](ERROR_CONTRACT.md#contracted-runtime-behaviour); a
+  concatenation is a maximal tree of non-constant string `+` operators
+  (parentheses included), evaluated left to right, allocating nothing when at
+  most one operand is non-empty; `x += y` evaluates the target's operands,
+  then `y`, then reads `x`;
+- boxing a string allocates 16 bytes (`DynamicType.Size`), and `[]string`
+  grows as a 16-byte pointer-holding element.
+
+String bytes are never stack or SDK storage (conversions from slices copy), so
+the borrow analysis ignores string values; `[]byte(s)` and `[]rune(s)` results
+are heap storage (`ResultBorrow.Heap`). The built-in backend's C representation
+is `typedef struct { u8 *ptr; i64 len; } gosvm_string;` with literals as C
+string literals in `.rodata`; the layout is the backend's choice. `gosvm
+features` reports `uses.strings`.
+
 ## `project.LoadSchema`
 
 `func LoadSchema(dir string) (*ResolvedSchema, error)` in
@@ -271,8 +314,10 @@ Generics added the `Instances`, `TypeInstances` and `Instantiated` fields and
 `Function.Instance`; allocation added the `HeapVars`, `HeapLiterals`, `Escapes`
 and `Heap` fields above; interfaces added `Conversions`, `DynamicTypes`,
 `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` and
-`Implementers`. Existing fields keep their meaning, and the new ones
-are empty or false for every program that compiled before. Separately, the
+`Implementers`. Strings and `error` added no field; they turned three recorded
+entries into new outcomes (the `error` result and `[]byte("abc")` compile, and
+the `fmt` import names `math/bits`). Existing fields keep their meaning, and
+the new ones are empty or false for every program that compiled before. Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

@@ -249,6 +249,10 @@ func (c *checker) stmt(s ast.Stmt) {
 	case *ast.ExprStmt:
 		c.expr(s.X)
 	case *ast.AssignStmt:
+		if s.Tok == token.ADD_ASSIGN && len(s.Lhs) == 1 && isString(c.info.Types[s.Lhs[0]].Type) {
+			c.stringAddAssign(s)
+			return
+		}
 		if s.Tok != token.DEFINE && s.Tok != token.ASSIGN {
 			c.fail(s, "compound assignment unsupported")
 		}
@@ -414,16 +418,14 @@ func (c *checker) switchStatement(s *ast.SwitchStmt) {
 }
 
 // rangeStatement admits Go 1.22 range loops over integers (of any admitted
-// type, or untyped constants), fixed scalar arrays, pointers to them and
-// slices. Iteration variables are fresh in every iteration.
+// type, or untyped constants), fixed scalar arrays, pointers to them, slices
+// and strings. Iteration variables are fresh in every iteration.
 func (c *checker) rangeStatement(s *ast.RangeStmt) {
 	xt := c.info.Types[s.X].Type
 	switch u := xt.Underlying().(type) {
 	case *types.Basic:
-		if u.Info()&types.IsString != 0 {
-			c.fail(s.X, "range over strings unsupported")
-		}
-		if u.Info()&types.IsInteger == 0 {
+		// Strings range over their UTF-8 encoded runes.
+		if u.Info()&(types.IsInteger|types.IsString) == 0 {
 			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a slice")
 		}
 	case *types.Map:
@@ -640,6 +642,10 @@ func (c *checker) exprValue(e ast.Expr) {
 		}
 		c.typeRule(e, tv.Type)
 	case *ast.SliceExpr:
+		if isString(c.info.Types[e.X].Type) {
+			c.stringSlice(e)
+			return
+		}
 		c.sliceView(e)
 	case *ast.StarExpr:
 		c.pointed(e.X)
@@ -794,6 +800,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 		}
 	}
 	if c.info.Types[e.Fun].IsType() {
+		if classifyConversion(c.info, e) != notStringConversion {
+			c.stringConversionRule(e, tv)
+			return
+		}
 		if isIface(tv.Type) {
 			// I(x): the argument is converted (or copied, when it is an
 			// interface value already).
