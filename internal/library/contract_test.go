@@ -175,8 +175,8 @@ func TestPublishedBendContractFlatLayout(t *testing.T) {
 	}
 }
 
-// fogo-v0 v1.57 Bend producers are accepted ahead of publication and flagged
-// as untested; the qualified pairings are not.
+// fogo-v0 v1.57 Bend producers are accepted and qualified; an accepted pairing
+// listed in untested is flagged until its qualification run.
 func TestBendFogoV157Accepted(t *testing.T) {
 	p := Producer{Version: 1, Kind: "bend-library-v1", Target: "fogo-v0", ABI: 1, Symbol: "bend_library_v1_call_x", Fingerprint: "x"}
 	authorized := false
@@ -186,8 +186,15 @@ func TestBendFogoV157Accepted(t *testing.T) {
 	if err := p.check("fogo-v0"); err != nil {
 		t.Fatal(err)
 	}
-	if !Untested("fogo-v0", "v1.57") || Untested("fogo-v0", "v1.53") || Untested("solana-v3", "v1.57") {
-		t.Fatal("wrong untested pairings")
+	for _, pairing := range [][2]string{{"fogo-v0", "v1.57"}, {"fogo-v0", "v1.53"}, {"solana-v3", "v1.57"}} {
+		if Untested(pairing[0], pairing[1]) {
+			t.Fatalf("qualified pairing %v flagged untested", pairing)
+		}
+	}
+	untested["fogo-v0/v9.99"] = true // Synthetic pairing exercises the mechanism.
+	defer delete(untested, "fogo-v0/v9.99")
+	if !Untested("fogo-v0", "v9.99") || Untested("solana-v3", "v9.99") {
+		t.Fatal("untested lookup ignores its table")
 	}
 	if Accepts("bend-library-v1", "solana-v3", "v1.53") {
 		t.Fatal("accepted v1.53 solana-v3 producer")

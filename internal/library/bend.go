@@ -70,14 +70,16 @@ func Accepts(kind, profile, tools string) bool {
 }
 
 // ProducerTools records the Bend producer platform-tools pins GoSVM accepts
-// per target. fogo-v0 v1.53 is Bend's published producer, qualified with the
-// v1.57 caller; solana-v3 is produced by the caller's own v1.57 backend.
-// fogo-v0 v1.57 is accepted ahead of Bend publishing it (see Untested); any
-// other pairing needs a new qualification before it is listed here.
+// per target. Bend's fogo-v0 v1.57 producer (the default, published October 9,
+// qualified October 14) and its earlier v1.53 producer are both qualified with
+// the v1.57 caller; solana-v3 is produced by the caller's own v1.57 backend.
+// Any other pairing needs a new qualification before it is listed here, or is
+// listed together with an untested entry.
 var ProducerTools = map[string][]string{target.Fogo: {"v1.53", "v1.57"}, target.Solana: {"v1.57"}}
 
-// untested lists accepted Bend pairings with no qualification run yet.
-var untested = map[string]bool{target.Fogo + "/v1.57": true}
+// untested lists accepted Bend pairings with no qualification run yet
+// ("<profile>/<tools>"). Every currently accepted pairing is qualified.
+var untested = map[string]bool{}
 
 // Untested reports whether an accepted Bend target/tools pairing still awaits
 // its first qualification run.

@@ -9,14 +9,16 @@ linker or transaction runtime.
 
 The coordinated producer contract is `../bendSVM/docs/library-artifact-contract.md`;
 its ABI fixture is `../bendSVM/tests/mixed-library/fixture.md`. Current GoSVM
-support accepts **fogo-v0** producers at Bend platform-tools v1.53 (qualified)
-or v1.57 (accepted ahead of publication, not yet qualified) and **solana-v3** at
-v1.57.
-The Go caller uses the separately pinned v1.57 backend. Their actual mixed image
+support accepts **fogo-v0** producers at Bend platform-tools v1.57 (the default)
+or v1.53, and **solana-v3** at v1.57; all three pairings are qualified.
+The Go caller uses the separately pinned v1.57 backend. The v1.53 mixed image
 has [local acceptance evidence](../results/compiler/2026-10-07-target-profiles-final/README.md).
-Bend's published `solana-v3` / v1.57 bundle (SHA-256 `9db669ce…c37ee`) is also
+Bend's published `solana-v3` / v1.57 bundle (SHA-256 `9db669ce…c37ee`) is
 [qualified locally](../results/compiler/2026-10-09-go-bend-rust-targets/README.md),
-alone and together with a Rust library, on both targets. Identical interface
+alone and together with a Rust library, on both targets, with the fogo-v0 / v1.53
+bundle (`ec18012f…c6de`). Bend's published `fogo-v0` / v1.57 bundle (SHA-256
+`d8493350…66ecd`) is [qualified the same way](../results/compiler/2026-10-14-bend-fogo-v157/README.md);
+its linked images and per-case CU are identical to the v1.53 ones. Identical interface
 fingerprints do not authorize relabelling objects or arbitrary compiler mixtures.
 Qualified SHA replacement libraries have a different selection/authorization
 contract and are outside this consumer.
@@ -25,8 +27,8 @@ contract and are outside this consumer.
 
 ```sh
 gosvm library add -name bend \
-  ../bendSVM/build/interop/fogo-v0/20261007T134003Z-0bdd2144/library.manifest.json \
-  path/to/solana-v3/library.manifest.json
+  ../bendSVM/build/interop/fogo-v0/20261009T191953Z-0295b5f8/fogo-v0/v1.57/library.manifest.json \
+  ../bendSVM/build/interop/solana-v3/20261009T185443Z-f45b18ca/solana-v3/v1.57/library.manifest.json
 ```
 
 Pass one producer manifest per target. GoSVM reads each manifest's target and
@@ -39,7 +41,7 @@ objects under `fogo-v0/` and `solana-v3/`:
   "bend": {
     "function": "Evaluate",
     "bend": {
-      "fogo": {"manifest": "../bendSVM/.../library.manifest.json", "sha256": "ec18012f…"}
+      "fogo": {"manifest": "../bendSVM/.../library.manifest.json", "sha256": "d8493350…"}
     }
   }
 }
@@ -48,10 +50,11 @@ objects under `fogo-v0/` and `solana-v3/`:
 `generate`, `build` and `test` regenerate `libs/<name>` when its pins change and
 otherwise revalidate it. A project target without a matching producer fails that
 target's build with the missing network named. Accepted producer pairings are
-fixed in the consumer: fogo-v0 from Bend's v1.53 producer (qualified with the
-v1.57 caller) or v1.57, and solana-v3 from v1.57, the caller's own backend.
-`library add` notes when a pairing has not yet been qualified; run
-`gosvm test -svm` before deploying such a build.
+fixed in the consumer: fogo-v0 from Bend's v1.57 producer (default) or its
+earlier v1.53 producer, both qualified with the v1.57 caller, and solana-v3 from
+v1.57, the caller's own backend. Should a pairing ever be accepted ahead of its
+qualification, `library add` notes it; run `gosvm test -svm` before deploying
+such a build.
 
 The lower-level `gosvm library bind -manifest … -sha256 … -allow-library-tools v1.53
 -package bend -function Evaluate -output dir` still binds a single producer into a

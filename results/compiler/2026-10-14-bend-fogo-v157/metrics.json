@@ -1,0 +1,725 @@
+{
+  "schema": 1,
+  "gosvm_sha256": "25a66844163e3305b4e8c2e804f8ea7a1ef22b9b5723daff09f2569627f3a873",
+  "repetitions": 3,
+  "network_validation": false,
+  "bend_manifests": {
+    "fogo-v0": {
+      "path": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/fogo-v0/20261009T191953Z-0295b5f8/fogo-v0/v1.57/library.manifest.json",
+      "sha256": "d84933502b7f2122c3c4339b3ace8e5fd5ae81b323c2449bff9b9f7f1ba66ecd"
+    },
+    "solana-v3": {
+      "path": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/solana-v3/20261009T185443Z-f45b18ca/solana-v3/v1.57/library.manifest.json",
+      "sha256": "9db669cefeee15dfad19cb849671256303a40243129ab105f85beb81dd3c37ee"
+    }
+  },
+  "fixtures": {
+    "go-bend": {
+      "fixture_sha256": "62107d91929bf233f0df9e0c91787c530a86a7e09fb41844c1a099df98fc45fb",
+      "runs": [
+        {
+          "run": 0,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "b22199761522da96c097bf312c21d99b3509450acd03ff8f4842186de5ae1d4c",
+          "elf_bytes": 4664,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 307
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 315
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 249
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 248
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 558
+            }
+          ]
+        },
+        {
+          "run": 0,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "760279ec4aa3bff11708f67ff232010528ce6f0da01d6361cd1c3fa984acb3a1",
+          "elf_bytes": 3896,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 317
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 251
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 250
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 254
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 562
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "b22199761522da96c097bf312c21d99b3509450acd03ff8f4842186de5ae1d4c",
+          "elf_bytes": 4664,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 307
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 315
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 249
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 248
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 558
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "760279ec4aa3bff11708f67ff232010528ce6f0da01d6361cd1c3fa984acb3a1",
+          "elf_bytes": 3896,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 317
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 251
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 250
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 254
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 562
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "b22199761522da96c097bf312c21d99b3509450acd03ff8f4842186de5ae1d4c",
+          "elf_bytes": 4664,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 307
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 315
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 249
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 248
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 558
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "760279ec4aa3bff11708f67ff232010528ce6f0da01d6361cd1c3fa984acb3a1",
+          "elf_bytes": 3896,
+          "cases": [
+            {
+              "name": "zero",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "forty-one",
+              "error": 0,
+              "cu": 311
+            },
+            {
+              "name": "disabled",
+              "error": 0,
+              "cu": 309
+            },
+            {
+              "name": "stop",
+              "error": 0,
+              "cu": 317
+            },
+            {
+              "name": "bad-bool",
+              "error": 104,
+              "cu": 251
+            },
+            {
+              "name": "bad-tag",
+              "error": 104,
+              "cu": 250
+            },
+            {
+              "name": "bad-padding",
+              "error": 104,
+              "cu": 254
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 562
+            }
+          ]
+        }
+      ],
+      "libraries": {
+        "bend": {
+          "function": "Evaluate",
+          "bend": {
+            "fogo": {
+              "manifest": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/fogo-v0/20261009T191953Z-0295b5f8/fogo-v0/v1.57/library.manifest.json",
+              "sha256": "d84933502b7f2122c3c4339b3ace8e5fd5ae81b323c2449bff9b9f7f1ba66ecd"
+            },
+            "solana": {
+              "manifest": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/solana-v3/20261009T185443Z-f45b18ca/solana-v3/v1.57/library.manifest.json",
+              "sha256": "9db669cefeee15dfad19cb849671256303a40243129ab105f85beb81dd3c37ee"
+            }
+          }
+        }
+      }
+    },
+    "go-bend-rust": {
+      "fixture_sha256": "73c2bb8b7cb727237ac2a4ee8515e28828b1941730185ff7474dc36b49d65b3c",
+      "runs": [
+        {
+          "run": 0,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "3139045afa7c5be10e699ea68e3ed8e9da171cbd2883acb452d42c75edef400c",
+          "elf_bytes": 11856,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 298
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 296
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 410
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 768
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 567
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 857
+            }
+          ]
+        },
+        {
+          "run": 0,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "749651ba7a957cc7adc20596d2a4f52d540d22cb7559f0b46204186a42e1c9d0",
+          "elf_bytes": 11088,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 284
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 282
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 238
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 398
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 756
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 555
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 831
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "3139045afa7c5be10e699ea68e3ed8e9da171cbd2883acb452d42c75edef400c",
+          "elf_bytes": 11856,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 298
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 296
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 410
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 768
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 567
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 857
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "749651ba7a957cc7adc20596d2a4f52d540d22cb7559f0b46204186a42e1c9d0",
+          "elf_bytes": 11088,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 284
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 282
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 238
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 398
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 756
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 555
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 831
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "target_profile": "fogo-v0",
+          "runtime": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "elf_sha256": "3139045afa7c5be10e699ea68e3ed8e9da171cbd2883acb452d42c75edef400c",
+          "elf_bytes": 11856,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 605
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 298
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 296
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 252
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 410
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 768
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 567
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 857
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "target_profile": "solana-v3",
+          "runtime": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "elf_sha256": "749651ba7a957cc7adc20596d2a4f52d540d22cb7559f0b46204186a42e1c9d0",
+          "elf_bytes": 11088,
+          "cases": [
+            {
+              "name": "accepted",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "boundary-forty",
+              "error": 0,
+              "cu": 593
+            },
+            {
+              "name": "bend-refused",
+              "error": 200,
+              "cu": 284
+            },
+            {
+              "name": "bend-disabled",
+              "error": 200,
+              "cu": 282
+            },
+            {
+              "name": "bend-malformed-bool",
+              "error": 104,
+              "cu": 238
+            },
+            {
+              "name": "rust-malformed-reserve",
+              "error": 304,
+              "cu": 398
+            },
+            {
+              "name": "u128-boundary",
+              "error": 0,
+              "cu": 756
+            },
+            {
+              "name": "zero-amount",
+              "error": 0,
+              "cu": 555
+            },
+            {
+              "name": "success-then-malformed-rollback",
+              "error": 104,
+              "cu": 831
+            }
+          ]
+        }
+      ],
+      "libraries": {
+        "bend": {
+          "function": "Evaluate",
+          "bend": {
+            "fogo": {
+              "manifest": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/fogo-v0/20261009T191953Z-0295b5f8/fogo-v0/v1.57/library.manifest.json",
+              "sha256": "d84933502b7f2122c3c4339b3ace8e5fd5ae81b323c2449bff9b9f7f1ba66ecd"
+            },
+            "solana": {
+              "manifest": "/Users/colkitt/sith/toys/crypto/bendSVM/build/interop/solana-v3/20261009T185443Z-f45b18ca/solana-v3/v1.57/library.manifest.json",
+              "sha256": "9db669cefeee15dfad19cb849671256303a40243129ab105f85beb81dd3c37ee"
+            }
+          }
+        },
+        "quote": {
+          "function": "Quote",
+          "rust": {
+            "crate": "rust/quote"
+          }
+        }
+      }
+    }
+  },
+  "passed": true
+}

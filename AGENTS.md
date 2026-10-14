@@ -36,8 +36,8 @@ part of routine build cleanup.
 Current network/backend selection and explicit migration are documented in
 [target profiles](docs/TARGET_PROFILES.md); preserve target-less v1.51 projects'
 historical meaning. [Bend libraries](docs/BEND_LIBRARIES.md) consume pinned producer
-artifacts: fogo-v0 at v1.53 (qualified) or v1.57 (accepted, not yet qualified)
-and solana-v3 at v1.57. [Rust libraries](docs/RUST_LIBRARIES.md) are built by
+artifacts: fogo-v0 at v1.57 (default) or v1.53 and solana-v3 at v1.57, all
+qualified locally. [Rust libraries](docs/RUST_LIBRARIES.md) are built by
 GoSVM from crates. `gosvm deploy`, `call` and `authority` reach public networks;
 local acceptance alone does not establish public-network compatibility. Keep modern runner/bootstrap outputs
 rebuildable and untracked.

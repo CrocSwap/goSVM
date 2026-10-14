@@ -62,9 +62,9 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   there is still no public runner download.
 - **Declarative libraries.** `gosvm library add -name X <bend manifests…>` or
   `-rust <crate>` records pins in `gosvm.json` and generates `libs/X` with a
-  producer and objects per target. Accepted pairings: Bend fogo-v0/v1.53,
-  Bend fogo-v0/v1.57 (accepted ahead of publication, not yet qualified; `library
-  add` prints a note), Bend solana-v3/v1.57, GoSVM-built Rust v1.57 ([Rust libraries](docs/RUST_LIBRARIES.md)).
+  producer and objects per target. Accepted pairings: Bend fogo-v0/v1.57
+  (default; qualified October 14), Bend fogo-v0/v1.53, Bend solana-v3/v1.57,
+  GoSVM-built Rust v1.57 ([Rust libraries](docs/RUST_LIBRARIES.md)).
 - **Deploy/call.** `gosvm deploy -network fogo-testnet|solana-devnet|…` checks live
   feature gates, then deploys natively through the upgradeable loader (no Solana
   CLI) with a per-network payer in
@@ -85,11 +85,14 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   `gosvm authority` shows/transfers (checked or `-unchecked` address)/removes it,
   and `deploy -authority` upgrades as a non-payer authority; verified on both.
 
+- **Bend fogo-v0 / v1.57 qualified (October 14).** Bend's published bundle
+  (`d8493350…66ecd`) with the solana-v3 bundle passes
+  [Go+Bend and Go+Bend+Rust qualification](results/compiler/2026-10-14-bend-fogo-v157/README.md)
+  on both targets; linked ELFs and per-case CU are identical to the v1.53 run.
+  It is no longer `untested` and is the documented fogo-v0 default; v1.53 stays
+  accepted and qualified.
+
 Open:
-- Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred). The
-  consumer already accepts it as untested; when published, bind it and run
-  `scripts/verify_go_bend_rust.py` into a fresh results directory, then drop it
-  from `untested` in `internal/library/bend.go`.
 - GoSVM invoking Bend's library build from a declared Bend source (like Rust
   crates today) awaits Bend's answer on output location and JSON output; see
   the [follow-up request](docs/coordination/2026-10-14-bend-build-request.md).
