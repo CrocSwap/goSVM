@@ -56,9 +56,6 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 	}
 	tag := "1"
 	if s.Tag != nil {
-		if _, ok := g.info.Types[s.Tag].Type.Underlying().(*types.Struct); ok {
-			g.fail(s.Tag, "struct switch comparisons unsupported; compare fields explicitly")
-		}
 		tag = g.expr(s.Tag)
 	}
 	g.line("do {")

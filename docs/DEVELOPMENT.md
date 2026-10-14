@@ -301,8 +301,16 @@ an older frontend/module path may need the archive restored first.
 ## Implementation and workload
 
 ```text
-Go parser/type checker → checked C → Solana Clang -O2 → LLD → SBF ELF
+Go parser/type checker → subset Check → checked C → Solana Clang -O2 → LLD → SBF ELF
 ```
+
+`compiler.Check` enforces the whole on-chain subset (entry signature, recursion,
+borrows and every language rule) before any code generation and returns a
+backend-neutral `CheckedProgram`; the C emitter applies no rules of its own.
+`project.LoadSchema` exposes validated schema 2 with resolved wire layouts. These
+are the interface for alternative backends; the C/LLVM output is unchanged. See
+[the backend interface](BACKEND_INTERFACE.md) and, for failure semantics,
+[the error contract](ERROR_CONTRACT.md).
 
 The frontend and harness have no external Go modules. No Go runtime, GC, scheduler
 or allocator is linked. A small C adapter decodes the account envelope and marshals

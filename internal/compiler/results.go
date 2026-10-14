@@ -15,13 +15,8 @@ type resultType struct {
 }
 
 func (g *generator) emitResults(node ast.Node, t *types.Tuple) {
-	if t.Len() < 2 {
+	if t.Len() < 2 || g.declaredResult(t) {
 		return
-	}
-	for _, r := range g.results {
-		if types.Identical(r.typ, t) {
-			return
-		}
 	}
 	g.next++
 	name := fmt.Sprintf("results%d", g.next)
@@ -33,13 +28,7 @@ func (g *generator) emitResults(node ast.Node, t *types.Tuple) {
 	g.line("} %s;", name)
 }
 func (g *generator) resultName(node ast.Node, t *types.Tuple) string {
-	for _, r := range g.results {
-		if types.Identical(r.typ, t) {
-			return r.name
-		}
-	}
-	g.fail(node, "result type was not declared before use")
-	return ""
+	return g.lookupResult(node, t).name
 }
 func (g *generator) expressionValues(expressions []ast.Expr) []string {
 	return g.expressionValuesAs(expressions, nil)
@@ -125,7 +114,7 @@ func (g *generator) captureTarget(e ast.Expr) string {
 		target, index := g.expr(e.X), g.expr(e.Index)
 		return fmt.Sprintf("*at(%s,%s)", target, index)
 	default:
-		g.fail(e, "unsupported assignment target")
+		g.unchecked(e)
 	}
 	return ""
 }
@@ -155,7 +144,7 @@ func (g *generator) assignMany(node ast.Node, lhs []ast.Expr, rhs []ast.Expr, to
 	}
 	values := g.expressionValuesAs(rhs, expected)
 	if len(values) != len(lhs) {
-		g.fail(node, "assignment value count mismatch")
+		g.unchecked(node)
 	}
 	for i, value := range values {
 		if defs[i] != nil {
@@ -186,9 +175,6 @@ func (g *generator) multiDeclaration(v *ast.ValueSpec) {
 			continue
 		}
 		o := g.info.Defs[id]
-		if isContext(o.Type()) {
-			g.fail(v, "Context must come from the entrypoint, not a zero value")
-		}
 		g.line("%s %s={0};", g.variable(v, o.Type()), g.name(o))
 	}
 }

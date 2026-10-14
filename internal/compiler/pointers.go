@@ -24,15 +24,7 @@ func memoryValue(t types.Type) bool {
 	return false
 }
 func (g *generator) pointerType(n ast.Node, p *types.Pointer) string {
-	t := p.Elem()
-	if isContext(t) {
-		g.fail(n, "pointers to Context unsupported")
-	}
-	switch t.Underlying().(type) {
-	case *types.Pointer, *types.Slice, *types.Signature, *types.Interface:
-		g.fail(n, "pointer elements must be unsigned/bool scalars, value structs or scalar arrays")
-	}
-	return g.variable(n, t) + " *"
+	return g.variable(n, p.Elem()) + " *"
 }
 func (g *generator) checkedPointer(n ast.Node, p types.Type, value string) string {
 	return fmt.Sprintf("((%s)gosvm_nonnull(%s))", g.variable(n, p), value)
@@ -40,7 +32,7 @@ func (g *generator) checkedPointer(n ast.Node, p types.Type, value string) strin
 func (g *generator) pointed(e ast.Expr) string {
 	p, ok := pointer(g.info.Types[e].Type)
 	if !ok {
-		g.fail(e, "dereference requires a supported pointer")
+		g.unchecked(e)
 	}
 	value := g.expr(e)
 	return g.temp(e, p.Elem(), "*"+g.checkedPointer(e, p, value))
@@ -64,7 +56,7 @@ func (g *generator) address(e ast.Expr) string {
 		base, index := g.expr(e.X), g.expr(e.Index)
 		return fmt.Sprintf("at(%s,%s)", base, index)
 	default:
-		g.fail(e, "address requires caller-owned local, field or element storage")
+		g.unchecked(e)
 	}
 	return ""
 }
@@ -152,7 +144,7 @@ func addBorrows(to borrowSet, from borrowSet) bool {
 
 type borrowSummary struct{ results []borrowSet }
 type borrowAnalysis struct {
-	g         *generator
+	f         *frontend
 	fn        *ast.FuncDecl
 	summaries map[types.Object]borrowSummary
 	vars      map[types.Object]borrowSet
@@ -160,22 +152,24 @@ type borrowAnalysis struct {
 	changed   bool
 }
 
-func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.FuncDecl) {
+// checkBorrows proves that no pointer or slice outlives the storage it refers
+// to and returns each function's result summary, keyed by its object.
+func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Function) map[types.Object]borrowSummary {
 	summaries := map[types.Object]borrowSummary{}
 	var check func(types.Object)
 	check = func(object types.Object) {
 		if _, done := summaries[object]; done {
 			return
 		}
-		fn := funcs[object]
+		fn := funcs[object].Decl
 		ast.Inspect(fn.Body, func(n ast.Node) bool {
 			if c, ok := n.(*ast.CallExpr); ok {
 				var target types.Object
 				switch e := c.Fun.(type) {
 				case *ast.Ident:
-					target = g.info.Uses[e]
+					target = f.info.Uses[e]
 				case *ast.SelectorExpr:
-					target = g.info.Uses[e.Sel]
+					target = f.info.Uses[e.Sel]
 				}
 				if funcs[target] != nil {
 					check(target)
@@ -184,7 +178,7 @@ func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.F
 			return true
 		})
 		sig := object.Type().(*types.Signature)
-		a := &borrowAnalysis{g: g, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len())}
+		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len())}
 		for i := range a.results {
 			a.results[i] = borrowSet{}
 		}
@@ -214,8 +208,8 @@ func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.F
 							break
 						}
 						if id, ok := lhs.(*ast.Ident); ok {
-							obj := g.info.Uses[id]
-							if definition := g.info.Defs[id]; definition != nil {
+							obj := f.info.Uses[id]
+							if definition := f.info.Defs[id]; definition != nil {
 								obj = definition
 							}
 							a.assign(id, obj, values[i])
@@ -225,7 +219,7 @@ func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.F
 					values := a.values(n.Values)
 					for i, id := range n.Names {
 						if i < len(values) {
-							a.assign(id, g.info.Defs[id], values[i])
+							a.assign(id, f.info.Defs[id], values[i])
 						}
 					}
 				case *ast.ReturnStmt:
@@ -236,7 +230,7 @@ func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.F
 						}
 						for root := range value {
 							if root.scope != nil {
-								g.fail(n, "reference escapes local storage; heap allocation unsupported")
+								f.fail(n, "reference escapes local storage; heap allocation unsupported")
 							}
 						}
 						if addBorrows(a.results[i], value) {
@@ -254,9 +248,10 @@ func (g *generator) checkBorrows(decls []ast.Decl, funcs map[types.Object]*ast.F
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
-			check(g.info.Defs[fn.Name])
+			check(f.info.Defs[fn.Name])
 		}
 	}
+	return summaries
 }
 func scopeWithin(child, parent *types.Scope) bool {
 	for s := child; s != nil; s = s.Parent() {
@@ -268,7 +263,7 @@ func scopeWithin(child, parent *types.Scope) bool {
 }
 func (a *borrowAnalysis) scopeAt(pos token.Pos) *types.Scope {
 	var result *types.Scope
-	for _, scope := range a.g.info.Scopes {
+	for _, scope := range a.f.info.Scopes {
 		if scope.Contains(pos) && (result == nil || scopeWithin(scope, result)) {
 			result = scope
 		}
@@ -281,7 +276,7 @@ func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet
 	}
 	for root := range value {
 		if root.scope != nil && !scopeWithin(obj.Parent(), root.scope) {
-			a.g.fail(node, "reference escapes its lexical storage scope; heap allocation unsupported")
+			a.f.fail(node, "reference escapes its lexical storage scope; heap allocation unsupported")
 		}
 	}
 	if a.vars[obj] == nil {
@@ -296,17 +291,17 @@ func (a *borrowAnalysis) address(e ast.Expr) borrowSet {
 	case *ast.ParenExpr:
 		return a.address(e.X)
 	case *ast.Ident:
-		o := a.g.info.Uses[e]
+		o := a.f.info.Uses[e]
 		if o != nil {
 			return borrowSet{borrowRoot{scope: o.Parent(), node: e, parameter: -1}: true}
 		}
 	case *ast.SelectorExpr:
-		if _, ok := pointer(a.g.info.Types[e.X].Type); ok {
+		if _, ok := pointer(a.f.info.Types[e.X].Type); ok {
 			return a.expr(e.X)
 		}
 		return a.address(e.X)
 	case *ast.IndexExpr:
-		if memoryValue(a.g.info.Types[e.X].Type) {
+		if memoryValue(a.f.info.Types[e.X].Type) {
 			return a.expr(e.X)
 		}
 		return a.address(e.X)
@@ -325,7 +320,7 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 	case *ast.ParenExpr:
 		return a.expr(e.X)
 	case *ast.Ident:
-		return a.vars[a.g.info.Uses[e]]
+		return a.vars[a.f.info.Uses[e]]
 	case *ast.UnaryExpr:
 		if e.Op == token.AND {
 			return a.address(e.X)
@@ -336,7 +331,7 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 			return values[0]
 		}
 	case *ast.SliceExpr:
-		if memoryValue(a.g.info.Types[e.X].Type) {
+		if memoryValue(a.f.info.Types[e.X].Type) {
 			return a.expr(e.X)
 		}
 		return a.address(e.X)
@@ -347,7 +342,7 @@ func (a *borrowAnalysis) values(expressions []ast.Expr) []borrowSet {
 	var values []borrowSet
 	for _, e := range expressions {
 		if c, ok := e.(*ast.CallExpr); ok {
-			if t, ok := a.g.info.Types[c].Type.(*types.Tuple); ok && t.Len() > 1 {
+			if t, ok := a.f.info.Types[c].Type.(*types.Tuple); ok && t.Len() > 1 {
 				values = append(values, a.call(c)...)
 				continue
 			}
@@ -357,20 +352,20 @@ func (a *borrowAnalysis) values(expressions []ast.Expr) []borrowSet {
 	return values
 }
 func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
-	if a.g.info.Types[call.Fun].IsType() && memoryValue(a.g.info.Types[call].Type) && len(call.Args) == 1 {
+	if a.f.info.Types[call.Fun].IsType() && memoryValue(a.f.info.Types[call].Type) && len(call.Args) == 1 {
 		return []borrowSet{a.expr(call.Args[0])}
 	}
 	var object types.Object
 	var args []borrowSet
 	switch e := call.Fun.(type) {
 	case *ast.Ident:
-		object = a.g.info.Uses[e]
+		object = a.f.info.Uses[e]
 	case *ast.SelectorExpr:
-		object = a.g.info.Uses[e.Sel]
-		if selection := a.g.info.Selections[e]; selection != nil && selection.Kind() == types.MethodVal {
+		object = a.f.info.Uses[e.Sel]
+		if selection := a.f.info.Selections[e]; selection != nil && selection.Kind() == types.MethodVal {
 			recv := object.Type().(*types.Signature).Recv().Type()
 			if _, wantPointer := pointer(recv); wantPointer {
-				if _, isPointer := pointer(a.g.info.Types[e.X].Type); isPointer {
+				if _, isPointer := pointer(a.f.info.Types[e.X].Type); isPointer {
 					args = append(args, a.expr(e.X))
 				} else {
 					args = append(args, a.address(e.X))

@@ -1,4 +1,8 @@
 // Package compiler implements an intentionally small, checked Go-to-C frontend.
+//
+// Check certifies the on-chain Go subset and returns a backend-neutral
+// CheckedProgram; the C emitter in this package lowers that value without
+// applying any language rules of its own.
 package compiler
 
 import (
@@ -39,16 +43,13 @@ static u8 *at(slice s, u64 i) { if (i >= (u64)s.len) abort(); return s.ptr+i; }
 `
 
 type generator struct {
-	fset *token.FileSet
-	info *types.Info
+	*frontend
 	bytes.Buffer
 	externals      map[string]library.Binding
 	names          map[types.Object]string
-	arrays         []arrayType
 	memory         bool
 	memoryWords    bool // Explicit SDK-2 snapshots opt into aligned aggregate copies.
 	entry          types.Object
-	results        []resultType
 	currentResults *types.Tuple
 	continueLabels []string
 	next           int
@@ -71,100 +72,28 @@ func CompileSources(sources []Source) (out []byte, err error) {
 	return CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", sources}}})
 }
 
-// CompileProgram checks and emits the on-chain package graph as one C unit.
-func CompileProgram(program *Program) (out []byte, err error) {
-	if program == nil {
-		return nil, fmt.Errorf("missing program")
-	}
-	if program.SDK != 0 && program.SDK != 1 && program.SDK != 2 {
-		return nil, fmt.Errorf("unsupported SDK version %d", program.SDK)
-	}
-	g := &generator{fset: token.NewFileSet(), names: map[types.Object]string{}, memoryWords: program.SDK == 2, info: &types.Info{
-		Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
-		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{},
-	}}
-	defer func() {
-		if r := recover(); r != nil {
-			if e, ok := r.(compileError); ok {
-				out, err = nil, e
-			} else {
-				panic(r)
-			}
-		}
-	}()
-	importer := &programImporter{g: g, entryPath: program.Entry, sdk: sdkImporter{version: program.SDK}, units: map[string]PackageSources{}, checked: map[string]*types.Package{}, active: map[string]bool{}}
-	for _, unit := range program.Packages {
-		if _, exists := importer.units[unit.Path]; exists {
-			return nil, fmt.Errorf("duplicate package %q", unit.Path)
-		}
-		importer.units[unit.Path] = unit
-	}
-	pkg, err := importer.Import(program.Entry)
+// CompileProgram checks the on-chain package graph with Check, then emits it
+// as one C unit. Every language rejection comes from Check.
+func CompileProgram(program *Program) ([]byte, error) {
+	checked, err := Check(program)
 	if err != nil {
 		return nil, err
 	}
-	files, decls := importer.files, importer.decls
-	entry, ok := pkg.Scope().Lookup("Process").(*types.Func)
-	byteSlice := types.NewSlice(types.Typ[types.Uint8])
-	expected := types.NewSignatureType(nil, nil, nil,
-		types.NewTuple(types.NewVar(0, nil, "", byteSlice), types.NewVar(0, nil, "", byteSlice)),
-		types.NewTuple(types.NewVar(0, nil, "", types.Typ[types.Uint64])), false)
-	contextEntry := false
-	if ok {
-		sig := entry.Type().(*types.Signature)
-		contextEntry = sig.Params().Len() == 1 && isContext(sig.Params().At(0).Type()) && sig.Results().Len() == 1 && types.Identical(sig.Results().At(0).Type(), types.Typ[types.Uint64]) && !sig.Variadic()
+	return emitC(checked)
+}
+
+// emitC lowers a checked program to C. It applies no language rules; a state
+// Check rules out is reported as an internal error, never translated.
+func emitC(program *CheckedProgram) (out []byte, err error) {
+	defer recoverCompileError(&err)
+	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2}
+	g.entry = program.Process
+	g.externals = libraryBindings(program.Libraries)
+	files := program.Files
+	var decls []ast.Decl
+	for _, file := range files {
+		decls = append(decls, file.Decls...)
 	}
-	if !ok || !types.Identical(entry.Type(), expected) && !contextEntry {
-		return nil, fmt.Errorf("require Process([]byte, []byte) uint64 or Process(solana.Context) uint64")
-	}
-	g.entry = entry
-	g.externals = map[string]library.Binding{}
-	for _, b := range program.Libraries {
-		g.externals[b.ImportPath+"."+b.Function] = b
-	}
-	// Reject recursion: this experiment has no stack-growth runtime.
-	funcs := map[types.Object]*ast.FuncDecl{}
-	for _, d := range decls {
-		if fn, ok := d.(*ast.FuncDecl); ok {
-			if fn.Body == nil {
-				g.fail(fn, "bodyless functions are unsupported")
-			}
-			funcs[g.info.Defs[fn.Name]] = fn
-		}
-	}
-	visited, active := map[types.Object]bool{}, map[types.Object]bool{}
-	var visit func(types.Object)
-	visit = func(o types.Object) {
-		if active[o] {
-			g.fail(funcs[o], "recursion is not supported")
-		}
-		if visited[o] {
-			return
-		}
-		active[o] = true
-		ast.Inspect(funcs[o].Body, func(n ast.Node) bool {
-			if c, ok := n.(*ast.CallExpr); ok {
-				var target types.Object
-				switch callee := c.Fun.(type) {
-				case *ast.Ident:
-					target = g.info.Uses[callee]
-				case *ast.SelectorExpr:
-					target = g.info.Uses[callee.Sel]
-				}
-				if funcs[target] != nil {
-					visit(target)
-				}
-			}
-			return true
-		})
-		active[o], visited[o] = false, true
-	}
-	for _, d := range decls {
-		if fn, ok := d.(*ast.FuncDecl); ok {
-			visit(g.info.Defs[fn.Name])
-		}
-	}
-	g.checkBorrows(decls, funcs)
 	hasPointers, hasViews := false, false
 	for _, file := range files {
 		ast.Inspect(file, func(n ast.Node) bool {
@@ -204,7 +133,7 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		g.ensureMemory()
 		g.WriteString(libraryMemory)
 	}
-	if importer.hasSDK {
+	if program.SDKPackage != nil {
 		ownedLifecycle := false
 		for _, object := range g.info.Uses {
 			fn, ok := object.(*types.Func)
@@ -226,10 +155,7 @@ func CompileProgram(program *Program) (out []byte, err error) {
 	emitType = func(node ast.Node, t types.Type) {
 		named, ok := t.(*types.Named)
 		if !ok {
-			g.fail(node, "only named scalar and value struct types supported")
-		}
-		if named.TypeParams().Len() != 0 {
-			g.fail(node, "generic types unsupported")
+			g.unchecked(node)
 		}
 		if emitted[t] {
 			return
@@ -246,17 +172,11 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		}
 		for i := 0; i < st.NumFields(); i++ {
 			f := st.Field(i)
-			if f.Embedded() || isContext(f.Type()) {
-				g.fail(node, "embedded and Context fields unsupported")
-			}
 			if a, ok := f.Type().Underlying().(*types.Array); ok {
 				g.emitArray(node, a)
 			} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
 				emitType(node, f.Type())
 			} else {
-				if _, ok := f.Type().Underlying().(*types.Basic); !ok {
-					g.fail(node, "struct fields must be unsigned scalars, bools, scalar arrays, or value structs")
-				}
 				g.variable(node, f.Type())
 			}
 		}
@@ -290,9 +210,6 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		if gen, ok := d.(*ast.GenDecl); ok && gen.Tok == token.TYPE {
 			for _, sp := range gen.Specs {
 				ts := sp.(*ast.TypeSpec)
-				if ts.Assign.IsValid() {
-					g.fail(ts, "type aliases unsupported")
-				}
 				emitType(ts, g.info.Defs[ts.Name].Type())
 			}
 		}
@@ -303,43 +220,32 @@ func CompileProgram(program *Program) (out []byte, err error) {
 		}
 	}
 	for _, d := range decls {
-		switch d := d.(type) {
-		case *ast.FuncDecl:
-			g.WriteString(g.signature(d) + ";\n")
-		case *ast.GenDecl:
-			if d.Tok == token.IMPORT || d.Tok == token.TYPE {
-				continue
-			}
-			if d.Tok != token.CONST {
-				g.fail(d, "only functions and constants are supported at package scope")
-			}
-		default:
-			g.fail(d, "unsupported declaration")
+		if fn, ok := d.(*ast.FuncDecl); ok {
+			g.WriteString(g.signature(fn) + ";\n")
 		}
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.WriteString(g.signature(fn))
 			g.currentResults = g.info.Defs[fn.Name].Type().(*types.Signature).Results()
-			if b, ok := g.externalFunction(g.info.Defs[fn.Name]); ok {
+			if b, ok := externalBinding(g.externals, g.info.Defs[fn.Name]); ok {
 				g.emitLibraryBody(fn, b)
 			} else if !g.emitPackedStore(fn) {
 				g.block(fn.Body)
 			}
 		}
 	}
-	if contextEntry {
+	if program.EntryKind == EntryContext {
 		g.WriteString("\n#define GOSVM_CONTEXT_ENTRY 1\n")
 		g.WriteString(accountsABI)
 	}
 	return g.Bytes(), nil
 }
 
-type compileError string
-
-func (e compileError) Error() string { return string(e) }
-func (g *generator) fail(n ast.Node, format string, args ...any) {
-	panic(compileError(fmt.Sprintf("%s: %s", g.fset.Position(n.Pos()), fmt.Sprintf(format, args...))))
+// unchecked marks an emitter state that Check rules out. Reaching one is a
+// compiler bug, reported as such rather than as a language error.
+func (g *generator) unchecked(n ast.Node) {
+	panic(compileError(fmt.Sprintf("%s: internal error: construct was not certified by Check", g.fset.Position(n.Pos()))))
 }
 func (g *generator) line(format string, args ...any) { fmt.Fprintf(&g.Buffer, format+"\n", args...) }
 func (g *generator) name(o types.Object) string {
@@ -354,6 +260,8 @@ func (g *generator) name(o types.Object) string {
 	g.names[o] = s
 	return s
 }
+
+// ctype maps a type admitted by typeRule to its C representation.
 func (g *generator) ctype(n ast.Node, t types.Type) string {
 	if tuple, ok := t.(*types.Tuple); ok && tuple.Len() > 1 {
 		return g.resultName(n, tuple)
@@ -371,9 +279,6 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 		return g.arrayName(n, a)
 	}
 	if named, ok := t.(*types.Named); ok {
-		if named.Obj().Pkg() != nil && named.Obj().Pkg().Path() == "gosvm/solana" {
-			g.fail(n, "only Context is available as an on-chain SDK type")
-		}
 		if _, ok := named.Underlying().(*types.Struct); ok {
 			return g.name(named.Obj())
 		}
@@ -389,42 +294,20 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 		case types.Bool, types.UntypedBool:
 			return "boolean"
 		case types.Int:
-			return "i64" // len only; signed variables/arithmetic rejected below.
+			return "i64" // len/cap only; Check rejects signed storage and arithmetic.
 		}
 	}
-	g.fail(n, "unsupported type %s", t)
+	g.unchecked(n)
 	return ""
 }
-func (g *generator) variable(n ast.Node, t types.Type) string {
-	if types.Identical(t.Underlying(), types.Typ[types.Int]) {
-		g.fail(n, "use explicitly typed unsigned integers; int variables are unsupported")
-	}
-	return g.ctype(n, t)
-}
+func (g *generator) variable(n ast.Node, t types.Type) string { return g.ctype(n, t) }
 func (g *generator) signature(fn *ast.FuncDecl) string {
-	if fn.Name.Name == "init" {
-		g.fail(fn, "init functions are unsupported")
-	}
-	if fn.Type.TypeParams != nil || fn.Body == nil {
-		g.fail(fn, "generics and bodyless functions are unsupported")
-	}
 	sig := g.info.Defs[fn.Name].Type().(*types.Signature)
-	if sig.Variadic() {
-		g.fail(fn, "variadics are unsupported")
-	}
-	for i := 0; i < sig.Results().Len(); i++ {
-		if sig.Results().At(i).Name() != "" {
-			g.fail(fn, "named results are unsupported")
-		}
-	}
 	ret := "void"
 	if sig.Results().Len() > 1 {
 		ret = g.resultName(fn, sig.Results())
 	}
 	if sig.Results().Len() == 1 {
-		if sig.Results().At(0).Name() != "" {
-			g.fail(fn, "named results are unsupported")
-		}
 		ret = g.variable(fn, sig.Results().At(0).Type())
 	}
 	args := []string{}
@@ -455,7 +338,6 @@ func (g *generator) expr(e ast.Expr) string {
 		return "0"
 	}
 	if tv.Value != nil {
-		g.ctype(e, tv.Type)
 		if tv.Value.Kind() == constant.Bool {
 			if constant.BoolVal(tv.Value) {
 				return "1"
@@ -464,7 +346,7 @@ func (g *generator) expr(e ast.Expr) string {
 		}
 		v, ok := constant.Uint64Val(tv.Value)
 		if !ok {
-			g.fail(e, "constant is outside uint64")
+			g.unchecked(e)
 		}
 		return fmt.Sprintf("%dULL", v)
 	}
@@ -472,9 +354,9 @@ func (g *generator) expr(e ast.Expr) string {
 	case *ast.ParenExpr:
 		return g.expr(e.X)
 	case *ast.Ident:
-		o := g.info.Uses[e]
-		if _, ok := o.(*types.Var); !ok {
-			g.fail(e, "unsupported identifier")
+		o, ok := g.info.Uses[e].(*types.Var)
+		if !ok {
+			g.unchecked(e)
 		}
 		return g.temp(e, tv.Type, g.name(o))
 	case *ast.SliceExpr:
@@ -482,15 +364,12 @@ func (g *generator) expr(e ast.Expr) string {
 	case *ast.StarExpr:
 		return g.pointed(e.X)
 	case *ast.CompositeLit:
-		if isContext(tv.Type) {
-			g.fail(e, "Context literals unsupported")
-		}
 		if a, ok := tv.Type.Underlying().(*types.Array); ok {
 			return g.arrayLiteral(e, a)
 		}
 		st, ok := tv.Type.Underlying().(*types.Struct)
 		if !ok {
-			g.fail(e, "only value struct literals supported")
+			g.unchecked(e)
 		}
 		r := g.temp(e, tv.Type, "{0}")
 		for i, elt := range e.Elts {
@@ -512,15 +391,9 @@ func (g *generator) expr(e ast.Expr) string {
 		}
 		return r
 	case *ast.SelectorExpr:
-		if sel := g.info.Selections[e]; sel != nil && sel.Kind() != types.FieldVal {
-			g.fail(e, "method values unsupported; call the method directly")
-		}
-		if isContext(g.info.Types[e.X].Type) {
-			g.fail(e, "Context fields are opaque")
-		}
 		field, ok := g.info.Uses[e.Sel].(*types.Var)
 		if !ok || !field.IsField() {
-			g.fail(e, "only value struct fields supported")
+			g.unchecked(e)
 		}
 		x := g.expr(e.X)
 		if p, ok := pointer(g.info.Types[e.X].Type); ok {
@@ -552,9 +425,6 @@ func (g *generator) expr(e ast.Expr) string {
 			sliceType = g.info.Types[e.Y].Type
 		}
 		if _, ok := sliceType.(*types.Slice); ok {
-			if e.Op != token.EQL && e.Op != token.NEQ {
-				g.fail(e, "only slice/nil comparison supported")
-			}
 			x, y := g.exprAs(e.X, sliceType), g.exprAs(e.Y, sliceType)
 			return g.temp(e, tv.Type, fmt.Sprintf("((%s).ptr %s (%s).ptr)", x, e.Op, y))
 		}
@@ -564,12 +434,12 @@ func (g *generator) expr(e ast.Expr) string {
 			if e.Op == token.NEQ {
 				comparison = "!" + comparison
 			} else if e.Op != token.EQL {
-				g.fail(e, "only == and != array comparisons supported")
+				g.unchecked(e)
 			}
 			return g.temp(e, tv.Type, comparison)
 		}
 		if _, ok := g.info.Types[e.X].Type.Underlying().(*types.Struct); ok {
-			g.fail(e, "struct comparisons unsupported; compare fields explicitly")
+			g.unchecked(e)
 		}
 		x := g.expr(e.X)
 		if e.Op == token.LAND || e.Op == token.LOR {
@@ -593,18 +463,12 @@ func (g *generator) expr(e ast.Expr) string {
 				bits = 32
 			case "u64":
 			default:
-				g.fail(e, "signed shifts unsupported")
+				g.unchecked(e)
 			}
 			return g.temp(e, tv.Type, fmt.Sprintf("%s >= %d ? 0 : ((u64)%s %s %s)", y, bits, x, e.Op, y))
 		}
 		if e.Op == token.QUO || e.Op == token.REM {
 			g.line("if (%s == 0) abort();", y)
-		}
-		switch e.Op {
-		case token.ADD, token.SUB, token.MUL, token.QUO, token.REM, token.AND, token.OR, token.XOR, token.AND_NOT:
-			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
-				g.fail(e, "signed arithmetic unsupported")
-			}
 		}
 		op := e.Op.String()
 		if e.Op == token.AND_NOT {
@@ -619,15 +483,11 @@ func (g *generator) expr(e ast.Expr) string {
 		x := g.expr(e.X)
 		op := e.Op.String()
 		switch e.Op {
-		case token.NOT, token.ADD:
+		case token.NOT, token.ADD, token.SUB:
 		case token.XOR:
 			op = "~"
-		case token.SUB:
-			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
-				g.fail(e, "signed negation unsupported")
-			}
 		default:
-			g.fail(e, "unsupported unary operator")
+			g.unchecked(e)
 		}
 		return g.temp(e, tv.Type, fmt.Sprintf("(%s(u64)%s)", op, x))
 	case *ast.CallExpr:
@@ -639,20 +499,14 @@ func (g *generator) expr(e ast.Expr) string {
 		if g.info.Types[e.Fun].IsType() {
 			if s, ok := tv.Type.(*types.Slice); ok && types.Identical(s.Elem(), types.Typ[types.Uint8]) {
 				if len(e.Args) != 1 {
-					g.fail(e, "invalid slice conversion")
+					g.unchecked(e)
 				}
 				if g.info.Types[e.Args[0]].IsNil() {
 					return g.temp(e, tv.Type, "(slice){0}")
 				}
-				if !types.Identical(g.info.Types[e.Args[0]].Type, tv.Type) {
-					g.fail(e, "slice conversion requires identical byte slices or nil")
-				}
 				return g.temp(e, tv.Type, g.expr(e.Args[0]))
 			}
-			if a, ok := tv.Type.Underlying().(*types.Array); ok {
-				if len(e.Args) != 1 || !types.Identical(g.info.Types[e.Args[0]].Type.Underlying(), a) {
-					g.fail(e, "array conversions require identical underlying arrays; slice conversions unsupported")
-				}
+			if _, ok := tv.Type.Underlying().(*types.Array); ok {
 				return g.temp(e, tv.Type, g.expr(e.Args[0]))
 			}
 		}
@@ -662,11 +516,11 @@ func (g *generator) expr(e ast.Expr) string {
 		case *ast.SelectorExpr:
 			id, ok := callee.X.(*ast.Ident)
 			if !ok {
-				g.fail(e, "only direct package function calls supported")
+				g.unchecked(e)
 			}
 			imported, ok := g.info.Uses[id].(*types.PkgName)
 			if !ok {
-				g.fail(e, "methods and function values unsupported")
+				g.unchecked(e)
 			}
 			if imported.Imported().Path() == "gosvm/solana" {
 				return g.importedCall(e, callee)
@@ -676,15 +530,12 @@ func (g *generator) expr(e ast.Expr) string {
 			o = g.info.Uses[callee]
 			builtinName = callee.Name
 		default:
-			g.fail(e, "only direct function calls supported")
+			g.unchecked(e)
 		}
 		args := g.callValues(e)
 		if _, ok := o.(*types.TypeName); ok {
-			if _, ok := tv.Type.Underlying().(*types.Struct); ok {
-				g.fail(e, "struct conversions unsupported; construct fields explicitly")
-			}
 			if len(args) != 1 {
-				g.fail(e, "invalid conversion")
+				g.unchecked(e)
 			}
 			return g.temp(e, tv.Type, "("+g.variable(e, tv.Type)+")"+args[0])
 		}
@@ -695,12 +546,12 @@ func (g *generator) expr(e ast.Expr) string {
 				}
 			}
 			if builtinName != "len" && builtinName != "cap" {
-				g.fail(e, "only len and cap builtins supported")
+				g.unchecked(e)
 			}
 			return g.temp(e, tv.Type, args[0]+"."+builtinName)
 		}
 		if _, ok := o.(*types.Func); !ok {
-			g.fail(e, "function values unsupported")
+			g.unchecked(e)
 		}
 		call := g.name(o) + "(" + strings.Join(args, ",") + ")"
 		if tup, ok := tv.Type.(*types.Tuple); ok && tup.Len() == 0 {
@@ -709,7 +560,7 @@ func (g *generator) expr(e ast.Expr) string {
 		}
 		return g.temp(e, tv.Type, call)
 	default:
-		g.fail(e, "unsupported expression %T", e)
+		g.unchecked(e)
 	}
 	return ""
 }
@@ -739,7 +590,7 @@ func (g *generator) stmt(s ast.Stmt) {
 		g.expr(s.X)
 	case *ast.AssignStmt:
 		if s.Tok != token.DEFINE && s.Tok != token.ASSIGN {
-			g.fail(s, "compound assignment unsupported")
+			g.unchecked(s)
 		}
 		if len(s.Lhs) != 1 || len(s.Rhs) != 1 {
 			g.assignMany(s, s.Lhs, s.Rhs, s.Tok)
@@ -793,15 +644,15 @@ func (g *generator) stmt(s ast.Stmt) {
 			v := g.expr(s.Rhs[0])
 			g.line("*at(%s,%s) = %s;", x, i, v)
 		default:
-			g.fail(s, "unsupported assignment target")
+			g.unchecked(s)
 		}
 	case *ast.DeclStmt:
 		d := s.Decl.(*ast.GenDecl)
-		if d.Tok != token.VAR && d.Tok != token.CONST {
-			g.fail(s, "unsupported local declaration")
-		}
 		if d.Tok == token.CONST {
 			return
+		}
+		if d.Tok != token.VAR {
+			g.unchecked(s)
 		}
 		for _, sp := range d.Specs {
 			v := sp.(*ast.ValueSpec)
@@ -810,9 +661,6 @@ func (g *generator) stmt(s ast.Stmt) {
 				continue
 			}
 			o := g.info.Defs[v.Names[0]]
-			if isContext(o.Type()) && len(v.Values) == 0 {
-				g.fail(v, "Context must come from the entrypoint, not a zero value")
-			}
 			rhs := "{0}"
 			if len(v.Values) == 1 {
 				rhs = g.exprAs(v.Values[0], o.Type())
@@ -843,32 +691,29 @@ func (g *generator) stmt(s ast.Stmt) {
 	case *ast.IncDecStmt:
 		id, ok := s.X.(*ast.Ident)
 		if !ok {
-			g.variable(s, g.info.Types[s.X].Type)
 			target := g.captureTarget(s.X)
 			g.line("(%s)%s;", target, s.Tok)
 			return
 		}
-		o := g.info.Uses[id]
-		g.variable(s, o.Type())
-		g.line("%s%s;", g.name(o), s.Tok)
+		g.line("%s%s;", g.name(g.info.Uses[id]), s.Tok)
 	case *ast.BranchStmt:
 		if s.Label != nil {
-			g.fail(s, "labeled branches unsupported")
+			g.unchecked(s)
 		}
 		switch s.Tok {
 		case token.BREAK:
 			g.line("break;")
 		case token.CONTINUE:
 			if len(g.continueLabels) == 0 {
-				g.fail(s, "continue outside a loop")
+				g.unchecked(s)
 			}
 			g.line("goto %s;", g.continueLabels[len(g.continueLabels)-1])
 		default:
-			g.fail(s, "fallthrough and goto unsupported")
+			g.unchecked(s)
 		}
 	case *ast.EmptyStmt:
 	default:
-		g.fail(s, "unsupported statement %T", s)
+		g.unchecked(s)
 	}
 }
 
@@ -883,19 +728,16 @@ func (g *generator) fieldTarget(e ast.Expr) string {
 	case *ast.StarExpr:
 		return "(*" + g.checkedPointer(e, g.info.Types[e.X].Type, g.expr(e.X)) + ")"
 	case *ast.SelectorExpr:
-		if isContext(g.info.Types[e.X].Type) {
-			g.fail(e, "Context fields are opaque")
-		}
 		f, ok := g.info.Uses[e.Sel].(*types.Var)
 		if !ok || !f.IsField() {
-			g.fail(e, "unsupported field target")
+			g.unchecked(e)
 		}
 		if p, ok := pointer(g.info.Types[e.X].Type); ok {
 			return g.checkedPointer(e, p, g.expr(e.X)) + "->" + g.name(f)
 		}
 		return g.fieldTarget(e.X) + "." + g.name(f)
 	default:
-		g.fail(e, "field target must be a local value struct")
+		g.unchecked(e)
 	}
 	return ""
 }

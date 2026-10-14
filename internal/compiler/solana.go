@@ -56,7 +56,7 @@ func isContext(t types.Type) bool {
 func (g *generator) importedCall(call *ast.CallExpr, selector *ast.SelectorExpr) string {
 	fn, ok := g.info.Uses[selector.Sel].(*types.Func)
 	if !ok || fn.Pkg() == nil || fn.Pkg().Path() != "gosvm/solana" {
-		g.fail(call, "only gosvm/solana direct calls are supported")
+		g.unchecked(call)
 	}
 	args := g.callValues(call)
 	return g.temp(call, g.info.Types[call].Type, "sol_"+fn.Name()+"("+joinArgs(args)+")")
