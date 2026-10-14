@@ -11,9 +11,20 @@ the one admitted `int` variable, restricted like `len` results —
 [GO_CONTROL](docs/GO_CONTROL.md)), `uint16` throughout the compiler and schema 2
 (fields, codecs, PDA seeds), and `import "math/bits"` (64/32/16/8-bit functions,
 Go-exact incl. Div traps — [GO_BITS](docs/GO_BITS.md)). The frozen check corpus
-lists the entries these changed in `corpusChanges`. Not yet chosen: signed
-integers (need overflow/division design and an error-contract addition),
-bounded allocation, interfaces/generics.
+lists the entries these changed in `corpusChanges`. Then, at the user's
+request, the remaining roadmap language items, all with Go-exact semantics,
+host differentials against native Go and SBF runs on both targets:
+[signed integers and `uint`](docs/GO_INTEGERS.md),
+[generics](docs/GO_GENERICS.md) (monomorphized in Check),
+[bounded allocation](docs/GO_ALLOCATION.md) (bump allocator, Go 1.22 append
+growth, Go-style escape analysis that moves escaping locals to the heap rather
+than rejecting them — a choice the user may revisit) and
+[interfaces](docs/GO_INTERFACES.md) (boxing on the heap, compare-and-branch
+dispatch; `error` stays out because strings are not in the subset). Each added
+traps recorded in [ERROR_CONTRACT](docs/ERROR_CONTRACT.md), which also contracts
+append growth and heap accounting. `gosvm features` reports per-program `uses`
+for Qushta's subset gating. Still out: strings, maps, closures/function values,
+floats, goroutines/defer.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
