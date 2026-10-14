@@ -5,6 +5,15 @@ Updated October 14, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work is next. See the October 9 section below.
 
+**Qushta verified backend (October 14):** Qushta is building an IR backend
+(typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
+[reply](docs/coordination/2026-10-14-qushta-reply.md). goSVM landed the agreed
+interface: `compiler.Check`/`CheckedProgram` and `project.LoadSchema`
+([backend interface](docs/BACKEND_INTERFACE.md)), `gosvm features`,
+`gosvm test --svm -elf`, and a v1.57 fresh-rebuild check. Error codes, check order
+and traps are a [stable contract](docs/ERROR_CONTRACT.md): announce changes to
+Qushta before landing them. Their baseline is tag `qushta-phase1-baseline`.
+
 Earlier status: The original session was parked
 October 4 at the user's request because of weekly Codex usage resets. A new
 director has started the roadmap with the user's authorization. The user's prior

@@ -97,8 +97,12 @@ def main():
     summary['unmanaged_v1_57_llvm_sha256'] = {t: sha((llvm / t).resolve()) for t in ('clang', 'ld.lld') if (llvm / t).exists()}
     if a.reference:
         ref = json.loads(a.reference.read_text())
-        known = {(r['target'], r['workload']): r['elf_sha256'] for r in ref['runs']}
-        names = {'full-swap': 'token-swap', 'clock2': 'clock'}
+        if 'runs' in ref:  # Target-profile acceptance metrics.
+            known = {(r['target'], r['workload']): r['elf_sha256'] for r in ref['runs']}
+            names = {'full-swap': 'token-swap', 'clock2': 'clock'}
+        else:  # An earlier run of this script.
+            known = {(r['target'], r['workload']): r['elf_sha256'] for r in ref['results']}
+            names = {'full-swap': 'full-swap', 'clock2': 'clock2'}
         summary['reference'] = str(a.reference.resolve().relative_to(ROOT))
         for r in summary['results']:
             r['matches_reference'] = known.get((r['target'], names[r['workload']])) == r['elf_sha256']
