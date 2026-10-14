@@ -136,11 +136,14 @@ func AddBendLibrary(dir, name, function string, manifests []string) ([]string, e
 		if err != nil {
 			return nil, err
 		}
-		profile, digest, err := library.InspectBend(abs)
+		profile, tools, digest, err := library.InspectBend(abs)
 		if err != nil {
 			return nil, err
 		}
 		p, _ := target.Resolve(profile)
+		if library.Untested(p.Name, tools) {
+			fmt.Printf("Note: Bend %s/%s producers are accepted but not yet qualified; run gosvm test -svm before deploying\n", p.Name, tools)
+		}
 		for key := range l.Bend {
 			if q, _ := target.Resolve(key); q.Name == p.Name {
 				delete(l.Bend, key)

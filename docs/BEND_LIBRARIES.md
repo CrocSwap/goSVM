@@ -9,7 +9,9 @@ linker or transaction runtime.
 
 The coordinated producer contract is `../bendSVM/docs/library-artifact-contract.md`;
 its ABI fixture is `../bendSVM/tests/mixed-library/fixture.md`. Current GoSVM
-support accepts the explicit **fogo-v0 / Bend platform-tools v1.53** producer.
+support accepts **fogo-v0** producers at Bend platform-tools v1.53 (qualified)
+or v1.57 (accepted ahead of publication, not yet qualified) and **solana-v3** at
+v1.57.
 The Go caller uses the separately pinned v1.57 backend. Their actual mixed image
 has [local acceptance evidence](../results/compiler/2026-10-07-target-profiles-final/README.md).
 Bend's published `solana-v3` / v1.57 bundle (SHA-256 `9db669ce…c37ee`) is also
@@ -47,7 +49,9 @@ objects under `fogo-v0/` and `solana-v3/`:
 otherwise revalidate it. A project target without a matching producer fails that
 target's build with the missing network named. Accepted producer pairings are
 fixed in the consumer: fogo-v0 from Bend's v1.53 producer (qualified with the
-v1.57 caller) and solana-v3 from v1.57, the caller's own backend.
+v1.57 caller) or v1.57, and solana-v3 from v1.57, the caller's own backend.
+`library add` notes when a pairing has not yet been qualified; run
+`gosvm test -svm` before deploying such a build.
 
 The lower-level `gosvm library bind -manifest … -sha256 … -allow-library-tools v1.53
 -package bend -function Evaluate -output dir` still binds a single producer into a

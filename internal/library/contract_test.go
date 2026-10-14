@@ -20,7 +20,7 @@ func TestProducerRequiresExplicitPinnedContract(t *testing.T) {
 		"wrong target":          func(p *Producer) { p.Target = "solana-v3" },
 		"historical manifest":   func(p *Producer) { p.Kind = "" },
 		"wrong ABI":             func(p *Producer) { p.ABI = 2 },
-		"wrong tools":           func(p *Producer) { p.Toolchains.Clang.Tools = "v1.57" },
+		"wrong tools":           func(p *Producer) { p.Toolchains.Clang.Tools = "v1.51" },
 		"missing authorization": func(p *Producer) { p.Authorized = nil },
 		"wrong CPU":             func(p *Producer) { p.Toolchains.Clang.CPU = "v3" },
 		"wrong ISA":             func(p *Producer) { p.Toolchains.Clang.Version = 3 },
@@ -80,7 +80,7 @@ func TestPublishedBendContract(t *testing.T) {
 		"fingerprint":        func(c *Contract) { c.Fingerprint = fmt.Sprintf("%064d", 0) },
 		"width":              func(c *Contract) { c.InputBytes++ },
 		"host architecture":  func(c *Contract) { c.Host.GOARCH = "wrong" },
-		"producer tools":     func(c *Contract) { v := c.Targets["fogo-v0"]; v.Tools = "v1.57"; c.Targets["fogo-v0"] = v },
+		"producer tools":     func(c *Contract) { v := c.Targets["fogo-v0"]; v.Tools = "v1.51"; c.Targets["fogo-v0"] = v },
 		"producer selection": func(c *Contract) { c.Header = c.Interface },
 		"target relabel":     func(c *Contract) { c.Targets["solana-v3"] = c.Targets["fogo-v0"]; delete(c.Targets, "fogo-v0") },
 	} {
@@ -172,5 +172,24 @@ func TestPublishedBendContractFlatLayout(t *testing.T) {
 	os.WriteFile(path, data, 0644)
 	if _, err = Read(path); err == nil {
 		t.Fatal("accepted ambiguous producer pins")
+	}
+}
+
+// fogo-v0 v1.57 Bend producers are accepted ahead of publication and flagged
+// as untested; the qualified pairings are not.
+func TestBendFogoV157Accepted(t *testing.T) {
+	p := Producer{Version: 1, Kind: "bend-library-v1", Target: "fogo-v0", ABI: 1, Symbol: "bend_library_v1_call_x", Fingerprint: "x"}
+	authorized := false
+	p.Authorized = &authorized
+	p.Toolchains.Clang.Tools = "v1.57"
+	p.Toolchains.Clang.CPU = "generic"
+	if err := p.check("fogo-v0"); err != nil {
+		t.Fatal(err)
+	}
+	if !Untested("fogo-v0", "v1.57") || Untested("fogo-v0", "v1.53") || Untested("solana-v3", "v1.57") {
+		t.Fatal("wrong untested pairings")
+	}
+	if Accepts("bend-library-v1", "solana-v3", "v1.53") {
+		t.Fatal("accepted v1.53 solana-v3 producer")
 	}
 }

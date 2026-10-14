@@ -1,6 +1,11 @@
 # goSVM session handoff
 
-Updated October 9, 2026 (America/New_York). The original session was parked
+Updated October 14, 2026 (America/New_York).
+**Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
+minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
+core-language work is next. See the October 9 section below.
+
+Earlier status: The original session was parked
 October 4 at the user's request because of weekly Codex usage resets. A new
 director has started the roadmap with the user's authorization. The user's prior
 performance objective was the 1.33× Whirlpools CU target, now achieved by the
@@ -20,9 +25,8 @@ validation scope. Milestone 1 is closed by user decision; the independent develo
 trial remains the sole milestone-2 acceptance gate. The Whirlpools 1.33× objective
 was achieved and should not be restarted as unfinished work.
 
-**Working tree:** the October 7 work is committed as `0f4343d` on branch
-`targets-and-libraries` (not merged to `main`; no remote push). Later October 9
-work follows on that branch. Run `git status --short` before editing. Resume
+**Working tree:** the October 7 and 9 work is merged to `main` and pushed to
+`origin` (October 14). Run `git status --short` before editing. Resume
 under the user's current instruction; roadmap entries are not scheduled tasks.
 
 ## October 9: Fogo/Solana and Go+Bend+Rust ergonomics
@@ -50,9 +54,11 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
 - **Declarative libraries.** `gosvm library add -name X <bend manifests…>` or
   `-rust <crate>` records pins in `gosvm.json` and generates `libs/X` with a
   producer and objects per target. Accepted pairings: Bend fogo-v0/v1.53,
-  Bend solana-v3/v1.57, GoSVM-built Rust v1.57 ([Rust libraries](docs/RUST_LIBRARIES.md)).
+  Bend fogo-v0/v1.57 (accepted ahead of publication, not yet qualified; `library
+  add` prints a note), Bend solana-v3/v1.57, GoSVM-built Rust v1.57 ([Rust libraries](docs/RUST_LIBRARIES.md)).
 - **Deploy/call.** `gosvm deploy -network fogo-testnet|solana-devnet|…` checks live
-  feature gates, then deploys via the Solana CLI with a per-network payer in
+  feature gates, then deploys natively through the upgradeable loader (no Solana
+  CLI) with a per-network payer in
   `deploy/keys/` (never the CLI keypair — on this host that is a production
   upgrade authority for another project, pointed at Fogo mainnet).
   `gosvm call` simulates/sends with return data, CU and logs.
@@ -70,8 +76,18 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   `gosvm authority` shows/transfers (checked or `-unchecked` address)/removes it,
   and `deploy -authority` upgrades as a non-payer authority; verified on both.
 
-Open: Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred); that
-needs a consumer pin addition and requalification when published.
+Open:
+- Bend proposes moving its fogo-v0 producer to v1.57 (GoSVM preferred). The
+  consumer already accepts it as untested; when published, bind it and run
+  `scripts/verify_go_bend_rust.py` into a fresh results directory, then drop it
+  from `untested` in `internal/library/bend.go`.
+- GoSVM invoking Bend's library build from a declared Bend source (like Rust
+  crates today) awaits Bend's answer on output location and JSON output; see
+  the [follow-up request](docs/coordination/2026-10-14-bend-build-request.md).
+- Probe programs stay deployed for future network checks: devnet
+  `Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp`, Fogo testnet
+  `G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW` (authority: the throwaway
+  payers in `build/network-probe/deploy/keys`).
 
 **Collaboration contract and ownership:** GoSVM owns its frontend/SDK, profile
 selection, generated Go/cgo consumer, external-object linking and Go final-image

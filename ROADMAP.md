@@ -8,6 +8,12 @@ are proposals, and no scheduled implementation is implied.
 
 ## Implementation progress
 
+October 14, 2026: the pre-core-language hurdles are met. One project targets Fogo
+(`fogo-v0`) and Solana (`solana-v3`) with automatic toolchain/runner selection,
+native deploy/redeploy/authority management validated on Fogo testnet and Solana
+devnet, and Go programs combining pure Bend and Rust libraries on both targets.
+See the [handoff](HANDOFF.md) October 9 section. Core-language work is next.
+
 October 5, 2026: roadmap work has started. The first lightweight-runner spike
 passed all existing matched bounded/token fixtures in three repetitions, with
 matching CU, errors, state assertions, CPI behavior, token ELF, and active feature

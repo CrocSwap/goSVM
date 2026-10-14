@@ -54,22 +54,34 @@ func (m Producer) tools() producerTools {
 // SymbolPrefix is each accepted producer kind's fingerprinted ABI symbol prefix.
 var SymbolPrefix = map[string]string{"bend-library-v1": "bend_library_v1_call_", RustKind: RustSymbolPrefix}
 
-// AcceptedTools returns the producer platform-tools pin accepted for a kind and target.
-func AcceptedTools(kind, profile string) string {
+// Accepts reports whether GoSVM accepts a producer kind's platform-tools pin
+// for a target.
+func Accepts(kind, profile, tools string) bool {
 	if kind == RustKind {
-		if _, ok := producerISA[profile]; ok {
-			return RustTools
-		}
-		return ""
+		_, ok := producerISA[profile]
+		return ok && tools == RustTools
 	}
-	return ProducerTools[profile]
+	for _, t := range ProducerTools[profile] {
+		if t == tools {
+			return true
+		}
+	}
+	return false
 }
 
-// ProducerTools records the Bend producer platform-tools pin GoSVM accepts per
-// target. fogo-v0 is Bend's v1.53 producer, qualified with the v1.57 caller;
-// solana-v3 is produced by the caller's own v1.57 backend. Any other pairing
-// needs a new qualification before it is listed here.
-var ProducerTools = map[string]string{target.Fogo: "v1.53", target.Solana: "v1.57"}
+// ProducerTools records the Bend producer platform-tools pins GoSVM accepts
+// per target. fogo-v0 v1.53 is Bend's published producer, qualified with the
+// v1.57 caller; solana-v3 is produced by the caller's own v1.57 backend.
+// fogo-v0 v1.57 is accepted ahead of Bend publishing it (see Untested); any
+// other pairing needs a new qualification before it is listed here.
+var ProducerTools = map[string][]string{target.Fogo: {"v1.53", "v1.57"}, target.Solana: {"v1.57"}}
+
+// untested lists accepted Bend pairings with no qualification run yet.
+var untested = map[string]bool{target.Fogo + "/v1.57": true}
+
+// Untested reports whether an accepted Bend target/tools pairing still awaits
+// its first qualification run.
+func Untested(profile, tools string) bool { return untested[profile+"/"+tools] }
 
 // producerISA is the producer CPU/SBPF version each target requires.
 var producerISA = map[string]struct {
@@ -102,8 +114,8 @@ func readProducer(path, digest string) (Producer, []byte, error) {
 func (m Producer) check(profile string) error {
 	isa, ok := producerISA[profile]
 	t := m.tools()
-	if m.Version != 1 || SymbolPrefix[m.Kind] == "" || m.ABI != 1 || m.Authorized == nil || *m.Authorized || !ok || m.Target != profile || t.Tools == "" || t.Tools != AcceptedTools(m.Kind, profile) || t.CPU != isa.CPU || t.Version != isa.Version || m.Symbol != SymbolPrefix[m.Kind]+m.Fingerprint {
-		return fmt.Errorf("unsupported %s producer target/toolchain contract %q/%q; accepted: Bend fogo-v0/v1.53 or solana-v3/v1.57, Rust %s; finalElfAuthorized must be false", m.Kind, m.Target, t.Tools, RustTools)
+	if m.Version != 1 || SymbolPrefix[m.Kind] == "" || m.ABI != 1 || m.Authorized == nil || *m.Authorized || !ok || m.Target != profile || !Accepts(m.Kind, profile, t.Tools) || t.CPU != isa.CPU || t.Version != isa.Version || m.Symbol != SymbolPrefix[m.Kind]+m.Fingerprint {
+		return fmt.Errorf("unsupported %s producer target/toolchain contract %q/%q; accepted: Bend fogo-v0/v1.53, fogo-v0/v1.57 or solana-v3/v1.57, Rust %s; finalElfAuthorized must be false", m.Kind, m.Target, t.Tools, RustTools)
 	}
 	return nil
 }
@@ -318,14 +330,14 @@ func (b *Binding) validateProducer() error {
 	return nil
 }
 
-// InspectBend checks a producer manifest's contract and returns its target
-// profile and SHA-256, for recording a new pin in a project lock.
-func InspectBend(path string) (string, string, error) {
+// InspectBend checks a producer manifest's contract and returns its target,
+// producer platform-tools pin and SHA-256.
+func InspectBend(path string) (string, string, string, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
 	digest := fmt.Sprintf("%x", sha256.Sum256(data))
 	m, _, err := readProducer(path, digest)
-	return m.Target, digest, err
+	return m.Target, m.tools().Tools, digest, err
 }

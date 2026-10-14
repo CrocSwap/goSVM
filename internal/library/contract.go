@@ -166,7 +166,7 @@ func (b *Binding) Validate() error {
 		if err != nil {
 			return err
 		}
-		if p.Name != name || AcceptedTools(b.ABI, name) == "" || object.Tools != AcceptedTools(b.ABI, name) {
+		if p.Name != name || !Accepts(b.ABI, name, object.Tools) {
 			return fmt.Errorf("library %s requires an explicitly allowed producer target/toolchain pin", name)
 		}
 		for _, a := range append([]Artifact{object.Object}, object.Support...) {
