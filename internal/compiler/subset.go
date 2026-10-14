@@ -21,20 +21,34 @@ type checker struct {
 	emitted   map[types.Type]bool // named types already checked
 	current   *types.Tuple        // results of the function being checked
 	loops     int                 // enclosing for statements
+
+	gp            *genericProgram // instances, for diagnostics within them
+	typeInstances []*TypeInstance // instantiated generic types, checked after named types
+}
+
+// within runs check for one declaration; a diagnostic inside an instance of
+// a generic declaration names the instantiation.
+func (c *checker) within(d ast.Node, check func()) {
+	var inst *Instance
+	if fn, ok := d.(*ast.FuncDecl); ok && c.gp != nil {
+		inst = c.gp.instanceOf[fn]
+	}
+	if inst == nil {
+		check()
+		return
+	}
+	c.gp.wrap(inst, check)
 }
 
 func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 	// Array value types written anywhere in source are declared first.
 	for _, f := range files {
 		ast.Inspect(f, func(n ast.Node) bool {
-			if n, ok := n.(*ast.ArrayType); ok && n.Len != nil {
-				if tv, ok := c.info.Types[n]; ok {
-					if a, ok := tv.Type.Underlying().(*types.Array); ok {
-						c.declareArray(n, a)
-					}
-				}
+			if d, ok := n.(*ast.FuncDecl); ok && c.gp != nil && c.gp.instanceOf[d] != nil {
+				c.within(d, func() { ast.Inspect(d, c.declareArrays) })
+				return false
 			}
-			return true
+			return c.declareArrays(n)
 		})
 	}
 	for _, d := range decls {
@@ -48,9 +62,13 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			}
 		}
 	}
+	for _, ti := range c.typeInstances {
+		ti := ti
+		c.gp.wrapType(ti, func() { c.namedType(posNode(ti.Site), ti.Type) })
+	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
-			c.declareResults(fn, c.info.Defs[fn.Name].Type().(*types.Signature).Results())
+			c.within(fn, func() { c.declareResults(fn, c.info.Defs[fn.Name].Type().(*types.Signature).Results()) })
 		}
 	}
 	for _, call := range bitsResults(c.info, files) {
@@ -59,7 +77,7 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 	for _, d := range decls {
 		switch d := d.(type) {
 		case *ast.FuncDecl:
-			c.signature(d)
+			c.within(d, func() { c.signature(d) })
 		case *ast.GenDecl:
 			if d.Tok == token.IMPORT || d.Tok == token.TYPE {
 				continue
@@ -78,10 +96,23 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 				// A library stub's body is replaced by the native call.
 				c.lookupResult(fn, c.current)
 			} else {
-				c.block(fn.Body)
+				c.within(fn, func() { c.block(fn.Body) })
 			}
 		}
 	}
+}
+
+// declareArrays declares the array value type written at n, if any; it is
+// an ast.Inspect visitor.
+func (c *checker) declareArrays(n ast.Node) bool {
+	if n, ok := n.(*ast.ArrayType); ok && n.Len != nil {
+		if tv, ok := c.info.Types[n]; ok {
+			if a, ok := tv.Type.Underlying().(*types.Array); ok {
+				c.declareArray(n, a)
+			}
+		}
+	}
+	return true
 }
 
 func (c *checker) declareArray(node ast.Node, a *types.Array) {
@@ -109,7 +140,7 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 	if !ok {
 		c.fail(node, "only named scalar and value struct types supported")
 	}
-	if named.TypeParams().Len() != 0 {
+	if named.TypeParams().Len() != 0 && named.TypeArgs().Len() == 0 {
 		c.fail(node, "generic types unsupported")
 	}
 	if c.emitted[t] {
@@ -763,7 +794,7 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	}
 	var o types.Object
 	builtinName := ""
-	switch callee := e.Fun.(type) {
+	switch callee := c.callFun(e.Fun).(type) {
 	case *ast.SelectorExpr:
 		id, ok := callee.X.(*ast.Ident)
 		if !ok {
@@ -781,9 +812,9 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			c.bitsCall(e, callee)
 			return
 		}
-		o = c.info.Uses[callee.Sel]
+		o = c.callee(callee.Sel)
 	case *ast.Ident:
-		o = c.info.Uses[callee]
+		o = c.callee(callee)
 		builtinName = callee.Name
 	default:
 		c.fail(e, "only direct function calls supported")
@@ -835,11 +866,11 @@ func (c *checker) sdkCall(call *ast.CallExpr, selector *ast.SelectorExpr) {
 // saved before the arguments, and a value copy through a pointer is taken
 // after them.
 func (c *checker) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, selection *types.Selection) {
-	sig := selection.Obj().(*types.Func).Type().(*types.Signature)
+	sig := c.method(selector).Type().(*types.Signature)
 	receiver := sig.Recv().Type()
 	if selection.Kind() == types.MethodExpr {
 		c.callValues(call)
-		actual := selection.Type().(*types.Signature).Params().At(0).Type()
+		actual := c.info.Types[selector].Type.(*types.Signature).Params().At(0).Type()
 		if p, ok := pointer(actual); ok {
 			if _, wantPointer := pointer(receiver); !wantPointer {
 				c.checkedPointer(call, p)

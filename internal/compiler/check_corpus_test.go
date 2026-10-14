@@ -69,7 +69,19 @@ var corpusChanges = map[int]corpusEntry{
 	148: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
 	224: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
 	310: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
+	// Generics became supported (docs/GO_GENERICS.md): the instantiation
+	// f[uint64] is emitted as its own function, and an unused generic type
+	// emits nothing.
+	27:  {CSHA256: "b4b469cbd78f41a300064e2a6d229a2e0788dd4542820fcae073fd414f7651a0"}, // s03.go: was "generics and bodyless functions are unsupported"
+	106: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // s00.go: was "generic types unsupported"
+	// Interface values are still rejected at the same position; the message
+	// now says interfaces are only usable as constraints.
+	140: {Error: "s42.go:2:40: interface values unsupported (interface{}); " + interfaceRule},
+	198: {Error: "s43.go:2:1: interface values unsupported (interface{}); " + interfaceRule},
+	272: {Error: "control-reject.go:1:11: interface values unsupported (error); " + interfaceRule},
 }
+
+const interfaceRule = "interfaces are only usable as type parameter constraints"
 
 const arrayElementRule = "array elements must be byte, uint16, uint32, uint64, bool, or named versions of those scalars"
 

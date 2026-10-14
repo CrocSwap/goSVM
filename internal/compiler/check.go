@@ -58,7 +58,9 @@ type CheckedProgram struct {
 	EntryKind EntryKind
 
 	// Functions lists every function and method declaration in Files order
-	// (the order the C emitter uses). Every one has a body.
+	// (the order the C emitter uses). Every one has a body. A generic
+	// declaration is not listed itself: its instances (Function.Instance set)
+	// are listed in its place, sorted by Instance.Key.
 	Functions []*Function
 	// CallOrder lists the same functions with callees before callers. Check
 	// rejects recursion, so the direct call graph is acyclic.
@@ -67,6 +69,20 @@ type CheckedProgram struct {
 	// Libraries are the pure native library bindings in the import graph
 	// (Program.Libraries). Functions they bind have Function.Library set.
 	Libraries []library.Binding
+
+	// Instances lists every instantiation of a generic function or method
+	// that checked code calls, in Functions order. Empty without generics.
+	Instances []*Instance
+	// TypeInstances lists every instantiated generic type that checked code
+	// uses, sorted by Key. Empty without generics.
+	TypeInstances []*TypeInstance
+	// Instantiated maps each identifier naming a generic callee at a call
+	// (F in F(x) or F[T](x), pkg.F's F, a method selector's Sel), in Files
+	// and in instance bodies, to the instance the call runs.
+	Instantiated map[*ast.Ident]*Instance
+
+	// lowered is Files with generic declarations replaced by their instances.
+	lowered []*ast.File
 }
 
 // Function is one checked function or method declaration.
@@ -83,6 +99,9 @@ type Function struct {
 	Library *library.Binding
 	// Borrows summarizes which arguments a returned pointer or slice may alias.
 	Borrows BorrowSummary
+	// Instance is set when the function is an instantiation of a generic
+	// declaration; Object and Decl are then the instance's own.
+	Instance *Instance
 }
 
 // BorrowSummary is the borrow checker's result for one function. Results has
@@ -151,6 +170,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 
 	// Every function needs a body; there is no linker-provided Go code.
 	funcs := map[types.Object]*Function{}
+	var declared []*Function
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			if fn.Body == nil {
@@ -162,10 +182,12 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 				function.Library = &b
 			}
 			funcs[object] = function
-			checked.Functions = append(checked.Functions, function)
+			declared = append(declared, function)
 		}
 	}
-	// Reject recursion: this experiment has no stack-growth runtime.
+	// Reject recursion: this experiment has no stack-growth runtime. Calls
+	// are followed to generic declarations, so a generic function calling
+	// itself with any type arguments is recursion too.
 	visited, active := map[types.Object]bool{}, map[types.Object]bool{}
 	var visit func(types.Object)
 	visit = func(o types.Object) {
@@ -176,28 +198,79 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 			return
 		}
 		active[o] = true
-		function := funcs[o]
-		ast.Inspect(function.Decl.Body, func(n ast.Node) bool {
+		ast.Inspect(funcs[o].Decl.Body, func(n ast.Node) bool {
 			if c, ok := n.(*ast.CallExpr); ok {
-				if target := callTarget(f.info, c); funcs[target] != nil {
+				if target := callTarget(f, c); funcs[target] != nil {
 					visit(target)
-					function.addCallee(funcs[target].Object)
 				}
 			}
 			return true
 		})
 		active[o], visited[o] = false, true
+	}
+	for _, function := range declared {
+		visit(function.Object)
+	}
+	// Monomorphize: each instantiation becomes an ordinary declaration.
+	gp := newGenericProgram(f, f.info, importer.ctxt, decls, true)
+	gp.run(importer.files)
+	f.instantiated = gp.instantiated
+	checked.lowered = gp.lowered(importer.files)
+	checked.Instances = gp.sortedInstances(importer.files)
+	checked.TypeInstances = gp.sortedTypeInstances()
+	checked.Instantiated = gp.instantiated
+	var lowered []ast.Decl
+	for _, file := range checked.lowered {
+		lowered = append(lowered, file.Decls...)
+	}
+	instances := map[types.Object]*Function{}
+	for _, d := range lowered {
+		if fn, ok := d.(*ast.FuncDecl); ok {
+			function := funcs[f.info.Defs[fn.Name]]
+			if inst := gp.instanceOf[fn]; inst != nil {
+				function = &Function{Object: inst.Object, Decl: fn, Instance: inst}
+			}
+			instances[function.Object] = function
+			checked.Functions = append(checked.Functions, function)
+		}
+	}
+	// The instance call graph needs its own recursion check: a call through
+	// a method constraint (x.M() with x of a type parameter) reaches its
+	// concrete method only once instantiated. Without generics the graph is
+	// the one checked above.
+	ordered, ordering := map[types.Object]bool{}, map[types.Object]bool{}
+	var order func(*Function)
+	order = func(function *Function) {
+		if ordering[function.Object] {
+			gp.wrap(function.Instance, func() { f.fail(function.Decl, "recursion is not supported") })
+		}
+		if ordered[function.Object] {
+			return
+		}
+		ordered[function.Object], ordering[function.Object] = true, true
+		defer func() { ordering[function.Object] = false }()
+		ast.Inspect(function.Decl.Body, func(n ast.Node) bool {
+			if c, ok := n.(*ast.CallExpr); ok {
+				if id := callIdent(f.callFun(c.Fun)); id != nil {
+					if callee := instances[f.callee(id)]; callee != nil {
+						order(callee)
+						function.addCallee(callee.Object)
+					}
+				}
+			}
+			return true
+		})
 		checked.CallOrder = append(checked.CallOrder, function)
 	}
 	for _, function := range checked.Functions {
-		visit(function.Object)
+		order(function)
 	}
-	summaries := f.checkBorrows(decls, funcs)
+	summaries := f.checkBorrows(lowered, instances, gp)
 	for _, function := range checked.Functions {
 		function.Borrows = exportBorrows(summaries[function.Object])
 	}
-	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}}
-	c.program(importer.files, decls)
+	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}, gp: gp, typeInstances: checked.TypeInstances}
+	c.program(checked.lowered, lowered)
 	return checked, nil
 }
 
@@ -212,8 +285,9 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	f := newFrontend(token.NewFileSet(), &types.Info{
 		Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
 		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{},
+		Instances: map[*ast.Ident]types.Instance{},
 	})
-	importer := &programImporter{f: f, entryPath: program.Entry, sdk: sdkImporter{version: program.SDK}, units: map[string]PackageSources{}, checked: map[string]*types.Package{}, active: map[string]bool{}}
+	importer := &programImporter{f: f, ctxt: types.NewContext(), entryPath: program.Entry, sdk: sdkImporter{version: program.SDK}, units: map[string]PackageSources{}, checked: map[string]*types.Package{}, active: map[string]bool{}}
 	for _, unit := range program.Packages {
 		if _, exists := importer.units[unit.Path]; exists {
 			return nil, nil, fmt.Errorf("duplicate package %q", unit.Path)
@@ -226,15 +300,18 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	return f, importer, nil
 }
 
-// callTarget is the declared object a call names directly, if any.
-func callTarget(info *types.Info, c *ast.CallExpr) types.Object {
-	switch callee := c.Fun.(type) {
-	case *ast.Ident:
-		return info.Uses[callee]
-	case *ast.SelectorExpr:
-		return info.Uses[callee.Sel]
+// callTarget is the declared object a call names directly, if any. Calls to
+// generic functions and to methods of generic types name the generic
+// declaration (Origin), whatever the type arguments.
+func callTarget(f *frontend, c *ast.CallExpr) types.Object {
+	id := callIdent(f.callFun(c.Fun))
+	if id == nil {
+		return nil
 	}
-	return nil
+	if fn, ok := f.info.Uses[id].(*types.Func); ok {
+		return fn.Origin()
+	}
+	return f.info.Uses[id]
 }
 
 func (fn *Function) addCallee(callee *types.Func) {

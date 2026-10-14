@@ -354,6 +354,7 @@ type programImporter struct {
 	hasSDK    bool
 	bits      *types.Package // math/bits declarations, once imported
 	entryPath string
+	ctxt      *types.Context // shared, so each generic type instance is one *types.Named
 }
 
 func (p *programImporter) Import(path string) (*types.Package, error) {
@@ -401,7 +402,7 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		}
 		files = append(files, file)
 	}
-	conf := types.Config{Sizes: &types.StdSizes{WordSize: 8, MaxAlign: 8}, Importer: p}
+	conf := types.Config{Sizes: &types.StdSizes{WordSize: 8, MaxAlign: 8}, Importer: p, Context: p.ctxt}
 	pkg, err := conf.Check(path, p.f.fset, files, p.f.info)
 	if err != nil {
 		return nil, err

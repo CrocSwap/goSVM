@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -260,5 +261,71 @@ func Process(s, i []byte) uint64 {
 	}
 	if fs := fullSwap(t); fs.StdlibCalls == nil || len(fs.StdlibCalls) != 0 {
 		t.Errorf("full swap must report an empty stdlib_calls list: %+v", fs.StdlibCalls)
+	}
+}
+
+func TestGenerics(t *testing.T) {
+	dir := t.TempDir()
+	src := `package program
+
+type Unsigned interface{ ~uint8 | ~uint64 }
+
+type Box[T any] struct{ V T }
+
+func (b *Box[T]) Set(v T) { b.V = v }
+
+func Min[T Unsigned](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func Clamp[T Unsigned](x, hi T) T { return Min(x, hi) }
+
+func Unused[A, B any](a A, b B) {}
+
+func Process(s, i []byte) uint64 {
+	var b Box[uint64]
+	b.Set(Clamp(uint64(len(s)), 9))
+	return b.V + uint64(Min[byte](s[0], s[1]))
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(src), 0644); err != nil {
+		t.Fatal(err)
+	}
+	u := report(t, dir)
+	h := u.Language.Handwritten
+	for name, want := range map[string]int{"generic_functions": 3, "generic_methods": 1, "generic_types": 1, "type_parameters": 5,
+		"explicit_instantiations": 1, "inferred_instantiations": 2, "type_instantiations": 2, "indirect_calls": 0, "index_expressions": 2, "function_calls": 3} {
+		if h.Constructs[name] != want {
+			t.Errorf("%s: %d, want %d", name, h.Constructs[name], want)
+		}
+	}
+	got := map[string]GenericUse{}
+	for _, g := range u.Generics {
+		got[g.Name] = g
+	}
+	want := map[string][]string{
+		"program.Box":     {"program.Box[uint64]"},
+		"program.Box.Set": {"program.Box[uint64].Set"},
+		"program.Min":     {"program.Min[uint64]", "program.Min[uint8]"},
+		"program.Clamp":   {"program.Clamp[uint64]"},
+		"program.Unused":  {},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("generics: %+v", u.Generics)
+	}
+	for name, instances := range want {
+		g := got[name]
+		if g.Count != len(instances) || !reflect.DeepEqual(g.Instances, instances) || g.Package != "program" {
+			t.Errorf("%s: %+v, want %q", name, g, instances)
+		}
+	}
+	if got["program.Box.Set"].Kind != "method" || got["program.Box"].Kind != "type" || got["program.Min"].Kind != "function" {
+		t.Errorf("kinds: %+v", u.Generics)
+	}
+	if fs := fullSwap(t); fs.Generics == nil || len(fs.Generics) != 0 || fs.Language.Handwritten.Constructs["type_parameters"] != 0 {
+		t.Errorf("full swap must report an empty generics list: %+v", fs.Generics)
 	}
 }

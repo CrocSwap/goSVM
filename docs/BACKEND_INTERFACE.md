@@ -25,9 +25,12 @@ this module or a fork of it.
 1. parses and type-checks the package graph with the pinned SDK in one
    `go/types` universe (dot/blank and illegal internal imports are rejected);
 2. requires `Process([]byte, []byte) uint64` or `Process(solana.Context) uint64`;
-3. requires bodies and rejects recursion;
-4. runs the borrow checker (no reference may outlive its storage);
-5. applies every declaration, type, statement and expression rule of the
+3. requires bodies and rejects recursion (including through generic
+   declarations);
+4. monomorphizes generics: each instantiation becomes a synthetic non-generic
+   declaration ([generics](#generics));
+5. runs the borrow checker (no reference may outlive its storage);
+6. applies every declaration, type, statement and expression rule of the
    subset ([`subset.go`](../internal/compiler/subset.go), with the type rules
    in [`rules.go`](../internal/compiler/rules.go)).
 
@@ -46,14 +49,55 @@ Every field is documented in `check.go`. In summary:
 | `Program` | The input, including `Libraries` and `SDK` |
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
-| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, and its `Borrows` |
+| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, and its `Borrows`; a generic declaration is replaced by its instances (`Instance` set) |
 | `CallOrder` | The same functions, callees before callers (acyclic) |
 | `Libraries` | Pure native library bindings in the graph |
+| `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
 alias SDK-owned storage such as account data. A result never aliases the
 callee's own locals.
+
+## Generics
+
+Check lowers generics by monomorphization ([GO_GENERICS.md](GO_GENERICS.md)),
+so a backend that lowers `Functions` needs no generic support of its own:
+
+- `Instances` lists one `*Instance` per instantiation of a generic function or
+  of a method of a generic type, in `Functions` order. `Origin` is the generic
+  declaration's object, `TypeArgs` the concrete arguments (the receiver type's,
+  for methods), `Object` the instance's own non-generic `*types.Func` (its name
+  is `Name`, for example `Min[uint64]` or `Stack[uint8].Push`), and `Decl` a
+  deep copy of the declaration without type parameters. `Key` is the
+  package-path-qualified instantiation and `Symbol` the C name the built-in
+  backend uses; both depend only on the declaration and the type arguments.
+- Each instance is also a `Function` (with `Function.Instance` set) in place of
+  its generic declaration, with its own `Callees` and its own `Borrows`. Generic
+  declarations themselves are not listed and have no code.
+- `Instantiated` maps every identifier that names a generic callee at a call,
+  in `Files` and in instance bodies, to the instance the call runs: `F` in
+  `F(x)` and in `F[T](x)` (strip the index expression), `pkg.F`'s `F`, and a
+  method selector's `Sel`. `Info.Uses` still records the generic declaration
+  (functions) or go/types' instantiated method there.
+- `TypeInstances` lists every instantiated generic type checked code uses, by
+  `Key`. Its `Type` is a `*types.Named` whose `Underlying()` is substituted.
+  go/types can keep identical instances spelled with `byte` and `uint8` as
+  distinct `*types.Named`; they share a key, and their fields share
+  `Var.Origin()`, so key types and fields by those rather than by pointer.
+
+Every node of an instance `Decl` has substituted `Info` entries: `Types` (with
+the original value mode and constant), `Defs` (fresh parameter, result and
+local objects; `Defs[Decl.Name]` is `Object`), `Uses` (mapped locals; fields and
+methods looked up again in the substituted types, so a call through a method
+constraint names the concrete method) and `Scopes` (a mirror of the generic
+declaration's scopes rooted at the function scope). Three things differ from
+go/types' own output: `Selections` for an instance's selectors hold the generic
+declaration's selection (its `Kind`, `Index` and `Indirect` are right; use
+`Uses` and `Types` for the substituted method or field and types), `Instances`
+has no entries for instance bodies (use `Instantiated`), and type-parameter
+identifiers keep their `TypeName` objects (use `Types`). Instance nodes share
+the generic declaration's positions, so diagnostics point into its source.
 
 Check does not lower SDK calls. Calls into `gosvm/solana` and the `gosvm/sdk/*`
 packages are ordinary typed calls. The C backend maps the SDK intrinsics onto its
@@ -110,10 +154,14 @@ For each program, `Check` must reject with exactly the recorded error, or accept
 when the old compiler accepted. `CompileProgram` must reproduce the recorded error
 or the SHA-256 of the emitted C. The recording is never edited: programs whose
 verdict changed on purpose since (range loops and `uint16` became supported; the
-array-element message now names `uint16`) are listed with their new expected
-outcome in the test's `corpusChanges` table. `CheckedProgram` did not change shape
-for these additions; a backend must lower `*ast.RangeStmt` as described in
+array-element message now names `uint16`; the two recorded generic programs are
+now accepted; interface values are rejected with a message naming the
+constraint rule) are listed with their new expected outcome in the test's
+`corpusChanges` table. `CheckedProgram` did not change shape for range loops and
+`uint16`; a backend must lower `*ast.RangeStmt` as described in
 [GO_CONTROL.md](GO_CONTROL.md#range-loops) and `uint16` as wrapping 16-bit
-arithmetic. Separately, the full-swap ELFs built with
+arithmetic. Generics added the `Instances`, `TypeInstances` and `Instantiated`
+fields and `Function.Instance`; existing fields keep their meaning, and for a
+program without generics they are exactly as before. Separately, the full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

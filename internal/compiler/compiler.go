@@ -89,7 +89,11 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2}
 	g.entry = program.Process
 	g.externals = libraryBindings(program.Libraries)
-	files := program.Files
+	g.instantiated = program.Instantiated
+	for _, inst := range program.Instances {
+		g.names[inst.Object] = inst.Symbol
+	}
+	files := program.lowered
 	var decls []ast.Decl
 	for _, file := range files {
 		decls = append(decls, file.Decls...)
@@ -162,6 +166,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	// Define value structs and array wrappers before function prototypes.
 	emitted := map[types.Type]bool{}
+	emittedInstances := map[string]bool{} // identical instances can be distinct *types.Named (byte, uint8)
 	var emitType func(ast.Node, types.Type)
 	emitType = func(node ast.Node, t types.Type) {
 		named, ok := t.(*types.Named)
@@ -172,6 +177,12 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			return
 		}
 		emitted[t] = true
+		if named.TypeArgs().Len() > 0 {
+			if emittedInstances[typeKey(named)] {
+				return
+			}
+			emittedInstances[typeKey(named)] = true
+		}
 		if a, ok := t.Underlying().(*types.Array); ok {
 			g.emitArray(node, a)
 			return
@@ -200,7 +211,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			f := st.Field(i)
 			g.line("%s %s;", g.variable(node, f.Type()), g.name(f))
 		}
-		g.line("} %s;", g.name(named.Obj()))
+		g.line("} %s;", g.structName(named))
 	}
 	// Anonymous arrays in signatures, locals and literals need the same wrapper
 	// as named arrays with identical underlying types. Visit in source order;
@@ -224,6 +235,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 				emitType(ts, g.info.Defs[ts.Name].Type())
 			}
 		}
+	}
+	for _, ti := range program.TypeInstances {
+		emitType(posNode(ti.Site), ti.Type)
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
@@ -266,6 +280,11 @@ func (g *generator) name(o types.Object) string {
 	if o == g.entry {
 		return "go_Process"
 	}
+	if field, ok := o.(*types.Var); ok && field.IsField() {
+		// Every instance of a generic struct names a field like the
+		// declaration does (Origin is the field itself outside generics).
+		o = field.Origin()
+	}
 	if s := g.names[o]; s != "" {
 		return s
 	}
@@ -294,7 +313,7 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	}
 	if named, ok := t.(*types.Named); ok {
 		if _, ok := named.Underlying().(*types.Struct); ok {
-			return g.name(named.Obj())
+			return g.structName(named)
 		}
 	}
 	if b, ok := t.Underlying().(*types.Basic); ok {
@@ -317,6 +336,15 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	return ""
 }
 func (g *generator) variable(n ast.Node, t types.Type) string { return g.ctype(n, t) }
+
+// structName is a value struct's C name; an instantiated generic struct is
+// named by its key, so every instance has its own deterministic name.
+func (g *generator) structName(named *types.Named) string {
+	if named.TypeArgs().Len() > 0 {
+		return "gosvm_ty_" + mangle(typeKey(named))
+	}
+	return g.name(named.Obj())
+}
 func (g *generator) signature(fn *ast.FuncDecl) string {
 	sig := g.info.Defs[fn.Name].Type().(*types.Signature)
 	ret := "void"
@@ -530,7 +558,7 @@ func (g *generator) expr(e ast.Expr) string {
 		}
 		var o types.Object
 		builtinName := ""
-		switch callee := e.Fun.(type) {
+		switch callee := g.callFun(e.Fun).(type) {
 		case *ast.SelectorExpr:
 			id, ok := callee.X.(*ast.Ident)
 			if !ok {
@@ -546,9 +574,9 @@ func (g *generator) expr(e ast.Expr) string {
 			if imported.Imported().Path() == bitsPath {
 				return g.bitsCall(e)
 			}
-			o = g.info.Uses[callee.Sel]
+			o = g.callee(callee.Sel)
 		case *ast.Ident:
-			o = g.info.Uses[callee]
+			o = g.callee(callee)
 			builtinName = callee.Name
 		default:
 			g.unchecked(e)
