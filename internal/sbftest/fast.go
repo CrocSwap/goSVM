@@ -20,7 +20,10 @@ import (
 	"gosvm/internal/testvm"
 )
 
-type FastOptions struct{ Runner, Pattern, Sysvars, Fixtures, Profile, PlatformTools, ReportPath string }
+// FastOptions configures fast SVM runs. ELFSource is recorded in the report as
+// "elf_source" when set (e.g. "external" for an ELF goSVM did not build);
+// reports for goSVM-built programs omit the field.
+type FastOptions struct{ Runner, Pattern, Sysvars, Fixtures, Profile, PlatformTools, ReportPath, ELFSource string }
 
 // RunFast executes schema-1 fixtures through one versioned stdio session. Cases
 // have independent seeded state; instructions within each transaction stay ordered.
@@ -214,9 +217,13 @@ func RunFast(ctx context.Context, dir, elf string, out io.Writer, opts FastOptio
 	if e != nil {
 		return e
 	}
-	report, e := json.MarshalIndent(map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "runtime_engine": "litesvm", "runtime_version": s.Identity, "transport": "stdio schema 1; ordered batches of 4 calls; reset between fixtures", "isolation": "initial VM checkpoint restored before every fixture",
+	fields := map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "runtime_engine": "litesvm", "runtime_version": s.Identity, "transport": "stdio schema 1; ordered batches of 4 calls; reset between fixtures", "isolation": "initial VM checkpoint restored before every fixture",
 		"elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfBytes)), "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtures)), "runner_sha256": fmt.Sprintf("%x", sha256.Sum256(runnerBytes)),
-		"selection": opts.Pattern, "cases": results, "runner": info, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}, "", "  ")
+		"selection": opts.Pattern, "cases": results, "runner": info, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}
+	if opts.ELFSource != "" {
+		fields["elf_source"] = opts.ELFSource
+	}
+	report, e := json.MarshalIndent(fields, "", "  ")
 	if e != nil {
 		return e
 	}
