@@ -3,7 +3,17 @@
 Updated October 14, 2026 (America/New_York).
 **Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
-core-language work is next. See the October 9 section below.
+core-language work has started. See the October 9 section below.
+
+**Core language (October 14):** the user chose to start with features existing
+programs work around. Landed: `range` loops (Go 1.22 semantics; `int` keys are
+the one admitted `int` variable, restricted like `len` results —
+[GO_CONTROL](docs/GO_CONTROL.md)), `uint16` throughout the compiler and schema 2
+(fields, codecs, PDA seeds), and `import "math/bits"` (64/32/16/8-bit functions,
+Go-exact incl. Div traps — [GO_BITS](docs/GO_BITS.md)). The frozen check corpus
+lists the entries these changed in `corpusChanges`. Not yet chosen: signed
+integers (need overflow/division design and an error-contract addition),
+bounded allocation, interfaces/generics.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

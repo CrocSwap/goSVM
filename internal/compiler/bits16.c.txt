@@ -1,0 +1,19 @@
+// 16-bit math/bits helpers, emitted only for programs that use both math/bits
+// and uint16 (after the u16 typedef and bits.c.txt). Adapted from Go's
+// math/bits (Go Authors, BSD-3-Clause; see THIRD_PARTY_NOTICES).
+static __attribute__((unused)) i64 gosvm_bits_Len16(u16 x) { return gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_LeadingZeros16(u16 x) { return 16 - gosvm_bits_Len64(x); }
+static __attribute__((unused)) i64 gosvm_bits_TrailingZeros16(u16 x) {
+    if (x == 0) return 16;
+    return gosvm_bits_TrailingZeros64(x);
+}
+static __attribute__((unused)) i64 gosvm_bits_OnesCount16(u16 x) { return gosvm_bits_OnesCount64(x); }
+static __attribute__((unused)) u16 gosvm_bits_RotateLeft16(u16 x, u64 s) {
+    return s == 0 ? x : (u16)((u64)x << s | (u64)x >> (16 - s));
+}
+static __attribute__((unused)) u16 gosvm_bits_ReverseBytes16(u16 x) {
+    return (u16)((u64)x >> 8 | ((u64)x & 0xff) << 8);
+}
+static __attribute__((unused)) u16 gosvm_bits_Reverse16(u16 x) {
+    return (u16)(gosvm_bits_Reverse64(x) >> 48);
+}

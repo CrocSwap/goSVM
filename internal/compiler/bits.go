@@ -22,10 +22,13 @@ var bitsAPI string
 //go:embed bits.c.txt
 var bitsRuntime string
 
+//go:embed bits16.c.txt
+var bits16Runtime string
+
 // bitsFunctions are the math/bits functions available on-chain. Every one has
 // a gosvm_bits_<Name> helper in bits.c.txt. The uint-typed functions are not
-// listed because uint is not in the subset; the 16-bit functions follow once
-// uint16 is.
+// listed because uint is not in the subset. The 16-bit helpers live in
+// bits16.c.txt, emitted only for programs that also use uint16.
 var bitsFunctions = map[string]bool{
 	"Add64": true, "Sub64": true, "Mul64": true, "Div64": true, "Rem64": true,
 	"Add32": true, "Sub32": true, "Mul32": true, "Div32": true, "Rem32": true,
@@ -36,6 +39,8 @@ var bitsFunctions = map[string]bool{
 	"Reverse64": true, "Reverse32": true, "Reverse8": true,
 	"ReverseBytes64": true, "ReverseBytes32": true,
 	"RotateLeft64": true, "RotateLeft32": true, "RotateLeft8": true,
+	"LeadingZeros16": true, "TrailingZeros16": true, "OnesCount16": true, "Len16": true,
+	"Reverse16": true, "ReverseBytes16": true, "RotateLeft16": true,
 }
 
 // importBits type-checks the declaration-only math/bits API. Each program
@@ -90,9 +95,6 @@ func (c *checker) bitsCall(call *ast.CallExpr, selector *ast.SelectorExpr) {
 	}
 	name := fn.Name()
 	if !bitsFunctions[name] {
-		if strings.HasSuffix(name, "16") {
-			c.fail(call, "math/bits.%s is unsupported: uint16 is not in the on-chain subset", name)
-		}
 		c.fail(call, "math/bits.%s is unsupported: uint is not in the on-chain subset; use the 64-, 32- or 8-bit variant", name)
 	}
 	if strings.HasPrefix(name, "RotateLeft") {
@@ -123,6 +125,8 @@ func (g *generator) bitsCall(call *ast.CallExpr) string {
 		switch fn.Name() {
 		case "RotateLeft32":
 			width = 32
+		case "RotateLeft16":
+			width = 16
 		case "RotateLeft8":
 			width = 8
 		}

@@ -499,9 +499,10 @@ escapes are rejected; no allocation or append is provided. See
 [view semantics and SBF evidence](../docs/GO_VIEWS.md).
 
 `import "math/bits"` is available on-chain, the one standard-library exception:
-the 64-, 32- and 8-bit carry, multiply, divide, count, reverse and rotate
-functions (constant rotation counts), with Go's exact results and its divide
-panics as aborts. The `uint` and 16-bit variants are rejected. See
+the 64- and 32-bit carry, multiply and divide functions and the 64-, 32-, 16-
+and 8-bit count, reverse and rotate functions (constant rotation counts), with
+Go's exact results and its divide panics as aborts. The `uint` variants are
+rejected. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
 
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables

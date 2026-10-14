@@ -21,7 +21,7 @@ type bitsOp struct {
 	source string
 	ref    func(a, b, c uint64) (uint64, uint64)
 	args   int // 1..3 meaningful inputs, for vector generation
-	width  int // 64, 32 or 8 bits per input
+	width  int // 64, 32, 16 or 8 bits per input
 }
 
 var bitsRotations = []int64{-1 << 63, -1000, -129, -128, -65, -64, -63, -33, -32, -31, -9, -8, -7, -1, 0, 1, 7, 8, 9, 31, 32, 33, 63, 64, 65, 127, 128, 1000, 1<<63 - 1}
@@ -75,6 +75,12 @@ func bitsOps() []bitsOp {
 		one("Reverse8", "bits.Reverse8(uint8(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.Reverse8(uint8(a))), 0 }, 1, 8),
 		one("ReverseBytes64", "bits.ReverseBytes64(a)", func(a, b, c uint64) (uint64, uint64) { return bits.ReverseBytes64(a), 0 }, 1, 64),
 		one("ReverseBytes32", "bits.ReverseBytes32(uint32(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.ReverseBytes32(uint32(a))), 0 }, 1, 32),
+		one("LeadingZeros16", "bits.LeadingZeros16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.LeadingZeros16(uint16(a))), 0 }, 1, 16),
+		one("TrailingZeros16", "bits.TrailingZeros16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.TrailingZeros16(uint16(a))), 0 }, 1, 16),
+		one("OnesCount16", "bits.OnesCount16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.OnesCount16(uint16(a))), 0 }, 1, 16),
+		one("Len16", "bits.Len16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.Len16(uint16(a))), 0 }, 1, 16),
+		one("Reverse16", "bits.Reverse16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.Reverse16(uint16(a))), 0 }, 1, 16),
+		one("ReverseBytes16", "bits.ReverseBytes16(uint16(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.ReverseBytes16(uint16(a))), 0 }, 1, 16),
 		// Results used in place, as len's are: comparison, shift count, switch tag.
 		one("int results", "cmp(bits.Len64(a) > bits.TrailingZeros32(uint32(b))) + a<<bits.OnesCount8(uint8(c)) + tag(a)", func(a, b, c uint64) (uint64, uint64) {
 			v := a << bits.OnesCount8(uint8(c))
@@ -93,6 +99,7 @@ func bitsOps() []bitsOp {
 		ops = append(ops,
 			one(fmt.Sprintf("RotateLeft64(%d)", k), fmt.Sprintf("bits.RotateLeft64(a, %d)", k), func(a, b, c uint64) (uint64, uint64) { return bits.RotateLeft64(a, int(k)), 0 }, 1, 64),
 			one(fmt.Sprintf("RotateLeft32(%d)", k), fmt.Sprintf("bits.RotateLeft32(uint32(a), %d)", k), func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft32(uint32(a), int(k))), 0 }, 1, 32),
+			one(fmt.Sprintf("RotateLeft16(%d)", k), fmt.Sprintf("bits.RotateLeft16(uint16(a), %d)", k), func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft16(uint16(a), int(k))), 0 }, 1, 16),
 			one(fmt.Sprintf("RotateLeft8(%d)", k), fmt.Sprintf("bits.RotateLeft8(uint8(a), %d)", k), func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft8(uint8(a), int(k))), 0 }, 1, 8),
 		)
 	}

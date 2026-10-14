@@ -32,14 +32,16 @@ standard-library packages are still rejected.
 | Carry arithmetic | `Add64`, `Sub64`, `Add32`, `Sub32` |
 | Full-width multiply | `Mul64`, `Mul32` |
 | Full-width divide | `Div64`, `Rem64`, `Div32`, `Rem32` |
-| Counts (int result) | `LeadingZeros64/32/8`, `TrailingZeros64/32/8`, `OnesCount64/32/8`, `Len64/32/8` |
-| Permutations | `Reverse64/32/8`, `ReverseBytes64/32`, `RotateLeft64/32/8` |
+| Counts (int result) | `LeadingZeros64/32/16/8`, `TrailingZeros64/32/16/8`, `OnesCount64/32/16/8`, `Len64/32/16/8` |
+| Permutations | `Reverse64/32/16/8`, `ReverseBytes64/32/16`, `RotateLeft64/32/16/8` |
 | Constant | `UintSize` (64, untyped) |
 
 The compiler type-checks calls against a copy of the Go 1.22 `math/bits` API.
 `TestBitsDeclarationsMatchStandardLibrary` checks that every name, signature
 (including parameter and result names) and constant value matches the host
-toolchain's `math/bits` source.
+toolchain's `math/bits` source. The 16-bit helpers are in
+`internal/compiler/bits16.c.txt`, emitted only for programs that also use
+`uint16`, so other programs' C is unchanged.
 
 ## Not supported
 
@@ -47,9 +49,6 @@ toolchain's `math/bits` source.
   `TrailingZeros`, `OnesCount`, `Len`, `Reverse`, `ReverseBytes`,
   `RotateLeft`), because `uint` is not in the subset. Use the 64-bit variant.
   The error is `math/bits.Add is unsupported: uint is not in the on-chain subset; use the 64-, 32- or 8-bit variant`.
-- The 16-bit variants, because `uint16` is not in the subset yet:
-  `math/bits.Len16 is unsupported: uint16 is not in the on-chain subset`. They
-  will be added once `uint16` is.
 - Function values such as `f := bits.Len64`, as for every function.
 
 ## Count results are `int`
@@ -110,7 +109,7 @@ unchanged on both.
 
 - `TestBitsDifferentialAgainstGo` (`internal/compiler/bits_diff_test.go`)
   compiles one program that calls every supported function (and every
-  `RotateLeft` width with 29 constant counts) to C, then runs 552,163 edge and
+  `RotateLeft` width with 29 constant counts) to C, then runs 623,913 edge and
   random vectors through the host binary. Each result, and each trap, is
   compared with the host's real `math/bits`. Edge vectors include 0, 1, max,
   every power of two ±1, alternating bit patterns, `hi = y-1` (largest valid),

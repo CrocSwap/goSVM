@@ -140,6 +140,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	if usesBits(g.info, files) {
 		g.WriteString(bitsRuntime)
+		if usesUint16(files, g.info) {
+			g.WriteString(bits16Runtime)
+		}
 	}
 	if program.SDKPackage != nil {
 		ownedLifecycle := false

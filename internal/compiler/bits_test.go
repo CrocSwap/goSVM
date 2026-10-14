@@ -64,7 +64,7 @@ func TestBitsDeclarationsMatchStandardLibrary(t *testing.T) {
 		if _, ok := curated.Scope().Lookup(name).(*types.Func); !ok {
 			t.Errorf("supported function %s is not declared", name)
 		}
-		if !strings.Contains(bitsRuntime, "gosvm_bits_"+name+"(") {
+		if !strings.Contains(bitsRuntime+bits16Runtime, "gosvm_bits_"+name+"(") {
 			t.Errorf("supported function %s has no runtime helper", name)
 		}
 	}
@@ -141,8 +141,7 @@ func TestBitsCheckRejections(t *testing.T) {
 		"uint Mul":          {`h, l := bits.Mul(1, 2); return uint64(h ^ l)`, "math/bits.Mul is unsupported: uint is not in the on-chain subset"},
 		"uint LeadingZeros": {`return uint64(bits.LeadingZeros(1))`, "math/bits.LeadingZeros is unsupported: uint"},
 		"uint Rem":          {`return uint64(bits.Rem(1, 2, 3))`, "math/bits.Rem is unsupported: uint"},
-		"uint16 Len16":      {`return uint64(bits.Len16(1))`, "math/bits.Len16 is unsupported: uint16 is not in the on-chain subset"},
-		"uint16 Reverse":    {`return uint64(bits.ReverseBytes16(1))`, "math/bits.ReverseBytes16 is unsupported: uint16"},
+		"variable k16":      {`return uint64(bits.RotateLeft16(uint16(i[0]), len(i)))`, "math/bits.RotateLeft16 requires a constant rotation count"},
 		"variable k":        {`return bits.RotateLeft64(1, len(i))`, "math/bits.RotateLeft64 requires a constant rotation count"},
 		"count result k":    {`return uint64(bits.RotateLeft8(i[0], bits.Len64(7)))`, "math/bits.RotateLeft8 requires a constant rotation count"},
 		"int variable":      {`n := bits.Len64(7); return uint64(n)`, "int variables are unsupported"},
