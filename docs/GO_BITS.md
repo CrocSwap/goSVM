@@ -34,6 +34,7 @@ standard-library packages are still rejected.
 | Full-width divide | `Div64`, `Rem64`, `Div32`, `Rem32` |
 | Counts (int result) | `LeadingZeros64/32/16/8`, `TrailingZeros64/32/16/8`, `OnesCount64/32/16/8`, `Len64/32/16/8` |
 | Permutations | `Reverse64/32/16/8`, `ReverseBytes64/32/16`, `RotateLeft64/32/16/8` |
+| `uint` variants | `Add`, `Sub`, `Mul`, `Div`, `Rem`, `LeadingZeros`, `TrailingZeros`, `OnesCount`, `Len`, `Reverse`, `ReverseBytes`, `RotateLeft` |
 | Constant | `UintSize` (64, untyped) |
 
 The compiler type-checks calls against a copy of the Go 1.22 `math/bits` API.
@@ -41,35 +42,31 @@ The compiler type-checks calls against a copy of the Go 1.22 `math/bits` API.
 (including parameter and result names) and constant value matches the host
 toolchain's `math/bits` source. The 16-bit helpers are in
 `internal/compiler/bits16.c.txt`, emitted only for programs that also use
-`uint16`, so other programs' C is unchanged.
+`uint16`, so other programs' C is unchanged. `uint` is 64 bits on-chain
+([integers](GO_INTEGERS.md)), so each `uint` variant calls its 64-bit helper
+in `bits.c.txt` and gives the 64-bit result and traps. `bits.Div` traps where
+`Div64` does, and `bits.Rem` where `Rem64` does.
 
 ## Not supported
 
-- The `uint` variants (`Add`, `Sub`, `Mul`, `Div`, `Rem`, `LeadingZeros`,
-  `TrailingZeros`, `OnesCount`, `Len`, `Reverse`, `ReverseBytes`,
-  `RotateLeft`), because `uint` is not in the subset. Use the 64-bit variant.
-  The error is `math/bits.Add is unsupported: uint is not in the on-chain subset; use the 64-, 32- or 8-bit variant`.
 - Function values such as `f := bits.Len64`, as for every function.
 
 ## Count results are `int`
 
-The count functions return `int`. In this subset `int` exists only as a result
-of `len` and `cap`, and these results follow the same rule. You can use them in
-an expression: in a conversion (`uint64(bits.LeadingZeros64(x))`), a comparison,
-a shift count or a `switch` tag. You cannot store them. `n := bits.Len64(x)`, an
-`int` parameter or result, and signed arithmetic such as `bits.Len64(x) - 1`
-are rejected with the existing messages (`int variables are unsupported`,
-`signed arithmetic unsupported`). Convert first instead:
-`uint64(bits.Len64(x)) - 1`.
+The count functions return `int`, an ordinary on-chain type
+([integers](GO_INTEGERS.md)). You can store a count, pass it, do arithmetic
+with it, or use it as a shift or rotation count:
+`n := bits.Len64(x) - 1`.
 
-## RotateLeft needs a constant count
+## RotateLeft counts
 
-The rotation count `k` of `RotateLeft64/32/8` is an `int`. It must be a constant
-expression (`bits.RotateLeft64(x, -3)`, `const k = 7`). Any value is allowed,
-including negative values and values wider than the operand. Go's rule applies:
-the rotation is `uint(k) mod width` bits to the left, so a negative `k` rotates
-right. The compiler reduces `k` at compile time. A non-constant count fails with
-`math/bits.RotateLeft64 requires a constant rotation count`.
+The rotation count `k` of `RotateLeft`, `RotateLeft64/32/16/8` is an `int`,
+and any `int` expression is allowed, including negative values and values
+wider than the operand. Go's rule applies: the rotation is `uint(k) mod width`
+bits to the left, so a negative `k` rotates right. A constant `k`
+(`bits.RotateLeft64(x, -3)`) is reduced at compile time, which keeps the C of
+earlier programs unchanged. Any other `k` is reduced at run time, as
+`(u64)k & (width-1)`.
 
 ## Semantics and traps
 
@@ -108,9 +105,11 @@ unchanged on both.
 ## Evidence
 
 - `TestBitsDifferentialAgainstGo` (`internal/compiler/bits_diff_test.go`)
-  compiles one program that calls every supported function (and every
-  `RotateLeft` width with 29 constant counts) to C, then runs 623,913 edge and
-  random vectors through the host binary. Each result, and each trap, is
+  compiles one program that calls every supported function, including the
+  `uint` variants, every `RotateLeft` width with 29 constant counts and with a
+  run-time count, and count results stored and used in arithmetic. It compiles
+  the program to C and runs 1,125,806 edge and random vectors (167 operations,
+  39,833 traps) through the host binary. Each result, and each trap, is
   compared with the host's real `math/bits`. Edge vectors include 0, 1, max,
   every power of two ±1, alternating bit patterns, `hi = y-1` (largest valid),
   `hi = y` and `hi = y+1` (overflow), `y = 0` and `y = 1`, and carries 0, 1, 2,

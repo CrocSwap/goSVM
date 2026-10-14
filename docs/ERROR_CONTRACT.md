@@ -13,19 +13,26 @@ These failures call the VM `abort` syscall: a static syscall hash on v3, the
 legacy `abort` import on v0 (`internal/compiler/compiler.go`). The instruction
 fails with no custom error code and the transaction rolls back.
 
-- Division or modulo by zero.
+- Division or modulo by zero, for every integer type, signed or unsigned.
+- A negative shift count (a signed count below zero), where Go panics
+  ([integers](GO_INTEGERS.md)).
 - Array index, slice index or slice-expression bounds out of range.
 - Nil pointer dereference, field access or method receiver.
 - Account index out of range in SDK account accessors.
-- `math/bits.Div64(hi, lo, y)` and `Div32` with `y == 0` or `y <= hi`, and
-  `Rem64`/`Rem32` with `y == 0`, where Go panics ([math/bits](GO_BITS.md)).
+- `math/bits.Div64(hi, lo, y)`, `Div32` and `Div` with `y == 0` or `y <= hi`,
+  and `Rem64`/`Rem32`/`Rem` with `y == 0`, where Go panics
+  ([math/bits](GO_BITS.md)).
 
 These are **not** traps:
 
-- Unsigned `+`, `-`, `*` and unary `-` wrap modulo 2^width.
-- A shift by the operand's width or more yields 0.
-- Unsigned conversions truncate or zero-extend.
-- Signed arithmetic is not in the subset, so it never runs.
+- `+`, `-`, `*`, unary `-` and `++`/`--` wrap modulo 2^width, two's complement
+  for signed types.
+- Signed division truncates toward zero, and the remainder takes the
+  dividend's sign. `MinInt / -1` is `MinInt` and `MinInt % -1` is 0, for each
+  signed width.
+- A shift by the operand's width or more yields 0, or -1 for a signed `>>` of a
+  negative value.
+- Conversions truncate, or sign- or zero-extend by the source's signedness.
 - Other `math/bits` calls never fail. [GO_BITS.md](GO_BITS.md) specifies their
   exact results, including `Add64`/`Sub64` carry inputs other than 0 and 1.
 
@@ -128,3 +135,7 @@ Handler results propagate unchanged.
 - 2026-10-14: addition (new functions), no existing behaviour changed:
   `math/bits` traps for `Div64`/`Div32` (`y == 0` or `y <= hi`) and
   `Rem64`/`Rem32` (`y == 0`).
+- 2026-10-14: addition (signed integers), no existing behaviour changed: the
+  division trap covers signed division, a negative shift count traps, and the
+  wrapping, `MinInt / -1` and conversion rules above. The `math/bits` `uint`
+  variants share the 64-bit traps (`Div`, `Rem`).

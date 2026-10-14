@@ -454,22 +454,28 @@ accounts in SDK 1 and [32 in SDK 2](../docs/ACCOUNT_DECODER32.md);
 legacy ABI requires one owned writable 24-byte state and a 16-byte instruction.
 Only the original experiment additionally tests v0 (`SBF_ARCH=v0 make verify`).
 
-Supported: `uint8`/`byte`, `uint16`, `uint32`, `uint64`, `bool`, byte slices, constants, local
-zero values, direct functions with unnamed results, indexing, `len`, unsigned
-arithmetic/conversions, comparisons, `if`, conditional/three-clause `for`, Go 1.22
-`range` over unsigned counts, scalar arrays, array pointers and byte slices, unlabeled
-`break`/`continue`, single or multiple `=`/`:=`, expression `switch`, and variable
-`++`/`--`. Unsigned arithmetic wraps at the operand width (computed in 64 bits and
-truncated); shifts by the width or more give zero. `uint16` is admitted wherever
-`uint8`/`uint32` are (storage, fields, arrays, pointers, constants, conversions); the
-[uint16 fixture](../examples/uint16-values/program.go) is checked against ordinary Go
-on the host and on SBF. See [range semantics and the `int` key rule](GO_CONTROL.md#range-loops). See [return/assignment/control semantics](../docs/GO_CONTROL.md). Context is opaque in SBF: it can
+Supported: every integer type (`uint8`/`byte`, `uint16`, `uint32`, `uint64`, `uint`,
+`int8`, `int16`, `int32`/`rune`, `int64`, `int`; `int` and `uint` are 64 bits), `bool`,
+byte slices, constants, local zero values, direct functions with unnamed results,
+indexing, `len`, integer arithmetic/conversions, comparisons, `if`,
+conditional/three-clause `for`, Go 1.22 `range` over integer counts, scalar arrays,
+array pointers and byte slices, unlabeled `break`/`continue`, single or multiple
+`=`/`:=`, expression `switch`, and variable `++`/`--`. Arithmetic wraps at the operand
+width (two's complement for signed types); signed division truncates toward zero
+(`MinInt / -1 == MinInt`); shifts take signed or unsigned counts, a negative count
+aborts, and shifts by the width or more give zero (or the sign fill for a signed `>>`).
+Integer types are admitted in storage, fields, arrays, pointers, constants and
+conversions; `len`/`cap` results and range keys are ordinary `int` values. The
+[uint16 fixture](../examples/uint16-values/program.go) and the generated
+[integer fixture](../examples/int-values/ops.go) are checked against ordinary Go on the
+host and on SBF. See [integer semantics](GO_INTEGERS.md) and
+[range semantics](GO_CONTROL.md#range-loops). See [return/assignment/control semantics](../docs/GO_CONTROL.md). Context is opaque in SBF: it can
 be passed/copied, but not constructed, zero-initialized or accessed through fields.
 Native tests can construct it with callbacks.
 
-Also supported: named unsigned scalars, named value structs, nested structs,
+Also supported: named integer scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
-and returns. Struct fields are unsigned scalars, bools, scalar arrays, or other value structs.
+and returns. Struct fields are integer scalars, bools, scalar arrays, or other value structs.
 Struct comparisons/conversions, embedding, aliases, and build constraints are
 rejected explicitly. Wire layout is generated independently of C or Go layout.
 
@@ -499,17 +505,16 @@ escapes are rejected; no allocation or append is provided. See
 [view semantics and SBF evidence](../docs/GO_VIEWS.md).
 
 `import "math/bits"` is available on-chain, the one standard-library exception:
-the 64- and 32-bit carry, multiply and divide functions and the 64-, 32-, 16-
-and 8-bit count, reverse and rotate functions (constant rotation counts), with
-Go's exact results and its divide panics as aborts. The `uint` variants are
-rejected. See
+the 64- and 32-bit and `uint` carry, multiply and divide functions and the 64-,
+32-, 16-, 8-bit and `uint` count, reverse and rotate functions, with Go's exact
+results and its divide panics as aborts. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
 
-Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables
-and arithmetic, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
+Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
+floating-point and complex types, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
 strings, generics, closures/function values, recursion, named results, variadics,
-range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds and
-division failures abort; there is no recovery or stack growth. LLVM/VM stack limits
+range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
+division and negative-shift failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

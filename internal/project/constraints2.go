@@ -106,7 +106,7 @@ func validateAccountConstraints(c Config, ix InstructionDeclaration, names map[s
 				if names[seed.Account].Name == "" || seed.Hex != "" || seed.Field != "" {
 					return fmt.Errorf("%s.%s: key seed requires a declared account only", ix.Name, a.Name)
 				}
-			case "byte", "uint16", "uint32", "uint64":
+			case "byte", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64":
 				parts := strings.Split(seed.Field, ".")
 				if len(parts) < 2 || (parts[0] != "args" && names[parts[0]].Kind != "state") || seed.Hex != "" || seed.Account != "" {
 					return fmt.Errorf("%s.%s: scalar seed requires an args or state field only", ix.Name, a.Name)
@@ -180,7 +180,8 @@ func (m *multiModel) checkPDAFields(ix InstructionDeclaration, args types.Type) 
 					return err
 				}
 				u, ok := t.Underlying().(*types.Basic)
-				want := map[string]types.BasicKind{"byte": types.Uint8, "uint16": types.Uint16, "uint32": types.Uint32, "uint64": types.Uint64}[s.Kind]
+				want := map[string]types.BasicKind{"byte": types.Uint8, "uint16": types.Uint16, "uint32": types.Uint32, "uint64": types.Uint64,
+					"int8": types.Int8, "int16": types.Int16, "int32": types.Int32, "int64": types.Int64}[s.Kind]
 				if !ok || u.Kind() != want {
 					return fmt.Errorf("%s.%s: seed %s requires %s, got %s", ix.Name, a.Name, s.Field, s.Kind, t)
 				}
@@ -224,12 +225,23 @@ func (m *multiModel) seedAdapter(out *bytes.Buffer, ix InstructionDeclaration, a
 			expr = fmt.Sprintf("seeds.AddBytes(literal%d[:])", j)
 		case "key":
 			expr = fmt.Sprintf("seeds.AddBytes(solana.Key(c,%d))", accountIndex(ix, s.Account))
-		case "uint16":
+		case "uint16", "int16":
 			// The pinned SDK snapshot has no AddUint16; encode the two
 			// little-endian bytes here so existing project SDKs stay unchanged.
+			// An int16 seed is its two's-complement bytes.
 			_, field, _ := m.constraintField(ix, args.GoType, s.Field, true)
+			if s.Kind == "int16" {
+				field = "int16(" + field + ")"
+			}
 			fmt.Fprintf(out, "var seed%d [2]byte\nseed%d[0]=byte(uint16(%s))\nseed%d[1]=byte(uint16(%s)>>8)\n", j, j, field, j, field)
 			expr = fmt.Sprintf("seeds.AddBytes(seed%d[:])", j)
+		case "int8", "int32", "int64":
+			// Signed seeds are the two's-complement little-endian bytes of the
+			// value: the unsigned seed of the same width, after conversion.
+			_, field, _ := m.constraintField(ix, args.GoType, s.Field, true)
+			method := map[string]string{"int8": "AddByte", "int32": "AddUint32", "int64": "AddUint64"}[s.Kind]
+			unsigned := map[string]string{"int8": "byte", "int32": "uint32", "int64": "uint64"}[s.Kind]
+			expr = fmt.Sprintf("seeds.%s(%s(%s(%s)))", method, unsigned, s.Kind, field)
 		default:
 			_, field, _ := m.constraintField(ix, args.GoType, s.Field, true)
 			method := map[string]string{"byte": "AddByte", "uint32": "AddUint32", "uint64": "AddUint64"}[s.Kind]

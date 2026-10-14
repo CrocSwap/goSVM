@@ -137,6 +137,7 @@ var ConstructNames = []string{
 	"break", "continue", "labels", "goto", "defer", "go", "select",
 	"const_typed", "const_untyped",
 	"int_literals", "char_literals", "string_literals",
+	"signed_division", "signed_shift_counts",
 }
 
 var operatorClass = map[string]string{
@@ -431,6 +432,15 @@ func (w *walker) typeOf(e ast.Expr) types.Type {
 	return nil
 }
 
+// isSignedInteger reports whether t is a typed signed integer type.
+func isSignedInteger(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	b, ok := t.Underlying().(*types.Basic)
+	return ok && b.Info()&types.IsInteger != 0 && b.Info()&(types.IsUnsigned|types.IsUntyped) == 0
+}
+
 func integerName(b *types.Basic) string {
 	if b.Kind() == types.Uint8 {
 		return "byte"
@@ -550,6 +560,18 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.BinaryExpr:
 			w.op(n.Op.String())
+			if w.tp.Info.Types[n].Value == nil {
+				switch n.Op {
+				case token.QUO, token.REM:
+					if isSignedInteger(w.typeOf(n.X)) {
+						w.count("signed_division")
+					}
+				case token.SHL, token.SHR:
+					if isSignedInteger(w.typeOf(n.Y)) && w.tp.Info.Types[n.Y].Value == nil {
+						w.count("signed_shift_counts")
+					}
+				}
+			}
 			if n.Op == token.EQL || n.Op == token.NEQ {
 				if t := w.typeOf(n.X); t != nil {
 					switch t.Underlying().(type) {

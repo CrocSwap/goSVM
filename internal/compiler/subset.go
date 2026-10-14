@@ -136,7 +136,7 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 			c.namedType(node, f.Type())
 		} else {
 			if _, ok := f.Type().Underlying().(*types.Basic); !ok {
-				c.fail(node, "struct fields must be unsigned scalars, bools, scalar arrays, or value structs")
+				c.fail(node, "struct fields must be integer scalars, bools, scalar arrays, or value structs")
 			}
 			c.variableRule(node, f.Type())
 		}
@@ -364,12 +364,9 @@ func (c *checker) switchStatement(s *ast.SwitchStmt) {
 	}
 }
 
-// rangeStatement admits Go 1.22 range loops over unsigned integers (and
-// untyped constants or int len/cap results), fixed scalar arrays, pointers to
-// them and byte slices. Iteration variables are fresh in every iteration. An
-// int key (from an array, pointer, slice, untyped constant or int count) is
-// the only int variable the subset admits; typeRule admits its uses exactly as
-// it admits a len/cap result, and variableRule keeps it out of other storage.
+// rangeStatement admits Go 1.22 range loops over integers (of any admitted
+// type, or untyped constants), fixed scalar arrays, pointers to them and byte
+// slices. Iteration variables are fresh in every iteration.
 func (c *checker) rangeStatement(s *ast.RangeStmt) {
 	xt := c.info.Types[s.X].Type
 	switch u := xt.Underlying().(type) {
@@ -378,7 +375,7 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 			c.fail(s.X, "range over strings unsupported")
 		}
 		if u.Info()&types.IsInteger == 0 {
-			c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
 		}
 	case *types.Map:
 		c.fail(s.X, "range over maps unsupported")
@@ -393,10 +390,10 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 	case *types.Array:
 	case *types.Pointer:
 		if _, ok := u.Elem().Underlying().(*types.Array); !ok {
-			c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
 		}
 	default:
-		c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+		c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
 	}
 	if s.Tok == token.ASSIGN {
 		for _, target := range []ast.Expr{s.Key, s.Value} {
@@ -424,12 +421,7 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 			if id == nil {
 				continue
 			}
-			t := c.info.Defs[id].Type()
-			if target == s.Key && types.Identical(t, types.Typ[types.Int]) {
-				c.typeRule(id, t)
-				continue
-			}
-			c.variableRule(id, t)
+			c.variableRule(id, c.info.Defs[id].Type())
 		}
 	}
 	c.loops++
@@ -573,7 +565,7 @@ func (c *checker) expr(e ast.Expr) {
 	}
 	if tv.Value != nil {
 		c.typeRule(e, tv.Type)
-		c.constantRule(e, tv.Value)
+		c.constantRule(e, tv.Type, tv.Value)
 		return
 	}
 	switch e := e.(type) {
@@ -656,17 +648,7 @@ func (c *checker) expr(e ast.Expr) {
 		}
 		c.expr(e.X)
 		switch e.Op {
-		case token.NOT, token.ADD:
-		case token.XOR:
-			// ^ on an int (len/cap result or range key) would yield a negative
-			// value that the unsigned comparisons below cannot represent.
-			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
-				c.fail(e, "signed arithmetic unsupported")
-			}
-		case token.SUB:
-			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
-				c.fail(e, "signed negation unsupported")
-			}
+		case token.NOT, token.ADD, token.XOR, token.SUB:
 		default:
 			c.fail(e, "unsupported unary operator")
 		}
@@ -712,22 +694,9 @@ func (c *checker) binary(e *ast.BinaryExpr, tv types.TypeAndValue) {
 		return
 	}
 	c.expr(e.Y)
-	if e.Op == token.SHL || e.Op == token.SHR {
-		// Shifts are defined for the unsigned widths only.
-		c.typeRule(e, tv.Type)
-		b, ok := tv.Type.Underlying().(*types.Basic)
-		if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint16 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.UntypedInt) {
-			c.fail(e, "signed shifts unsupported")
-		}
-		c.typeRule(e, tv.Type)
-		return
-	}
-	switch e.Op {
-	case token.ADD, token.SUB, token.MUL, token.QUO, token.REM, token.AND, token.OR, token.XOR, token.AND_NOT:
-		if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
-			c.fail(e, "signed arithmetic unsupported")
-		}
-	}
+	// Integer operators follow Go for every admitted width, signed or not:
+	// wrapping arithmetic, truncating division, sign-filling right shifts and
+	// signed or unsigned shift counts (a negative count traps).
 	c.typeRule(e, tv.Type)
 }
 

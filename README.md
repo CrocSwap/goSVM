@@ -104,8 +104,9 @@ facilities in its own code, without installing the compiler or SBF tools.
 
 ## Current scope
 
-The compiler supports multi-file programs, user packages, unsigned integers
-(`uint8`/`uint16`/`uint32`/`uint64`), structs, fixed-size scalar arrays, multiple
+The compiler supports multi-file programs, user packages, signed and unsigned
+[integers](docs/GO_INTEGERS.md) (`int8`…`int64`, `uint8`…`uint64`, `int`, `uint`)
+with Go's exact semantics, structs, fixed-size scalar arrays, multiple
 return values, methods, `range` loops, constrained pointers, and borrowed byte slices. It lowers Go through checked C and Solana
 Clang/LLD to SBF.
 

@@ -310,17 +310,7 @@ func (m *multiModel) codecFields(out *bytes.Buffer, fields []WireField, value, b
 		case *types.Struct:
 			m.codecFields(out, f.Fields, path, buffer, encode, host)
 		case *types.Array:
-			size := 0
-			switch u.Elem().Underlying().(*types.Basic).Kind() {
-			case types.Uint8:
-				size = 1
-			case types.Uint16:
-				size = 2
-			case types.Uint32:
-				size = 4
-			case types.Uint64:
-				size = 8
-			}
+			size := wireSize(u.Elem().Underlying().(*types.Basic))
 			fmt.Fprintf(out, "for j:=uint64(0);j<%d;j++ {\n", u.Len())
 			m.codecScalar(out, path+"[j]", buffer, fmt.Sprintf("%d+j*%d", f.Offset, size), size, u.Elem(), encode, host)
 			fmt.Fprint(out, "}\n")

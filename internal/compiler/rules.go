@@ -47,10 +47,9 @@ func recoverCompileError(err *error) {
 // on-chain value representation. Check applies them; the emitter only maps
 // already-certified types to C.
 
-// typeRule admits unsigned scalars (uint8, uint16, uint32, uint64), bool,
-// untyped integer/bool constants, int (only as the result of len/cap or a
-// range key; variableRule keeps it out of all other storage), byte slices,
-// solana.Context, value structs, declared scalar arrays, declared
+// typeRule admits integer scalars (uint8, uint16, uint32, uint64, uint, int8,
+// int16, int32, int64, int), bool, untyped integer/bool constants, byte
+// slices, solana.Context, value structs, declared scalar arrays, declared
 // multiple-result tuples and pointers to admitted elements.
 func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	if tuple, ok := t.(*types.Tuple); ok && tuple.Len() > 1 {
@@ -81,7 +80,8 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	}
 	if b, ok := t.Underlying().(*types.Basic); ok {
 		switch b.Kind() {
-		case types.Uint8, types.Uint16, types.Uint32, types.Uint64, types.UntypedInt, types.Bool, types.UntypedBool, types.Int:
+		case types.Uint8, types.Uint16, types.Uint32, types.Uint64, types.Uint, types.UntypedInt, types.Bool, types.UntypedBool,
+			types.Int8, types.Int16, types.Int32, types.Int64, types.Int:
 			return
 		}
 	}
@@ -89,11 +89,8 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 }
 
 // variableRule applies to storage: variables, parameters, results, fields,
-// conversions and array elements. Signed int is never storage.
+// conversions and array elements. Every value type is also a storage type.
 func (f *frontend) variableRule(n ast.Node, t types.Type) {
-	if types.Identical(t.Underlying(), types.Typ[types.Int]) {
-		f.fail(n, "use explicitly typed unsigned integers; int variables are unsupported")
-	}
 	f.typeRule(n, t)
 }
 
@@ -105,7 +102,7 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 	}
 	switch t.Underlying().(type) {
 	case *types.Pointer, *types.Slice, *types.Signature, *types.Interface:
-		f.fail(n, "pointer elements must be unsigned/bool scalars, value structs or scalar arrays")
+		f.fail(n, "pointer elements must be integer/bool scalars, value structs or scalar arrays")
 	}
 	f.variableRule(n, t)
 }
@@ -113,8 +110,8 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint16 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.Bool) {
-		f.fail(node, "array elements must be byte, uint16, uint32, uint64, bool, or named versions of those scalars")
+	if !ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool) || b.Info()&types.IsUntyped != 0 {
+		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())
 	size := (&types.StdSizes{WordSize: 8, MaxAlign: 8}).Sizeof(a.Elem())
@@ -123,9 +120,11 @@ func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
 	}
 }
 
-// constantRule requires integer constants to be representable as uint64.
-func (f *frontend) constantRule(e ast.Expr, v constant.Value) {
-	if v.Kind() == constant.Bool {
+// constantRule requires integer constants to be representable as uint64,
+// except constants of a signed type, which go/types has already checked
+// against that type's range.
+func (f *frontend) constantRule(e ast.Expr, t types.Type, v constant.Value) {
+	if v.Kind() == constant.Bool || isSigned(t) {
 		return
 	}
 	if _, ok := constant.Uint64Val(v); !ok {
@@ -169,4 +168,24 @@ func (f *frontend) declaredResult(t *types.Tuple) bool {
 		}
 	}
 	return false
+}
+
+// isSigned reports whether t is a typed signed integer type (int8..int64,
+// int, or a named version).
+func isSigned(t types.Type) bool {
+	b, ok := t.Underlying().(*types.Basic)
+	return ok && b.Info()&types.IsInteger != 0 && b.Info()&(types.IsUnsigned|types.IsUntyped) == 0
+}
+
+// intWidth is the width in bits of an admitted integer type.
+func intWidth(t types.Type) int {
+	switch t.Underlying().(*types.Basic).Kind() {
+	case types.Uint8, types.Int8:
+		return 8
+	case types.Uint16, types.Int16:
+		return 16
+	case types.Uint32, types.Int32:
+		return 32
+	}
+	return 64
 }

@@ -55,10 +55,14 @@ Module resolution remains offline and never executes package initialization.
 ## Packed wire format and layout history
 
 Wire structs encode fields in declaration order with no native padding. Supported
-fields are byte/uint16/uint32/uint64 (including named versions; little-endian, 1/2/4/8
-bytes, no alignment padding), bounded scalar arrays,
-and nested exported value structs. Embedding, tags, signed values, boolean wire
-fields, pointer/slice fields, arrays of structs and nested arrays are rejected.
+fields are byte/uint16/uint32/uint64 and int8/int16/int32/int64 (including named
+versions; little-endian, 1/2/4/8 bytes, signed values in two's complement, no
+alignment padding), bounded scalar arrays, and nested exported value structs.
+`int` and `uint` are rejected because their size depends on the platform
+(`wire field Delta: int is platform-sized; use int64`). Embedding, tags, boolean
+wire fields, pointer/slice fields, arrays of structs and nested arrays are
+rejected. `idl.json` and `layouts.json` name signed fields by their Go type
+(`"type": "int16"`).
 Each encoded layout, including its eight-byte discriminator, is capped at 1,024
 bytes. Account-backed byte views can represent larger buffers at the low-level
 SDK boundary; schema-2 owned-value codecs do not yet support those large layouts.
@@ -122,10 +126,13 @@ program account. Seeds are structured data, not arbitrary Go expressions:
 ```
 
 `key` uses a named account's runtime key; `bytes` uses at most 32 hex-encoded bytes
-(including an empty seed). `byte`, `uint16`, `uint32` and `uint64` name exported
-canonical state fields or `args` fields of the matching underlying width. Integer
-encoding is little-endian (a `uint16` seed is two bytes; the generated adapter
-encodes it itself, so the pinned SDK snapshot is unchanged). There are at most 16 seeds including the explicit bump; no
+(including an empty seed). `byte`, `uint16`, `uint32`, `uint64`, `int8`,
+`int16`, `int32` and `int64` name exported canonical state fields or `args`
+fields of the matching underlying type. Integer encoding is little-endian, and
+signed seeds are the two's-complement bytes of the value (an `int32` seed of -2
+is `fe ff ff ff`). A `uint16` or `int16` seed is two bytes that the generated
+adapter encodes itself; the other signed seeds use the unsigned SDK method of
+the same width. So the pinned SDK snapshot is unchanged. There are at most 16 seeds including the explicit bump; no
 implicit bump search is generated. All argument/state fields are type-checked
 before any artifacts change. Derivation failure or address mismatch returns 6008.
 Handlers still build signing seeds explicitly with the checked PDA API.

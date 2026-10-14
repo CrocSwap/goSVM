@@ -62,10 +62,22 @@ runtime templates (`*.c.txt`). Another backend needs its own lowering for them.
 `math/bits` calls look the same: they are standard-library calls in the typed
 program (`types.Func` with `Pkg().Path() == "math/bits"`), are not listed in
 `Function.Callees`, and have no Go body in the checked program. Check has
-already certified that each is a supported function and that `RotateLeft*`'s
-count is a constant (its `types.TypeAndValue.Value`). The C backend lowers them
-to `bits.c.txt`; another backend needs its own lowering, with the results and
-traps in [GO_BITS.md](GO_BITS.md). `UintSize` is an untyped constant (64).
+already certified that each is a supported function. A `RotateLeft*` count is
+any `int` expression; when it is constant, its `types.TypeAndValue.Value` holds
+it. The `uint` variants (`bits.Add`, `bits.Len`, ...) are the 64-bit functions,
+because `uint` is 64 bits. The C backend lowers them to `bits.c.txt`; another
+backend needs its own lowering, with the results and traps in
+[GO_BITS.md](GO_BITS.md). `UintSize` is an untyped constant (64).
+
+Integer types are ordinary `types.Basic` kinds: every fixed-size integer, plus
+`int` and `uint` (both 64 bits), and named versions. `len`/`cap` results, range
+keys and `math/bits` counts are `int` values like any other. A backend must
+implement Go's integer semantics (wrapping arithmetic, truncating signed
+division with `MinInt / -1 == MinInt`, sign-filling `>>`, signed or unsigned
+shift counts with a trap on a negative count, and sign- or zero-extending
+conversions), as specified in [GO_INTEGERS.md](GO_INTEGERS.md). SBF has no
+signed divide instruction, so signed division needs a lowering that does not
+call `__divdi3`.
 
 ## `project.LoadSchema`
 
@@ -109,11 +121,13 @@ replays 312 programs recorded from the pre-split compiler (commit `dfcb8fc`) in
 For each program, `Check` must reject with exactly the recorded error, or accept
 when the old compiler accepted. `CompileProgram` must reproduce the recorded error
 or the SHA-256 of the emitted C. The recording is never edited: programs whose
-verdict changed on purpose since (range loops and `uint16` became supported; the
-array-element message now names `uint16`) are listed with their new expected
-outcome in the test's `corpusChanges` table. `CheckedProgram` did not change shape
-for these additions; a backend must lower `*ast.RangeStmt` as described in
-[GO_CONTROL.md](GO_CONTROL.md#range-loops) and `uint16` as wrapping 16-bit
-arithmetic. Separately, the full-swap ELFs built with
+verdict changed on purpose since are listed with their new expected outcome in
+the test's `corpusChanges` table. These are: range loops and `uint16` became
+supported; signed integers, `int` and `uint` became supported; and the
+array-element, pointer-element and struct-field messages now name the admitted
+types. `CheckedProgram` did not change shape for these additions. A backend must
+lower `*ast.RangeStmt` as described in
+[GO_CONTROL.md](GO_CONTROL.md#range-loops), `uint16` as wrapping 16-bit
+arithmetic, and signed integers as in [GO_INTEGERS.md](GO_INTEGERS.md). Separately, the full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

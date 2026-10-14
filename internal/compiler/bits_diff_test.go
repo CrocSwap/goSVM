@@ -94,6 +94,39 @@ func bitsOps() []bitsOp {
 			return v, 0
 		}, 3, 64),
 	}
+	// The uint variants (uint is 64 bits) and int results used as values.
+	u := func(f func(a, b, c uint) (uint, uint)) func(a, b, c uint64) (uint64, uint64) {
+		return func(a, b, c uint64) (uint64, uint64) {
+			x, y := f(uint(a), uint(b), uint(c))
+			return uint64(x), uint64(y)
+		}
+	}
+	ops = append(ops,
+		two("Add", "bits.Add(uint(a), uint(b), uint(c))", u(func(a, b, c uint) (uint, uint) { return bits.Add(a, b, c) }), 3, 64),
+		two("Sub", "bits.Sub(uint(a), uint(b), uint(c))", u(func(a, b, c uint) (uint, uint) { return bits.Sub(a, b, c) }), 3, 64),
+		two("Mul", "bits.Mul(uint(a), uint(b))", u(func(a, b, c uint) (uint, uint) { return bits.Mul(a, b) }), 2, 64),
+		two("Div", "bits.Div(uint(a), uint(b), uint(c))", u(func(a, b, c uint) (uint, uint) { return bits.Div(a, b, c) }), 3, 64),
+		one("Rem", "bits.Rem(uint(a), uint(b), uint(c))", u(func(a, b, c uint) (uint, uint) { return bits.Rem(a, b, c), 0 }), 3, 64),
+		one("LeadingZeros", "bits.LeadingZeros(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.LeadingZeros(uint(a))), 0 }, 1, 64),
+		one("TrailingZeros", "bits.TrailingZeros(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.TrailingZeros(uint(a))), 0 }, 1, 64),
+		one("OnesCount", "bits.OnesCount(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.OnesCount(uint(a))), 0 }, 1, 64),
+		one("Len", "bits.Len(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.Len(uint(a))), 0 }, 1, 64),
+		one("Reverse", "bits.Reverse(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.Reverse(uint(a))), 0 }, 1, 64),
+		one("ReverseBytes", "bits.ReverseBytes(uint(a))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.ReverseBytes(uint(a))), 0 }, 1, 64),
+		// Rotation counts known only at run time: any int, including negative.
+		one("RotateLeft(var)", "bits.RotateLeft(uint(a), int(b))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft(uint(a), int(b))), 0 }, 2, 64),
+		one("RotateLeft64(var)", "bits.RotateLeft64(a, int(b))", func(a, b, c uint64) (uint64, uint64) { return bits.RotateLeft64(a, int(b)), 0 }, 2, 64),
+		one("RotateLeft32(var)", "bits.RotateLeft32(uint32(a), int(b))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft32(uint32(a), int(b))), 0 }, 2, 64),
+		one("RotateLeft16(var)", "bits.RotateLeft16(uint16(a), int(b))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft16(uint16(a), int(b))), 0 }, 2, 64),
+		one("RotateLeft8(var)", "bits.RotateLeft8(uint8(a), int(int8(b)))", func(a, b, c uint64) (uint64, uint64) { return uint64(bits.RotateLeft8(uint8(a), int(int8(b)))), 0 }, 2, 64),
+		// Count results as ordinary int values: stored, subtracted (may be
+		// negative), and used as a rotation count.
+		bitsOp{"int values", "n := bits.Len64(a) - bits.TrailingZeros64(b)\nn++\nstore(o, 0, uint64(n)+bits.RotateLeft64(c, n))", func(a, b, c uint64) (uint64, uint64) {
+			n := bits.Len64(a) - bits.TrailingZeros64(b)
+			n++
+			return uint64(n) + bits.RotateLeft64(c, n), 0
+		}, 3, 64},
+	)
 	for _, k := range bitsRotations {
 		k := k
 		ops = append(ops,
@@ -235,7 +268,7 @@ func TestBitsDifferentialAgainstGo(t *testing.T) {
 			// Add64/Sub64 carries other than 0/1 are undefined by the package
 			// documentation; the compiled oracle treats them as nonzero=1 on
 			// amd64/arm64, which goSVM matches.
-			if !intrinsicCarry && (op.name == "Add64" || op.name == "Sub64") && c > 1 {
+			if !intrinsicCarry && (op.name == "Add64" || op.name == "Sub64" || op.name == "Add" || op.name == "Sub") && c > 1 {
 				return
 			}
 			vectors = append(vectors, vector{n, a, b, c})

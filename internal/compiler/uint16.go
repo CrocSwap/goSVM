@@ -13,6 +13,12 @@ const uint16Prelude = "typedef unsigned short u16;\n"
 // usesUint16 reports whether any declared object or expression in the program
 // files has a type that contains uint16.
 func usesUint16(files []*ast.File, info *types.Info) bool {
+	return usesBasic(files, info, func(b *types.Basic) bool { return b.Kind() == types.Uint16 })
+}
+
+// usesBasic reports whether any declared object or expression in the program
+// files has a type that contains a basic type matching want.
+func usesBasic(files []*ast.File, info *types.Info, want func(*types.Basic) bool) bool {
 	seen := map[types.Type]bool{}
 	var mentions func(types.Type) bool
 	mentions = func(t types.Type) bool {
@@ -22,7 +28,7 @@ func usesUint16(files []*ast.File, info *types.Info) bool {
 		seen[t] = true
 		switch t := t.(type) {
 		case *types.Basic:
-			return t.Kind() == types.Uint16
+			return want(t)
 		case *types.Named:
 			return mentions(t.Underlying())
 		case *types.Pointer:

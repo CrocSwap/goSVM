@@ -26,9 +26,9 @@ var bitsRuntime string
 var bits16Runtime string
 
 // bitsFunctions are the math/bits functions available on-chain. Every one has
-// a gosvm_bits_<Name> helper in bits.c.txt. The uint-typed functions are not
-// listed because uint is not in the subset. The 16-bit helpers live in
-// bits16.c.txt, emitted only for programs that also use uint16.
+// a gosvm_bits_<Name> helper in bits.c.txt, except the uint-typed functions,
+// which use their 64-bit helper (uint is 64 bits; see bitsHelper). The 16-bit
+// helpers live in bits16.c.txt, emitted only for programs that also use uint16.
 var bitsFunctions = map[string]bool{
 	"Add64": true, "Sub64": true, "Mul64": true, "Div64": true, "Rem64": true,
 	"Add32": true, "Sub32": true, "Mul32": true, "Div32": true, "Rem32": true,
@@ -41,6 +41,20 @@ var bitsFunctions = map[string]bool{
 	"RotateLeft64": true, "RotateLeft32": true, "RotateLeft8": true,
 	"LeadingZeros16": true, "TrailingZeros16": true, "OnesCount16": true, "Len16": true,
 	"Reverse16": true, "ReverseBytes16": true, "RotateLeft16": true,
+	"Add": true, "Sub": true, "Mul": true, "Div": true, "Rem": true,
+	"LeadingZeros": true, "TrailingZeros": true, "OnesCount": true, "Len": true,
+	"Reverse": true, "ReverseBytes": true, "RotateLeft": true,
+}
+
+// bitsHelper names the C helper for a supported function. The uint variants
+// share the 64-bit helpers, so programs that do not use them emit the same C
+// as before they were added.
+func bitsHelper(name string) string {
+	switch name {
+	case "Add", "Sub", "Mul", "Div", "Rem", "LeadingZeros", "TrailingZeros", "OnesCount", "Len", "Reverse", "ReverseBytes", "RotateLeft":
+		return "gosvm_bits_" + name + "64"
+	}
+	return "gosvm_bits_" + name
 }
 
 // importBits type-checks the declaration-only math/bits API. Each program
@@ -85,9 +99,8 @@ func bitsResults(info *types.Info, files []*ast.File) []*ast.CallExpr {
 	return calls
 }
 
-// bitsCall is the subset rule for math/bits calls: only the listed functions,
-// and RotateLeft's int rotation count must be a constant expression. Count
-// results are int, admitted exactly where len's result is.
+// bitsCall is the subset rule for math/bits calls: only the listed functions.
+// Count results and RotateLeft's rotation count are ordinary int values.
 func (c *checker) bitsCall(call *ast.CallExpr, selector *ast.SelectorExpr) {
 	fn, ok := c.info.Uses[selector.Sel].(*types.Func)
 	if !ok {
@@ -95,16 +108,9 @@ func (c *checker) bitsCall(call *ast.CallExpr, selector *ast.SelectorExpr) {
 	}
 	name := fn.Name()
 	if !bitsFunctions[name] {
-		c.fail(call, "math/bits.%s is unsupported: uint is not in the on-chain subset; use the 64-, 32- or 8-bit variant", name)
+		c.fail(call, "math/bits.%s is unsupported", name)
 	}
-	if strings.HasPrefix(name, "RotateLeft") {
-		if len(call.Args) != 2 || c.info.Types[call.Args[1]].Value == nil {
-			c.fail(call, "math/bits.%s requires a constant rotation count", name)
-		}
-		c.expr(call.Args[0])
-	} else {
-		c.callValues(call)
-	}
+	c.callValues(call)
 	c.typeRule(call, c.info.Types[call].Type)
 }
 
@@ -117,10 +123,6 @@ func (g *generator) bitsCall(call *ast.CallExpr) string {
 	t := g.info.Types[call].Type
 	var args []string
 	if strings.HasPrefix(fn.Name(), "RotateLeft") {
-		k, ok := constant.Int64Val(g.info.Types[call.Args[1]].Value)
-		if !ok {
-			g.unchecked(call)
-		}
 		width := uint64(64)
 		switch fn.Name() {
 		case "RotateLeft32":
@@ -130,12 +132,22 @@ func (g *generator) bitsCall(call *ast.CallExpr) string {
 		case "RotateLeft8":
 			width = 8
 		}
-		// Go: s := uint(k) & (n - 1), so negative k rotates right.
-		args = []string{g.expr(call.Args[0]), fmt.Sprintf("%dULL", uint64(k)&(width-1))}
+		// Go: s := uint(k) & (n - 1), so negative k rotates right. A constant
+		// count is reduced here; any other int count at run time.
+		x := g.expr(call.Args[0])
+		if k := g.info.Types[call.Args[1]].Value; k != nil {
+			n, ok := constant.Int64Val(k)
+			if !ok {
+				g.unchecked(call)
+			}
+			args = []string{x, fmt.Sprintf("%dULL", uint64(n)&(width-1))}
+		} else {
+			args = []string{x, fmt.Sprintf("((u64)%s & %dULL)", g.expr(call.Args[1]), width-1)}
+		}
 	} else {
 		args = g.callValues(call)
 	}
-	value := "gosvm_bits_" + fn.Name() + "(" + strings.Join(args, ",") + ")"
+	value := bitsHelper(fn.Name()) + "(" + strings.Join(args, ",") + ")"
 	if tuple, ok := t.(*types.Tuple); ok && tuple.Len() == 2 {
 		pair := "gosvm_bits_u64x2"
 		if types.Identical(tuple.At(0).Type(), types.Typ[types.Uint32]) {

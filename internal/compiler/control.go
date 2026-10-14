@@ -104,7 +104,8 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 // so assigning to the iteration variables never changes it. Iteration
 // variables are declared inside the C loop body: fresh in every iteration.
 //
-//   - integers: the count is fixed at loop start.
+//   - integers: the count is fixed at loop start; a negative count runs
+//     no iterations.
 //   - arrays with a value variable: the array is copied once (Go ranges over
 //     a copy); pointers to arrays are read through, checking nil per element.
 //   - arrays without a value variable: len is constant and the array is never
@@ -140,7 +141,12 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 		bound = "(u64)" + x + ".len"
 		element = func(i string) string { return fmt.Sprintf("%s.ptr[%s]", x, i) }
 	} else if _, ok := xt.Underlying().(*types.Basic); ok {
-		bound = "(u64)" + g.expr(s.X)
+		n := g.expr(s.X)
+		bound = "(u64)" + n
+		if !g.nonNegative(s.X) {
+			// A negative signed count runs no iterations.
+			bound = fmt.Sprintf("(%s < 0 ? 0ULL : (u64)%s)", n, n)
+		}
 	} else {
 		g.unchecked(s.X)
 	}

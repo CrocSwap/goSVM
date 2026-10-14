@@ -347,7 +347,14 @@ func TestBitsSBF(t *testing.T) {
 // returns each case's CU and the ELF hash.
 func runBitsProgram(t *testing.T, llvm, runner, profile, name string, cases []probeCase, keep string) map[string]any {
 	t.Helper()
-	source := mustRead(t, filepath.Join("testdata", name, "program.go"))
+	files := map[string][]byte{"program.go": mustRead(t, filepath.Join("testdata", name, "program.go"))}
+	return runProbeProgram(t, llvm, runner, profile, name, files, cases, keep)
+}
+
+// runProbeProgram builds the package made of files for the profile, runs the
+// probe cases and returns each case's CU and the ELF hash.
+func runProbeProgram(t *testing.T, llvm, runner, profile, name string, files map[string][]byte, cases []probeCase, keep string) map[string]any {
+	t.Helper()
 	dir := t.TempDir()
 	if keep != "" {
 		dir = filepath.Join(keep, profile, name)
@@ -355,8 +362,10 @@ func runBitsProgram(t *testing.T, llvm, runner, profile, name string, cases []pr
 			t.Fatal(err)
 		}
 	}
-	if err := os.WriteFile(filepath.Join(dir, "program.go"), source, 0644); err != nil {
-		t.Fatal(err)
+	for file, source := range files {
+		if err := os.WriteFile(filepath.Join(dir, file), source, 0644); err != nil {
+			t.Fatal(err)
+		}
 	}
 	elf := filepath.Join(dir, "program.so")
 	if err := Build(dir, elf, llvm, profile); err != nil {

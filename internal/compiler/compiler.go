@@ -127,6 +127,12 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		// program's emitted C is byte-identical to earlier compilers.
 		g.WriteString(uint16Prelude)
 	}
+	if usesNarrowSigned(files, g.info) {
+		g.WriteString(signedPrelude)
+	}
+	if usesSignedDivision(files, g.info) {
+		g.WriteString(signedDivision)
+	}
 	if hasViews {
 		g.WriteString(viewRuntime)
 	}
@@ -305,12 +311,18 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 			return "u16"
 		case types.Uint32:
 			return "u32"
-		case types.Uint64, types.UntypedInt:
+		case types.Uint64, types.Uint, types.UntypedInt:
 			return "u64"
 		case types.Bool, types.UntypedBool:
 			return "boolean"
-		case types.Int:
-			return "i64" // len/cap only; Check rejects signed storage and arithmetic.
+		case types.Int8:
+			return "i8"
+		case types.Int16:
+			return "i16"
+		case types.Int32:
+			return "i32"
+		case types.Int64, types.Int:
+			return "i64"
 		}
 	}
 	g.unchecked(n)
@@ -359,6 +371,11 @@ func (g *generator) expr(e ast.Expr) string {
 				return "1"
 			}
 			return "0"
+		}
+		if isSigned(tv.Type) {
+			if negative, ok := signedConstant(tv.Value); ok {
+				return negative
+			}
 		}
 		v, ok := constant.Uint64Val(tv.Value)
 		if !ok {
@@ -471,19 +488,18 @@ func (g *generator) expr(e ast.Expr) string {
 		}
 		y := g.expr(e.Y)
 		if e.Op == token.SHL || e.Op == token.SHR {
-			bits := 64
-			switch g.ctype(e, tv.Type) {
-			case "u8":
-				bits = 8
-			case "u16":
-				bits = 16
-			case "u32":
-				bits = 32
-			case "u64":
-			default:
+			b, ok := tv.Type.Underlying().(*types.Basic)
+			if !ok || b.Info()&types.IsInteger == 0 {
 				g.unchecked(e)
 			}
-			return g.temp(e, tv.Type, fmt.Sprintf("%s >= %d ? 0 : ((u64)%s %s %s)", y, bits, x, e.Op, y))
+			g.shiftCount(e, y)
+			if signed, ok := g.signedBinary(e, x, y); ok {
+				return g.temp(e, tv.Type, signed)
+			}
+			return g.temp(e, tv.Type, fmt.Sprintf("%s >= %d ? 0 : ((u64)%s %s %s)", y, intWidth(tv.Type), x, e.Op, y))
+		}
+		if signed, ok := g.signedBinary(e, x, y); ok {
+			return g.temp(e, tv.Type, signed)
 		}
 		if e.Op == token.QUO || e.Op == token.REM {
 			g.line("if (%s == 0) abort();", y)
@@ -713,9 +729,18 @@ func (g *generator) stmt(s ast.Stmt) {
 		g.switchStatement(s)
 	case *ast.IncDecStmt:
 		id, ok := s.X.(*ast.Ident)
+		t := g.info.Types[s.X].Type
 		if !ok {
 			target := g.captureTarget(s.X)
+			if isSigned(t) {
+				g.incDec(s, t, "("+target+")", s.Tok.String())
+				return
+			}
 			g.line("(%s)%s;", target, s.Tok)
+			return
+		}
+		if isSigned(t) {
+			g.incDec(s, t, g.name(g.info.Uses[id]), s.Tok.String())
 			return
 		}
 		g.line("%s%s;", g.name(g.info.Uses[id]), s.Tok)

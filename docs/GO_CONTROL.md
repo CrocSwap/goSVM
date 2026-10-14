@@ -51,8 +51,8 @@ loop, including from a nested switch, and executes the loop post statement once.
 
 | Operand | Key type | Forms |
 | --- | --- | --- |
-| unsigned integer `n` (`uint8`/`uint16`/`uint32`/`uint64`) | type of `n` | `for i := range n`, `for range n` |
-| untyped constant or `len`/`cap` result | `int` | `for i := range 10`, `for i := range len(s)` |
+| integer `n` of any [integer type](GO_INTEGERS.md) | type of `n` | `for i := range n`, `for range n` |
+| untyped constant | `int` | `for i := range 10` |
 | fixed scalar array, or pointer to one | `int` | `i`, `i, v`, `_, v`, none |
 | byte slice or byte view | `int` | `i`, `i, v`, `_, v`, none |
 
@@ -67,7 +67,8 @@ for j := range uint64(len(data)) / 8 { // j is uint64
 
 - The operand is evaluated once, before the first iteration. An integer count
   and a slice's length are fixed then; later writes to the count or slice
-  variable do not change the iteration.
+  variable do not change the iteration. A negative signed count runs no
+  iterations.
 - A range over an array **value** with a value variable iterates over a copy:
   writes to the array in the body are not seen by `v`. A pointer to an array is
   read through on every iteration, so `v` sees earlier writes, and a nil pointer
@@ -88,14 +89,9 @@ for j := range uint64(len(data)) / 8 { // j is uint64
   over strings, maps, channels, functions and non-byte slices, are rejected.
 
 **The `int` key.** Array, slice, untyped-constant and `len` ranges produce an
-`int` key. It is the only `int` variable the subset admits, and its uses are
-restricted exactly like a `len`/`cap` result: index with it, compare it, slice
-with it, use it as a shift count, or convert it to an unsigned type. Signed
-arithmetic, negation and complement (`i+1`, `-i`, `^i`, `i<<1`) are rejected with
-the existing `signed arithmetic`/`signed negation`/`signed shifts` diagnostics;
-write `uint64(i)+1`. It cannot be copied into another variable, incremented or
-have its address taken ("int variables are unsupported"). To get a typed key,
-range over a typed count: `for i := range uint64(len(s))`.
+`int` key. It is an ordinary `int` value ([integers](GO_INTEGERS.md)): copy it,
+do arithmetic with it (`s[i+1]`), take its address, or increment it. To get
+another key type, range over a typed count: `for i := range uint64(len(s))`.
 
 [Fixture](../examples/range-values/program.go) and validation: Check acceptance and
 rejection tables, ordinary-Go/generated-C differential vectors (randomised plus

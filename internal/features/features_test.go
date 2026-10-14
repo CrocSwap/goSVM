@@ -262,3 +262,43 @@ func Process(s, i []byte) uint64 {
 		t.Errorf("full swap must report an empty stdlib_calls list: %+v", fs.StdlibCalls)
 	}
 }
+
+// Signed integer types and uint are reported like every integer type; signed
+// division and non-constant signed shift counts (which can trap on a negative
+// count) have their own counters.
+func TestSignedIntegers(t *testing.T) {
+	dir := t.TempDir()
+	src := `package main
+
+type Tick int16
+
+func Process(s, i []byte) uint64 {
+	var a int8 = -3
+	b := int64(i[0]) - 7
+	var u uint = 9
+	n := len(s)
+	c := Tick(b) / 2
+	d := b % int64(a)
+	e := u >> n
+	f := b << 3
+	g := a / 2
+	_ = 7 / 2
+	return uint64(c) + uint64(d) + uint64(e) + uint64(f) + uint64(g)
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(src), 0644); err != nil {
+		t.Fatal(err)
+	}
+	h := report(t, dir).Language.Handwritten
+	for _, name := range []string{"int8", "int64", "uint"} {
+		if h.IntegerTypes[name] == 0 || h.IntegerValues[name] == 0 {
+			t.Errorf("integer type %s: types %v values %v", name, h.IntegerTypes, h.IntegerValues)
+		}
+	}
+	if h.IntegerValues["int16"] == 0 || h.IntegerValues["int"] == 0 {
+		t.Errorf("named int16 and len results: %v", h.IntegerValues)
+	}
+	if h.Constructs["signed_division"] != 3 || h.Constructs["signed_shift_counts"] != 1 {
+		t.Errorf("signed_division %d, signed_shift_counts %d", h.Constructs["signed_division"], h.Constructs["signed_shift_counts"])
+	}
+}

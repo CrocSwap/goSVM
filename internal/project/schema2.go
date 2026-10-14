@@ -76,7 +76,7 @@ type PDADeclaration struct {
 // Seed declarations are data, not Go expressions. Scalars name canonical state/
 // argument fields, keys name accounts, and fixed bytes use explicit hex encoding.
 type SeedDeclaration struct {
-	Kind    string `json:"kind"` // bytes, key, byte, uint16, uint32, uint64
+	Kind    string `json:"kind"` // bytes, key, byte, uint16, uint32, uint64, int8, int16, int32, int64
 	Hex     string `json:"hex,omitempty"`
 	Account string `json:"account,omitempty"`
 	Field   string `json:"field,omitempty"`
@@ -95,7 +95,7 @@ type AccountAlias struct {
 }
 
 // WireField is a packed, recursive layout independent of native alignment.
-// Array elements in this subset are unsigned scalars; Fields describe structs.
+// Array elements in this subset are integer scalars; Fields describe structs.
 type WireField struct {
 	Name   string      `json:"name"`
 	Type   string      `json:"type"`
@@ -533,6 +533,22 @@ func (m *multiModel) typeName(t types.Type) string {
 	})
 }
 
+// wireSize is the little-endian wire width of a fixed-size integer type (signed
+// values are two's complement), or 0 for any other basic type.
+func wireSize(b *types.Basic) int {
+	switch b.Kind() {
+	case types.Uint8, types.Int8:
+		return 1
+	case types.Uint16, types.Int16:
+		return 2
+	case types.Uint32, types.Int32:
+		return 4
+	case types.Uint64, types.Int64:
+		return 8
+	}
+	return 0
+}
+
 func (m *multiModel) wireField(name string, t types.Type, offset int, active map[types.Type]bool) (WireField, error) {
 	f := WireField{Name: name, Type: canonicalType(t), Offset: offset, GoType: t}
 	if active[t] {
@@ -543,16 +559,13 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 	switch u := t.Underlying().(type) {
 	case *types.Basic:
 		switch u.Kind() {
-		case types.Uint8:
-			f.Size = 1
-		case types.Uint16:
-			f.Size = 2
-		case types.Uint32:
-			f.Size = 4
-		case types.Uint64:
-			f.Size = 8
-		default:
-			return f, fmt.Errorf("wire field %s: require byte, uint16, uint32 or uint64, got %s", name, t)
+		case types.Int, types.Uint:
+			// Platform-sized types have no fixed wire width.
+			return f, fmt.Errorf("wire field %s: %s is platform-sized; use %s64", name, t, u.Name())
+		}
+		f.Size = wireSize(u)
+		if f.Size == 0 {
+			return f, fmt.Errorf("wire field %s: require byte, uint16, uint32, uint64, int8, int16, int32 or int64, got %s", name, t)
 		}
 	case *types.Array:
 		elem, err := m.wireField(name+"[]", u.Elem(), 0, active)
@@ -560,7 +573,7 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 			return f, err
 		}
 		if _, ok := u.Elem().Underlying().(*types.Basic); !ok || u.Len() > 1024 || int(u.Len())*elem.Size > 1024 {
-			return f, fmt.Errorf("wire array %s requires bounded unsigned scalar elements", name)
+			return f, fmt.Errorf("wire array %s requires bounded integer scalar elements", name)
 		}
 		f.Size, f.Length = int(u.Len())*elem.Size, int(u.Len())
 	case *types.Struct:

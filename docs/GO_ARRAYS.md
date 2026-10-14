@@ -1,7 +1,8 @@
 # Experimental fixed-size arrays
 
-The first milestone 2 compiler increment supports fixed-size arrays of `byte`,
-`uint16`, `uint32`, `uint64`, `bool`, and named versions of those scalar types. Named array
+The first milestone 2 compiler increment supports fixed-size arrays of any
+[integer type](GO_INTEGERS.md) (`byte`, `uint16`, `uint32`, `uint64`, `uint`,
+`int8`, `int16`, `int32`, `int64`, `int`), `bool`, and named versions of those scalar types. Named array
 types such as `type PublicKey [32]byte` are supported. This is compiler support;
 the schema-1 project generator still accepts only flat unsigned wire fields.
 [Shared-package imports](GO_PACKAGES.md) and [schema-2 scalar-array codecs](SCHEMA2.md)
@@ -29,13 +30,14 @@ literals are supported. Array equality/inequality compare elements, and `len` an
 `cap` retain Go's operand-evaluation rules. Conversion between arrays with identical
 underlying types is supported, including named/unnamed array conversions.
 
-Indexes are checked using their full unsigned width. An out-of-range access
+Indexes are checked using their full unsigned width; a negative `int` index is
+out of range. An out-of-range access
 aborts; there is no on-chain recovery. The SVM corpus checks transaction rollback
 for failed accesses, including a successful first instruction followed by a
 bounds failure. Zero-length arrays have no accessible elements.
 
 This increment limits each array value to **1,024 bytes**. Arrays of structs,
-nested arrays, signed/pointer elements and slice-to-array conversions remain
+nested arrays, pointer elements and slice-to-array conversions remain
 unsupported. [`range`](GO_CONTROL.md#range-loops) iterates over arrays (over a copy
 when a value variable is used) and pointers to arrays. [Constrained array pointers](GO_POINTERS.md), indexed
 increment/decrement and [borrowed byte views](GO_VIEWS.md) are now supported. Diagnostics identify Go source

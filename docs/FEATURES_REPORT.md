@@ -64,8 +64,12 @@ Each `language` side has:
   `type_switch`, `fallthrough`, `for_three_clause`, `for_condition_only`,
   `for_infinite`, `for_range` with `for_range_array|slice|int|other`, `break`,
   `continue`, `labels`, `goto`, `defer`, `go`, `select`), constants
-  (`const_typed`, `const_untyped`) and literals (`int_literals`,
-  `char_literals`, `string_literals`, excluding import paths). An SDK method
+  (`const_typed`, `const_untyped`), literals (`int_literals`,
+  `char_literals`, `string_literals`, excluding import paths), and signed
+  integer operations whose lowering differs from the unsigned one
+  (`signed_division`: non-constant `/` and `%` on signed operands;
+  `signed_shift_counts`: shifts by a non-constant signed count, which trap
+  when negative; both added within gosvm-features-v1). An SDK method
   call counts as both `method_calls` and `sdk_calls`.
 - `operators`: binary, unary (`!`, `unary-`, `unary^`, `unary+`), compound
   assignment (`+=`, …) and `++`/`--` occurrences; `&x` is `address_of`, not an
@@ -75,8 +79,9 @@ Each `language` side has:
 - `integer_types`: predeclared integer type names written in source
   (`byte` and `uint8` kept distinct).
 - `integer_value_types`: the underlying integer kind of every typed expression
-  (`uint8` reported as `byte`; untyped constants excluded). `int` here usually
-  comes from `len` and constant indices.
+  (`uint8` reported as `byte`; untyped constants excluded), including the
+  signed types, `int` and `uint`. `int` also comes from `len` and constant
+  indices.
 - `conversions`: conversion target types (fully qualified).
 - `arrays`: fixed array type expressions written in source, with `type`,
   `elem`, `length`, `count`.

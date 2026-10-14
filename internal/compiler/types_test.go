@@ -29,11 +29,11 @@ func TestTypeCheckBeforeEntryGeneration(t *testing.T) {
 	}
 }
 func TestTypeInspectionIsNotSubsetCertification(t *testing.T) {
-	p := &Program{Entry: "app", Packages: []PackageSources{unit("app", `package app;func Process(s,i []byte)uint64{n:=int(i[0]);return uint64(n)}`)}}
+	p := &Program{Entry: "app", Packages: []PackageSources{unit("app", `package app;func Process(s,i []byte)uint64{n:=float64(i[0]);return uint64(n)}`)}}
 	if _, err := TypeCheckProgram(p); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := CompileProgram(p); err == nil || !strings.Contains(err.Error(), "int variables") {
+	if _, err := CompileProgram(p); err == nil || !strings.Contains(err.Error(), "unsupported type float64") {
 		t.Fatalf("final subset check missing: %v", err)
 	}
 	p.Packages[0] = unit("app", `package app;type V struct{N missing}`)

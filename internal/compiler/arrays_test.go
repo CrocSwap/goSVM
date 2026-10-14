@@ -119,7 +119,7 @@ func TestArrayRejections(t *testing.T) {
 		"oversize byte":    `type K [1025]byte;func Process(s,i []byte)uint64{return 0}`,
 		"oversize word":    `type K [129]uint64;func Process(s,i []byte)uint64{return 0}`,
 		"huge length":      `type K [9223372036854775807]byte;func Process(s,i []byte)uint64{return 0}`,
-		"signed element":   `type K [32]int;func Process(s,i []byte)uint64{return 0}`,
+		"float element":    `type K [32]float64;func Process(s,i []byte)uint64{return 0}`,
 		"nested array":     `type K [2][32]byte;func Process(s,i []byte)uint64{return 0}`,
 		"struct element":   `type S struct{ N uint64 };type K [2]S;func Process(s,i []byte)uint64{return 0}`,
 		"context element":  `import "gosvm/solana";type K [2]solana.Context;func Process(c solana.Context)uint64{return 0}`,

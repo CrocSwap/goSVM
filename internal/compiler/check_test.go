@@ -77,11 +77,11 @@ func TestCheckLegacyEntryAndRejection(t *testing.T) {
 	if checked.EntryKind != EntryBytes || checked.SDKPackage != nil || len(checked.CallOrder) != 1 {
 		t.Fatalf("legacy entry %+v", checked)
 	}
-	source := "package main\nfunc Process(input []byte, output []byte) uint64 { n := len(input); return uint64(n) }\n"
+	source := "package main\nfunc Process(input []byte, output []byte) uint64 { f := float64(len(input)); return uint64(f) }\n"
 	program := &Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "p.go", Data: []byte(source)}}}}}
 	checked, err := Check(program)
-	if checked != nil || err == nil || !strings.Contains(err.Error(), "p.go:2:") || !strings.Contains(err.Error(), "int variables are unsupported") {
-		t.Fatalf("Check accepted int storage: %v", err)
+	if checked != nil || err == nil || !strings.Contains(err.Error(), "p.go:2:") || !strings.Contains(err.Error(), "unsupported type float64") {
+		t.Fatalf("Check accepted float storage: %v", err)
 	}
 	if _, compileErr := CompileProgram(program); compileErr == nil || compileErr.Error() != err.Error() {
 		t.Fatalf("CompileProgram error %v differs from Check %v", compileErr, err)

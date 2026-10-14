@@ -64,7 +64,7 @@ func TestBitsDeclarationsMatchStandardLibrary(t *testing.T) {
 		if _, ok := curated.Scope().Lookup(name).(*types.Func); !ok {
 			t.Errorf("supported function %s is not declared", name)
 		}
-		if !strings.Contains(bitsRuntime+bits16Runtime, "gosvm_bits_"+name+"(") {
+		if !strings.Contains(bitsRuntime+bits16Runtime, bitsHelper(name)+"(") {
 			t.Errorf("supported function %s has no runtime helper", name)
 		}
 	}
@@ -137,18 +137,8 @@ func TestBitsCheckAcceptsSupportedFunctions(t *testing.T) {
 
 func TestBitsCheckRejections(t *testing.T) {
 	for name, tc := range map[string]struct{ body, want string }{
-		"uint Add":          {`sum, carry := bits.Add(1, 2, 0); return uint64(sum + carry)`, "math/bits.Add is unsupported: uint is not in the on-chain subset"},
-		"uint Mul":          {`h, l := bits.Mul(1, 2); return uint64(h ^ l)`, "math/bits.Mul is unsupported: uint is not in the on-chain subset"},
-		"uint LeadingZeros": {`return uint64(bits.LeadingZeros(1))`, "math/bits.LeadingZeros is unsupported: uint"},
-		"uint Rem":          {`return uint64(bits.Rem(1, 2, 3))`, "math/bits.Rem is unsupported: uint"},
-		"variable k16":      {`return uint64(bits.RotateLeft16(uint16(i[0]), len(i)))`, "math/bits.RotateLeft16 requires a constant rotation count"},
-		"variable k":        {`return bits.RotateLeft64(1, len(i))`, "math/bits.RotateLeft64 requires a constant rotation count"},
-		"count result k":    {`return uint64(bits.RotateLeft8(i[0], bits.Len64(7)))`, "math/bits.RotateLeft8 requires a constant rotation count"},
-		"int variable":      {`n := bits.Len64(7); return uint64(n)`, "int variables are unsupported"},
-		"int var decl":      {`var n = bits.OnesCount8(i[0]); return uint64(n)`, "int variables are unsupported"},
-		"signed arithmetic": {`return uint64(bits.Len64(7) - 1)`, "signed arithmetic unsupported"},
-		"function value":    {`f := bits.Len64; return uint64(f(1))`, "only value struct fields supported"},
-		"uint UintSize":     {`var u uint = bits.UintSize; return uint64(u)`, "unsupported type uint"},
+		"function value": {`f := bits.Len64; return uint64(f(1))`, "only value struct fields supported"},
+		"method value":   {`f := bits.RotateLeft; return uint64(f(1, 2))`, "only value struct fields supported"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := "package main\nimport \"math/bits\"\nfunc Process(s, i []byte) uint64 {\n" + tc.body + "\n}\n"
@@ -158,7 +148,6 @@ func TestBitsCheckRejections(t *testing.T) {
 		})
 	}
 	for name, tc := range map[string]struct{ source, want string }{
-		"int result": {"package main\nimport \"math/bits\"\nfunc n(x uint64) int { return bits.Len64(x) }\nfunc Process(s, i []byte) uint64 { return uint64(n(1)) }\n", "int variables are unsupported"},
 		"dot import": {"package main\nimport . \"math/bits\"\nfunc Process(s, i []byte) uint64 { return Reverse64(1) }\n", "dot and blank imports unsupported"},
 		"blank":      {"package main\nimport _ \"math/bits\"\nfunc Process(s, i []byte) uint64 { return 1 }\n", "dot and blank imports unsupported"},
 		"other std":  {"package main\nimport \"math\"\nfunc Process(s, i []byte) uint64 { return math.MaxUint32 }\n", `unsupported import "math"`},
@@ -168,6 +157,38 @@ func TestBitsCheckRejections(t *testing.T) {
 				t.Fatalf("want %q, got %v", tc.want, err)
 			}
 		})
+	}
+}
+
+// The uint variants, int count results stored and computed with, and
+// RotateLeft counts that are not constants are ordinary Check-accepted code.
+// Their results are compared with Go in TestBitsDifferentialAgainstGo.
+func TestBitsCheckAcceptsUintAndIntValues(t *testing.T) {
+	for name, body := range map[string]string{
+		"uint Add":       `sum, carry := bits.Add(1, 2, 0); return uint64(sum + carry)`,
+		"uint Mul":       `h, l := bits.Mul(1, 2); return uint64(h ^ l)`,
+		"uint Div":       `q, r := bits.Div(0, 7, 2); return uint64(q + r)`,
+		"uint counts":    `return uint64(bits.LeadingZeros(1) + bits.TrailingZeros(2) + bits.OnesCount(3) + bits.Len(4))`,
+		"uint Rem":       `return uint64(bits.Rem(1, 2, 3))`,
+		"uint permute":   `var u uint = bits.UintSize; return uint64(bits.Reverse(u) ^ bits.ReverseBytes(u) ^ bits.RotateLeft(u, -1))`,
+		"variable k16":   `return uint64(bits.RotateLeft16(uint16(i[0]), len(i)))`,
+		"variable k":     `return bits.RotateLeft64(1, len(i))`,
+		"count result k": `return uint64(bits.RotateLeft8(i[0], bits.Len64(7)))`,
+		"negative k":     `k := -int(i[0]); return uint64(bits.RotateLeft32(7, k))`,
+		"int variable":   `n := bits.Len64(7); return uint64(n)`,
+		"int var decl":   `var n = bits.OnesCount8(i[0]); return uint64(n)`,
+		"int arithmetic": `return uint64(bits.Len64(7) - 1)`,
+	} {
+		t.Run(name, func(t *testing.T) {
+			source := "package main\nimport \"math/bits\"\nfunc Process(s, i []byte) uint64 {\n" + body + "\n}\n"
+			if _, err := CompileSources([]Source{{"p.go", []byte(source)}}); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+	source := "package main\nimport \"math/bits\"\nfunc n(x uint64) int { return bits.Len64(x) }\nfunc Process(s, i []byte) uint64 { return uint64(n(1)) }\n"
+	if _, err := CompileSources([]Source{{"p.go", []byte(source)}}); err != nil {
+		t.Fatal(err)
 	}
 }
 

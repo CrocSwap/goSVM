@@ -52,7 +52,7 @@ func TestValueTypeRejections(t *testing.T) {
 	for name, code := range map[string]string{
 		"hidden context": `import "gosvm/solana";type Box struct { C solana.Context };func Process(c solana.Context)uint64{return 0}`,
 		"slice field":    `type Box struct { B []byte };func Process(s,i []byte)uint64{return 0}`,
-		"signed named":   `type Bad int;func Process(s,i []byte)uint64{var b Bad;return uint64(b)}`,
+		"float named":    `type Bad float64;func Process(s,i []byte)uint64{var b Bad;return uint64(b)}`,
 		"comparison":     `type V struct { N uint64 };func Process(s,i []byte)uint64{a:=V{};if a==a{return 0};return 1}`,
 		"conversion":     `type V struct { N uint64 };type W V;func Process(s,i []byte)uint64{a:=V{};b:=W(a);return b.N}`,
 		"alias":          `type V = uint64;func Process(s,i []byte)uint64{return 0}`,
