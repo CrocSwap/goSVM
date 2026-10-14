@@ -289,10 +289,14 @@ func RunGeneral(ctx context.Context, elf, fixturePath, reportPath string, out io
 	if e != nil {
 		return e
 	}
-	report, e := json.MarshalIndent(map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "fixture_format": FixtureFormat, "runtime_engine": "litesvm", "runtime_version": s.Identity,
+	fields := map[string]any{"schema": 1, "target_profile": opts.Profile, "platform_tools": opts.PlatformTools, "network_validation": false, "fixture_format": FixtureFormat, "runtime_engine": "litesvm", "runtime_version": s.Identity,
 		"isolation": "initial VM checkpoint plus declared overrides before each scenario; ordered steps share state", "selection": opts.Pattern, "cases": results,
 		"elf_sha256": images["program"], "program_sha256": images, "fixtures_sha256": fmt.Sprintf("%x", sha256.Sum256(fixtureBytes)), "runner_sha256": fmt.Sprintf("%x", sha256.Sum256(runnerBytes)),
-		"runner": values[0], "native_programs": suite.NativePrograms, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}, "", "  ")
+		"runner": values[0], "native_programs": suite.NativePrograms, "startup_seconds": startupSeconds, "fixture_seconds": fixtureSeconds, "total_seconds": time.Since(started).Seconds()}
+	if opts.ELFSource != "" {
+		fields["elf_source"] = opts.ELFSource
+	}
+	report, e := json.MarshalIndent(fields, "", "  ")
 	if e != nil {
 		return e
 	}

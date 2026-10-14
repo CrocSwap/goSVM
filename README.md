@@ -76,7 +76,8 @@ or scaffold with `gosvm new -schema 2 -sdk 2 my-program`.
 
 `gosvm test --svm` runs the compiled program for every target in a local SVM
 runtime, choosing the matching managed runner; runners are installed from
-pinned local packages for now (`gosvm runner install -archive ...`). `gosvm deploy`
+pinned local packages for now (`gosvm runner install -archive ...`); add
+`-target solana -elf other.so` to test an ELF from another backend. `gosvm deploy`
 reads the cluster's live feature gates before deploying with a dedicated
 per-network payer, and `gosvm call` simulates or sends an instruction.
 Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with

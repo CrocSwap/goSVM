@@ -101,6 +101,28 @@ report paths. Generated build artifacts remain untracked and can be rebuilt.
 Low-level `gosvm -target <profile> -o <explicit-output> source.go|directory` is also
 available; callers own output isolation there. Raw `-arch v0|v3` keeps its old meaning.
 
+## Testing an externally built ELF
+
+A program built by a different backend can run a project's fast SVM tests:
+
+```sh
+gosvm test --svm -target solana -elf path/to/other.so
+gosvm test --svm -target solana -elf path/to/other.so -svm-fixtures testdata/lifecycle.json
+```
+
+`-elf` requires `-svm` and exactly one target: a project configured for several
+targets needs `-target`. The ELF header (e_machine and e_flags) must match that
+target's profile (fogo-v0 and solana-v3 ELFs are not interchangeable), checked
+before any other work. goSVM still generates and checks the project and runs the
+native Go tests, which exercise the source rather than the ELF; it does not
+compile, so no backend is needed and `-llvm`/`-no-cache` have no effect. The
+runner is selected as usual for the target. The report is written to
+`build/external/<profile>/svm-results.json`, apart from compiler outputs, and
+records `"elf_source": "external"` with the ELF's `elf_sha256`; reports for
+goSVM-built programs omit `elf_source`. Passing fixtures show the ELF matches the
+fixtures' expected state and errors in the local runner, not that it is
+equivalent to the goSVM build or compatible with a public network.
+
 ## Explicit migration
 
 Existing configurations without `target` remain exactly v1.51 experimental v3.

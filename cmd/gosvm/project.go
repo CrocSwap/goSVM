@@ -60,6 +60,10 @@ Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed runner for
 the target (solana-v3 0.6.0; fogo-v0/legacy 0.5.0), PATH.
 Use -svm-sysvars <JSON file> for explicit Clock/Rent values in fast tests.
 Use -svm-fixtures <JSON file> for general multi-account project fixtures.
+test --svm -elf <program.so> tests an externally built ELF instead of compiling
+(native Go tests still run; one target, so add -target when several are configured;
+the header must match the target). Report: build/external/<profile>/svm-results.json
+with "elf_source": "external" and the ELF's elf_sha256.
 Programs are copied to build/fogo/program.so and build/solana/program.so;
 isolated outputs/reports are under build/<profile>/<tools>/<backend>/deps-<dependencies>/.
 Historical outputs retain build/program.so and build/svm-results.json.
@@ -156,7 +160,7 @@ func projectCommand(args []string) error {
 	sbfValue, noCacheValue := false, false
 	svmValue := false
 	showTimings := false
-	svmPattern, svmRunner, svmSysvars, svmFixtures := "", "", "", ""
+	svmPattern, svmRunner, svmSysvars, svmFixtures, externalELF := "", "", "", "", ""
 	llvm, sbf, noCache := &llvmValue, &sbfValue, &noCacheValue
 	if command == "build" || command == "test" || command == "doctor" {
 		fs.StringVar(llvm, "llvm", *llvm, "platform-tools/llvm directory")
@@ -172,6 +176,7 @@ func projectCommand(args []string) error {
 		fs.StringVar(&svmRunner, "svm-runner", "", "runner binary (or GOSVM_TEST_RUNNER/PATH)")
 		fs.StringVar(&svmSysvars, "svm-sysvars", "", "explicit clock/rent JSON file (requires -svm)")
 		fs.StringVar(&svmFixtures, "svm-fixtures", "", "general multi-account fixture JSON file (requires -svm)")
+		fs.StringVar(&externalELF, "elf", "", "test this externally built SBF ELF instead of compiling (requires -svm and one target)")
 	}
 	parseArgs := args[1:]
 	var testArgs []string
@@ -194,8 +199,8 @@ func projectCommand(args []string) error {
 	if *sbf && svmValue {
 		return fmt.Errorf("choose either -sbf or -svm")
 	}
-	if !svmValue && (svmPattern != "" || svmRunner != "" || svmSysvars != "" || svmFixtures != "") {
-		return fmt.Errorf("-svm-run, -svm-runner, -svm-sysvars, and -svm-fixtures require -svm")
+	if !svmValue && (svmPattern != "" || svmRunner != "" || svmSysvars != "" || svmFixtures != "" || externalELF != "") {
+		return fmt.Errorf("-svm-run, -svm-runner, -svm-sysvars, -svm-fixtures, and -elf require -svm")
 	}
 	if svmFixtures != "" && svmSysvars != "" {
 		return fmt.Errorf("general fixtures declare sysvars in their JSON; choose -svm-fixtures or -svm-sysvars")
@@ -237,6 +242,27 @@ func projectCommand(args []string) error {
 	if *sbf && len(profiles) > 1 {
 		return fmt.Errorf("validator tests (-sbf) run one target; add -target fogo or -target solana")
 	}
+	if externalELF != "" {
+		if len(profiles) != 1 {
+			var names []string
+			for _, p := range profiles {
+				names = append(names, p.Name)
+			}
+			return fmt.Errorf("-elf tests one externally built program but the project has targets %s; add -target <name> naming the ELF's target", strings.Join(names, ", "))
+		}
+		// Check the header before generation and native tests so a mismatched
+		// artifact fails fast; the SVM run validates it again.
+		data, err := os.ReadFile(externalELF)
+		if err != nil {
+			return fmt.Errorf("-elf: %w", err)
+		}
+		if err = profiles[0].ValidateProgram(data); err != nil {
+			return fmt.Errorf("-elf %s does not match target %s: %w", externalELF, profiles[0].Name, err)
+		}
+		if err = os.Remove(externalReportPath(*dir, profiles[0])); err != nil && !os.IsNotExist(err) {
+			return err
+		}
+	}
 	explicitLLVM := false
 	fs.Visit(func(f *flag.Flag) {
 		if f.Name == "llvm" {
@@ -252,7 +278,7 @@ func projectCommand(args []string) error {
 	}
 	selected := profiles[0]
 	*llvm = llvmFor(selected)
-	building := command == "build" || command == "test" && (*sbf || svmValue)
+	building := command == "build" || command == "test" && (*sbf || svmValue) && externalELF == ""
 	outputDirs := map[string]string{}
 	for _, p := range profiles {
 		outputDir := filepath.Join(*dir, "build")
@@ -415,6 +441,13 @@ func projectCommand(args []string) error {
 			}
 			return name
 		}
+		if externalELF != "" {
+			if e := testExternal(ctx, *dir, p, externalELF, phase, &timings,
+				sbftest.FastOptions{Runner: svmRunner, Pattern: svmPattern, Sysvars: svmSysvars, Fixtures: svmFixtures}); e != nil {
+				return e
+			}
+			continue
+		}
 		if e := buildTarget(ctx, *dir, p, llvmFor(p), outputDirs[p.Name], phase, &timings, *noCache, *sbf, svmValue, start,
 			sbftest.FastOptions{Runner: svmRunner, Pattern: svmPattern, Sysvars: svmSysvars, Fixtures: svmFixtures}); e != nil {
 			if len(profiles) == 1 {
@@ -469,6 +502,28 @@ func buildTarget(ctx context.Context, dir string, p target.Profile, llvm, output
 		})
 	}
 	return e
+}
+
+// externalReportPath keeps reports for externally supplied ELFs apart from the
+// compiler's per-backend output directories.
+func externalReportPath(dir string, p target.Profile) string {
+	return filepath.Join(dir, "build", "external", p.Name, "svm-results.json")
+}
+
+// testExternal runs the fast SVM fixtures against an ELF that goSVM did not
+// build. Nothing is compiled and no backend is required.
+func testExternal(ctx context.Context, dir string, p target.Profile, elf string, phase func(string) string, timings *commandTimings, opts sbftest.FastOptions) error {
+	report := externalReportPath(dir, p)
+	a, e := filepath.Abs(elf)
+	if e != nil {
+		return e
+	}
+	if b, _ := filepath.Abs(report); a == b {
+		return fmt.Errorf("-elf must not be the report path %s", report)
+	}
+	fmt.Printf("Testing externally supplied %s ELF %s (not built by goSVM)\n", p.Name, elf)
+	opts.Profile, opts.PlatformTools, opts.ReportPath, opts.ELFSource = p.Name, p.Tools, report, "external"
+	return timings.measure(phase("svm_tests"), func() error { return sbftest.RunFast(ctx, dir, elf, os.Stdout, opts) })
 }
 
 func copyAtomic(src, dst string) error {
