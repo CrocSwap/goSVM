@@ -55,7 +55,8 @@ Module resolution remains offline and never executes package initialization.
 ## Packed wire format and layout history
 
 Wire structs encode fields in declaration order with no native padding. Supported
-fields are byte/uint32/uint64 (including named versions), bounded scalar arrays,
+fields are byte/uint16/uint32/uint64 (including named versions; little-endian, 1/2/4/8
+bytes, no alignment padding), bounded scalar arrays,
 and nested exported value structs. Embedding, tags, signed values, boolean wire
 fields, pointer/slice fields, arrays of structs and nested arrays are rejected.
 Each encoded layout, including its eight-byte discriminator, is capped at 1,024
@@ -121,9 +122,10 @@ program account. Seeds are structured data, not arbitrary Go expressions:
 ```
 
 `key` uses a named account's runtime key; `bytes` uses at most 32 hex-encoded bytes
-(including an empty seed). `byte`, `uint32` and `uint64` name exported canonical
-state fields or `args` fields of the matching underlying width. Integer encoding
-is little-endian. There are at most 16 seeds including the explicit bump; no
+(including an empty seed). `byte`, `uint16`, `uint32` and `uint64` name exported
+canonical state fields or `args` fields of the matching underlying width. Integer
+encoding is little-endian (a `uint16` seed is two bytes; the generated adapter
+encodes it itself, so the pinned SDK snapshot is unchanged). There are at most 16 seeds including the explicit bump; no
 implicit bump search is generated. All argument/state fields are type-checked
 before any artifacts change. Derivation failure or address mismatch returns 6008.
 Handlers still build signing seeds explicitly with the checked PDA API.

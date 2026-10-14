@@ -1,7 +1,7 @@
 # Experimental fixed-size arrays
 
 The first milestone 2 compiler increment supports fixed-size arrays of `byte`,
-`uint32`, `uint64`, `bool`, and named versions of those scalar types. Named array
+`uint16`, `uint32`, `uint64`, `bool`, and named versions of those scalar types. Named array
 types such as `type PublicKey [32]byte` are supported. This is compiler support;
 the schema-1 project generator still accepts only flat unsigned wire fields.
 [Shared-package imports](GO_PACKAGES.md) and [schema-2 scalar-array codecs](SCHEMA2.md)
@@ -35,8 +35,9 @@ for failed accesses, including a successful first instruction followed by a
 bounds failure. Zero-length arrays have no accessible elements.
 
 This increment limits each array value to **1,024 bytes**. Arrays of structs,
-nested arrays, signed/pointer elements, slice-to-array conversions and `range`
-remain unsupported. [Constrained array pointers](GO_POINTERS.md), indexed
+nested arrays, signed/pointer elements and slice-to-array conversions remain
+unsupported. [`range`](GO_CONTROL.md#range-loops) iterates over arrays (over a copy
+when a value variable is used) and pointers to arrays. [Constrained array pointers](GO_POINTERS.md), indexed
 increment/decrement and [borrowed byte views](GO_VIEWS.md) are now supported. Diagnostics identify Go source
 locations. The per-value limit does not guarantee that all copies, locals and
 calls in a function fit its SBF stack frame; LLVM/VM stack limits still apply.

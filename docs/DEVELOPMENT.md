@@ -454,11 +454,16 @@ accounts in SDK 1 and [32 in SDK 2](../docs/ACCOUNT_DECODER32.md);
 legacy ABI requires one owned writable 24-byte state and a 16-byte instruction.
 Only the original experiment additionally tests v0 (`SBF_ARCH=v0 make verify`).
 
-Supported: `uint8`/`byte`, `uint32`, `uint64`, `bool`, byte slices, constants, local
+Supported: `uint8`/`byte`, `uint16`, `uint32`, `uint64`, `bool`, byte slices, constants, local
 zero values, direct functions with unnamed results, indexing, `len`, unsigned
-arithmetic/conversions, comparisons, `if`, conditional/three-clause `for`, unlabeled
+arithmetic/conversions, comparisons, `if`, conditional/three-clause `for`, Go 1.22
+`range` over unsigned counts, scalar arrays, array pointers and byte slices, unlabeled
 `break`/`continue`, single or multiple `=`/`:=`, expression `switch`, and variable
-`++`/`--`. See [return/assignment/control semantics](../docs/GO_CONTROL.md). Context is opaque in SBF: it can
+`++`/`--`. Unsigned arithmetic wraps at the operand width (computed in 64 bits and
+truncated); shifts by the width or more give zero. `uint16` is admitted wherever
+`uint8`/`uint32` are (storage, fields, arrays, pointers, constants, conversions); the
+[uint16 fixture](../examples/uint16-values/program.go) is checked against ordinary Go
+on the host and on SBF. See [range semantics and the `int` key rule](GO_CONTROL.md#range-loops). See [return/assignment/control semantics](../docs/GO_CONTROL.md). Context is opaque in SBF: it can
 be passed/copied, but not constructed, zero-initialized or accessed through fields.
 Native tests can construct it with callbacks.
 
@@ -502,7 +507,7 @@ panics as aborts. The `uint` and 16-bit variants are rejected. See
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables
 and arithmetic, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
 strings, generics, closures/function values, recursion, named results, variadics,
-`range`, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds and
+range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds and
 division failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.

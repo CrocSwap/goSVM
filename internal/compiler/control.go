@@ -98,3 +98,104 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 	}
 	g.line("} while (0);\n}")
 }
+
+// rangeLoop lowers a Go 1.22 range loop that Check admitted. The operand is
+// evaluated once before the loop and a hidden u64 counter drives iteration,
+// so assigning to the iteration variables never changes it. Iteration
+// variables are declared inside the C loop body: fresh in every iteration.
+//
+//   - integers: the count is fixed at loop start.
+//   - arrays with a value variable: the array is copied once (Go ranges over
+//     a copy); pointers to arrays are read through, checking nil per element.
+//   - arrays without a value variable: len is constant and the array is never
+//     loaded; only calls on the operand path run (no copy, no nil check).
+//   - byte slices: the header (and so the length) is fixed at loop start;
+//     elements are read from the shared storage in each iteration.
+func (g *generator) rangeLoop(s *ast.RangeStmt) {
+	label := ""
+	if containsContinue(s.Body) {
+		g.next++
+		label = fmt.Sprintf("continue%d", g.next)
+	}
+	g.continueLabels = append(g.continueLabels, label)
+	defer func() { g.continueLabels = g.continueLabels[:len(g.continueLabels)-1] }()
+	g.line("{")
+	xt := g.info.Types[s.X].Type
+	key, value := rangeTarget(s.Key), rangeTarget(s.Value)
+	var bound string
+	var element func(string) string
+	if a, ok := arrayValue(xt); ok {
+		bound = fmt.Sprintf("%dULL", a.Len())
+		if value == nil {
+			g.rangeOperandCalls(s.X)
+		} else if p, ok := pointer(xt); ok {
+			x := g.expr(s.X)
+			element = func(i string) string { return fmt.Sprintf("%s->items[%s]", g.checkedPointer(s.X, p, x), i) }
+		} else {
+			x := g.expr(s.X) // an array-valued expression is a fresh by-value copy
+			element = func(i string) string { return fmt.Sprintf("%s.items[%s]", x, i) }
+		}
+	} else if _, ok := xt.Underlying().(*types.Slice); ok {
+		x := g.expr(s.X)
+		bound = "(u64)" + x + ".len"
+		element = func(i string) string { return fmt.Sprintf("%s.ptr[%s]", x, i) }
+	} else if _, ok := xt.Underlying().(*types.Basic); ok {
+		bound = "(u64)" + g.expr(s.X)
+	} else {
+		g.unchecked(s.X)
+	}
+	g.next++
+	counter := fmt.Sprintf("range%d", g.next)
+	g.line("for (u64 %s=0;%s<%s;%s++) {", counter, counter, bound, counter)
+	object := func(id *ast.Ident) types.Object {
+		if s.Tok == token.DEFINE {
+			return g.info.Defs[id]
+		}
+		return g.info.Uses[id]
+	}
+	assign := func(id *ast.Ident, v string) {
+		o := object(id)
+		if s.Tok == token.DEFINE {
+			g.line("%s %s = %s;", g.variable(id, o.Type()), g.name(o), v)
+		} else {
+			g.line("%s = %s;", g.name(o), v)
+		}
+	}
+	read := ""
+	if value != nil {
+		// Read the element before any store, as an assignment would.
+		read = g.temp(value, object(value).Type(), element(counter))
+	}
+	if key != nil {
+		assign(key, "("+g.variable(key, object(key).Type())+")"+counter)
+	}
+	if value != nil {
+		assign(value, read)
+	}
+	g.block(s.Body)
+	if label != "" {
+		g.line("%s: ;", label)
+	}
+	g.line("}\n}")
+}
+
+// rangeOperandCalls runs the calls on an index-only array range operand
+// without loading the array or dereferencing a pointer, as Go does.
+func (g *generator) rangeOperandCalls(e ast.Expr) {
+	switch e := e.(type) {
+	case *ast.Ident:
+	case *ast.ParenExpr:
+		g.rangeOperandCalls(e.X)
+	case *ast.SelectorExpr:
+		g.rangeOperandCalls(e.X)
+	case *ast.StarExpr:
+		g.rangeOperandCalls(e.X)
+	case *ast.CallExpr:
+		if g.info.Types[e.Fun].IsType() {
+			g.unchecked(e)
+		}
+		g.expr(e)
+	default:
+		g.unchecked(e)
+	}
+}

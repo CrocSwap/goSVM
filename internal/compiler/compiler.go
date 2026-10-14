@@ -122,6 +122,11 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		g.WriteString("#define GOSVM_SLICE_VIEWS 1\n")
 	}
 	g.WriteString(prelude)
+	if usesUint16(files, g.info) {
+		// Only programs that use uint16 get the typedef, so every other
+		// program's emitted C is byte-identical to earlier compilers.
+		g.WriteString(uint16Prelude)
+	}
 	if hasViews {
 		g.WriteString(viewRuntime)
 	}
@@ -293,6 +298,8 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 		switch b.Kind() {
 		case types.Uint8:
 			return "u8"
+		case types.Uint16:
+			return "u16"
 		case types.Uint32:
 			return "u32"
 		case types.Uint64, types.UntypedInt:
@@ -465,6 +472,8 @@ func (g *generator) expr(e ast.Expr) string {
 			switch g.ctype(e, tv.Type) {
 			case "u8":
 				bits = 8
+			case "u16":
+				bits = 16
 			case "u32":
 				bits = 32
 			case "u64":
@@ -695,6 +704,8 @@ func (g *generator) stmt(s ast.Stmt) {
 		g.line("}")
 	case *ast.ForStmt:
 		g.loop(s)
+	case *ast.RangeStmt:
+		g.rangeLoop(s)
 	case *ast.SwitchStmt:
 		g.switchStatement(s)
 	case *ast.IncDecStmt:

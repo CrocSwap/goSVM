@@ -126,8 +126,10 @@ func TestArrayRejections(t *testing.T) {
 		"slice element":    `type K [2][]byte;func Process(s,i []byte)uint64{return 0}`,
 		"slice conversion": `func Process(s,i []byte)uint64{a:=[24]byte(s);return uint64(a[0])}`,
 		"word slice":       `func Process(s,i []byte)uint64{a:=[32]uint64{};b:=a[:];return b[0]}`,
-		"array range":      `func Process(s,i []byte)uint64{a:=[32]byte{};for _,v:=range a {s[0]=v};return 0}`,
-		"pointer element":  `type K [2]*uint64;func Process(s,i []byte)uint64{return 0}`,
+		// Value ranges over arrays are supported (range_test.go); an index-only
+		// range over a literal is not.
+		"literal range":   `func Process(s,i []byte)uint64{for j:=range [32]byte{} {s[j]=0};return 0}`,
+		"pointer element": `type K [2]*uint64;func Process(s,i []byte)uint64{return 0}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Compile("arrays-reject.go", []byte("package p;"+source))

@@ -296,6 +296,8 @@ func (c *checker) stmt(s ast.Stmt) {
 			c.stmt(s.Post)
 		}
 		c.loops--
+	case *ast.RangeStmt:
+		c.rangeStatement(s)
 	case *ast.SwitchStmt:
 		c.switchStatement(s)
 	case *ast.IncDecStmt:
@@ -360,6 +362,107 @@ func (c *checker) switchStatement(s *ast.SwitchStmt) {
 			c.stmt(statement)
 		}
 	}
+}
+
+// rangeStatement admits Go 1.22 range loops over unsigned integers (and
+// untyped constants or int len/cap results), fixed scalar arrays, pointers to
+// them and byte slices. Iteration variables are fresh in every iteration. An
+// int key (from an array, pointer, slice, untyped constant or int count) is
+// the only int variable the subset admits; typeRule admits its uses exactly as
+// it admits a len/cap result, and variableRule keeps it out of other storage.
+func (c *checker) rangeStatement(s *ast.RangeStmt) {
+	xt := c.info.Types[s.X].Type
+	switch u := xt.Underlying().(type) {
+	case *types.Basic:
+		if u.Info()&types.IsString != 0 {
+			c.fail(s.X, "range over strings unsupported")
+		}
+		if u.Info()&types.IsInteger == 0 {
+			c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+		}
+	case *types.Map:
+		c.fail(s.X, "range over maps unsupported")
+	case *types.Chan:
+		c.fail(s.X, "range over channels unsupported")
+	case *types.Signature:
+		c.fail(s.X, "range over functions unsupported")
+	case *types.Slice:
+		if !types.Identical(u.Elem(), types.Typ[types.Uint8]) {
+			c.fail(s.X, "range over slices requires byte slices")
+		}
+	case *types.Array:
+	case *types.Pointer:
+		if _, ok := u.Elem().Underlying().(*types.Array); !ok {
+			c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+		}
+	default:
+		c.fail(s.X, "range requires an unsigned integer, a scalar array, a pointer to one, or a byte slice")
+	}
+	if s.Tok == token.ASSIGN {
+		for _, target := range []ast.Expr{s.Key, s.Value} {
+			if _, ok := target.(*ast.Ident); target != nil && !ok {
+				c.fail(target, "range assignment targets must be local variables")
+			}
+		}
+	}
+	a, isArray := arrayValue(xt)
+	if isArray && rangeTarget(s.Value) == nil {
+		// Without a value variable Go never loads the array: only the calls
+		// on the operand path run. Conversions and literals would be loaded.
+		c.rangeOperandPath(s.X)
+	}
+	c.expr(s.X)
+	if p, ok := pointer(xt); ok {
+		c.checkedPointer(s.X, p)
+	}
+	if isArray {
+		c.lookupArray(s.X, a)
+	}
+	if s.Tok == token.DEFINE {
+		for _, target := range []ast.Expr{s.Key, s.Value} {
+			id := rangeTarget(target)
+			if id == nil {
+				continue
+			}
+			t := c.info.Defs[id].Type()
+			if target == s.Key && types.Identical(t, types.Typ[types.Int]) {
+				c.typeRule(id, t)
+				continue
+			}
+			c.variableRule(id, t)
+		}
+	}
+	c.loops++
+	c.block(s.Body)
+	c.loops--
+}
+
+// rangeOperandPath admits the operand of an index-only array range: locals,
+// fields, dereferences and calls.
+func (c *checker) rangeOperandPath(e ast.Expr) {
+	switch e := e.(type) {
+	case *ast.Ident:
+	case *ast.ParenExpr:
+		c.rangeOperandPath(e.X)
+	case *ast.SelectorExpr:
+		c.rangeOperandPath(e.X)
+	case *ast.StarExpr:
+		c.rangeOperandPath(e.X)
+	case *ast.CallExpr:
+		if c.info.Types[e.Fun].IsType() {
+			c.fail(e, "index-only range over an array conversion unsupported; range over the operand")
+		}
+	default:
+		c.fail(e, "index-only range over an array requires a variable, field, dereference or call")
+	}
+}
+
+// rangeTarget is a range iteration variable, or nil when absent or blank.
+func rangeTarget(e ast.Expr) *ast.Ident {
+	if id, ok := e.(*ast.Ident); ok && id.Name != "_" {
+		return id
+	}
+	return nil
 }
 
 func (c *checker) assignMany(node ast.Node, lhs []ast.Expr, rhs []ast.Expr, tok token.Token) {
@@ -553,7 +656,13 @@ func (c *checker) expr(e ast.Expr) {
 		}
 		c.expr(e.X)
 		switch e.Op {
-		case token.NOT, token.ADD, token.XOR:
+		case token.NOT, token.ADD:
+		case token.XOR:
+			// ^ on an int (len/cap result or range key) would yield a negative
+			// value that the unsigned comparisons below cannot represent.
+			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
+				c.fail(e, "signed arithmetic unsupported")
+			}
 		case token.SUB:
 			if b, ok := tv.Type.Underlying().(*types.Basic); !ok || b.Info()&types.IsUnsigned == 0 {
 				c.fail(e, "signed negation unsupported")
@@ -607,7 +716,7 @@ func (c *checker) binary(e *ast.BinaryExpr, tv types.TypeAndValue) {
 		// Shifts are defined for the unsigned widths only.
 		c.typeRule(e, tv.Type)
 		b, ok := tv.Type.Underlying().(*types.Basic)
-		if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.UntypedInt) {
+		if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint16 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.UntypedInt) {
 			c.fail(e, "signed shifts unsupported")
 		}
 		c.typeRule(e, tv.Type)

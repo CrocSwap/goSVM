@@ -314,6 +314,8 @@ func (m *multiModel) codecFields(out *bytes.Buffer, fields []WireField, value, b
 			switch u.Elem().Underlying().(*types.Basic).Kind() {
 			case types.Uint8:
 				size = 1
+			case types.Uint16:
+				size = 2
 			case types.Uint32:
 				size = 4
 			case types.Uint64:

@@ -47,8 +47,9 @@ func recoverCompileError(err *error) {
 // on-chain value representation. Check applies them; the emitter only maps
 // already-certified types to C.
 
-// typeRule admits unsigned scalars (uint8, uint32, uint64), bool, untyped
-// integer/bool constants, int (only as the result of len/cap), byte slices,
+// typeRule admits unsigned scalars (uint8, uint16, uint32, uint64), bool,
+// untyped integer/bool constants, int (only as the result of len/cap or a
+// range key; variableRule keeps it out of all other storage), byte slices,
 // solana.Context, value structs, declared scalar arrays, declared
 // multiple-result tuples and pointers to admitted elements.
 func (f *frontend) typeRule(n ast.Node, t types.Type) {
@@ -80,7 +81,7 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	}
 	if b, ok := t.Underlying().(*types.Basic); ok {
 		switch b.Kind() {
-		case types.Uint8, types.Uint32, types.Uint64, types.UntypedInt, types.Bool, types.UntypedBool, types.Int:
+		case types.Uint8, types.Uint16, types.Uint32, types.Uint64, types.UntypedInt, types.Bool, types.UntypedBool, types.Int:
 			return
 		}
 	}
@@ -112,8 +113,8 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.Bool) {
-		f.fail(node, "array elements must be byte, uint32, uint64, bool, or named versions of those scalars")
+	if !ok || (b.Kind() != types.Uint8 && b.Kind() != types.Uint16 && b.Kind() != types.Uint32 && b.Kind() != types.Uint64 && b.Kind() != types.Bool) {
+		f.fail(node, "array elements must be byte, uint16, uint32, uint64, bool, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())
 	size := (&types.StdSizes{WordSize: 8, MaxAlign: 8}).Sizeof(a.Elem())

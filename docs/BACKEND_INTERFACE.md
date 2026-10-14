@@ -108,6 +108,12 @@ replays 312 programs recorded from the pre-split compiler (commit `dfcb8fc`) in
 
 For each program, `Check` must reject with exactly the recorded error, or accept
 when the old compiler accepted. `CompileProgram` must reproduce the recorded error
-or the SHA-256 of the emitted C. Separately, the full-swap ELFs built with
+or the SHA-256 of the emitted C. The recording is never edited: programs whose
+verdict changed on purpose since (range loops and `uint16` became supported; the
+array-element message now names `uint16`) are listed with their new expected
+outcome in the test's `corpusChanges` table. `CheckedProgram` did not change shape
+for these additions; a backend must lower `*ast.RangeStmt` as described in
+[GO_CONTROL.md](GO_CONTROL.md#range-loops) and `uint16` as wrapping 16-bit
+arithmetic. Separately, the full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.
