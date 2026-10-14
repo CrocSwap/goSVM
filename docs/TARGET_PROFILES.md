@@ -163,6 +163,12 @@ covers the same token swap, managed lifecycle, Clock controls and failures/rollb
 on both targets, plus the actual v0 Go/Bend image. **No Fogo or Solana public-network
 deployment or transaction acceptance has been established by this work.**
 
+Uncached builds are byte-identical on this host: `-no-cache` rebuilds of the
+full token swap and `clock2` from two different absolute paths, with fresh Go
+caches, produce the same ELF for `fogo-v0` and `solana-v3` and embed no build
+path or username ([fresh-rebuild evidence](../results/compiler/2026-10-14-v157-rebuild/README.md),
+`scripts/verify_rebuild.py`). Other host packages are not covered.
+
 ## Deploy and call
 
 ```sh
