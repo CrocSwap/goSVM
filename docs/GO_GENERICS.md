@@ -52,10 +52,15 @@ func Process(s, i []byte) uint64 {
   (`func (p Pair[K, V]) Flip() Pair[V, K]`).
 - Generic calls inside generic code, including across packages: a library
   package's `Stack[T]` can be instantiated with the importing package's types.
+- Allocation in generic code: `make([]T, n)`, `append` on `[]T`, `new(T)`,
+  `[]T{...}`, and generic structs with pointer or slice fields. Escape analysis
+  runs per instance, so each instance moves exactly its own escaping locals to
+  the heap ([allocation](GO_ALLOCATION.md#with-generics-and-signed-integers)).
 
-Every type argument must be a type the subset can store: an unsigned scalar,
-`bool`, a named scalar, a value struct, a scalar array of at most 1,024 bytes,
-a byte slice, or a pointer to an admitted element. Each instance's body must
+Every type argument must be a type the subset can store: an integer scalar
+(signed or unsigned), `bool`, a named scalar, a value struct (including one
+with pointer or slice fields), a scalar array of at most 1,024 bytes, a slice
+of an admitted element, or a pointer to an admitted element. Each instance's body must
 then satisfy every subset rule with the arguments substituted; for example
 `Eq[T comparable]` instantiated with a struct is rejected because struct
 comparison is unsupported, while `Eq[[4]byte]` is accepted.
@@ -141,9 +146,9 @@ instance and type-instance symbol; as for all code, local temporaries
   error in the generated adapter (`cannot use generic type model.Boxed[T any]
   without instantiation`); a field of an instantiated generic type is
   `wire field Inner has generic type ...; generic types are unsupported in wire layouts`.
-- Everything the subset rejects for ordinary code (struct fields of slice or
-  pointer type, arrays of structs, signed integers, allocation) is rejected in
-  instances too.
+- Everything the subset rejects for ordinary code (arrays of structs or
+  pointers, pointers to slices, Context fields, slices of zero-size elements)
+  is rejected in instances too.
 
 No trap or error code was added; instances fail exactly as the equivalent
 hand-written code does ([error contract](ERROR_CONTRACT.md)).

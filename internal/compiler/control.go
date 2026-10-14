@@ -110,7 +110,7 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 //     a copy); pointers to arrays are read through, checking nil per element.
 //   - arrays without a value variable: len is constant and the array is never
 //     loaded; only calls on the operand path run (no copy, no nil check).
-//   - byte slices: the header (and so the length) is fixed at loop start;
+//   - slices: the header (and so the length) is fixed at loop start;
 //     elements are read from the shared storage in each iteration.
 func (g *generator) rangeLoop(s *ast.RangeStmt) {
 	label := ""
@@ -140,6 +140,10 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 		x := g.expr(s.X)
 		bound = "(u64)" + x + ".len"
 		element = func(i string) string { return fmt.Sprintf("%s.ptr[%s]", x, i) }
+		if !isByteSlice(xt) {
+			elem := g.variable(s.X, xt.(*types.Slice).Elem())
+			element = func(i string) string { return fmt.Sprintf("((%s *)%s.ptr)[%s]", elem, x, i) }
+		}
 	} else if _, ok := xt.Underlying().(*types.Basic); ok {
 		n := g.expr(s.X)
 		bound = "(u64)" + n
@@ -161,7 +165,9 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 	}
 	assign := func(id *ast.Ident, v string) {
 		o := object(id)
-		if s.Tok == token.DEFINE {
+		if s.Tok == token.DEFINE && g.moved[o] {
+			g.declareMoved(id, o, v)
+		} else if s.Tok == token.DEFINE {
 			g.line("%s %s = %s;", g.variable(id, o.Type()), g.name(o), v)
 		} else {
 			g.line("%s = %s;", g.name(o), v)

@@ -28,6 +28,9 @@ func (g *generator) sliceView(e *ast.SliceExpr) string {
 		// Pointer-to-array indirection is checked when building the view, after
 		// the explicit index calls; a plain array address has already been saved.
 		base = fmt.Sprintf("GOSVM_SLICE((%s)->items,%dULL)", g.checkedPointer(e, p, address), a.Len())
+		if !isByteSlice(g.info.Types[e].Type) {
+			base = fmt.Sprintf("GOSVM_SLICE((u8 *)(%s)->items,%dULL)", g.checkedPointer(e, p, address), a.Len())
+		}
 	} else {
 		base = g.expr(e.X)
 	}
@@ -42,6 +45,10 @@ func (g *generator) sliceView(e *ast.SliceExpr) string {
 	maximum := "(" + base + ").cap"
 	if e.Max != nil {
 		maximum = g.expr(e.Max)
+	}
+	if t := g.info.Types[e].Type; !isByteSlice(t) {
+		elem := g.variable(e, t.(*types.Slice).Elem())
+		return g.temp(e, t, fmt.Sprintf("gosvm_view_n(%s,(u64)%s,(u64)%s,(u64)%s,sizeof(%s))", base, lo, hi, maximum, elem))
 	}
 	return g.temp(e, g.info.Types[e].Type, fmt.Sprintf("gosvm_view(%s,(u64)%s,(u64)%s,(u64)%s)", base, lo, hi, maximum))
 }

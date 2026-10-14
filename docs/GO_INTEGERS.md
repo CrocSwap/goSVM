@@ -53,10 +53,17 @@ These follow the Go specification.
   (`var x int8 = 128`), constant negative shift counts (`x << -1`) and constant
   division by zero are compile errors with the `go/types` message.
 
-Still rejected: `uintptr`, floating-point and complex types, strings, slices
-of anything but bytes (`[]int8`), and builtins other than `len` and `cap`
-(including `min` and `max`). Compound assignment (`x += 1`) is still rejected,
-for every type.
+Still rejected: `uintptr`, floating-point and complex types, strings, and
+builtins other than `len`, `cap` and the [allocation](GO_ALLOCATION.md)
+builtins `new`, `make`, `append` and `copy` (including `min` and `max`).
+Compound assignment (`x += 1`) is still rejected, for every type.
+
+With [allocation](GO_ALLOCATION.md), slices of every integer type (`[]int8`,
+`[]int`, `[]uint`) work like any other slice. `make` lengths and capacities,
+indexes and slice bounds may have any integer type: a negative `make` length
+or capacity aborts where Go panics `makeslice: len out of range` (or `cap out
+of range`), and a negative index or bound aborts like any out-of-range one.
+`copy` returns an ordinary `int`.
 
 Schema 2 wire layouts accept `int8`, `int16`, `int32` and `int64` fields and
 seeds, as little-endian two's complement. `int` and `uint` are rejected in wire

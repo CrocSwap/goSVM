@@ -196,6 +196,15 @@ relationships cause argument decoding before relations; other instructions retai
 the validation order described above. Initialization follows PDA checks and
 precedes the handler; authorized closing follows handler success.
 
+## Heap budget
+
+Handlers may allocate ([GO_ALLOCATION.md](GO_ALLOCATION.md)). The optional
+top-level `"heap_bytes"` (schema 1 or 2) sets the invocation heap budget: a
+multiple of 1,024 from 32,768 to 262,144; omitted means 32,768. A larger budget
+is compiled into the program, and every transaction must then start with a
+ComputeBudget `RequestHeapFrame` for at least that many bytes; generated clients
+do not add it.
+
 ## Validation
 
 The [prototype evidence](../results/compiler/2026-10-05-schema2-supported/README.md)

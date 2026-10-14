@@ -71,8 +71,11 @@ with "elf_source": "external" and the ELF's elf_sha256.
 Programs are copied to build/fogo/program.so and build/solana/program.so;
 isolated outputs/reports are under build/<profile>/<tools>/<backend>/deps-<dependencies>/.
 Historical outputs retain build/program.so and build/svm-results.json.
-Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] source.go|directory
+Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] [-heap-bytes N] source.go|directory
 Raw -arch v0|v3 retains historical low-level semantics.
+Heap: gosvm.json "heap_bytes" (projects) or -heap-bytes (low level) sets the
+allocation budget, 32768..262144 in 1 KiB steps (default 32768); above 32768
+every transaction must send ComputeBudget RequestHeapFrame (docs/GO_ALLOCATION.md).
 `
 
 func llvmDefault() string {
@@ -227,11 +230,13 @@ func projectCommand(args []string) error {
 		}
 	}
 	var profiles []target.Profile
+	var buildOptions compiler.BuildOptions
 	if findErr == nil {
 		config, err := project.Load(*dir)
 		if err != nil {
 			return err
 		}
+		buildOptions.HeapBytes = config.HeapBytes
 		if profiles, err = config.TargetProfiles(); err != nil {
 			return err
 		}
@@ -455,7 +460,7 @@ func projectCommand(args []string) error {
 			}
 			continue
 		}
-		if e := buildTarget(ctx, *dir, p, llvmFor(p), outputDirs[p.Name], phase, &timings, *noCache, *sbf, svmValue, start,
+		if e := buildTarget(ctx, *dir, p, llvmFor(p), outputDirs[p.Name], phase, &timings, *noCache, *sbf, svmValue, start, buildOptions,
 			sbftest.FastOptions{Runner: svmRunner, Pattern: svmPattern, Sysvars: svmSysvars, Fixtures: svmFixtures}); e != nil {
 			if len(profiles) == 1 {
 				return e
@@ -473,16 +478,16 @@ func projectCommand(args []string) error {
 
 // buildTarget compiles one profile into its isolated output directory, publishes
 // a stable build/<network>/program.so copy, then runs any requested SBF tests.
-func buildTarget(ctx context.Context, dir string, p target.Profile, llvm, outputDir string, phase func(string) string, timings *commandTimings, noCache, sbf, svm bool, start time.Time, opts sbftest.FastOptions) error {
+func buildTarget(ctx context.Context, dir string, p target.Profile, llvm, outputDir string, phase func(string) string, timings *commandTimings, noCache, sbf, svm bool, start time.Time, options compiler.BuildOptions, opts sbftest.FastOptions) error {
 	if e := timings.measure(phase("backend_check"), func() error { return p.CheckBackend(llvm) }); e != nil {
 		return e
 	}
 	output := filepath.Join(outputDir, "program.so")
 	e := timings.measure(phase("sbf_build"), func() error {
 		if noCache {
-			return compiler.Build(dir, output, llvm, p.Name)
+			return compiler.BuildWithOptions(dir, output, llvm, p.Name, options)
 		}
-		return compiler.BuildCached(dir, output, llvm, p.Name)
+		return compiler.BuildCachedWithOptions(dir, output, llvm, p.Name, options)
 	})
 	if e != nil {
 		return e

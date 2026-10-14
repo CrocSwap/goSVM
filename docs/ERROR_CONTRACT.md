@@ -22,6 +22,17 @@ fails with no custom error code and the transaction rolls back.
 - `math/bits.Div64(hi, lo, y)`, `Div32` and `Div` with `y == 0` or `y <= hi`,
   and `Rem64`/`Rem32`/`Rem` with `y == 0`, where Go panics
   ([math/bits](GO_BITS.md)).
+- Out of memory: an allocation (`new`, `make`, a growing `append`, a slice
+  literal, an escaping `&T{...}` or a local moved to the heap) needs more than
+  the remaining invocation heap budget ([allocation](GO_ALLOCATION.md)).
+- `make` length or capacity out of range: `len > cap`, a negative length or
+  capacity of any signed integer type, or a capacity larger than 2^48 bytes,
+  where Go panics `makeslice: len out of range` or `cap out of range`.
+
+A program built with a heap budget above 32 KiB whose transaction did not
+request a large enough heap frame fails at its first allocation with a VM
+access violation (also `ProgramFailedToComplete`, consuming the remaining
+compute), not with the abort syscall.
 
 These are **not** traps:
 
@@ -139,3 +150,10 @@ Handler results propagate unchanged.
   division trap covers signed division, a negative shift count traps, and the
   wrapping, `MinInt / -1` and conversion rules above. The `math/bits` `uint`
   variants share the 64-bit traps (`Div`, `Rem`).
+- 2026-10-14: addition (allocation), no existing behaviour changed: out-of-memory
+  and `make` length/capacity-out-of-range traps; the heap-frame access
+  violation for budgets above 32 KiB.
+- 2026-10-14: signed integers, generics and allocation combined, no trap added
+  or changed: negative signed `make` lengths and capacities, indexes and slice
+  bounds use the traps above, and instances of generic code allocate and trap
+  exactly as the equivalent hand-written code.

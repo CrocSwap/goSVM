@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 
+	"gosvm/internal/compiler"
 	"gosvm/sdk"
 	"gosvm/solana"
 )
@@ -44,6 +45,10 @@ type Config struct {
 	Layouts       []WireDeclaration             `json:"layouts,omitempty"`
 	Instructions  []InstructionDeclaration      `json:"instructions,omitempty"`
 	Libraries     map[string]LibraryDeclaration `json:"libraries,omitempty"`
+	// HeapBytes is the invocation heap budget for allocation (0: 32 KiB).
+	// Larger budgets require every transaction to send ComputeBudget
+	// RequestHeapFrame; see docs/GO_ALLOCATION.md.
+	HeapBytes int `json:"heap_bytes,omitempty"`
 }
 
 func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.LegacySource))) }
@@ -91,6 +96,9 @@ func Load(dir string) (Config, error) {
 	}
 	if !nameRE.MatchString(c.Name) || !validModule(c.Module) {
 		return c, fmt.Errorf("invalid project name or Go module import path")
+	}
+	if e := compiler.ValidateHeapBytes(c.HeapBytes); e != nil {
+		return c, e
 	}
 	if c.SDKVersion != 0 && c.SDKVersion != 1 && c.SDKVersion != 2 || c.Schema == Schema && c.SDKVersion == 2 {
 		return c, fmt.Errorf("SDK version 2 requires schema 2; supported SDK versions are 1 and 2")

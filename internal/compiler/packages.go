@@ -31,6 +31,9 @@ type Program struct {
 	Metadata  []Source
 	Libraries []library.Binding
 	SDK       int // 0/2: current SDK; 1: exact legacy snapshot
+	// HeapBytes is the invocation heap budget for allocation; 0 selects the
+	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
+	HeapBytes int `json:",omitempty"`
 }
 
 // ReadProgram retains the file/directory input convention. Only user imports

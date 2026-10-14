@@ -51,9 +51,10 @@ func recoverCompileError(err *error) {
 // already-certified types to C.
 
 // typeRule admits integer scalars (uint8, uint16, uint32, uint64, uint, int8,
-// int16, int32, int64, int), bool, untyped integer/bool constants, byte
-// slices, solana.Context, value structs, declared scalar arrays, declared
-// multiple-result tuples and pointers to admitted elements.
+// int16, int32, int64, int), bool, untyped integer/bool constants, slices of
+// admitted elements (sliceRule), solana.Context, value structs, declared
+// scalar arrays, declared multiple-result tuples and pointers to admitted
+// elements.
 func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	if tuple, ok := t.(*types.Tuple); ok && tuple.Len() > 1 {
 		f.lookupResult(n, tuple)
@@ -66,7 +67,10 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	if isContext(t) {
 		return
 	}
-	if s, ok := t.(*types.Slice); ok && types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+	if s, ok := t.(*types.Slice); ok {
+		if !types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+			f.sliceRule(n, s)
+		}
 		return
 	}
 	if a, ok := t.Underlying().(*types.Array); ok {

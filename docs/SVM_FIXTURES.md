@@ -46,7 +46,7 @@ matched wire adapter in `build/anchor/go-token.so`; use that exact artifact.
 | `payer_seed` | 32-byte hex Ed25519 seed for the deterministic local fee payer; alias `payer` |
 | `signers` | Additional `{name, seed}` test signing keys |
 | `programs` | Additional `{name, address, elf, sha256}` images; checksum required |
-| `native_programs` | `{name, address}` aliases for the native System program; only `11111111111111111111111111111111` is supported |
+| `native_programs` | `{name, address}` aliases for runtime builtins: the System program `11111111111111111111111111111111` and the ComputeBudget program `ComputeBudget111111111111111111111111111111` (for example a `RequestHeapFrame` instruction, data `01` + little-endian u32 bytes; see [allocation](GO_ALLOCATION.md#heap-budget)) |
 | `accounts` | `{name, address, initial?}` account declarations |
 | `sysvars` | Optional complete typed Clock/Rent objects from the [runner protocol](SVM_RUNNER_PROTOCOL.md) |
 | `cases` | Named scenarios with optional `overrides` and ordered `steps` |

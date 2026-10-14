@@ -465,7 +465,7 @@ width (two's complement for signed types); signed division truncates toward zero
 (`MinInt / -1 == MinInt`); shifts take signed or unsigned counts, a negative count
 aborts, and shifts by the width or more give zero (or the sign fill for a signed `>>`).
 Integer types are admitted in storage, fields, arrays, pointers, constants and
-conversions; `len`/`cap` results and range keys are ordinary `int` values. The
+conversions; `len`/`cap`/`copy` results and range keys are ordinary `int` values. The
 [uint16 fixture](../examples/uint16-values/program.go) and the generated
 [integer fixture](../examples/int-values/ops.go) are checked against ordinary Go on the
 host and on SBF. See [integer semantics](GO_INTEGERS.md) and
@@ -475,14 +475,16 @@ Native tests can construct it with callbacks.
 
 Also supported: named integer scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
-and returns. Struct fields are integer scalars, bools, scalar arrays, or other value structs.
+and returns. Struct fields are integer scalars, bools, scalar arrays, other value
+structs, pointers or slices.
 Struct comparisons/conversions, embedding, aliases, and build constraints are
 rejected explicitly. Wire layout is generated independently of C or Go layout.
 
 Fixed-size scalar arrays, including named `[32]byte` key types, now support value
 copies, literals, indexed reads/writes, equality, `len`/`cap` and matching-underlying
-array conversions. Each array value is limited to 1,024 bytes. Nested arrays,
-struct elements and non-byte views remain unsupported; schema-1 generated codecs
+array conversions. Each array value is limited to 1,024 bytes. Nested arrays and
+struct elements remain unsupported (non-byte views of arrays came with
+[allocation](../docs/GO_ALLOCATION.md)); schema-1 generated codecs
 remain flat unsigned fields; schema 2 adds packed scalar-array codecs. See [semantics and validation](../docs/GO_ARRAYS.md).
 
 Named, module-aware user imports now support shared types, constants, codecs and
@@ -493,16 +495,23 @@ native service can use ordinary Go facilities outside that graph. See
 
 Value/pointer methods and constrained pointers now support caller-owned scalar,
 struct and array storage, mutable aliases, returned caller borrows, direct method
-calls and method expressions. Local/block escapes, pointer fields/elements,
-pointers-to-pointers, named pointer types and method values are rejected. See
+calls and method expressions. Escaping locals move to the heap; pointer-element
+arrays, pointers-to-pointers, named pointer types and method values are rejected. See
 [borrowing and verified semantics](../docs/GO_POINTERS.md). Increment/decrement also
 supports fields, dereferences and indexed elements.
 
 Borrowed byte views now support two/three-index slicing, reslicing within
 capacity, slice len/cap and nil comparisons, caller-borrowing results and alias
-updates. SDK buffers have capacity equal to their supplied lengths. Local/block
-escapes are rejected; no allocation or append is provided. See
+updates. SDK buffers have capacity equal to their supplied lengths. See
 [view semantics and SBF evidence](../docs/GO_VIEWS.md).
+
+Bounded, invocation-scoped heap allocation supports `new`, `make`, `append`
+(Go 1.22's exact capacity growth), `copy`, slice literals, slices of any admitted
+element (`[]uint64`, `[]Struct`, `[][32]byte`, `[]*T`, `[][]byte`), pointer and
+slice struct fields, and locals whose references escape, which move to the heap.
+The budget is 32 KiB by default and up to 256 KiB with `heap_bytes` (clients then
+send `RequestHeapFrame`); running out aborts. See
+[allocation semantics and SBF evidence](../docs/GO_ALLOCATION.md).
 
 `import "math/bits"` is available on-chain, the one standard-library exception:
 the 64- and 32-bit and `uint` carry, multiply and divide functions and the 64-,
@@ -514,14 +523,19 @@ Generics are monomorphized: generic functions, generic structs and named arrays
 with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`),
 `comparable`, `any` and method constraints. Each instantiation is checked and
 emitted as its own function or struct with a deterministic name derived from its
-type arguments, at most 64 per generic declaration. Interfaces are only usable as
-constraints. See [generics semantics, naming and SBF evidence](../docs/GO_GENERICS.md).
+type arguments, at most 64 per generic declaration. Generic code may allocate
+(`make([]T, n)`, `append` on `[]T`, `new(T)`), and each instance gets its own
+escape analysis. Interfaces are only usable as constraints. See
+[generics semantics, naming and SBF evidence](../docs/GO_GENERICS.md) and the
+[mixed fixture](../examples/mixed-values/program.go), which combines signed
+integers, generics and allocation and is checked against ordinary Go on the
+host and on SBF.
 
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, allocation, append, non-byte/named slices, slice fields, interface values, maps,
+floating-point and complex types, globals, `init`, named slices, interface values, maps,
 strings, closures/function values, recursion, named results, variadics,
 range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
-division and negative-shift failures abort; there is no recovery or stack growth. LLVM/VM stack limits
+division, negative-shift, `make` range and out-of-memory failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

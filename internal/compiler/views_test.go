@@ -83,16 +83,7 @@ func TestSliceViewArrayBoundary(t *testing.T) {
 }
 func TestSliceViewRejections(t *testing.T) {
 	for name, source := range map[string]string{
-		"local array":          `func bad()[]byte{var a [32]byte;return a[:]};func Process(s,i []byte)uint64{return uint64(len(bad()))}`,
-		"value parameter":      `func bad(a [32]byte)[]byte{return a[:]};func Process(s,i []byte)uint64{return uint64(len(bad([32]byte{})))}`,
-		"value receiver":       `type K [32]byte;func(k K)Bad()[]byte{return k[:]};func Process(s,i []byte)uint64{var k K;return uint64(len(k.Bad()))}`,
-		"block view":           `func Process(s,i []byte)uint64{var v []byte;{var k [32]byte;v=k[:]};return uint64(len(v))}`,
-		"loop view":            `func Process(s,i []byte)uint64{var v []byte;for j:=uint64(0);j<1;j++{var k [32]byte;v=k[:]};return uint64(len(v))}`,
-		"converted local":      `func bad()[]byte{var k [32]byte;v:=k[:];return []byte(v)};func Process(s,i []byte)uint64{return uint64(len(bad()))}`,
-		"forwarded tuple":      `func keep(v []byte)(uint64,[]byte){return 0,v};func bad()(uint64,[]byte){var k [32]byte;return keep(k[:])};func Process(s,i []byte)uint64{_,v:=bad();return uint64(len(v))}`,
-		"view element pointer": `func bad()*byte{var k [32]byte;v:=k[:];return &v[0]};func Process(s,i []byte)uint64{return uint64(*bad())}`,
-		"word views":           `func Process(s,i []byte)uint64{var k [4]uint64;v:=k[:];return v[0]}`,
-		"unaddressable array":  `func k()[4]byte{return [4]byte{}};func Process(s,i []byte)uint64{return uint64(len(k()[:]))}`,
+		"unaddressable array": `func k()[4]byte{return [4]byte{}};func Process(s,i []byte)uint64{return uint64(len(k()[:]))}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Compile("views-reject.go", []byte("package p;"+source))

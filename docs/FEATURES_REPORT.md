@@ -70,14 +70,17 @@ Each `language` side has:
   integer operations whose lowering differs from the unsigned one
   (`signed_division`: non-constant `/` and `%` on signed operands;
   `signed_shift_counts`: shifts by a non-constant signed count, which trap
-  when negative), and generics (`generic_functions`, `generic_methods`
+  when negative), generics (`generic_functions`, `generic_methods`
   declared on generic types, `generic_types`, `type_parameters` declared, and
   generic function names written with type arguments,
   `explicit_instantiations`, or without, `inferred_instantiations`, plus
-  instantiated generic type expressions, `type_instantiations`); all added
-  within gosvm-features-v1 on October 14, 2026. An SDK method call counts as
-  both `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of
-  `F`, and `F[T]` is not an `index_expressions` entry.
+  instantiated generic type expressions, `type_instantiations`) and
+  allocation builtins (`new_calls`, `make_calls`, `append_calls`,
+  `append_spreads` for `append(s, t...)`, `copy_calls`; they also count in
+  `builtin_calls` and `builtins`); all added within gosvm-features-v1 on
+  October 14, 2026, schema unchanged. An SDK method call counts as both
+  `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of `F`,
+  and `F[T]` is not an `index_expressions` entry.
 - `operators`: binary, unary (`!`, `unary-`, `unary^`, `unary+`), compound
   assignment (`+=`, …) and `++`/`--` occurrences; `&x` is `address_of`, not an
   operator. `operator_classes` groups them as `arithmetic`, `shift`,

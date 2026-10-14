@@ -41,7 +41,13 @@ func legacy() {
 	arch := flag.String("arch", "v3", "SBF version: v3 (default) or v0")
 	profileName := flag.String("target", "", "explicit profile; raw -arch retains historical semantics")
 	noCache := flag.Bool("no-cache", false, "rebuild even if source, compiler, backend and output match the last build")
+	heapBytes := flag.Int("heap-bytes", 0, "invocation heap budget for allocation: a multiple of 1024 from 32768 to 262144 (0: 32768); above 32768 every transaction must send ComputeBudget RequestHeapFrame")
 	flag.Parse()
+	if err := compiler.ValidateHeapBytes(*heapBytes); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	options := compiler.BuildOptions{HeapBytes: *heapBytes}
 	emitArch := *arch
 	if *profileName != "" {
 		explicitArch, explicitLLVM := false, false
@@ -85,6 +91,7 @@ func legacy() {
 		var src *compiler.Program
 		src, err = compiler.ReadProgram(flag.Arg(0))
 		if err == nil {
+			src.HeapBytes = options.HeapBytes
 			out, err = compiler.CompileProgram(src)
 		}
 		if err == nil {
@@ -98,9 +105,9 @@ func legacy() {
 		}
 	} else {
 		if *noCache {
-			err = compiler.Build(flag.Arg(0), *output, *llvm, *arch)
+			err = compiler.BuildWithOptions(flag.Arg(0), *output, *llvm, *arch, options)
 		} else {
-			err = compiler.BuildCached(flag.Arg(0), *output, *llvm, *arch)
+			err = compiler.BuildCachedWithOptions(flag.Arg(0), *output, *llvm, *arch, options)
 		}
 	}
 	if err != nil {

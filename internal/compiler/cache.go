@@ -13,7 +13,13 @@ import (
 // content hashes, including backend executable bytes. Replaced tools cannot
 // reuse a receipt even when their size and modification timestamp are preserved.
 func BuildCached(source, output, llvm, arch string) error {
-	program, err := ReadProgram(source)
+	return BuildCachedWithOptions(source, output, llvm, arch, BuildOptions{})
+}
+
+// BuildCachedWithOptions is BuildCached with compiler options; they are
+// part of the receipt key.
+func BuildCachedWithOptions(source, output, llvm, arch string, o BuildOptions) error {
+	program, err := readProgramWith(source, o)
 	if err != nil {
 		return err
 	}
@@ -119,6 +125,9 @@ func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	h := sha256.New()
 	fmt.Fprintf(h, "gosvm-receipt-v3\x00%s\x00%s\x00", arch, program.Entry)
 	fmt.Fprintf(h, "sdk:%d\x00%x\n", program.SDK, sha256.Sum256([]byte(sdkSource(program.SDK))))
+	if program.HeapBytes != 0 {
+		fmt.Fprintf(h, "heap:%d\n", program.HeapBytes)
+	}
 	for _, unit := range program.Packages {
 		fmt.Fprintf(h, "package:%s\x00", unit.Path)
 		for _, src := range unit.Sources {

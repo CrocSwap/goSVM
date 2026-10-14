@@ -29,7 +29,9 @@ this module or a fork of it.
    declarations);
 4. monomorphizes generics: each instantiation becomes a synthetic non-generic
    declaration ([generics](#generics));
-5. runs the borrow checker (no reference may outlive its storage);
+5. runs the borrow checker (no reference may outlive its storage; locals whose
+   references escape are moved to the heap, separately for each instance of a
+   generic declaration);
 6. applies every declaration, type, statement and expression rule of the
    subset ([`subset.go`](../internal/compiler/subset.go), with the type rules
    in [`rules.go`](../internal/compiler/rules.go)).
@@ -49,15 +51,45 @@ Every field is documented in `check.go`. In summary:
 | `Program` | The input, including `Libraries` and `SDK` |
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
-| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, and its `Borrows`; a generic declaration is replaced by its instances (`Instance` set) |
+| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, its `Borrows`, and the locals it moves to the heap (`HeapVars`, `HeapLiterals`); a generic declaration is replaced by its instances (`Instance` set), each with its own `Borrows` and heap moves |
 | `CallOrder` | The same functions, callees before callers (acyclic) |
 | `Libraries` | Pure native library bindings in the graph |
 | `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
-alias SDK-owned storage such as account data. A result never aliases the
-callee's own locals.
+alias SDK-owned storage such as account data; `Heap` is true if it may refer to
+the invocation heap (an allocation, a moved local, or a reference loaded from a
+field or element). A result never aliases the callee's own stack locals.
+`BorrowSummary.Escapes` lists the argument slots whose referenced storage the
+function may store into heap data; a caller that passes its own local there
+moves that local to the heap.
+
+### Allocation
+
+Heap allocation ([GO_ALLOCATION.md](GO_ALLOCATION.md)) adds no IR of its own:
+`new`, `make`, `append` and `copy` are `*types.Builtin` calls, slice literals
+(and elided `&T{...}` elements, whose `types.TypeAndValue` type is `*T`) are
+`*ast.CompositeLit`s, and slices of any admitted element are `*types.Slice`
+values. Check decides heap placement: `Function.HeapVars` are local variables,
+value parameters and receivers whose storage must be allocated on the heap (at
+the declaration, each time it executes, or at function entry for parameters and
+receivers), and `Function.HeapLiterals` are the `&T{...}` literals to allocate.
+Every other local stays on the stack and is never referenced from heap data. A
+backend must reproduce the allocator (an 8-byte in-use counter at the heap start,
+8-byte rounding and alignment, abort when `Program.HeapBytes` (0: 32 KiB) is
+exhausted), Go 1.22's `growslice` capacities, and the `makeslice` range checks.
+`Program.HeapBytes` comes from `gosvm.json` `heap_bytes` or the CLI's
+`-heap-bytes`.
+
+`make` lengths and capacities, indexes and slice bounds may have any integer
+type. A negative signed `make` operand traps like `len > cap`; a negative index
+or bound traps like any out-of-range one (the C backend compares them as `u64`,
+where a negative value is out of range). Instances of generic declarations are
+analyzed separately: an instance's `HeapVars` are its own `Decl`'s objects
+(its parameters are its `Object`'s signature parameters) and its
+`HeapLiterals` are nodes of its own `Decl`, so `Box[int16]` and `Box[uint8]`
+each move their own parameter and `Id[T]` moves nothing.
 
 ## Generics
 
@@ -73,7 +105,8 @@ so a backend that lowers `Functions` needs no generic support of its own:
   package-path-qualified instantiation and `Symbol` the C name the built-in
   backend uses; both depend only on the declaration and the type arguments.
 - Each instance is also a `Function` (with `Function.Instance` set) in place of
-  its generic declaration, with its own `Callees` and its own `Borrows`. Generic
+  its generic declaration, with its own `Callees`, its own `Borrows` and its
+  own heap moves (`HeapVars`, `HeapLiterals`). Generic
   declarations themselves are not listed and have no code.
 - `Instantiated` maps every identifier that names a generic callee at a call,
   in `Files` and in instance bodies, to the instance the call runs: `F` in
@@ -114,8 +147,8 @@ backend needs its own lowering, with the results and traps in
 [GO_BITS.md](GO_BITS.md). `UintSize` is an untyped constant (64).
 
 Integer types are ordinary `types.Basic` kinds: every fixed-size integer, plus
-`int` and `uint` (both 64 bits), and named versions. `len`/`cap` results, range
-keys and `math/bits` counts are `int` values like any other. A backend must
+`int` and `uint` (both 64 bits), and named versions. `len`/`cap`/`copy`
+results, range keys and `math/bits` counts are `int` values like any other. A backend must
 implement Go's integer semantics (wrapping arithmetic, truncating signed
 division with `MinInt / -1 == MinInt`, sign-filling `>>`, signed or unsigned
 shift counts with a trap on a negative count, and sign- or zero-extending
@@ -169,14 +202,21 @@ verdict changed on purpose since are listed with their new expected outcome in
 the test's `corpusChanges` table. These are: range loops and `uint16` became
 supported; signed integers, `int` and `uint` became supported; the two recorded
 generic programs are now accepted; interface values are rejected with a message
-naming the constraint rule; and the array-element, pointer-element and
-struct-field messages now name the admitted types. `CheckedProgram` did not
-change shape for range loops, `uint16` or signed integers. A backend must lower
-`*ast.RangeStmt` as described in [GO_CONTROL.md](GO_CONTROL.md#range-loops),
-`uint16` as wrapping 16-bit arithmetic, and signed integers as in
-[GO_INTEGERS.md](GO_INTEGERS.md). Generics added the `Instances`,
-`TypeInstances` and `Instantiated` fields and `Function.Instance`; existing
-fields keep their meaning, and for a program without generics they are exactly
-as before. Separately, the full-swap ELFs built with
+naming the constraint rule; the array-element and pointer-element messages now
+name the admitted types; and allocation turned 32 recorded rejections (escaping
+locals, `copy`, `make`, slice literals, `[]uint64`, non-byte views and
+pointer/slice fields) into accepted programs. Two of those (a `[]byte` and a
+`*uint64` struct field) had had their message reworded by signed integers; the
+merged compiler accepts them with the C the allocation change recorded. Every
+changed entry's outcome equals the outcome under the one feature that explains
+it. `CheckedProgram` did not change shape for range loops, `uint16` or signed
+integers. A backend must lower `*ast.RangeStmt` as described in
+[GO_CONTROL.md](GO_CONTROL.md#range-loops), `uint16` as wrapping 16-bit
+arithmetic, and signed integers as in [GO_INTEGERS.md](GO_INTEGERS.md).
+Generics added the `Instances`, `TypeInstances` and `Instantiated` fields and
+`Function.Instance`; allocation added the `HeapVars`, `HeapLiterals`, `Escapes`
+and `Heap` fields above. Existing fields keep their meaning, and the new ones
+are empty or false for every program that compiled before. Separately, the
+full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

@@ -165,9 +165,13 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 			c.declareArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
 			c.namedType(node, f.Type())
+		} else if memoryValue(f.Type()) {
+			// Pointer and slice fields hold only heap or SDK storage; the
+			// borrow analysis moves any local stored into one to the heap.
+			c.variableRule(node, f.Type())
 		} else {
 			if _, ok := f.Type().Underlying().(*types.Basic); !ok {
-				c.fail(node, "struct fields must be integer scalars, bools, scalar arrays, or value structs")
+				c.fail(node, "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers or slices")
 			}
 			c.variableRule(node, f.Type())
 		}
@@ -396,7 +400,7 @@ func (c *checker) switchStatement(s *ast.SwitchStmt) {
 }
 
 // rangeStatement admits Go 1.22 range loops over integers (of any admitted
-// type, or untyped constants), fixed scalar arrays, pointers to them and byte
+// type, or untyped constants), fixed scalar arrays, pointers to them and
 // slices. Iteration variables are fresh in every iteration.
 func (c *checker) rangeStatement(s *ast.RangeStmt) {
 	xt := c.info.Types[s.X].Type
@@ -406,7 +410,7 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 			c.fail(s.X, "range over strings unsupported")
 		}
 		if u.Info()&types.IsInteger == 0 {
-			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
+			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a slice")
 		}
 	case *types.Map:
 		c.fail(s.X, "range over maps unsupported")
@@ -415,16 +419,13 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 	case *types.Signature:
 		c.fail(s.X, "range over functions unsupported")
 	case *types.Slice:
-		if !types.Identical(u.Elem(), types.Typ[types.Uint8]) {
-			c.fail(s.X, "range over slices requires byte slices")
-		}
 	case *types.Array:
 	case *types.Pointer:
 		if _, ok := u.Elem().Underlying().(*types.Array); !ok {
-			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
+			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a slice")
 		}
 	default:
-		c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a byte slice")
+		c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a slice")
 	}
 	if s.Tok == token.ASSIGN {
 		for _, target := range []ast.Expr{s.Key, s.Value} {
@@ -619,10 +620,23 @@ func (c *checker) expr(e ast.Expr) {
 			c.arrayLiteral(e, a)
 			return
 		}
-		if _, ok := tv.Type.Underlying().(*types.Struct); !ok {
+		if s, ok := tv.Type.(*types.Slice); ok {
+			c.sliceLiteral(e, s)
+			return
+		}
+		literal := tv.Type
+		if p, ok := pointer(literal); ok {
+			// An elided &T{...} element of a slice literal: always heap.
+			if _, ok := p.Elem().Underlying().(*types.Struct); !ok {
+				c.fail(e, "elided &T{...} literals require a struct type; write &T{...}")
+			}
+			c.typeRule(e, literal)
+			literal = p.Elem()
+		}
+		if _, ok := literal.Underlying().(*types.Struct); !ok {
 			c.fail(e, "only value struct literals supported")
 		}
-		c.typeRule(e, tv.Type)
+		c.typeRule(e, literal)
 		for _, elt := range e.Elts {
 			if kv, ok := elt.(*ast.KeyValueExpr); ok {
 				elt = kv.Value
@@ -739,13 +753,16 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 		}
 	}
 	if c.info.Types[e.Fun].IsType() {
-		if s, ok := tv.Type.(*types.Slice); ok && types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+		if s, ok := tv.Type.(*types.Slice); ok {
 			if len(e.Args) != 1 {
 				c.fail(e, "invalid slice conversion")
 			}
 			if !c.info.Types[e.Args[0]].IsNil() {
 				if !types.Identical(c.info.Types[e.Args[0]].Type, tv.Type) {
-					c.fail(e, "slice conversion requires identical byte slices or nil")
+					if isByteSlice(s) {
+						c.fail(e, "slice conversion requires identical byte slices or nil")
+					}
+					c.fail(e, "slice conversion requires identical slices or nil")
 				}
 				c.expr(e.Args[0])
 			}
@@ -788,6 +805,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	default:
 		c.fail(e, "only direct function calls supported")
 	}
+	if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
+		c.allocBuiltin(e, b.Name(), tv)
+		return
+	}
 	values := c.callValues(e)
 	if _, ok := o.(*types.TypeName); ok {
 		if _, ok := tv.Type.Underlying().(*types.Struct); ok {
@@ -808,7 +829,7 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			}
 		}
 		if builtinName != "len" && builtinName != "cap" {
-			c.fail(e, "only len and cap builtins supported")
+			c.fail(e, builtinRule)
 		}
 		c.typeRule(e, tv.Type)
 		return
@@ -946,6 +967,14 @@ func (c *checker) fieldTarget(e ast.Expr) {
 			return
 		}
 		c.fieldTarget(e.X)
+	case *ast.IndexExpr:
+		// An element of a slice is addressable storage, as in s[i].F = v.
+		if _, ok := c.info.Types[e.X].Type.(*types.Slice); !ok {
+			c.fail(e, "field target must be a local value struct")
+		}
+		c.expr(e.X)
+		c.expr(e.Index)
+		c.typeRule(e, c.info.Types[e].Type)
 	default:
 		c.fail(e, "field target must be a local value struct")
 	}
@@ -979,10 +1008,10 @@ func (c *checker) captureTarget(e ast.Expr) {
 	}
 }
 
-// sliceView admits byte views of byte slices and byte arrays; they retain
-// the underlying storage and never copy or allocate.
+// sliceView admits views of slices and arrays; they retain the underlying
+// storage and never copy or allocate.
 func (c *checker) sliceView(e *ast.SliceExpr) {
-	if s, ok := c.info.Types[e].Type.(*types.Slice); !ok || !types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+	if _, ok := c.info.Types[e].Type.(*types.Slice); !ok {
 		c.fail(e, "slice views require byte/uint8 elements")
 	}
 	if _, ok := arrayValue(c.info.Types[e.X].Type); ok {

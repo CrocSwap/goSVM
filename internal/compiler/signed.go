@@ -74,7 +74,7 @@ func signedConstant(v constant.Value) (string, bool) {
 
 // nonNegative reports whether an integer expression is known to be >= 0
 // without evaluating it: an unsigned value, a non-negative constant, or a
-// len, cap or math/bits count result. Such int operands keep the unsigned
+// len, cap, copy or math/bits count result. Such int operands keep the unsigned
 // comparison, shift-count and range lowering they have always had (so
 // earlier programs' C is unchanged), which is exact for values that are
 // never negative.
@@ -99,7 +99,7 @@ func (f *frontend) nonNegative(e ast.Expr) bool {
 	}
 	if id, ok := call.Fun.(*ast.Ident); ok {
 		if _, builtin := f.info.Uses[id].(*types.Builtin); builtin {
-			return id.Name == "len" || id.Name == "cap"
+			return id.Name == "len" || id.Name == "cap" || id.Name == "copy"
 		}
 	}
 	if fn, ok := isBitsFunc(f.info, call); ok {

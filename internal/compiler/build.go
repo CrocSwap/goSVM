@@ -24,7 +24,32 @@ var linkerScriptModernV3 []byte
 
 // Build loads the restricted import graph and invokes Clang/LLD, with no Go runtime or Cargo.
 func Build(source, output, llvm, arch string) error {
+	return BuildWithOptions(source, output, llvm, arch, BuildOptions{})
+}
+
+// BuildOptions are compiler settings that do not come from Go source.
+type BuildOptions struct {
+	// HeapBytes is the invocation heap budget for allocation; 0 selects the
+	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
+	HeapBytes int
+}
+
+// readProgramWith reads source and applies the options to the program.
+func readProgramWith(source string, o BuildOptions) (*Program, error) {
+	if err := ValidateHeapBytes(o.HeapBytes); err != nil {
+		return nil, err
+	}
 	program, err := ReadProgram(source)
+	if err != nil {
+		return nil, err
+	}
+	program.HeapBytes = o.HeapBytes
+	return program, nil
+}
+
+// BuildWithOptions is Build with compiler options.
+func BuildWithOptions(source, output, llvm, arch string, o BuildOptions) error {
+	program, err := readProgramWith(source, o)
 	if err != nil {
 		return err
 	}

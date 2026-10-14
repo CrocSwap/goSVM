@@ -108,10 +108,12 @@ The compiler supports multi-file programs, user packages, signed and unsigned
 [integers](docs/GO_INTEGERS.md) (`int8`…`int64`, `uint8`…`uint64`, `int`, `uint`)
 with Go's exact semantics, structs, fixed-size scalar arrays, multiple
 return values, methods, `range` loops, constrained pointers, borrowed byte slices,
-and [generics](docs/GO_GENERICS.md) (monomorphized at compile time). It lowers Go
-through checked C and Solana Clang/LLD to SBF.
+[generics](docs/GO_GENERICS.md) (monomorphized at compile time) and bounded
+[heap allocation](docs/GO_ALLOCATION.md) (`new`, `make`, `append`, `copy`,
+slices of any element type). It lowers Go through checked C and Solana
+Clang/LLD to SBF.
 
-Full Go language support is outside the current scope: allocation, maps,
+Full Go language support is outside the current scope: garbage collection, maps,
 interface values, goroutines, and on-chain standard-library imports other than
 [`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
 toolchain without a production audit.

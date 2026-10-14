@@ -102,12 +102,25 @@ type Function struct {
 	// Instance is set when the function is an instantiation of a generic
 	// declaration; Object and Decl are then the instance's own.
 	Instance *Instance
+	// HeapVars are the function's local variables, value parameters and
+	// receivers whose references escape: they live on the invocation heap
+	// (allocated at their declaration, or at entry for parameters) instead of
+	// the stack. HeapLiterals are its &T{...} literals that escape likewise.
+	// Both are in source order and empty for programs without escapes. Each
+	// instance of a generic declaration has its own (its Decl's objects and
+	// literals). See docs/GO_ALLOCATION.md.
+	HeapVars     []*types.Var
+	HeapLiterals []*ast.CompositeLit
 }
 
 // BorrowSummary is the borrow checker's result for one function. Results has
 // one entry per declared result; non-pointer, non-slice results are empty.
+// Escapes lists, ascending, the argument slots (0 is the receiver for
+// methods) whose referenced storage the function may store into heap data;
+// a caller passing its own local storage there moves that local to the heap.
 type BorrowSummary struct {
 	Results []ResultBorrow
+	Escapes []int
 }
 
 // ResultBorrow describes the storage a pointer or slice result may refer to.
@@ -119,6 +132,11 @@ type ResultBorrow struct {
 	// SDK is true when the result may alias SDK-owned invocation storage
 	// (account data, keys, instruction data) obtained through gosvm/solana.
 	SDK bool
+	// Heap is true when the result may refer to invocation-heap storage: an
+	// allocation, an escaping local, or a reference loaded from a pointer or
+	// slice field or element (which may also hold SDK storage; SDK is then
+	// set too when the program imports gosvm/solana).
+	Heap bool
 }
 
 // Check type-checks the program and enforces every on-chain subset rule
@@ -265,9 +283,11 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	for _, function := range checked.Functions {
 		order(function)
 	}
-	summaries := f.checkBorrows(lowered, instances, gp)
+	summaries := f.checkBorrows(lowered, instances, gp, importer.hasSDK)
 	for _, function := range checked.Functions {
-		function.Borrows = exportBorrows(summaries[function.Object])
+		summary := summaries[function.Object]
+		function.Borrows = exportBorrows(summary)
+		function.HeapVars, function.HeapLiterals = exportMoves(summary)
 	}
 	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}, gp: gp, typeInstances: checked.TypeInstances}
 	c.program(checked.lowered, lowered)
@@ -281,6 +301,9 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	}
 	if program.SDK != 0 && program.SDK != 1 && program.SDK != 2 {
 		return nil, nil, fmt.Errorf("unsupported SDK version %d", program.SDK)
+	}
+	if err := ValidateHeapBytes(program.HeapBytes); err != nil {
+		return nil, nil, err
 	}
 	f := newFrontend(token.NewFileSet(), &types.Info{
 		Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
@@ -341,12 +364,18 @@ func externalBinding(externals map[string]library.Binding, o types.Object) (libr
 
 func exportBorrows(s borrowSummary) BorrowSummary {
 	out := BorrowSummary{Results: make([]ResultBorrow, len(s.results))}
+	for slot := range s.escapes {
+		out.Escapes = append(out.Escapes, slot)
+	}
+	sort.Ints(out.Escapes)
 	for i, roots := range s.results {
 		seen := map[int]bool{}
 		for root := range roots {
 			switch {
 			case root.foreign:
 				out.Results[i].SDK = true
+			case root.heap:
+				out.Results[i].Heap = true
 			case root.scope == nil && root.parameter >= 0 && !seen[root.parameter]:
 				seen[root.parameter] = true
 				out.Results[i].Parameters = append(out.Results[i].Parameters, root.parameter)
@@ -355,4 +384,20 @@ func exportBorrows(s borrowSummary) BorrowSummary {
 		sort.Ints(out.Results[i].Parameters)
 	}
 	return out
+}
+
+// exportMoves lists a function's heap-moved variables and literals in source
+// order.
+func exportMoves(s borrowSummary) ([]*types.Var, []*ast.CompositeLit) {
+	var vars []*types.Var
+	for o := range s.vars {
+		vars = append(vars, o.(*types.Var))
+	}
+	sort.Slice(vars, func(i, j int) bool { return vars[i].Pos() < vars[j].Pos() })
+	var lits []*ast.CompositeLit
+	for lit := range s.lits {
+		lits = append(lits, lit)
+	}
+	sort.Slice(lits, func(i, j int) bool { return lits[i].Pos() < lits[j].Pos() })
+	return vars, lits
 }

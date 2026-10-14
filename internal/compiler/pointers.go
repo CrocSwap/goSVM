@@ -46,6 +46,9 @@ func (g *generator) address(e ast.Expr) string {
 	case *ast.StarExpr:
 		return g.checkedPointer(e, g.info.Types[e.X].Type, g.expr(e.X)) // Go evaluates the indirection, including its nil check.
 	case *ast.CompositeLit:
+		if g.movedLits[e] {
+			return g.box(e, g.info.Types[e].Type, g.expr(e))
+		}
 		return "&" + g.expr(e)
 	case *ast.IndexExpr:
 		if a, ok := arrayValue(g.info.Types[e.X].Type); ok {
@@ -54,6 +57,9 @@ func (g *generator) address(e ast.Expr) string {
 			return fmt.Sprintf("%s_at(%s,%s)", g.arrayName(e, a), base, index)
 		}
 		base, index := g.expr(e.X), g.expr(e.Index)
+		if !isByteSlice(g.info.Types[e.X].Type) {
+			return "&" + g.element(e, g.info.Types[e.X].Type, base, index)
+		}
 		return fmt.Sprintf("at(%s,%s)", base, index)
 	default:
 		g.unchecked(e)
@@ -121,15 +127,26 @@ func (g *generator) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, s
 	return g.temp(call, g.info.Types[call].Type, invocation)
 }
 
-// A root is a caller borrow, a local storage region, or SDK-owned invocation
-// storage. Local roots have lexical scopes; callers are substituted at calls.
+// A root is a caller borrow, a local storage region, SDK-owned invocation
+// storage or the invocation heap. Local roots have lexical scopes and name
+// their storage: a variable (object) or an &T{...} literal (node). Callers are
+// substituted at calls.
 type borrowRoot struct {
 	parameter int
 	scope     *types.Scope
 	node      ast.Node
+	object    types.Object
 	foreign   bool
+	heap      bool
 }
 type borrowSet map[borrowRoot]bool
+
+// heapRoot is invocation-lifetime storage reached through the allocator or
+// loaded from a pointer/slice field or element; foreignRoot is SDK storage.
+var (
+	heapRoot    = borrowRoot{parameter: -1, heap: true}
+	foreignRoot = borrowRoot{parameter: -1, foreign: true}
+)
 
 func addBorrows(to borrowSet, from borrowSet) bool {
 	changed := false
@@ -142,20 +159,37 @@ func addBorrows(to borrowSet, from borrowSet) bool {
 	return changed
 }
 
-type borrowSummary struct{ results []borrowSet }
+// borrowSummary is one function's result origins, the argument slots whose
+// storage it may store into heap data (callers move such local arguments to
+// the heap) and its own locals that escape and so live on the heap.
+type borrowSummary struct {
+	results []borrowSet
+	escapes map[int]bool
+	vars    map[types.Object]bool
+	lits    map[*ast.CompositeLit]bool
+}
 type borrowAnalysis struct {
 	f         *frontend
 	fn        *ast.FuncDecl
 	summaries map[types.Object]borrowSummary
 	vars      map[types.Object]borrowSet
 	results   []borrowSet
+	escapes   map[int]bool
+	moved     map[types.Object]bool
+	movedLits map[*ast.CompositeLit]bool
+	sdk       bool
 	changed   bool
 }
 
 // checkBorrows proves that no pointer or slice outlives the storage it refers
 // to and returns each function's result summary, keyed by its object. Each
-// instance of a generic declaration has its own summary.
-func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Function, gp *genericProgram) map[types.Object]borrowSummary {
+// instance of a generic declaration has its own summary, including its own
+// heap moves. A local whose reference escapes (returned, kept in a variable
+// outside its scope or stored into a field, element, literal or append) is
+// moved to the invocation heap, as Go's escape analysis would; see
+// docs/GO_ALLOCATION.md. sdk reports whether the program imports
+// gosvm/solana, whose views may be stored in heap data and loaded back.
+func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Function, gp *genericProgram, sdk bool) map[types.Object]borrowSummary {
 	summaries := map[types.Object]borrowSummary{}
 	var check func(types.Object)
 	check = func(object types.Object) {
@@ -177,7 +211,8 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		})
 		defer gp.rethrow(funcs[object].Instance.context()) // name the instantiation in this body's diagnostics
 		sig := object.Type().(*types.Signature)
-		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len())}
+		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len()),
+			escapes: map[int]bool{}, moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, sdk: sdk}
 		for i := range a.results {
 			a.results[i] = borrowSet{}
 		}
@@ -212,6 +247,10 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 								obj = definition
 							}
 							a.assign(id, obj, values[i])
+						} else if memoryValue(f.info.Types[lhs].Type) {
+							// A field, element or pointed-to target holds only heap
+							// or SDK storage.
+							a.store(values[i])
 						}
 					}
 				case *ast.ValueSpec:
@@ -221,6 +260,20 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 							a.assign(id, f.info.Defs[id], values[i])
 						}
 					}
+				case *ast.RangeStmt:
+					if id, ok := n.Value.(*ast.Ident); ok {
+						obj := f.info.Uses[id]
+						if definition := f.info.Defs[id]; definition != nil {
+							obj = definition
+						}
+						if obj != nil && memoryValue(obj.Type()) {
+							a.assign(id, obj, a.loaded())
+						}
+					}
+				case *ast.CompositeLit:
+					a.literal(n)
+				case *ast.CallExpr:
+					a.call(n)
 				case *ast.ReturnStmt:
 					values := a.values(n.Results)
 					for i, value := range values {
@@ -229,11 +282,14 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 						}
 						for root := range value {
 							if root.scope != nil {
-								f.fail(n, "reference escapes local storage; heap allocation unsupported")
+								// The local outlives this call: it lives on the heap.
+								a.move(root)
+								root = heapRoot
 							}
-						}
-						if addBorrows(a.results[i], value) {
-							a.changed = true
+							if !a.results[i][root] {
+								a.results[i][root] = true
+								a.changed = true
+							}
 						}
 					}
 				}
@@ -243,7 +299,7 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 				break
 			}
 		}
-		summaries[object] = borrowSummary{a.results}
+		summaries[object] = borrowSummary{results: a.results, escapes: a.escapes, vars: a.moved, lits: a.movedLits}
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
@@ -274,13 +330,70 @@ func (a *borrowAnalysis) scopeAt(pos token.Pos) *types.Scope {
 	}
 	return result
 }
+
+// move puts a local root's storage on the invocation heap.
+func (a *borrowAnalysis) move(root borrowRoot) {
+	if root.object != nil {
+		a.moved[root.object] = true
+	} else if lit, ok := root.node.(*ast.CompositeLit); ok {
+		a.movedLits[lit] = true
+	}
+}
+
+// store records that value is written into heap data: a field, element,
+// pointed-to target, literal element or appended element. Such storage
+// outlives any lexical scope, so locals move to the heap and parameter
+// borrows become the caller's obligation.
+func (a *borrowAnalysis) store(value borrowSet) {
+	for root := range value {
+		switch {
+		case root.scope != nil:
+			a.move(root)
+		case root.parameter >= 0:
+			a.escapes[root.parameter] = true
+		}
+	}
+}
+
+// loaded is the origin of a reference read from a field or element: the
+// store rule guarantees it is heap or SDK storage, never a local.
+func (a *borrowAnalysis) loaded() borrowSet {
+	if a.sdk {
+		return borrowSet{heapRoot: true, foreignRoot: true}
+	}
+	return borrowSet{heapRoot: true}
+}
+
+// literal stores the reference-typed fields or elements of a struct or slice
+// literal.
+func (a *borrowAnalysis) literal(lit *ast.CompositeLit) {
+	t := a.f.info.Types[lit].Type
+	if t == nil {
+		return
+	}
+	if p, ok := pointer(t); ok {
+		t = p.Elem()
+	}
+	switch t.Underlying().(type) {
+	case *types.Struct, *types.Slice:
+		for _, elt := range lit.Elts {
+			if kv, ok := elt.(*ast.KeyValueExpr); ok {
+				elt = kv.Value
+			}
+			if memoryValue(a.f.info.Types[elt].Type) {
+				a.store(a.expr(elt))
+			}
+		}
+	}
+}
 func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet) {
 	if obj == nil || obj.Name() == "_" || !memoryValue(obj.Type()) {
 		return
 	}
 	for root := range value {
 		if root.scope != nil && !scopeWithin(obj.Parent(), root.scope) {
-			a.f.fail(node, "reference escapes its lexical storage scope; heap allocation unsupported")
+			// Kept beyond its lexical scope: the local lives on the heap.
+			a.move(root)
 		}
 	}
 	if a.vars[obj] == nil {
@@ -297,7 +410,7 @@ func (a *borrowAnalysis) address(e ast.Expr) borrowSet {
 	case *ast.Ident:
 		o := a.f.info.Uses[e]
 		if o != nil {
-			return borrowSet{borrowRoot{scope: o.Parent(), node: e, parameter: -1}: true}
+			return borrowSet{borrowRoot{scope: o.Parent(), object: o, parameter: -1}: true}
 		}
 	case *ast.SelectorExpr:
 		if _, ok := pointer(a.f.info.Types[e.X].Type); ok {
@@ -339,6 +452,17 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 			return a.expr(e.X)
 		}
 		return a.address(e.X)
+	case *ast.SelectorExpr, *ast.IndexExpr, *ast.StarExpr:
+		if memoryValue(a.f.info.Types[e].Type) {
+			return a.loaded()
+		}
+	case *ast.CompositeLit:
+		// Slice literals and the elided &T{...} elements of slice literals
+		// are allocated on the heap.
+		switch a.f.info.Types[e].Type.Underlying().(type) {
+		case *types.Slice, *types.Pointer:
+			return borrowSet{heapRoot: true}
+		}
 	}
 	return borrowSet{}
 }
@@ -355,9 +479,39 @@ func (a *borrowAnalysis) values(expressions []ast.Expr) []borrowSet {
 	}
 	return values
 }
+
+// builtin gives the origins of new, make and append results. append's result
+// may alias its first operand or a new heap array; appended references are
+// stored. The elements of an appended or copied slice are already heap or SDK
+// storage.
+func (a *borrowAnalysis) builtin(call *ast.CallExpr, name string) []borrowSet {
+	switch name {
+	case "new", "make":
+		return []borrowSet{{heapRoot: true}}
+	case "append":
+		result := borrowSet{heapRoot: true}
+		if len(call.Args) > 0 {
+			addBorrows(result, a.expr(call.Args[0]))
+		}
+		if !call.Ellipsis.IsValid() && len(call.Args) > 1 {
+			for _, value := range call.Args[1:] {
+				if memoryValue(a.f.info.Types[value].Type) {
+					a.store(a.expr(value))
+				}
+			}
+		}
+		return []borrowSet{result}
+	}
+	return []borrowSet{{}}
+}
 func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	if a.f.info.Types[call.Fun].IsType() && memoryValue(a.f.info.Types[call].Type) && len(call.Args) == 1 {
 		return []borrowSet{a.expr(call.Args[0])}
+	}
+	if id, ok := call.Fun.(*ast.Ident); ok {
+		if b, ok := a.f.info.Uses[id].(*types.Builtin); ok {
+			return a.builtin(call, b.Name())
+		}
 	}
 	var object types.Object
 	var args []borrowSet
@@ -392,15 +546,20 @@ func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	if fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" {
 		for i := range results {
 			if memoryValue(sig.Results().At(i).Type()) {
-				results[i][borrowRoot{parameter: -1, foreign: true}] = true
+				results[i][foreignRoot] = true
 			}
 		}
 		return results
 	}
 	summary := a.summaries[object]
+	for slot := range summary.escapes {
+		if slot < len(args) {
+			a.store(args[slot])
+		}
+	}
 	for i, origins := range summary.results {
 		for root := range origins {
-			if root.foreign {
+			if root.foreign || root.heap {
 				results[i][root] = true
 			} else if root.parameter >= 0 && root.parameter < len(args) {
 				addBorrows(results[i], args[root.parameter])
