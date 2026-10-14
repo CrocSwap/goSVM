@@ -1,0 +1,797 @@
+{
+  "schema": "gosvm-features-v1",
+  "program": {
+    "module": "example.org/gosvm/full-swap",
+    "entry_package": "example.org/gosvm/full-swap",
+    "targets": [
+      {
+        "profile": "legacy-v1.51-v3"
+      }
+    ],
+    "packages": [
+      "example.org/gosvm/full-swap",
+      "example.org/gosvm/full-swap/model"
+    ],
+    "sdk_packages": [
+      "gosvm/sdk/cpi",
+      "gosvm/sdk/pda",
+      "gosvm/sdk/system",
+      "gosvm/sdk/token",
+      "gosvm/solana"
+    ]
+  },
+  "files": [
+    {
+      "path": "lifecycle.go",
+      "package": "example.org/gosvm/full-swap",
+      "kind": "handwritten",
+      "sha256": "ea2afb247e73db01fb272aa6c2123474b6226d94793486f0ac0dcf26bf1fbe38",
+      "lines": 101
+    },
+    {
+      "path": "model/model.go",
+      "package": "example.org/gosvm/full-swap/model",
+      "kind": "handwritten",
+      "sha256": "8fb4bbde17e019f1f065e96fa920ceeb6011aa0422358f4d39f8b352e1b29ef2",
+      "lines": 31
+    },
+    {
+      "path": "model/quote.go",
+      "package": "example.org/gosvm/full-swap/model",
+      "kind": "handwritten",
+      "sha256": "392e808643abbffb16cc2282d61dd49f591562714518724e94efb6d47266ab6b",
+      "lines": 70
+    },
+    {
+      "path": "program.go",
+      "package": "example.org/gosvm/full-swap",
+      "kind": "handwritten",
+      "sha256": "e3255cfe50fc49d14036c572b6815bd6a2790e7c5d7772ffdd6f13af40368125",
+      "lines": 62
+    },
+    {
+      "path": "zz_gosvm.go",
+      "package": "example.org/gosvm/full-swap",
+      "kind": "generated",
+      "sha256": "da2eeeedbd0c7a1c718ad90bbb264ffaf97120630ec34eb2979d86859cfeca76",
+      "lines": 2555
+    }
+  ],
+  "lines": {
+    "handwritten": 264,
+    "generated": 2555
+  },
+  "language": {
+    "handwritten": {
+      "files": 4,
+      "lines": 264,
+      "constructs": {
+        "address_of": 7,
+        "array_equality": 2,
+        "array_literals": 2,
+        "array_type_decls": 1,
+        "assignments": 16,
+        "break": 2,
+        "builtin_calls": 0,
+        "channel_types": 0,
+        "char_literals": 12,
+        "compound_assignments": 0,
+        "const_typed": 5,
+        "const_untyped": 2,
+        "continue": 0,
+        "conversions": 6,
+        "cross_package_calls": 1,
+        "defer": 0,
+        "else": 0,
+        "else_if": 0,
+        "fallthrough": 0,
+        "field_selections": 144,
+        "for_condition_only": 3,
+        "for_infinite": 0,
+        "for_range": 0,
+        "for_range_array": 0,
+        "for_range_int": 0,
+        "for_range_other": 0,
+        "for_range_slice": 0,
+        "for_three_clause": 0,
+        "function_calls": 2,
+        "function_literals": 0,
+        "functions": 6,
+        "go": 0,
+        "goto": 0,
+        "if": 37,
+        "index_expressions": 0,
+        "indirect_calls": 0,
+        "int_literals": 81,
+        "interface_types": 0,
+        "keyed_literals": 3,
+        "labels": 0,
+        "library_calls": 0,
+        "map_types": 0,
+        "method_calls": 10,
+        "methods_declared": 0,
+        "multi_result_functions": 4,
+        "multi_value_assignments": 11,
+        "multi_value_returns": 32,
+        "other_type_decls": 0,
+        "params": 18,
+        "pointer_derefs": 0,
+        "pointer_params": 0,
+        "pointer_receivers": 0,
+        "pointer_results": 0,
+        "pointer_types": 0,
+        "results": 10,
+        "returns": 38,
+        "sdk_calls": 30,
+        "select": 0,
+        "short_var_decls": 38,
+        "slice_expressions": 2,
+        "slice_expressions_of_arrays": 2,
+        "slice_literals": 0,
+        "slice_types": 0,
+        "string_literals": 0,
+        "struct_equality": 0,
+        "struct_literals": 3,
+        "struct_type_decls": 5,
+        "switch": 0,
+        "switch_cases": 0,
+        "switch_tagless": 0,
+        "type_aliases": 0,
+        "type_switch": 0,
+        "value_receivers": 0,
+        "var_decls": 4
+      },
+      "operators": {
+        "!=": 31,
+        "%": 1,
+        "&": 6,
+        "*": 16,
+        "+": 13,
+        "++": 2,
+        "-": 8,
+        "--": 2,
+        "/": 5,
+        "<": 4,
+        "<<": 3,
+        "==": 17,
+        ">": 5,
+        ">=": 5,
+        ">>": 8,
+        "|": 1,
+        "||": 22
+      },
+      "operator_classes": {
+        "arithmetic": 43,
+        "bitwise": 7,
+        "comparison": 62,
+        "incdec": 4,
+        "logical": 22,
+        "shift": 11
+      },
+      "builtins": {},
+      "integer_types": {
+        "byte": 7,
+        "uint64": 19
+      },
+      "integer_value_types": {
+        "byte": 17,
+        "uint64": 384
+      },
+      "conversions": {
+        "example.org/gosvm/full-swap/model.PublicKey": 5,
+        "uint64": 1
+      },
+      "arrays": [
+        {
+          "type": "[32]byte",
+          "elem": "byte",
+          "length": 32,
+          "count": 1
+        },
+        {
+          "type": "[6]byte",
+          "elem": "byte",
+          "length": 6,
+          "count": 2
+        }
+      ],
+      "imports": [
+        "example.org/gosvm/full-swap/model",
+        "gosvm/sdk/pda",
+        "gosvm/sdk/token",
+        "gosvm/solana"
+      ],
+      "max_loop_nesting": 1
+    },
+    "generated": {
+      "files": 1,
+      "lines": 2555,
+      "constructs": {
+        "address_of": 0,
+        "array_equality": 0,
+        "array_literals": 0,
+        "array_type_decls": 0,
+        "assignments": 111,
+        "break": 0,
+        "builtin_calls": 67,
+        "channel_types": 0,
+        "char_literals": 0,
+        "compound_assignments": 0,
+        "const_typed": 0,
+        "const_untyped": 0,
+        "continue": 0,
+        "conversions": 154,
+        "cross_package_calls": 0,
+        "defer": 0,
+        "else": 0,
+        "else_if": 0,
+        "fallthrough": 0,
+        "field_selections": 300,
+        "for_condition_only": 0,
+        "for_infinite": 0,
+        "for_range": 0,
+        "for_range_array": 0,
+        "for_range_int": 0,
+        "for_range_other": 0,
+        "for_range_slice": 0,
+        "for_three_clause": 96,
+        "function_calls": 212,
+        "function_literals": 0,
+        "functions": 15,
+        "go": 0,
+        "goto": 0,
+        "if": 662,
+        "index_expressions": 460,
+        "indirect_calls": 0,
+        "int_literals": 1886,
+        "interface_types": 0,
+        "keyed_literals": 0,
+        "labels": 0,
+        "library_calls": 0,
+        "map_types": 0,
+        "method_calls": 20,
+        "methods_declared": 0,
+        "multi_result_functions": 0,
+        "multi_value_assignments": 38,
+        "multi_value_returns": 0,
+        "other_type_decls": 0,
+        "params": 36,
+        "pointer_derefs": 0,
+        "pointer_params": 0,
+        "pointer_receivers": 0,
+        "pointer_results": 0,
+        "pointer_types": 0,
+        "results": 14,
+        "returns": 680,
+        "sdk_calls": 189,
+        "select": 0,
+        "short_var_decls": 200,
+        "slice_expressions": 2,
+        "slice_expressions_of_arrays": 2,
+        "slice_literals": 0,
+        "slice_types": 4,
+        "string_literals": 0,
+        "struct_equality": 0,
+        "struct_literals": 0,
+        "struct_type_decls": 5,
+        "switch": 1,
+        "switch_cases": 5,
+        "switch_tagless": 0,
+        "type_aliases": 0,
+        "type_switch": 0,
+        "value_receivers": 0,
+        "var_decls": 23
+      },
+      "operators": {
+        "!": 42,
+        "!=": 460,
+        "*": 30,
+        "+": 30,
+        "++": 96,
+        "<": 97,
+        "<<": 1,
+        ">>": 1,
+        "|": 1,
+        "||": 10
+      },
+      "operator_classes": {
+        "arithmetic": 60,
+        "bitwise": 1,
+        "comparison": 557,
+        "incdec": 96,
+        "logical": 52,
+        "shift": 2
+      },
+      "builtins": {
+        "len": 67
+      },
+      "integer_types": {
+        "byte": 42,
+        "uint64": 146
+      },
+      "integer_value_types": {
+        "byte": 804,
+        "int": 434,
+        "uint64": 1960
+      },
+      "conversions": {
+        "byte": 27,
+        "uint64": 127
+      },
+      "arrays": [
+        {
+          "type": "[32]byte",
+          "elem": "byte",
+          "length": 32,
+          "count": 9
+        },
+        {
+          "type": "[6]byte",
+          "elem": "byte",
+          "length": 6,
+          "count": 2
+        }
+      ],
+      "imports": [
+        "example.org/gosvm/full-swap/model",
+        "gosvm/sdk/pda",
+        "gosvm/sdk/system",
+        "gosvm/sdk/token",
+        "gosvm/solana"
+      ],
+      "max_loop_nesting": 1
+    }
+  },
+  "sdk_calls": [
+    {
+      "name": "(*gosvm/sdk/pda.Seeds).AddByte",
+      "package": "gosvm/sdk/pda",
+      "method": true,
+      "count": 10,
+      "handwritten": 4,
+      "generated": 6,
+      "positions": [
+        "lifecycle.go:30",
+        "lifecycle.go:30",
+        "lifecycle.go:80",
+        "program.go:53",
+        "zz_gosvm.go:543",
+        "zz_gosvm.go:1493",
+        "zz_gosvm.go:1525",
+        "zz_gosvm.go:1547",
+        "zz_gosvm.go:1996",
+        "zz_gosvm.go:2539"
+      ]
+    },
+    {
+      "name": "(*gosvm/sdk/pda.Seeds).AddBytes",
+      "package": "gosvm/sdk/pda",
+      "method": true,
+      "count": 10,
+      "handwritten": 2,
+      "generated": 8,
+      "positions": [
+        "lifecycle.go:30",
+        "lifecycle.go:30",
+        "zz_gosvm.go:540",
+        "zz_gosvm.go:1487",
+        "zz_gosvm.go:1490",
+        "zz_gosvm.go:1519",
+        "zz_gosvm.go:1522",
+        "zz_gosvm.go:1544",
+        "zz_gosvm.go:1993",
+        "zz_gosvm.go:2536"
+      ]
+    },
+    {
+      "name": "(*gosvm/sdk/pda.Seeds).AddKey",
+      "package": "gosvm/sdk/pda",
+      "method": true,
+      "count": 4,
+      "handwritten": 4,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:30",
+        "lifecycle.go:30",
+        "lifecycle.go:80",
+        "program.go:53"
+      ]
+    },
+    {
+      "name": "(*gosvm/sdk/pda.Seeds).Matches",
+      "package": "gosvm/sdk/pda",
+      "method": true,
+      "count": 6,
+      "handwritten": 0,
+      "generated": 6,
+      "positions": [
+        "zz_gosvm.go:554",
+        "zz_gosvm.go:1504",
+        "zz_gosvm.go:1536",
+        "zz_gosvm.go:1558",
+        "zz_gosvm.go:2007",
+        "zz_gosvm.go:2550"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/system.Create",
+      "package": "gosvm/sdk/system",
+      "method": false,
+      "count": 1,
+      "handwritten": 0,
+      "generated": 1,
+      "positions": [
+        "zz_gosvm.go:1476"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.Balance",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 8,
+      "handwritten": 8,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:16",
+        "lifecycle.go:20",
+        "lifecycle.go:71",
+        "lifecycle.go:75",
+        "program.go:21",
+        "program.go:25",
+        "program.go:29",
+        "program.go:33"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.CloseSigned",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 2,
+      "handwritten": 2,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:95",
+        "lifecycle.go:99"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.CreateSigned",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 2,
+      "handwritten": 2,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:33",
+        "lifecycle.go:37"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.Load",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 16,
+      "handwritten": 2,
+      "generated": 14,
+      "positions": [
+        "lifecycle.go:41",
+        "lifecycle.go:45",
+        "zz_gosvm.go:424",
+        "zz_gosvm.go:433",
+        "zz_gosvm.go:442",
+        "zz_gosvm.go:451",
+        "zz_gosvm.go:1381",
+        "zz_gosvm.go:1390",
+        "zz_gosvm.go:1874",
+        "zz_gosvm.go:1883",
+        "zz_gosvm.go:1892",
+        "zz_gosvm.go:1901",
+        "zz_gosvm.go:2426",
+        "zz_gosvm.go:2435",
+        "zz_gosvm.go:2444",
+        "zz_gosvm.go:2453"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.Read",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 14,
+      "handwritten": 0,
+      "generated": 14,
+      "positions": [
+        "zz_gosvm.go:429",
+        "zz_gosvm.go:438",
+        "zz_gosvm.go:447",
+        "zz_gosvm.go:456",
+        "zz_gosvm.go:1386",
+        "zz_gosvm.go:1395",
+        "zz_gosvm.go:1879",
+        "zz_gosvm.go:1888",
+        "zz_gosvm.go:1897",
+        "zz_gosvm.go:1906",
+        "zz_gosvm.go:2431",
+        "zz_gosvm.go:2440",
+        "zz_gosvm.go:2449",
+        "zz_gosvm.go:2458"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.Transfer",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 3,
+      "handwritten": 3,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:49",
+        "lifecycle.go:53",
+        "program.go:48"
+      ]
+    },
+    {
+      "name": "gosvm/sdk/token.TransferSigned",
+      "package": "gosvm/sdk/token",
+      "method": false,
+      "count": 3,
+      "handwritten": 3,
+      "generated": 0,
+      "positions": [
+        "lifecycle.go:84",
+        "lifecycle.go:90",
+        "program.go:56"
+      ]
+    },
+    {
+      "name": "gosvm/solana.CloseAccount",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 1,
+      "handwritten": 0,
+      "generated": 1,
+      "positions": [
+        "zz_gosvm.go:2527"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Count",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 4,
+      "handwritten": 0,
+      "generated": 4,
+      "positions": [
+        "zz_gosvm.go:118",
+        "zz_gosvm.go:561",
+        "zz_gosvm.go:1565",
+        "zz_gosvm.go:2014"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Data",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 6,
+      "handwritten": 0,
+      "generated": 6,
+      "positions": [
+        "zz_gosvm.go:387",
+        "zz_gosvm.go:1327",
+        "zz_gosvm.go:1336",
+        "zz_gosvm.go:1447",
+        "zz_gosvm.go:1834",
+        "zz_gosvm.go:2386"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Executable",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 35,
+      "handwritten": 0,
+      "generated": 35,
+      "positions": [
+        "zz_gosvm.go:124",
+        "zz_gosvm.go:130",
+        "zz_gosvm.go:136",
+        "zz_gosvm.go:142",
+        "zz_gosvm.go:148",
+        "zz_gosvm.go:154",
+        "zz_gosvm.go:157",
+        "zz_gosvm.go:160",
+        "zz_gosvm.go:570",
+        "zz_gosvm.go:579",
+        "zz_gosvm.go:585",
+        "zz_gosvm.go:591",
+        "zz_gosvm.go:597",
+        "zz_gosvm.go:603",
+        "zz_gosvm.go:606",
+        "zz_gosvm.go:609",
+        "zz_gosvm.go:612",
+        "zz_gosvm.go:615",
+        "zz_gosvm.go:618",
+        "zz_gosvm.go:1571",
+        "zz_gosvm.go:1577",
+        "zz_gosvm.go:1583",
+        "zz_gosvm.go:1589",
+        "zz_gosvm.go:1595",
+        "zz_gosvm.go:1601",
+        "zz_gosvm.go:1604",
+        "zz_gosvm.go:1607",
+        "zz_gosvm.go:2020",
+        "zz_gosvm.go:2029",
+        "zz_gosvm.go:2035",
+        "zz_gosvm.go:2041",
+        "zz_gosvm.go:2047",
+        "zz_gosvm.go:2053",
+        "zz_gosvm.go:2056",
+        "zz_gosvm.go:2059"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Instruction",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 5,
+      "handwritten": 0,
+      "generated": 5,
+      "positions": [
+        "zz_gosvm.go:88",
+        "zz_gosvm.go:510",
+        "zz_gosvm.go:1419",
+        "zz_gosvm.go:1960",
+        "zz_gosvm.go:2517"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Key",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 41,
+      "handwritten": 0,
+      "generated": 41,
+      "positions": [
+        "zz_gosvm.go:167",
+        "zz_gosvm.go:178",
+        "zz_gosvm.go:182",
+        "zz_gosvm.go:186",
+        "zz_gosvm.go:190",
+        "zz_gosvm.go:194",
+        "zz_gosvm.go:198",
+        "zz_gosvm.go:202",
+        "zz_gosvm.go:540",
+        "zz_gosvm.go:625",
+        "zz_gosvm.go:629",
+        "zz_gosvm.go:733",
+        "zz_gosvm.go:737",
+        "zz_gosvm.go:741",
+        "zz_gosvm.go:745",
+        "zz_gosvm.go:749",
+        "zz_gosvm.go:753",
+        "zz_gosvm.go:853",
+        "zz_gosvm.go:953",
+        "zz_gosvm.go:1057",
+        "zz_gosvm.go:1490",
+        "zz_gosvm.go:1522",
+        "zz_gosvm.go:1544",
+        "zz_gosvm.go:1614",
+        "zz_gosvm.go:1625",
+        "zz_gosvm.go:1629",
+        "zz_gosvm.go:1633",
+        "zz_gosvm.go:1637",
+        "zz_gosvm.go:1641",
+        "zz_gosvm.go:1645",
+        "zz_gosvm.go:1649",
+        "zz_gosvm.go:1993",
+        "zz_gosvm.go:2066",
+        "zz_gosvm.go:2077",
+        "zz_gosvm.go:2181",
+        "zz_gosvm.go:2185",
+        "zz_gosvm.go:2189",
+        "zz_gosvm.go:2193",
+        "zz_gosvm.go:2197",
+        "zz_gosvm.go:2201",
+        "zz_gosvm.go:2536"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Lamports",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 1,
+      "handwritten": 0,
+      "generated": 1,
+      "positions": [
+        "zz_gosvm.go:1327"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Owner",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 10,
+      "handwritten": 0,
+      "generated": 10,
+      "positions": [
+        "zz_gosvm.go:171",
+        "zz_gosvm.go:633",
+        "zz_gosvm.go:957",
+        "zz_gosvm.go:1061",
+        "zz_gosvm.go:1326",
+        "zz_gosvm.go:1335",
+        "zz_gosvm.go:1451",
+        "zz_gosvm.go:1618",
+        "zz_gosvm.go:2070",
+        "zz_gosvm.go:2081"
+      ]
+    },
+    {
+      "name": "gosvm/solana.ProgramID",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 10,
+      "handwritten": 0,
+      "generated": 10,
+      "positions": [
+        "zz_gosvm.go:163",
+        "zz_gosvm.go:546",
+        "zz_gosvm.go:621",
+        "zz_gosvm.go:1496",
+        "zz_gosvm.go:1528",
+        "zz_gosvm.go:1550",
+        "zz_gosvm.go:1610",
+        "zz_gosvm.go:1999",
+        "zz_gosvm.go:2062",
+        "zz_gosvm.go:2542"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Signer",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 5,
+      "handwritten": 0,
+      "generated": 5,
+      "positions": [
+        "zz_gosvm.go:127",
+        "zz_gosvm.go:567",
+        "zz_gosvm.go:576",
+        "zz_gosvm.go:1574",
+        "zz_gosvm.go:2026"
+      ]
+    },
+    {
+      "name": "gosvm/solana.Writable",
+      "package": "gosvm/solana",
+      "method": false,
+      "count": 22,
+      "handwritten": 0,
+      "generated": 22,
+      "positions": [
+        "zz_gosvm.go:121",
+        "zz_gosvm.go:133",
+        "zz_gosvm.go:139",
+        "zz_gosvm.go:145",
+        "zz_gosvm.go:151",
+        "zz_gosvm.go:564",
+        "zz_gosvm.go:573",
+        "zz_gosvm.go:582",
+        "zz_gosvm.go:588",
+        "zz_gosvm.go:594",
+        "zz_gosvm.go:600",
+        "zz_gosvm.go:1568",
+        "zz_gosvm.go:1580",
+        "zz_gosvm.go:1586",
+        "zz_gosvm.go:1592",
+        "zz_gosvm.go:1598",
+        "zz_gosvm.go:2017",
+        "zz_gosvm.go:2023",
+        "zz_gosvm.go:2032",
+        "zz_gosvm.go:2038",
+        "zz_gosvm.go:2044",
+        "zz_gosvm.go:2050"
+      ]
+    }
+  ],
+  "library_calls": []
+}

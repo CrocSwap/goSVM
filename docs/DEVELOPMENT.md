@@ -435,6 +435,10 @@ changing runtime code; it does not make source edits faster.
 
 ## Supported subset and remaining blockers
 
+To see which constructs and SDK calls one program actually uses, run
+`gosvm features` ([schema `gosvm-features-v1`](FEATURES_REPORT.md)); it splits
+handwritten code from the generated adapter.
+
 One file or a directory of root-level non-test Go files in one package;
 `Process(solana.Context) uint64` with the pinned SDK and restricted user packages, or
 legacy `Process([]byte, []byte) uint64`. The SDK adapter supports up to 16 incoming
