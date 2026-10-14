@@ -32,6 +32,7 @@ func (g *generator) loop(s *ast.ForStmt) {
 	if s.Init != nil {
 		g.stmt(s.Init)
 	}
+	fresh := g.freshLoopVariables(s)
 	g.line("for (;;) {")
 	if s.Cond != nil {
 		c := g.expr(s.Cond)
@@ -41,6 +42,7 @@ func (g *generator) loop(s *ast.ForStmt) {
 	if label != "" {
 		g.line("%s: ;", label)
 	}
+	g.copyLoopVariables(s, fresh)
 	if s.Post != nil {
 		g.stmt(s.Post)
 	}

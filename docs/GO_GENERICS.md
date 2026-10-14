@@ -52,6 +52,13 @@ func Process(s, i []byte) uint64 {
   (`func (p Pair[K, V]) Flip() Pair[V, K]`).
 - Generic calls inside generic code, including across packages: a library
   package's `Stack[T]` can be instantiated with the importing package's types.
+- Function values in generic code ([function values](GO_FUNCTIONS.md)):
+  generic functions take and return function values
+  (`Map[T, U any](xs []T, f func(T) U) []U`), generic instances and methods of
+  generic types are values (`Max[int8]`, inferred `var f func(int64, int64)
+  int64 = Max`, `b.Get` on a `Box[int16]`, `Box[uint8].Get`), function types
+  are type arguments, and each instance has its own closures. Recursion
+  through a value of an instance's own signature is rejected like any other.
 - Allocation in generic code: `make([]T, n)`, `append` on `[]T`, `new(T)`,
   `[]T{...}`, and generic structs with pointer or slice fields. Escape analysis
   runs per instance, so each instance moves exactly its own escaping locals to

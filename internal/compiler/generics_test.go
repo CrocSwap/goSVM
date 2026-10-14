@@ -151,10 +151,10 @@ func TestGenericRejections(t *testing.T) {
 			"g.go:3:1: interface method Value: unsupported type float64"},
 		"constraint violation": {unsigned + "func Min[T Unsigned](a, b T) T { return a }\nfunc Process(s, i []byte) uint64 { _ = Min(\"a\", \"b\"); return 0 }",
 			"g.go:4:40: string does not satisfy Unsigned (string missing in ~uint8 | ~uint16 | ~uint32 | ~uint64)"},
-		"generic function value": {"func Id[T any](x T) T { return x }\nfunc Process(s, i []byte) uint64 { f := Id[uint64]; return f(1) }",
-			"g.go:3:41: unsupported identifier"},
-		"generic method value": {"type B[T any] struct{ v T }\nfunc (b B[T]) Get() T { return b.v }\nfunc Process(s, i []byte) uint64 { f := B[uint64]{}.Get; return f() }",
-			"g.go:4:41: method values unsupported; call the method directly"},
+		// A generic function calling itself through a value of its own
+		// signature: every instance's value is a possible callee.
+		"generic recursion through a value": {"func Id[T any](x T) T { f := Id[T]; return f(x) }\nfunc Process(s, i []byte) uint64 { return Id(uint64(1)) }",
+			"g.go:3:43: instantiation Id[uint64]: g.go:2:1: recursion is not supported"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if got := genericCheck(t, c.source); got != c.want {

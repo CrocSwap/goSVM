@@ -456,7 +456,7 @@ Only the original experiment additionally tests v0 (`SBF_ARCH=v0 make verify`).
 
 Supported: every integer type (`uint8`/`byte`, `uint16`, `uint32`, `uint64`, `uint`,
 `int8`, `int16`, `int32`/`rune`, `int64`, `int`; `int` and `uint` are 64 bits), `bool`,
-byte slices, constants, local zero values, direct functions with unnamed results,
+byte slices, constants, local zero values, functions with unnamed or named results, function values and closures, `defer`,
 indexing, `len`, integer arithmetic/conversions, comparisons, `if`,
 conditional/three-clause `for`, Go 1.22 `range` over integer counts, scalar arrays,
 array pointers and byte slices, unlabeled `break`/`continue`, single or multiple
@@ -552,13 +552,29 @@ strings, the predeclared `error` interface works like any interface value. See
 [string semantics, allocation and SBF evidence](../docs/GO_STRINGS.md) and the
 [string fixture](../examples/string-values/program.go).
 
+Function values, closures and `defer` have Go's semantics: declared functions,
+generic instances, method values and method expressions as values; literals
+capturing variables by reference (captured variables move to the heap; Go 1.22
+per-iteration loop variables); calls through values (compare-and-branch
+dispatch over the program's targets of the signature); `defer` (including in
+loops, with deferred closures changing named results); and named results. A
+nil function call aborts. Recursion through function values is rejected,
+resolving each call through a value to every target of its signature. See
+[function value semantics, heap cost and SBF evidence](../docs/GO_FUNCTIONS.md)
+and the [function-value fixture](../examples/func-values/program.go), checked
+against ordinary Go on the host and on SBF. The two combine: closures capture
+strings, function types take and return strings and `error`, and deferred
+closures change named `string`/`error` results
+([combined fixture](../examples/func-strings/program.go), checked against
+ordinary Go on the host).
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
 floating-point and complex types, globals, `init`, named slices, maps,
-closures/function and method values, recursion (including through dynamic calls), named results, variadics,
+method values of interface types, recursion (including through dynamic calls and function values), variadics,
 compound assignment other than `+=` on strings,
-range over maps/channels/functions, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
+range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
-uncomparable interface comparison and nil interface call failures abort; there is no recovery or stack growth. LLVM/VM stack limits
+uncomparable interface comparison, nil interface call and nil function call failures abort; there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

@@ -113,7 +113,8 @@ return values, methods, `range` loops, constrained pointers, borrowed byte slice
 slices of any element type), [interface values](docs/GO_INTERFACES.md)
 (dynamic dispatch, type assertions and switches) and
 [strings and `error`](docs/GO_STRINGS.md) (UTF-8 `range`, concatenation,
-conversions). It lowers Go through checked C and Solana Clang/LLD to SBF.
+conversions), and [function values, closures and `defer`](docs/GO_FUNCTIONS.md).
+It lowers Go through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, maps,
 goroutines, and on-chain standard-library imports other than

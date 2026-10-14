@@ -94,6 +94,20 @@ interface-to-interface conversions allocate nothing. With the default budget,
 ([boxing cost](GO_INTERFACES.md#boxing-cost)). Programs with interface values
 always carry the heap runtime.
 
+### Function values and closures
+
+[Function values](GO_FUNCTIONS.md#heap-cost) allocate like any other value:
+a declared function, instance, method expression or literal without captures
+allocates nothing; evaluating a literal with `n` captured variables allocates
+`8 + 8n` bytes (the target ID and one address per capture); a method value
+allocates 16 bytes (pointer receiver) or 8 plus the receiver's size rounded up
+to 8 (value receiver). Every captured variable is moved to the heap by the
+escape analysis (below), so closures share it by reference; a captured
+three-clause loop variable gets a fresh allocation before each post statement
+(Go 1.22 per-iteration variables). A `defer` in a loop allocates its record (16
+bytes plus the saved values, rounded up to 8) per execution. Programs with
+function values or `defer` always carry the heap runtime.
+
 ## Heap budget
 
 The budget is a compile-time constant (`GOSVM_HEAP_BYTES` in the C runtime):
@@ -163,7 +177,13 @@ variable or an `&T{...}` literal) **escapes** when it may be:
 - stored into heap data: assigned to a field, an element or through a pointer,
   written into a struct or slice literal, or appended;
 - converted to an interface (an interface value can be copied anywhere), or
-  passed to a dynamic method call, which may run any implementation; or
+  passed to a dynamic method call, which may run any implementation;
+- captured by a function literal (always moved: a closure can be called
+  anywhere), bound by a pointer-receiver method value, passed to a call
+  through a function value (which may run any target), or returned by a
+  literal;
+- saved by a `defer` statement while declared in an inner block of the
+  function (the block's storage ends before the deferred call runs); or
 - passed as an argument that the callee may store into heap data (the callee's
   `BorrowSummary.Escapes`, propagated through calls and returned borrows).
 

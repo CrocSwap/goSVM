@@ -177,6 +177,17 @@ func (gp *genericProgram) discover(root ast.Node) {
 			return false
 		}
 		gp.nodeTypes(n)
+		if id, ok := n.(*ast.Ident); ok {
+			// A generic function or method used as a value (F[T], x.M, T.M)
+			// runs the instance its type arguments select; calls were
+			// resolved at their call expression, visited first.
+			if fn, ok := gp.info.Uses[id].(*types.Func); ok && gp.decls[fn.Origin()] != nil && gp.instantiated[id] == nil {
+				if args, ok := gp.instanceArgs(fn, id); ok {
+					gp.request(fn.Origin(), args, id)
+				}
+			}
+			return true
+		}
 		call, ok := n.(*ast.CallExpr)
 		if !ok {
 			return true
@@ -214,6 +225,35 @@ func (gp *genericProgram) discover(root ast.Node) {
 		gp.request(origin, args, id)
 		return true
 	})
+}
+
+// instanceArgs are the type arguments of a generic function or method named
+// by id outside a call; false when they are not concrete.
+func (gp *genericProgram) instanceArgs(fn *types.Func, id *ast.Ident) ([]types.Type, bool) {
+	if fn.Origin().Type().(*types.Signature).RecvTypeParams().Len() > 0 {
+		recv := fn.Type().(*types.Signature).Recv().Type()
+		if p, ok := recv.(*types.Pointer); ok {
+			recv = p.Elem()
+		}
+		named, ok := recv.(*types.Named)
+		if !ok || containsTypeParam(named) {
+			return nil, false
+		}
+		return typeList(named.TypeArgs()), true
+	}
+	if copied, ok := gp.copyArgs[id]; ok {
+		return copied, true
+	}
+	if instance, ok := gp.info.Instances[id]; ok {
+		args := typeList(instance.TypeArgs)
+		for _, a := range args {
+			if containsTypeParam(a) {
+				return nil, false
+			}
+		}
+		return args, true
+	}
+	return nil, false
 }
 
 // nodeTypes records the type instances that a node's type or definition uses.
@@ -939,6 +979,11 @@ func writeType(b *strings.Builder, t types.Type, qualifier types.Qualifier) {
 		writeType(b, t.Elem(), qualifier)
 	case *types.Interface:
 		writeInterface(b, t, qualifier)
+	case *types.Signature:
+		// Function types are spelled by parameter and result types, so
+		// identical types (whatever their parameter names) share a key.
+		b.WriteString("func")
+		writeSignature(b, t, qualifier)
 	case *types.Map:
 		b.WriteString("map[")
 		writeType(b, t.Key(), qualifier)

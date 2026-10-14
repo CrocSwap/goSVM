@@ -386,7 +386,7 @@ func checkedReport(t *testing.T, path string) *Usage {
 // The uses summary flags each feature beyond the original subset; full swap
 // (the pinned baseline) uses none of them.
 func TestUsesSummary(t *testing.T) {
-	if got := checkedReport(t, filepath.Join("..", "..", "examples", "full-swap")).Uses; got != (Uses{Checked: true}) {
+	if got := checkedReport(t, filepath.Join("..", "..", "examples", "full-swap")).Uses; !reflect.DeepEqual(got, Uses{Checked: true}) {
 		t.Errorf("full swap uses: %+v", got)
 	}
 	for name, tc := range map[string]struct {
@@ -430,7 +430,7 @@ func Process(s, i []byte) uint64 { h, _ := bits.Mul64(Id(uint64(3)), 4); return 
 			t.Errorf("%s: expected a Check error", name)
 		}
 		got.CheckError = ""
-		if got != tc.want {
+		if !reflect.DeepEqual(got, tc.want) {
 			t.Errorf("%s: %+v, want %+v", name, got, tc.want)
 		}
 	}

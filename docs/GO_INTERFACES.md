@@ -179,9 +179,15 @@ out-of-memory trap.
   interfaces`.
 - `interface values must not hold T: it contains zero-length arrays or empty
   structs` (see above).
-- Method values (`f := x.M`) and method expressions of interface types
-  (`I.M(x)`) are rejected, as are maps (and so interfaces as map keys), and
-  embedding an interface in a struct (struct embedding is rejected).
+- Method values (`f := x.M`) and method expressions (`I.M`, `I.M(x)`) of
+  interface types are rejected (`method values of interface types
+  unsupported; use a function literal that calls the method`); method values
+  of concrete types are supported ([function values](GO_FUNCTIONS.md)). Maps
+  (and so interfaces as map keys) and embedding an interface in a struct
+  (struct embedding is rejected) remain unsupported.
+- [Function values](GO_FUNCTIONS.md) can be stored in interfaces (8-byte
+  box), asserted and switched on; function types are not comparable, so
+  comparing two interfaces holding the same function type aborts.
 - Recursion is rejected through dynamic calls too: a dynamic call may reach any
   method that fills its slot, so a cycle through one is `recursion is not
   supported`.

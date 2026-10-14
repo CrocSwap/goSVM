@@ -143,7 +143,6 @@ func TestAllocationRejections(t *testing.T) {
 		"slice compare":       {`a, b := []V{}, []V{}; _ = a == nil && b == nil; s[0] = 1; var w []uint64; _ = w`, ""},
 		"compound append":     {`var w []uint64; w = append(w, 1); w[0] += 1`, "compound assignment unsupported"},
 		"struct compare":      {`var a, b V; _ = a.N == b.N; s[0] = 1; _ = a == b`, "struct comparisons unsupported; compare fields explicitly"},
-		"method value":        {`v := V{}; f := v.Addr; _ = f`, "method values unsupported; call the method directly"},
 		"signed make length":  {`w := make([]uint64, len(s)-1); _ = w`, ""},
 		"zero struct pointer": {`p := new(E); _ = p`, ""},
 	} {

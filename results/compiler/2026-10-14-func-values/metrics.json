@@ -1,0 +1,116 @@
+{
+  "full_swap_elf": {
+    "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+    "rebuild_identical": true,
+    "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"
+  },
+  "heap_limits_32k": {
+    "capture1_16B": 2044,
+    "capture3_32B": 1022,
+    "loop_defer_uint64_24B": 1363,
+    "pointer_method_16B": 2044,
+    "upfront_bytes": 48,
+    "value_method_24B_receiver_32B": 1022
+  },
+  "host_differential": {
+    "go_panics": 4463,
+    "heap_bytes": 32768,
+    "vectors": 13932
+  },
+  "indirect_call_experiment": {
+    "note": "f := a or b selected by input, then f(x): gosvm compare-and-branch dispatcher vs a volatile C function pointer (callx, code relocation) vs a const table of function pointers (callx, data relocation); every variant ran correctly on both targets",
+    "results": {
+      "fogo-v0": {
+        "code": {
+          "a_cu": 117,
+          "all_passed": true,
+          "b_cu": 115
+        },
+        "dispatch": {
+          "a_cu": 111,
+          "all_passed": true,
+          "b_cu": 109
+        },
+        "table": {
+          "a_cu": 120,
+          "all_passed": true,
+          "b_cu": 118
+        }
+      },
+      "solana-v3": {
+        "code": {
+          "a_cu": 117,
+          "all_passed": true,
+          "b_cu": 115
+        },
+        "dispatch": {
+          "a_cu": 111,
+          "all_passed": true,
+          "b_cu": 109
+        },
+        "table": {
+          "a_cu": 120,
+          "all_passed": true,
+          "b_cu": 118
+        }
+      }
+    }
+  },
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "runner": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0, Agave 4.0)"
+  },
+  "schema": 1,
+  "targets": {
+    "fogo-v0": {
+      "aborts": 105,
+      "calls_elf_sha256": "636d81127e155ecdab0aaf8bd5f4253939c17941ae206b05c82dd931c86ac5e9",
+      "cases": 336,
+      "cu_per_iteration_closure": 52.1,
+      "cu_per_iteration_direct": 46.11,
+      "cu_per_iteration_function_value": 50.11,
+      "cu_per_iteration_inline": 46.1,
+      "envs-kind0-2044-fits_cu": 57460,
+      "envs-kind0-2045-oom_cu": 57448,
+      "envs-kind1-1022-fits_cu": 39071,
+      "envs-kind1-1023-oom_cu": 39053,
+      "envs-kind2-5000-fits_cu": 70225,
+      "envs-kind3-5000-fits_cu": 65228,
+      "envs-kind4-1022-fits_cu": 38044,
+      "envs-kind4-1023-oom_cu": 38032,
+      "envs-kind5-2044-fits_cu": 57462,
+      "envs-kind5-2045-oom_cu": 57449,
+      "envs-kind6-1363-fits_cu": 56097,
+      "envs-kind6-1364-oom_cu": 56103,
+      "func_elf_sha256": "e6519f9c176f8fab02c1eaa7a13b35bcddd24b41bfa8013bfb1d4ac1eec70d32",
+      "max_vector_cu": 8899,
+      "profile": "fogo-v0"
+    },
+    "solana-v3": {
+      "aborts": 105,
+      "calls_elf_sha256": "4a0665f2bfc00172141b4eac739a81aa27de391ac32c33c69662f90d44bcedc5",
+      "cases": 336,
+      "cu_per_iteration_closure": 52.1,
+      "cu_per_iteration_direct": 46.11,
+      "cu_per_iteration_function_value": 50.11,
+      "cu_per_iteration_inline": 46.1,
+      "envs-kind0-2044-fits_cu": 57453,
+      "envs-kind0-2045-oom_cu": 57440,
+      "envs-kind1-1022-fits_cu": 40086,
+      "envs-kind1-1023-oom_cu": 40067,
+      "envs-kind2-5000-fits_cu": 75218,
+      "envs-kind3-5000-fits_cu": 70221,
+      "envs-kind4-1022-fits_cu": 39060,
+      "envs-kind4-1023-oom_cu": 39046,
+      "envs-kind5-2044-fits_cu": 59498,
+      "envs-kind5-2045-oom_cu": 59485,
+      "envs-kind6-1363-fits_cu": 50638,
+      "envs-kind6-1364-oom_cu": 50641,
+      "func_elf_sha256": "fa1777bfc6af81e54b1b7ae59e4c7a080f80655740bcfd4c041bfb0cc5b48115",
+      "max_vector_cu": 9120,
+      "profile": "solana-v3"
+    }
+  }
+}

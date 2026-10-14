@@ -78,6 +78,12 @@ type Uses struct {
 	// folded into constant expressions do not count). Added within
 	// gosvm-features-v1.
 	Strings bool `json:"strings"`
+	// Closures: function literals, function values, method values or
+	// expressions, or calls through function values (added within
+	// gosvm-features-v1; docs/GO_FUNCTIONS.md).
+	Closures bool `json:"closures"`
+	// Defer: defer statements (added within gosvm-features-v1).
+	Defer bool `json:"defer"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -86,6 +92,16 @@ type Uses struct {
 	// literals Check moves to the heap (across all functions and instances).
 	HeapMovedLocals   int `json:"heap_moved_locals"`
 	HeapMovedLiterals int `json:"heap_moved_literals"`
+	// RecursionCheckInconclusive is set when a call through a function value
+	// has possible targets that Check could not resolve to a set whose call
+	// graph is acyclic, with the reasons in RecursionCheckReasons (added
+	// within gosvm-features-v1). Check resolves every such call to all
+	// targets of its signature (the address-taken set) and rejects any
+	// cycle in the resulting graph, so a checked program's call graph is
+	// proven acyclic and the flag is always false; it exists so a backend
+	// can rely on that proof. See docs/GO_FUNCTIONS.md#recursion.
+	RecursionCheckInconclusive bool     `json:"recursion_check_inconclusive"`
+	RecursionCheckReasons      []string `json:"recursion_check_reasons,omitempty"`
 }
 
 // ApplyCheck records Check's verdict and heap moves in u.Uses.
@@ -132,6 +148,8 @@ func summarize(u *Usage) {
 	u.Uses.Uint16 = has(types, "uint16") || has(values, "uint16")
 	u.Uses.Range = sum("for_range") > 0
 	u.Uses.Strings = sum("string_values") > 0
+	u.Uses.Closures = sum("function_literals")+sum("function_values")+sum("method_values")+sum("method_expressions")+sum("indirect_calls") > 0
+	u.Uses.Defer = sum("defer") > 0
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -259,6 +277,12 @@ var ConstructNames = []string{
 	// non-constant conversions between strings and byte or rune slices or
 	// from integers (not string-to-string), and range over a string.
 	"string_values", "string_concatenations", "string_conversions", "string_ranges",
+	// Function values (added within gosvm-features-v1): declared functions
+	// (or generic instances) used as values rather than called, method
+	// values x.M and method expressions T.M not called, and functions and
+	// literals with named results. Literals are function_literals, calls
+	// through values indirect_calls and defer statements defer.
+	"function_values", "method_values", "method_expressions", "named_results",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -662,6 +686,10 @@ func (w *walker) file(f *ast.File) {
 	elseIf := map[ast.Stmt]bool{}
 	// Generic function names with written type arguments (F[T] or pkg.F[T]).
 	explicit := map[*ast.Ident]bool{}
+	// Callee expressions of calls (a function value is one that is not
+	// called) and the selector names, which count at their selector.
+	called := map[ast.Expr]bool{}
+	selected := map[*ast.Ident]bool{}
 	ast.Inspect(f, func(n ast.Node) bool {
 		var x ast.Expr
 		switch n := n.(type) {
@@ -669,6 +697,21 @@ func (w *walker) file(f *ast.File) {
 			x = n.X
 		case *ast.IndexListExpr:
 			x = n.X
+		case *ast.CallExpr:
+			fun := ast.Unparen(n.Fun)
+			switch f := fun.(type) {
+			case *ast.IndexExpr:
+				if w.instantiation(f.X) {
+					fun = f.X
+				}
+			case *ast.IndexListExpr:
+				if w.instantiation(f.X) {
+					fun = f.X
+				}
+			}
+			called[fun] = true
+		case *ast.SelectorExpr:
+			selected[n.Sel] = true
 		}
 		switch x := x.(type) {
 		case *ast.Ident:
@@ -722,6 +765,9 @@ func (w *walker) file(f *ast.File) {
 		}
 		switch n := n.(type) {
 		case *ast.Ident:
+			if fn, ok := w.tp.Info.Uses[n].(*types.Func); ok && !called[n] && !selected[n] && fn.Type().(*types.Signature).Recv() == nil {
+				w.count("function_values")
+			}
 			if _, ok := w.tp.Info.Instances[n]; ok {
 				switch w.tp.Info.Uses[n].(type) {
 				case *types.TypeName:
@@ -749,6 +795,9 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.FuncLit:
 			w.count("function_literals")
+			if sig, ok := w.typeOf(n).(*types.Signature); ok && sig.Results().Len() > 0 && sig.Results().At(0).Name() != "" {
+				w.count("named_results")
+			}
 		case *ast.TypeSpec:
 			if n.TypeParams != nil {
 				w.count("generic_types")
@@ -887,6 +936,15 @@ func (w *walker) file(f *ast.File) {
 		case *ast.SelectorExpr:
 			if s := w.tp.Info.Selections[n]; s != nil && s.Kind() == types.FieldVal {
 				w.count("field_selections")
+			} else if s != nil && !called[n] {
+				switch s.Kind() {
+				case types.MethodVal:
+					w.count("method_values")
+				case types.MethodExpr:
+					w.count("method_expressions")
+				}
+			} else if fn, ok := w.tp.Info.Uses[n.Sel].(*types.Func); ok && s == nil && !called[n] && fn.Type().(*types.Signature).Recv() == nil {
+				w.count("function_values")
 			}
 		case *ast.CallExpr:
 			w.call(n)
@@ -1030,6 +1088,9 @@ func (w *walker) funcDecl(n *ast.FuncDecl) {
 	}
 	if sig.Results().Len() > 1 {
 		w.count("multi_result_functions")
+	}
+	if sig.Results().Len() > 0 && sig.Results().At(0).Name() != "" {
+		w.count("named_results")
 	}
 }
 

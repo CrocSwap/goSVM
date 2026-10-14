@@ -146,6 +146,18 @@ package on-chain is math/bits)`. Write error types by hand (a struct or a named
 integer with an `Error() string` method). Logging strings through `sol_log` is
 a separate SDK item: the pinned SDK is unchanged and has no string API.
 
+## With function values
+
+Strings work in every [function-value](GO_FUNCTIONS.md) form: parameters and
+results of function types (including `error`), captured variables (a closure
+captures the variable, so a later `s += t` through one closure is seen by the
+others; the capture moves the 16-byte header to the heap, not the bytes),
+deferred calls with string arguments (evaluated at the `defer` statement),
+named `string` and `error` results changed by deferred closures, method values
+of types with string methods, and function values in interfaces next to
+`error` values. See [with strings and `error`](GO_FUNCTIONS.md#with-strings-and-error)
+for the combined heap costs and evidence.
+
 ## Traps
 
 Strings add no new trap. An out-of-range index or slice bound uses the existing

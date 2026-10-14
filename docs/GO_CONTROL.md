@@ -108,10 +108,38 @@ platform-tools v1.57 or the managed runners are not installed).
 The explicit error representation is an unsigned status code: zero means success,
 and a nonzero handler status is returned unchanged by the adapter. The SDK's
 encoded runtime/CPI statuses remain unchanged; an ordinary small handler code is
-a Solana custom error. Named results/naked returns, variadics and compound
-assignments (except `+=` on strings) remain unsupported. The built-in `error`
-interface is available inside handlers since [strings](GO_STRINGS.md#error)
-were added, but `Process` still returns this status code. Runtime arithmetic/bounds failures still abort.
+a Solana custom error. Variadics and compound assignments (except `+=` on
+strings) remain unsupported. Named results and bare `return` are supported
+([below](#defer-and-named-results)). The built-in `error` interface is
+available inside handlers since [strings](GO_STRINGS.md#error) were added, but
+`Process` still returns this status code. Runtime arithmetic/bounds failures still abort.
+
+## Defer and named results
+
+`defer` runs a call when the surrounding function returns, with Go's
+semantics ([function values](GO_FUNCTIONS.md)):
+
+- the function value (or method receiver) and the arguments are evaluated at
+  the `defer` statement; the call runs at return, after the result values are
+  set, last-in first-out;
+- deferred closures can read and change named results: `return x` assigns `x`
+  to the results, then deferred calls run, then the results are returned;
+- functions, static and dynamic methods, function values, literals and
+  `copy` can be deferred; `recover`, `panic` and `go` are rejected, as are
+  deferred `gosvm/solana` and `math/bits` calls (defer a literal that makes the
+  call);
+- `defer` inside `for` and `range` loops is supported: every execution's call
+  runs, newest first, and each record (16 bytes plus the saved values) is
+  allocated on the heap; outside loops a record lives in the frame;
+- a trap aborts without running deferred calls (there is no `recover`); on
+  chain the transaction rolls back.
+
+Named results (`func f() (a, b uint64)`) start at their zero values and may
+be returned with a bare `return`. Without `defer`, `return x, y` returns the
+values directly; with `defer`, they are stored in the results before the
+deferred calls run. A three-clause loop variable captured by a closure (or
+whose address escapes) is copied to a fresh variable before each post
+statement, as Go 1.22 specifies.
 
 [Validation](../results/compiler/2026-10-05-control-values/README.md) includes
 1,000 randomized ordinary-Go/generated-C vectors, 10 edge/error vectors, imported

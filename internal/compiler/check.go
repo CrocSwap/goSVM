@@ -100,9 +100,33 @@ type CheckedProgram struct {
 	TypeAssertions []*ast.TypeAssertExpr
 	TypeSwitches   []*ast.TypeSwitchStmt
 
+	// Function values, closures and defer (docs/GO_FUNCTIONS.md); all empty
+	// without them.
+	//
+	// FuncTargets is the address-taken set: every function a function value
+	// may hold (declared functions and instances used as values, literals,
+	// method values and method expressions); FuncTargets[i].ID is i+1.
+	FuncTargets []*FuncTarget
+	// FuncValues maps each expression that makes a function value (an
+	// identifier, pkg.F, F[T], x.M, T.M or a literal) to its target.
+	FuncValues map[ast.Expr]*FuncTarget
+	// FuncClasses are the distinct signatures called through function
+	// values, each with the targets of an identical signature: the possible
+	// callees of such a call. IndirectCalls maps each such call to its class
+	// (a literal called where it is written is not listed: it runs that
+	// literal).
+	FuncClasses   []*FuncClass
+	IndirectCalls map[*ast.CallExpr]*FuncClass
+	// Closures lists every function literal with its captured variables
+	// (its environment), in Functions order, enclosing literals first.
+	Closures []*Closure
+	// DeferSites lists every defer statement in Functions order.
+	DeferSites []*DeferSite
+
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
 	ifaces  *ifaceProgram
+	funcs   *funcProgram
 	// usesStrings reports that some checked value has a string type.
 	usesStrings bool
 }
@@ -239,6 +263,11 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 		}
 		active[o] = true
 		ast.Inspect(funcs[o].Decl.Body, func(n ast.Node) bool {
+			if _, ok := n.(*ast.FuncLit); ok {
+				// A literal's calls run when it is called; the instance graph
+				// below follows them through function values.
+				return false
+			}
 			if c, ok := n.(*ast.CallExpr); ok {
 				if target := callTarget(f, c); funcs[target] != nil {
 					visit(target)
@@ -287,18 +316,54 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	// a method constraint (x.M() with x of a type parameter) reaches its
 	// concrete method only once instantiated. Without generics the graph is
 	// the one checked above.
-	ordered, ordering := map[types.Object]bool{}, map[types.Object]bool{}
-	var order func(*Function)
-	order = func(function *Function) {
-		if ordering[function.Object] {
-			gp.wrap(function.Instance, func() { f.fail(function.Decl, "recursion is not supported") })
+	// Function literals are nodes of their own, and a call through a function
+	// value may run every target of its signature (the address-taken set),
+	// so recursion through function values is rejected too.
+	f.funcs = buildFuncValues(f, checked.Functions, checked.lowered)
+	checked.FuncTargets = f.funcs.targets
+	checked.FuncValues = f.funcs.byExpr
+	checked.FuncClasses = f.funcs.classes
+	checked.IndirectCalls = f.funcs.indirect
+	checked.Closures = f.funcs.closures
+	checked.DeferSites = f.funcs.defers
+	checked.funcs = f.funcs
+	ordered, ordering := map[any]bool{}, map[any]bool{}
+	var order func(node any)
+	order = func(node any) {
+		var body *ast.BlockStmt
+		var function *Function
+		switch n := node.(type) {
+		case *Function:
+			function, body = n, n.Decl.Body
+		case *Closure:
+			body = n.Lit.Body
 		}
-		if ordered[function.Object] {
+		if ordering[node] {
+			switch n := node.(type) {
+			case *Function:
+				gp.wrap(n.Instance, func() { f.fail(n.Decl, "recursion is not supported") })
+			case *Closure:
+				gp.wrap(n.Owner.Instance, func() { f.fail(n.Lit, "recursion is not supported") })
+			}
+		}
+		if ordered[node] {
 			return
 		}
-		ordered[function.Object], ordering[function.Object] = true, true
-		defer func() { ordering[function.Object] = false }()
-		ast.Inspect(function.Decl.Body, func(n ast.Node) bool {
+		ordered[node], ordering[node] = true, true
+		defer func() { ordering[node] = false }()
+		target := func(t *FuncTarget) {
+			if t.Kind == TargetLiteral {
+				if cl := f.funcs.byLit[t.Lit]; cl != nil {
+					order(cl)
+				}
+			} else if callee := instances[t.Func]; callee != nil {
+				order(callee)
+			}
+		}
+		ast.Inspect(body, func(n ast.Node) bool {
+			if _, ok := n.(*ast.FuncLit); ok {
+				return false // a literal's calls run when it is called
+			}
 			if c, ok := n.(*ast.CallExpr); ok {
 				if slot := f.ifaces.calls[c]; slot != nil {
 					// A dynamic call may run any method that fills its slot.
@@ -307,19 +372,36 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 							order(callee)
 						}
 					}
+				} else if class := f.funcs.indirect[c]; class != nil {
+					for _, t := range class.Targets {
+						target(t)
+					}
+				} else if lit, ok := ast.Unparen(c.Fun).(*ast.FuncLit); ok {
+					if t := f.funcs.byExpr[lit]; t != nil {
+						target(t)
+					}
 				} else if id := callIdent(f.callFun(c.Fun)); id != nil {
 					if callee := instances[f.callee(id)]; callee != nil {
 						order(callee)
-						function.addCallee(callee.Object)
+						if function != nil {
+							function.addCallee(callee.Object)
+						} else {
+							node.(*Closure).addCallee(callee.Object)
+						}
 					}
 				}
 			}
 			return true
 		})
-		checked.CallOrder = append(checked.CallOrder, function)
+		if function != nil {
+			checked.CallOrder = append(checked.CallOrder, function)
+		}
 	}
 	for _, function := range checked.Functions {
 		order(function)
+	}
+	for _, cl := range f.funcs.closures {
+		order(cl)
 	}
 	summaries := f.checkBorrows(lowered, instances, gp, importer.hasSDK)
 	for _, function := range checked.Functions {

@@ -148,6 +148,28 @@ var corpusChanges = map[int]corpusEntry{
 	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"},                                                       // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
 	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"},                                                       // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
 	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; the only standard-library package on-chain is math/bits)`}, // was "...; use a module-backed program for user packages"
+	// No entry is affected by both strings and function values: merging them
+	// changed no verdict or C hash recorded by either side.
+	//
+	// Function values, closures, defer and named results became supported
+	// (docs/GO_FUNCTIONS.md): each was a rejection and now compiles. Two
+	// remaining rejections are reached by the new rules first: a call
+	// through a Context field (Context fields stay opaque) and an SDK
+	// function used as a value (gosvm/solana has no Go bodies).
+	34:  {CSHA256: "1cde42fcf4acfdeeda674ed84256c5dbc9cf867a585c65dd9cd164c2ff381fbe"},                               // f2:=f; f2(): was "unsupported identifier"
+	65:  {CSHA256: "ef1906da10e87cf29e30eda8b6f0a2a282a822ced60e07f452c71264c962fc3c"},                               // func f()(a,b uint64): was "named results are unsupported"
+	81:  {CSHA256: "cf0127a1717128e24d768bff71cd96e6a1a1cbf0c6d46b71d68a1dd00eac9d39"},                               // defer f(): was "unsupported statement *ast.DeferStmt"
+	91:  {CSHA256: "9e102f8b87c9f629cfbe2ed4d3883eb1c5d927085b37ca6656dc169216d772c9"},                               // s14.go f := func() {}: was "unsupported expression *ast.FuncLit"
+	116: {Error: "reject.go:1:78: Context fields are opaque"},                                                        // c.Invoke(...) through a Context field: was "methods and function values unsupported"
+	122: {Error: "reject.go:1:74: gosvm/solana functions cannot be used as values; call them in a function literal"}, // f:=solana.Count: was "only value struct fields supported"
+	134: {CSHA256: "97a5a93e561d1f86560b970655224b54a083551325f2823f9c1038cc7e22cf68"},                               // s27.go type F func(): was "unsupported type program.F"
+	136: {CSHA256: "ef1906da10e87cf29e30eda8b6f0a2a282a822ced60e07f452c71264c962fc3c"},                               // func pair()(a,b uint64): was "named results are unsupported" (same C as 65)
+	153: {CSHA256: "f318bb3f6ebf79714559de24c1b7aa61fa9c9e1b824cb6e106d7aa9ddf5cb3b5"},                               // imported f:=s.F: was "method values unsupported; call the method directly"
+	183: {CSHA256: "cf0127a1717128e24d768bff71cd96e6a1a1cbf0c6d46b71d68a1dd00eac9d39"},                               // s63.go defer f(): was "unsupported statement *ast.DeferStmt" (same C as 81)
+	202: {CSHA256: "2b9319281286f623f5e4930273c1ba8d2886f0bb4d6fa756f7c174e5d60368fb"},                               // s12.go func() uint64 {...}(): was "only direct function calls supported"
+	229: {CSHA256: "7eddff6040fb04145527c0be61efebe70613f1f192a61b6c5ffeb2d2ca2d377b"},                               // f:=v.Read: was "method values unsupported; call the method directly"
+	248: {CSHA256: "b67fe362e0be4e216b50547f1d21dc9fc2ffa56cd5ef7c4d386fa94f27a256ff"},                               // s37.go f := s.M: was "method values unsupported; call the method directly"
+	291: {CSHA256: "8d94780bbebf314088d1744dbe48b51229e9ee8c0e2c39cb322695416d752a5c"},                               // imported f:=G: was "unsupported identifier"
 }
 
 const (
@@ -197,9 +219,10 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics and allocation each turned recorded rejections
-	// into accepted programs (corpusChanges); the rest still exercise Check.
-	if rejected < 95 {
+	// Signed integers, generics, allocation, strings and function values each
+	// turned recorded rejections into accepted programs (corpusChanges); the
+	// rest still exercise Check.
+	if rejected < 83 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

@@ -39,6 +39,17 @@ fails with no custom error code and the transaction rolls back.
   not comparable, where Go panics `comparing uncomparable type`.
 - Calling a method on a nil interface value, after the receiver and the
   arguments are evaluated (Go's nil pointer dereference).
+- Calling a nil function value, after the function value and the arguments
+  are evaluated; a nil deferred function value aborts when the deferring
+  function returns, after its body, where Go panics
+  ([function values](GO_FUNCTIONS.md#traps)). A nil interface, or a value
+  method through a nil pointer, in a `defer` statement aborts at the statement
+  after its arguments are evaluated (the existing nil-interface and
+  nil-pointer traps), as Go panics there.
+
+A trap aborts without running pending deferred calls (there is no `recover`);
+the instruction's effects roll back, so this is indistinguishable on chain
+from Go's unwinding.
 
 A program built with a heap budget above 32 KiB whose transaction did not
 request a large enough heap frame fails at its first allocation with a VM
@@ -86,6 +97,16 @@ because fixtures compare them byte for byte:
   and `rawruneslice` sizes, which are also their capacities, and `[]byte` of a
   constant exactly its length (capacity `len`). The full table is in
   [GO_STRINGS.md](GO_STRINGS.md#allocation).
+  Evaluating a function literal
+  that captures `n ≥ 1` variables allocates `8 + 8n` bytes (nothing without
+  captures, and nothing for a declared function, instance or method
+  expression used as a value); a method value allocates 16 bytes for a
+  pointer receiver and `8 + ((size+7)&^7)` for a value receiver of Go size
+  `size`; captured variables are always moved to the heap (a captured
+  three-clause loop variable is also copied to a fresh allocation before each
+  post statement); a `defer` statement inside a loop allocates a 16-byte header
+  plus its saved values as a C struct, rounded up to 8, per execution, and one
+  outside loops allocates nothing ([function values](GO_FUNCTIONS.md#heap-cost)).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
 ## Error codes
@@ -211,3 +232,11 @@ Handler results propagate unchanged.
   concatenations and conversions allocate as recorded under heap accounting
   and use the out-of-memory trap, and `[]byte(s)`/`[]rune(s)` capacities are
   contracted with it; `error` values use the interface traps.
+- 2026-10-14: addition (function values, closures, defer, named results), no
+  existing behaviour changed: calling a nil function value aborts (a nil
+  deferred value when the function returns); the heap cost of closure
+  environments, method values, captured variables and deferred calls in loops
+  is recorded under heap accounting; deferred calls do not run when a trap
+  aborts. A nil interface or nil pointer in a `defer` statement, closures
+  beyond the budget and comparisons of interfaces holding function values use
+  the existing traps.

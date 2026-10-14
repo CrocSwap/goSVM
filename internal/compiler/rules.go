@@ -26,10 +26,14 @@ type frontend struct {
 	// usesStrings is set when typeRule admits a string type: the program
 	// needs the string representation (docs/GO_STRINGS.md).
 	usesStrings bool
+	// funcs is the program's function-value information (targets, indirect
+	// calls, closures and defer sites); empty for programs without them.
+	funcs       *funcProgram
+	funcChecked map[*types.Signature]bool // function types funcTypeRule admitted
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
-	return &frontend{fset: fset, info: info, ifaces: &ifaceProgram{}}
+	return &frontend{fset: fset, info: info, ifaces: &ifaceProgram{}, funcs: &funcProgram{}}
 }
 
 type compileError string
@@ -107,6 +111,10 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 		f.interfaceRule(n, t)
 		return
 	}
+	if isFuncValue(t) {
+		f.funcTypeRule(n, t.Underlying().(*types.Signature))
+		return
+	}
 	f.fail(n, "unsupported type %s", t)
 }
 
@@ -132,10 +140,10 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
-	// Interface and string elements are admitted too (the message predates
-	// them).
+	// Interface, function and string elements are admitted too (the message
+	// predates them).
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !isIface(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
+	if !isIface(a.Elem()) && !isFuncValue(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
 		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())

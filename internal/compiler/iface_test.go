@@ -94,12 +94,13 @@ func TestInterfaceAcceptedForms(t *testing.T) {
 
 func TestInterfaceRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
-		"float boxing":         {`var a any = 1.5; _ = a`, "unsupported type float64"},
-		"zero-size part":       {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
-		"method expression":    {`_ = Shape.Area(R{})`, "method expressions of interface types unsupported"},
-		"method value":         {`var x Shape = R{}; f := x.Area; _ = f`, "method values unsupported; call the method directly"},
-		"map in interface":     {`var m map[uint8]uint8; var a any = m; _ = a`, "unsupported type map[uint8]uint8"},
-		"generic float getter": {`var g Getter[float32]; _ = g`, "instantiation Getter[float32]: type argument float32 for T: unsupported type float32"},
+		"float boxing":            {`var a any = 1.5; _ = a`, "unsupported type float64"},
+		"zero-size part":          {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
+		"method expression":       {`_ = Shape.Area(R{})`, "method expressions of interface types unsupported"},
+		"method value":            {`var x Shape = R{}; f := x.Area; _ = f`, ifaceMethodValueRule},
+		"method expression value": {`f := Shape.Area; _ = f`, ifaceMethodValueRule},
+		"map in interface":        {`var m map[uint8]uint8; var a any = m; _ = a`, "unsupported type map[uint8]uint8"},
+		"generic float getter":    {`var g Getter[float32]; _ = g`, "instantiation Getter[float32]: type argument float32 for T: unsupported type float32"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := ifacePrefix + c.body + "\nreturn 0 }\n"
@@ -116,8 +117,8 @@ func TestInterfaceRejections(t *testing.T) {
 			"alloc.go:3:1: interface method Value: unsupported type float64"},
 		"variadic method": {"package p\ntype V interface{ M(xs ...uint64) }\nfunc f(x V) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
 			"alloc.go:3:1: interface method M: variadics are unsupported"},
-		"function parameter": {"package p\ntype F interface{ M(f func()) }\nfunc f(x F) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
-			"alloc.go:3:1: interface method M: unsupported type func()"},
+		"variadic function parameter": {"package p\ntype F interface{ M(f func(...uint64)) }\nfunc f(x F) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
+			"alloc.go:3:1: interface method M: variadic function types are unsupported"},
 		"zero-size part": {"package p\ntype Z struct{ a [0]byte; b uint64 }\nfunc Process(s, i []byte) uint64 { var a any = Z{}; _ = a; return 0 }\n",
 			"alloc.go:3:48: interface values must not hold program.Z: it contains zero-length arrays or empty structs"},
 		"context": {"package p\nimport \"gosvm/solana\"\nfunc Process(c solana.Context) uint64 { var a any = c; _ = a; return 0 }\n",

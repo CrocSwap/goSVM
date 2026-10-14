@@ -61,7 +61,6 @@ func TestPointerLifetimeRejections(t *testing.T) {
 		"pointer pointer":  `func Process(s,i []byte)uint64{var p *uint64;pp:=&p;return **pp}`,
 		"pointer slice":    `func Process(s,i []byte)uint64{p:=&s;return uint64(len(*p))}`,
 		"context pointer":  `import "gosvm/solana";func Process(c solana.Context)uint64{p:=&c;return solana.Count(*p)}`,
-		"method value":     `type V struct{N uint64};func(v V)Read()uint64{return v.N};func Process(s,i []byte)uint64{v:=V{};f:=v.Read;return f()}`,
 		"method recursion": `type V uint64;func(v V)Read()uint64{return v.Read()};func Process(s,i []byte)uint64{return V(1).Read()}`,
 	} {
 		t.Run(name, func(t *testing.T) {
