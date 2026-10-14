@@ -94,15 +94,16 @@ func TestInterfaceAcceptedForms(t *testing.T) {
 
 func TestInterfaceRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
-		"error variable":        {`var e error; _ = e`, errorRule},
-		"error result":          {`var x any = id(nil); _ = x; var es []error; _ = es`, errorRule},
-		"string boxing":         {`var a any = "x"; _ = a`, "unsupported type string"},
-		"float boxing":          {`var a any = 1.5; _ = a`, "unsupported type float64"},
-		"zero-size part":        {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
-		"method expression":     {`_ = Shape.Area(R{})`, "method expressions of interface types unsupported"},
-		"method value":          {`var x Shape = R{}; f := x.Area; _ = f`, "method values unsupported; call the method directly"},
-		"map in interface":      {`var m map[uint8]uint8; var a any = m; _ = a`, "unsupported type map[uint8]uint8"},
-		"generic string getter": {`var g Getter[string]; _ = g`, "instantiation Getter[string]: type argument string for T: unsupported type string"},
+		"error variable":          {`var e error; _ = e`, errorRule},
+		"error result":            {`var x any = id(nil); _ = x; var es []error; _ = es`, errorRule},
+		"string boxing":           {`var a any = "x"; _ = a`, "unsupported type string"},
+		"float boxing":            {`var a any = 1.5; _ = a`, "unsupported type float64"},
+		"zero-size part":          {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
+		"method expression":       {`_ = Shape.Area(R{})`, "method expressions of interface types unsupported"},
+		"method value":            {`var x Shape = R{}; f := x.Area; _ = f`, ifaceMethodValueRule},
+		"method expression value": {`f := Shape.Area; _ = f`, ifaceMethodValueRule},
+		"map in interface":        {`var m map[uint8]uint8; var a any = m; _ = a`, "unsupported type map[uint8]uint8"},
+		"generic string getter":   {`var g Getter[string]; _ = g`, "instantiation Getter[string]: type argument string for T: unsupported type string"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := ifacePrefix + c.body + "\nreturn 0 }\n"
@@ -119,8 +120,8 @@ func TestInterfaceRejections(t *testing.T) {
 			"alloc.go:3:1: interface method String: unsupported type string"},
 		"variadic method": {"package p\ntype V interface{ M(xs ...uint64) }\nfunc f(x V) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
 			"alloc.go:3:1: interface method M: variadics are unsupported"},
-		"function parameter": {"package p\ntype F interface{ M(f func()) }\nfunc f(x F) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
-			"alloc.go:3:1: interface method M: unsupported type func()"},
+		"variadic function parameter": {"package p\ntype F interface{ M(f func(...uint64)) }\nfunc f(x F) {}\nfunc Process(s, i []byte) uint64 { return 0 }\n",
+			"alloc.go:3:1: interface method M: variadic function types are unsupported"},
 		"error field": {"package p\ntype T struct{ Err error }\nfunc Process(s, i []byte) uint64 { return 0 }\n",
 			"alloc.go:2:6: " + errorRule},
 		"zero-size part": {"package p\ntype Z struct{ a [0]byte; b uint64 }\nfunc Process(s, i []byte) uint64 { var a any = Z{}; _ = a; return 0 }\n",

@@ -85,6 +85,9 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			c.declareResults(posNode(slot.Site), slot.Signature.Results())
 		}
 	}
+	// Literals and calls through function values return their signatures'
+	// results.
+	c.declareFuncResults()
 	for _, d := range decls {
 		switch d := d.(type) {
 		case *ast.FuncDecl:
@@ -176,10 +179,11 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 			c.declareArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
 			c.namedType(node, f.Type())
-		} else if memoryValue(f.Type()) || isIface(f.Type()) {
+		} else if memoryValue(f.Type()) || isIface(f.Type()) || isFuncValue(f.Type()) {
 			// Pointer and slice fields hold only heap or SDK storage; the
 			// borrow analysis moves any local stored into one to the heap.
-			// Interface fields hold such storage or heap copies.
+			// Interface fields hold such storage or heap copies, and
+			// function values refer only to heap environments.
 			c.variableRule(node, f.Type())
 		} else {
 			if _, ok := f.Type().Underlying().(*types.Basic); !ok {
@@ -203,11 +207,6 @@ func (c *checker) signature(fn *ast.FuncDecl) {
 	sig := c.info.Defs[fn.Name].Type().(*types.Signature)
 	if sig.Variadic() {
 		c.fail(fn, "variadics are unsupported")
-	}
-	for i := 0; i < sig.Results().Len(); i++ {
-		if sig.Results().At(i).Name() != "" {
-			c.fail(fn, "named results are unsupported")
-		}
 	}
 	if sig.Results().Len() > 1 {
 		c.lookupResult(fn, sig.Results())
@@ -370,6 +369,8 @@ func (c *checker) stmt(s ast.Stmt) {
 		default:
 			c.fail(s, "fallthrough and goto unsupported")
 		}
+	case *ast.DeferStmt:
+		c.deferStmt(s)
 	case *ast.EmptyStmt:
 	default:
 		c.fail(s, "unsupported statement %T", s)
@@ -588,7 +589,7 @@ func (c *checker) valuesAs(expressions []ast.Expr, expected []types.Type) int {
 
 func (c *checker) callValues(call *ast.CallExpr) int {
 	var expected []types.Type
-	if sig, ok := c.info.Types[call.Fun].Type.(*types.Signature); ok {
+	if sig, ok := c.info.Types[call.Fun].Type.Underlying().(*types.Signature); ok {
 		for i := 0; i < sig.Params().Len(); i++ {
 			expected = append(expected, sig.Params().At(i).Type())
 		}
@@ -629,6 +630,10 @@ func (c *checker) exprValue(e ast.Expr) {
 	if tv.Value != nil {
 		c.typeRule(e, tv.Type)
 		c.constantRule(e, tv.Type, tv.Value)
+		return
+	}
+	if t := c.funcs.byExpr[e]; t != nil {
+		c.funcValue(e, t)
 		return
 	}
 	switch e := e.(type) {
@@ -676,7 +681,13 @@ func (c *checker) exprValue(e ast.Expr) {
 		}
 	case *ast.SelectorExpr:
 		if sel := c.info.Selections[e]; sel != nil && sel.Kind() != types.FieldVal {
+			if isIface(c.info.Types[e.X].Type) || isIface(sel.Recv()) {
+				c.fail(e, ifaceMethodValueRule)
+			}
 			c.fail(e, "method values unsupported; call the method directly")
+		}
+		if path := c.intrinsicValue(e); path != "" {
+			c.fail(e, intrinsicValueRule, path)
 		}
 		if isContext(c.info.Types[e.X].Type) {
 			c.fail(e, "Context fields are opaque")
@@ -825,6 +836,16 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			c.typeRule(e, tv.Type)
 			return
 		}
+		if isFuncValue(tv.Type) {
+			// F(f) and (func())(nil): Go requires identical underlying
+			// signatures; the value is copied.
+			if len(e.Args) != 1 {
+				c.fail(e, "invalid conversion")
+			}
+			c.expr(e.Args[0])
+			c.typeRule(e, tv.Type)
+			return
+		}
 	}
 	var o types.Object
 	builtinName := ""
@@ -832,11 +853,13 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	case *ast.SelectorExpr:
 		id, ok := callee.X.(*ast.Ident)
 		if !ok {
-			c.fail(e, "only direct package function calls supported")
+			c.indirectCall(e, tv) // a function-valued field
+			return
 		}
 		imported, ok := c.info.Uses[id].(*types.PkgName)
 		if !ok {
-			c.fail(e, "methods and function values unsupported")
+			c.indirectCall(e, tv)
+			return
 		}
 		if imported.Imported().Path() == "gosvm/solana" {
 			c.sdkCall(e, callee)
@@ -850,8 +873,13 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	case *ast.Ident:
 		o = c.callee(callee)
 		builtinName = callee.Name
+		if _, ok := o.(*types.Var); ok {
+			c.indirectCall(e, tv) // a function-valued variable
+			return
+		}
 	default:
-		c.fail(e, "only direct function calls supported")
+		c.indirectCall(e, tv) // a literal, element, call result, ...
+		return
 	}
 	if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
 		c.allocBuiltin(e, b.Name(), tv)

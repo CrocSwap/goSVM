@@ -77,11 +77,9 @@ func TestImportedPackageRejections(t *testing.T) {
 	for name, source := range map[string]string{
 		"globals":                        `var N uint64=1;func F()uint64{return N}`,
 		"init":                           `func init(){};func F()uint64{return 1}`,
-		"method value":                   `type S struct{};func(s S)F()uint64{return 1};func F()uint64{s:=S{};f:=s.F;return f()}`,
 		"unsupported unreachable helper": `func unused(){defer unused()};func F()uint64{return 1}`,
 		"cross-package recursion":        `import "app";func F()uint64{return app.Process(nil,nil)}`,
 		"direct recursion":               `func F()uint64{return F()}`,
-		"function values":                `func F()uint64{f:=G;return f()};func G()uint64{return 1}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			p := &Program{Entry: "app", Packages: []PackageSources{unit("app", `package app;import "dep";func Process(s,i []byte)uint64{return dep.F()}`), unit("dep", "package dep;"+source)}}

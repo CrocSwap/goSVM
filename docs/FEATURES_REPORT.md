@@ -39,7 +39,7 @@ construct counter is present even when zero.
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
 | `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
 | `generics[]` | every generic function, method and type declared in program code: `name` (`pkg/path.F`, `pkg/path.T.M`, `pkg/path.T`), `package`, `kind` (`function`, `method`, `type`), `count` and the sorted canonical `instances` the compiler would monomorphize (added October 14, 2026; additive, schema unchanged; see [generics](GO_GENERICS.md)) |
-| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`; `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations` and `interface_values`; programs with interface values pass Check, so `checked` is true for them unless another rule rejects them, for example an `error` value): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Interface conversions alone do not set `allocation`, but boxing allocates, so a backend that supports `interfaces` needs the allocator too ([interfaces](GO_INTERFACES.md#boxing-cost)). Lets a backend that supports a subset reject a program with a named reason |
+| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`; `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations` and `interface_values`; programs with interface values pass Check, so `checked` is true for them unless another rule rejects them, for example an `error` value): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Interface conversions alone do not set `allocation`, but boxing allocates, so a backend that supports `interfaces` needs the allocator too ([interfaces](GO_INTERFACES.md#boxing-cost)). Lets a backend that supports a subset reject a program with a named reason. Also (added October 14, 2026; additive): `closures` (function literals, function values, method values or expressions, or calls through function values; separate from `interfaces`), `defer` (`defer` statements), and `recursion_check_inconclusive` with `recursion_check_reasons` (omitted when empty): set when a call through a function value has possible targets that are not resolved to a set whose call graph is acyclic. Check resolves every such call to all targets of its signature and rejects any cycle, so every possibly-recursive program is rejected outright and the flag is always false ([recursion](GO_FUNCTIONS.md#recursion)). Closures move captured variables to the heap (`heap_moved_locals`), so a program with captures also has `allocation` |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as
@@ -84,7 +84,12 @@ Each `language` side has:
   converted in a generic body, but not nil or interface-to-interface
   conversions; `dynamic_calls`: method calls on interface values;
   `type_assertions`: `x.(T)` expressions, not type switch guards, which
-  `type_switch` counts); all added within gosvm-features-v1 on
+  `type_switch` counts) and function values (`function_values`: declared
+  functions or generic instances used as values rather than called;
+  `method_values` and `method_expressions` not called; `named_results`:
+  functions and literals with named results; literals are
+  `function_literals`, calls through values `indirect_calls`, and `defer`
+  statements `defer`); all added within gosvm-features-v1 on
   October 14, 2026, schema unchanged. An SDK method call counts as both
   `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of `F`,
   and `F[T]` is not an `index_expressions` entry.

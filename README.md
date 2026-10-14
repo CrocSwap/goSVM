@@ -110,9 +110,10 @@ with Go's exact semantics, structs, fixed-size scalar arrays, multiple
 return values, methods, `range` loops, constrained pointers, borrowed byte slices,
 [generics](docs/GO_GENERICS.md) (monomorphized at compile time), bounded
 [heap allocation](docs/GO_ALLOCATION.md) (`new`, `make`, `append`, `copy`,
-slices of any element type) and [interface values](docs/GO_INTERFACES.md)
-(dynamic dispatch, type assertions and switches). It lowers Go through checked
-C and Solana Clang/LLD to SBF.
+slices of any element type), [interface values](docs/GO_INTERFACES.md)
+(dynamic dispatch, type assertions and switches) and
+[function values, closures and `defer`](docs/GO_FUNCTIONS.md). It lowers Go
+through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, maps,
 strings (and so `error`), goroutines, and on-chain standard-library imports other than

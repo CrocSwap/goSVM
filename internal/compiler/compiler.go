@@ -51,6 +51,7 @@ type generator struct {
 	memoryWords    bool // Explicit SDK-2 snapshots opt into aligned aggregate copies.
 	entry          types.Object
 	currentResults *types.Tuple
+	fn             *fnContext // named results and defer statements of the body being emitted
 	continueLabels []string
 	next           int
 	moved          map[types.Object]bool      // heap-moved locals (Function.HeapVars)
@@ -112,6 +113,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	if program.ifaces != nil {
 		g.ifaces = program.ifaces
 	}
+	if program.funcs != nil {
+		g.funcs = program.funcs
+	}
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -148,7 +152,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	// programs that use it get the heap runtime, so the C of every other
 	// program is byte-identical to earlier compilers.
 	// Interface values box into the heap and need its runtime too.
-	hasHeap := usesAllocation(program) || g.ifaces.used
+	// Function values and defer records live there as well.
+	hasHeap := usesAllocation(program) || g.ifaces.used || g.funcs.used
 	if hasHeap {
 		hasViews, hasPointers = true, true
 	}
@@ -179,6 +184,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	if g.ifaces.used {
 		g.WriteString(ifaceRuntime)
+	}
+	if g.funcs.used {
+		g.WriteString(funcRuntime)
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
@@ -316,20 +324,42 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			g.emitResults(posNode(slot.Site), slot.Signature.Results())
 		}
 	}
+	for _, cl := range g.funcs.closures {
+		g.emitResults(cl.Lit, cl.Target.Signature.Results())
+	}
+	for _, class := range g.funcs.classes {
+		g.emitResults(posNode(class.Site), class.Signature.Results())
+	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.WriteString(g.signature(fn) + ";\n")
 		}
 	}
+	for _, cl := range g.funcs.closures {
+		g.WriteString(g.literalSignature(cl) + ";\n")
+	}
 	if g.ifaces.used {
 		g.emitInterfaces(program)
 	}
+	g.emitFuncDispatchers()
+	functions := map[*ast.FuncDecl]*Function{}
+	for _, function := range program.Functions {
+		functions[function.Decl] = function
+	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
+			sites := g.funcs.bodyDefers[fn]
+			g.emitDeferTypes(fn, sites)
 			g.WriteString(g.signature(fn))
 			g.currentResults = g.info.Defs[fn.Name].Type().(*types.Signature).Results()
+			named := namedResults(g.currentResults)
 			if b, ok := externalBinding(g.externals, g.info.Defs[fn.Name]); ok {
 				g.emitLibraryBody(fn, b)
+			} else if len(sites) > 0 || named != nil {
+				g.line("{")
+				g.movedPrologue(fn)
+				g.emitBody(fn, fn.Body, g.currentResults, named, sites)
+				g.line("}")
 			} else if len(g.movedParams[fn]) > 0 {
 				g.line("{")
 				g.movedPrologue(fn)
@@ -337,6 +367,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 				g.line("}")
 			} else if !g.emitPackedStore(fn) {
 				g.block(fn.Body)
+			}
+			for _, cl := range g.funcs.owned[functions[fn]] {
+				g.emitLiteral(cl)
 			}
 		}
 	}
@@ -392,6 +425,9 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	}
 	if isIface(t) {
 		return "gosvm_iface"
+	}
+	if isFuncValue(t) {
+		return "gosvm_func"
 	}
 	if isContext(t) {
 		return "Context *"
@@ -521,6 +557,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 			g.unchecked(e)
 		}
 		return fmt.Sprintf("%dULL", v)
+	}
+	if t := g.funcs.byExpr[e]; t != nil {
+		return g.funcValue(e, t)
 	}
 	switch e := e.(type) {
 	case *ast.ParenExpr:
@@ -711,6 +750,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 			if _, ok := tv.Type.Underlying().(*types.Array); ok {
 				return g.temp(e, tv.Type, g.expr(e.Args[0]))
 			}
+			if isFuncValue(tv.Type) {
+				return g.temp(e, tv.Type, g.expr(e.Args[0]))
+			}
 		}
 		var o types.Object
 		builtinName := ""
@@ -718,11 +760,11 @@ func (g *generator) exprValue(e ast.Expr) string {
 		case *ast.SelectorExpr:
 			id, ok := callee.X.(*ast.Ident)
 			if !ok {
-				g.unchecked(e)
+				return g.indirectCall(e)
 			}
 			imported, ok := g.info.Uses[id].(*types.PkgName)
 			if !ok {
-				g.unchecked(e)
+				return g.indirectCall(e)
 			}
 			if imported.Imported().Path() == "gosvm/solana" {
 				return g.importedCall(e, callee)
@@ -734,8 +776,11 @@ func (g *generator) exprValue(e ast.Expr) string {
 		case *ast.Ident:
 			o = g.callee(callee)
 			builtinName = callee.Name
+			if _, ok := o.(*types.Var); ok {
+				return g.indirectCall(e)
+			}
 		default:
-			g.unchecked(e)
+			return g.indirectCall(e)
 		}
 		if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
 			return g.allocBuiltin(e, b.Name())
@@ -784,6 +829,10 @@ func (g *generator) stmt(s ast.Stmt) {
 	case *ast.BlockStmt:
 		g.block(s)
 	case *ast.ReturnStmt:
+		if g.fn != nil {
+			g.returnStmt(s)
+			return
+		}
 		if g.currentResults != nil && g.currentResults.Len() > 1 {
 			g.multiReturn(s)
 			return
@@ -945,6 +994,8 @@ func (g *generator) stmt(s ast.Stmt) {
 		default:
 			g.unchecked(s)
 		}
+	case *ast.DeferStmt:
+		g.deferStmt(s)
 	case *ast.EmptyStmt:
 	default:
 		g.unchecked(s)

@@ -43,7 +43,7 @@ func (g *generator) exprAs(e ast.Expr, expected types.Type) string {
 }
 func (g *generator) callValues(call *ast.CallExpr) []string {
 	var expected []types.Type
-	if sig, ok := g.info.Types[call.Fun].Type.(*types.Signature); ok {
+	if sig, ok := g.info.Types[call.Fun].Type.Underlying().(*types.Signature); ok {
 		for i := 0; i < sig.Params().Len(); i++ {
 			expected = append(expected, sig.Params().At(i).Type())
 		}

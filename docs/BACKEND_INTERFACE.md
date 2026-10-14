@@ -26,7 +26,7 @@ this module or a fork of it.
    `go/types` universe (dot/blank and illegal internal imports are rejected);
 2. requires `Process([]byte, []byte) uint64` or `Process(solana.Context) uint64`;
 3. requires bodies and rejects recursion (including through generic
-   declarations);
+   declarations, dynamic calls and function values);
 4. monomorphizes generics: each instantiation becomes a synthetic non-generic
    declaration ([generics](#generics));
 5. runs the borrow checker (no reference may outlive its storage; locals whose
@@ -52,10 +52,11 @@ Every field is documented in `check.go`. In summary:
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
 | `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, its `Borrows`, and the locals it moves to the heap (`HeapVars`, `HeapLiterals`); a generic declaration is replaced by its instances (`Instance` set), each with its own `Borrows` and heap moves |
-| `CallOrder` | The same functions, callees before callers (acyclic); the possible targets of a dynamic call come before its caller |
+| `CallOrder` | The same functions, callees before callers (acyclic); the possible targets of a dynamic call, or of a call through a function value, come before its caller |
 | `Libraries` | Pure native library bindings in the graph |
 | `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
 | `Conversions`, `DynamicTypes`, `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` | Interface values ([interfaces](#interfaces)); empty without them |
+| `FuncTargets`, `FuncValues`, `FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` | Function values, closures and `defer` ([function values](#function-values)); empty without them |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
@@ -208,6 +209,59 @@ uncomparable identical dynamic type aborts) and the three interface traps. The
 type IDs, the two-word layout and the dispatch code are the built-in backend's
 choice.
 
+## Function values
+
+Function values, closures and `defer` ([GO_FUNCTIONS.md](GO_FUNCTIONS.md))
+are ordinary `*types.Signature` values, `*ast.FuncLit`s and `*ast.DeferStmt`s
+in the typed program; Check adds what lowering them needs. All fields are
+additive and empty for programs without them:
+
+- `FuncTargets` is the **address-taken set**: every function a function
+  value may hold, with `ID` (1-based; `FuncTargets[i].ID == i+1`), `Kind`
+  (`TargetFunction` for a declared function or an instance's `Object`,
+  `TargetLiteral`, `TargetMethodValue`, `TargetMethodExpr`), `Func` (the
+  function or method called; an `Instance.Object` for generic code) or `Lit`,
+  the value's `Signature`, and for methods whether the value binds a pointer
+  (`PointerReceiver`) or the call dereferences a `*T` argument of a value
+  method (`Deref`, which traps on nil). `FuncValues` maps each expression that
+  makes a value (identifier, `pkg.F`, `F[T]`, `x.M`, `T.M`, literal) to its
+  target.
+- `FuncClasses` are the signatures called through values; each `Targets`
+  lists every target of an identical signature (parameter names ignored, so
+  a named function type and its underlying type share a class), in ID order.
+  `IndirectCalls` maps each call through a value to its class, and
+  `(*CheckedProgram).CallTargets(call)` returns the possible targets of a
+  call: the class's targets, or the one literal for a literal called where it
+  is written. This is the analogue of `DynamicCalls` and `Implementers`: a
+  backend can lower the call as compare-and-branch dispatch over exactly these
+  targets, aborting when none matches (a nil value). Check's recursion check
+  uses the same edges, so the graph they form with direct and dynamic calls is
+  acyclic.
+- `Closures` lists every literal with its `Owner` function, enclosing
+  literal (`Parent`), parameter and named-result objects, `Captures` (the
+  variables declared outside it that its body uses, in first-use order) and
+  `EnvBytes` (heap per evaluation: 0, or 8 plus 8 per capture). Captured
+  variables are always in the owner's `HeapVars` (including literal parameters
+  and named results captured by nested literals); the literal accesses them by
+  reference. `Callees` lists its direct callees.
+- `DeferSites` lists every `defer` statement with its `Kind` (function,
+  static method, dynamic method, indirect, literal, `copy`), `Owner` and
+  enclosing literal (`Lit`, nil for the function body), `InLoop` (each
+  execution's record is then heap-allocated: `RecordBytes`), and `Saved`, the
+  types the statement evaluates and saves, in order.
+
+A backend must reproduce what is observable: evaluation order (a function
+value, then its arguments, then the nil check at the call; deferred
+operands at the `defer` statement; a nil interface or a value method
+through a nil pointer in a `defer` statement aborts there), last-in
+first-out deferred calls after the results are set (named results visible to
+deferred closures), deferred calls not running on a trap, Go 1.22
+per-iteration loop variables, method-value binding and copy semantics, the
+nil-function trap and the heap bytes of environments, method values,
+captured variables and loop defer records (the out-of-memory points). The
+one-word value encoding, target IDs and dispatch code are the built-in
+backend's choice.
+
 ## `project.LoadSchema`
 
 `func LoadSchema(dir string) (*ResolvedSchema, error)` in
@@ -271,8 +325,15 @@ Generics added the `Instances`, `TypeInstances` and `Instantiated` fields and
 `Function.Instance`; allocation added the `HeapVars`, `HeapLiterals`, `Escapes`
 and `Heap` fields above; interfaces added `Conversions`, `DynamicTypes`,
 `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` and
-`Implementers`. Existing fields keep their meaning, and the new ones
-are empty or false for every program that compiled before. Separately, the
+`Implementers`; function values added `FuncTargets`, `FuncValues`,
+`FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` and `CallTargets`.
+Existing fields keep their meaning, and the new ones
+are empty or false for every program that compiled before. Function values,
+closures, `defer` and named results turned 12 recorded rejections into
+accepted programs, and two rejections are now reached first by a new rule
+(a call through a `Context` field reports that `Context` fields are opaque; an
+SDK function used as a value reports that `gosvm/solana` functions cannot be
+values). Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

@@ -86,6 +86,19 @@ func (g *generator) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, s
 	if isIface(g.info.Types[selector.X].Type) {
 		return g.dynamicCall(call, selector)
 	}
+	fn, args := g.methodArgs(call, selector, selection)
+	sig := fn.Type().(*types.Signature)
+	invocation := g.name(fn) + "(" + strings.Join(args, ",") + ")"
+	if sig.Results().Len() == 0 {
+		g.line("%s;", invocation)
+		return ""
+	}
+	return g.temp(call, g.info.Types[call].Type, invocation)
+}
+
+// methodArgs evaluates a static method call's receiver and arguments in
+// Go's order and returns the method with its C arguments.
+func (g *generator) methodArgs(call *ast.CallExpr, selector *ast.SelectorExpr, selection *types.Selection) (*types.Func, []string) {
 	fn := g.method(selector)
 	sig := fn.Type().(*types.Signature)
 	receiver := sig.Recv().Type()
@@ -122,12 +135,7 @@ func (g *generator) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, s
 			args = append([]string{value}, g.callValues(call)...)
 		}
 	}
-	invocation := g.name(fn) + "(" + strings.Join(args, ",") + ")"
-	if sig.Results().Len() == 0 {
-		g.line("%s;", invocation)
-		return ""
-	}
-	return g.temp(call, g.info.Types[call].Type, invocation)
+	return fn, args
 }
 
 // A root is a caller borrow, a local storage region, SDK-owned invocation
@@ -182,6 +190,14 @@ type borrowAnalysis struct {
 	movedLits map[*ast.CompositeLit]bool
 	sdk       bool
 	changed   bool
+	// Closures (docs/GO_FUNCTIONS.md): variables captured by the function's
+	// literals live on the heap, so a reference stored in one is stored into
+	// heap data and one read from it is heap or SDK storage, like a field.
+	// Literal results are returned to unknown callers: stored likewise.
+	captured   map[types.Object]bool
+	litResults map[types.Object]bool
+	litReturns map[*ast.ReturnStmt]bool
+	named      map[types.Object]int // the function's named results
 }
 
 // checkBorrows proves that no pointer or slice outlives the storage it refers
@@ -215,22 +231,54 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		defer gp.rethrow(funcs[object].Instance.context()) // name the instantiation in this body's diagnostics
 		sig := object.Type().(*types.Signature)
 		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len()),
-			escapes: map[int]bool{}, moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, sdk: sdk}
+			escapes: map[int]bool{}, moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, sdk: sdk,
+			captured: map[types.Object]bool{}, litResults: map[types.Object]bool{}, litReturns: map[*ast.ReturnStmt]bool{}, named: map[types.Object]int{}}
 		for i := range a.results {
 			a.results[i] = borrowSet{}
+			if r := sig.Results().At(i); r.Name() != "" {
+				a.named[r] = i
+			}
+		}
+		for _, cl := range f.funcs.owned[funcs[object]] {
+			for _, v := range cl.Captures {
+				a.captured[v], a.moved[v] = true, true
+			}
+			for _, p := range cl.Params {
+				if p != nil && memoryValue(p.Type()) {
+					a.vars[p] = a.loaded() // passed by an unknown caller: heap or SDK storage
+				}
+			}
+			for _, r := range cl.Results {
+				if r != nil {
+					a.litResults[r] = true
+				}
+			}
+			ast.Inspect(cl.Lit.Body, func(n ast.Node) bool {
+				if r, ok := n.(*ast.ReturnStmt); ok {
+					a.litReturns[r] = true
+				}
+				return true
+			})
 		}
 		slot := 0
-		if receiver := sig.Recv(); receiver != nil {
-			if memoryValue(receiver.Type()) {
-				a.vars[receiver] = borrowSet{borrowRoot{parameter: 0}: true}
+		parameter := func(p *types.Var, slot int) {
+			if !memoryValue(p.Type()) {
+				return
 			}
+			if a.captured[p] {
+				// The incoming reference is copied to the heap.
+				a.escapes[slot] = true
+				a.vars[p] = a.loaded()
+				return
+			}
+			a.vars[p] = borrowSet{borrowRoot{parameter: slot}: true}
+		}
+		if receiver := sig.Recv(); receiver != nil {
+			parameter(receiver, 0)
 			slot++
 		}
 		for i := 0; i < sig.Params().Len(); i++ {
-			p := sig.Params().At(i)
-			if memoryValue(p.Type()) {
-				a.vars[p] = borrowSet{borrowRoot{parameter: i + slot}: true}
-			}
+			parameter(sig.Params().At(i), i+slot)
 		}
 		// Joining all assignments is conservative across branches and loops. It
 		// never forgets an origin on a control-flow path, including back edges.
@@ -288,29 +336,45 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 					a.literal(n)
 				case *ast.CallExpr:
 					a.call(n)
+				case *ast.SelectorExpr:
+					// A method value of a pointer-receiver method binds the
+					// pointer in its heap environment.
+					if t := f.funcs.byExpr[n]; t != nil && t.Kind == TargetMethodValue && t.PointerReceiver {
+						if _, isPointer := pointer(f.info.Types[n.X].Type); isPointer {
+							a.store(a.expr(n.X))
+						} else {
+							a.store(a.address(n.X))
+						}
+					}
+				case *ast.DeferStmt:
+					a.deferred(n)
 				case *ast.ReturnStmt:
 					values := a.values(n.Results)
+					if a.litReturns[n] {
+						// A literal's results go to callers through function values.
+						for _, value := range values {
+							a.store(value)
+						}
+						return true
+					}
 					for i, value := range values {
 						if i >= len(a.results) || !memoryValue(sig.Results().At(i).Type()) {
 							continue
 						}
-						for root := range value {
-							if root.scope != nil {
-								// The local outlives this call: it lives on the heap.
-								a.move(root)
-								root = heapRoot
-							}
-							if !a.results[i][root] {
-								a.results[i][root] = true
-								a.changed = true
-							}
-						}
+						a.result(i, value)
 					}
 				}
 				return true
 			})
 			if !a.changed {
 				break
+			}
+		}
+		// A captured named result may be set by a closure (a deferred one,
+		// for example): it may hold any heap or SDK reference.
+		for obj, i := range a.named {
+			if a.captured[obj] && memoryValue(obj.Type()) {
+				addBorrows(a.results[i], a.loaded())
 			}
 		}
 		summaries[object] = borrowSummary{results: a.results, escapes: a.escapes, vars: a.moved, lits: a.movedLits}
@@ -420,9 +484,76 @@ func (a *borrowAnalysis) literal(lit *ast.CompositeLit) {
 		}
 	}
 }
+
+// result records value as the origin of result i: a local outlives the
+// call, so it lives on the heap.
+func (a *borrowAnalysis) result(i int, value borrowSet) {
+	for root := range value {
+		if root.scope != nil {
+			// The local outlives this call: it lives on the heap.
+			a.move(root)
+			root = heapRoot
+		}
+		if !a.results[i][root] {
+			a.results[i][root] = true
+			a.changed = true
+		}
+	}
+}
+
+// deferred keeps the references a deferred call saves alive until the
+// function returns: locals of an inner block (whose storage ends with the
+// block) move to the heap; the body's own locals outlive the deferred call.
+func (a *borrowAnalysis) deferred(n *ast.DeferStmt) {
+	site := a.f.funcs.byDefer[n]
+	if site == nil {
+		return
+	}
+	top := a.f.info.Scopes[a.fn.Type]
+	if site.Lit != nil {
+		top = a.f.info.Scopes[site.Lit.Type]
+	}
+	values := a.values(n.Call.Args)
+	if sel, ok := n.Call.Fun.(*ast.SelectorExpr); ok {
+		if s := a.f.info.Selections[sel]; s != nil && s.Kind() == types.MethodVal && !isIface(a.f.info.Types[sel.X].Type) {
+			if fn, ok := a.f.callee(sel.Sel).(*types.Func); ok {
+				if _, wantPointer := pointer(fn.Type().(*types.Signature).Recv().Type()); wantPointer {
+					if _, isPointer := pointer(a.f.info.Types[sel.X].Type); isPointer {
+						values = append(values, a.expr(sel.X))
+					} else {
+						values = append(values, a.address(sel.X))
+					}
+				}
+			}
+		}
+	}
+	for _, value := range values {
+		for root := range value {
+			if root.scope != nil && root.scope != top {
+				a.move(root)
+			}
+		}
+	}
+}
+
 func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet) {
 	if obj == nil || obj.Name() == "_" || !memoryValue(obj.Type()) {
 		return
+	}
+	if a.captured[obj] || a.litResults[obj] {
+		// Heap storage: the reference is stored, and reading it back
+		// yields heap or SDK storage.
+		a.store(value)
+		if a.vars[obj] == nil {
+			a.vars[obj] = borrowSet{}
+		}
+		if addBorrows(a.vars[obj], a.loaded()) {
+			a.changed = true
+		}
+		return
+	}
+	if i, ok := a.named[obj]; ok {
+		a.result(i, value)
 	}
 	for root := range value {
 		if root.scope != nil && !scopeWithin(obj.Parent(), root.scope) {
@@ -575,6 +706,25 @@ func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	args = append(args, a.values(call.Args)...)
 	fn, ok := object.(*types.Func)
 	if !ok {
+		if sig := signatureOf(a.f.info, call.Fun); sig != nil {
+			// A call through a function value may run any target: every
+			// reference argument may be stored, and a reference result is
+			// heap or SDK storage.
+			for _, arg := range args {
+				a.store(arg)
+			}
+			results := make([]borrowSet, sig.Results().Len())
+			for i := range results {
+				results[i] = borrowSet{}
+				if memoryValue(sig.Results().At(i).Type()) {
+					results[i] = a.loaded()
+				}
+			}
+			if len(results) == 0 {
+				return []borrowSet{borrowSet{}}
+			}
+			return results
+		}
 		return []borrowSet{borrowSet{}}
 	}
 	sig := fn.Type().(*types.Signature)

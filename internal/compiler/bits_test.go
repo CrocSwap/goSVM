@@ -137,8 +137,9 @@ func TestBitsCheckAcceptsSupportedFunctions(t *testing.T) {
 
 func TestBitsCheckRejections(t *testing.T) {
 	for name, tc := range map[string]struct{ body, want string }{
-		"function value": {`f := bits.Len64; return uint64(f(1))`, "only value struct fields supported"},
-		"method value":   {`f := bits.RotateLeft; return uint64(f(1, 2))`, "only value struct fields supported"},
+		"function value": {`f := bits.Len64; return uint64(f(1))`, "math/bits functions cannot be used as values; call them in a function literal"},
+		"method value":   {`f := bits.RotateLeft; return uint64(f(1, 2))`, "math/bits functions cannot be used as values; call them in a function literal"},
+		"defer":          {`defer bits.Len64(1); return 0`, "defer of math/bits calls unsupported; defer a function literal that makes the call"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := "package main\nimport \"math/bits\"\nfunc Process(s, i []byte) uint64 {\n" + tc.body + "\n}\n"
