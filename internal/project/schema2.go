@@ -76,7 +76,7 @@ type PDADeclaration struct {
 // Seed declarations are data, not Go expressions. Scalars name canonical state/
 // argument fields, keys name accounts, and fixed bytes use explicit hex encoding.
 type SeedDeclaration struct {
-	Kind    string `json:"kind"` // bytes, key, byte, uint32, uint64
+	Kind    string `json:"kind"` // bytes, key, byte, uint16, uint32, uint64
 	Hex     string `json:"hex,omitempty"`
 	Account string `json:"account,omitempty"`
 	Field   string `json:"field,omitempty"`
@@ -545,12 +545,14 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 		switch u.Kind() {
 		case types.Uint8:
 			f.Size = 1
+		case types.Uint16:
+			f.Size = 2
 		case types.Uint32:
 			f.Size = 4
 		case types.Uint64:
 			f.Size = 8
 		default:
-			return f, fmt.Errorf("wire field %s: require byte, uint32 or uint64, got %s", name, t)
+			return f, fmt.Errorf("wire field %s: require byte, uint16, uint32 or uint64, got %s", name, t)
 		}
 	case *types.Array:
 		elem, err := m.wireField(name+"[]", u.Elem(), 0, active)

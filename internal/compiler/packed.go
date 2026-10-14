@@ -25,6 +25,8 @@ func (g *generator) packedStoreWidth(fn *ast.FuncDecl) uint64 {
 	}
 	var width uint64
 	switch {
+	case types.Identical(p.At(2).Type(), types.Typ[types.Uint16]):
+		width = 2
 	case types.Identical(p.At(2).Type(), types.Typ[types.Uint32]):
 		width = 4
 	case types.Identical(p.At(2).Type(), types.Typ[types.Uint64]):
