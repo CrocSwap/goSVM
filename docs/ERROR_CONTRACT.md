@@ -17,17 +17,27 @@ fails with no custom error code and the transaction rolls back.
 - A negative shift count (a signed count below zero), where Go panics
   ([integers](GO_INTEGERS.md)).
 - Array index, slice index or slice-expression bounds out of range.
-- Nil pointer dereference, field access or method receiver.
+- Nil pointer dereference, field access or method receiver, including a
+  value-receiver method called through a nil `*T` held in an interface.
 - Account index out of range in SDK account accessors.
 - `math/bits.Div64(hi, lo, y)`, `Div32` and `Div` with `y == 0` or `y <= hi`,
   and `Rem64`/`Rem32`/`Rem` with `y == 0`, where Go panics
   ([math/bits](GO_BITS.md)).
 - Out of memory: an allocation (`new`, `make`, a growing `append`, a slice
-  literal, an escaping `&T{...}` or a local moved to the heap) needs more than
-  the remaining invocation heap budget ([allocation](GO_ALLOCATION.md)).
+  literal, an escaping `&T{...}`, a local moved to the heap or a conversion to
+  an interface) needs more than the remaining invocation heap budget
+  ([allocation](GO_ALLOCATION.md)).
 - `make` length or capacity out of range: `len > cap`, a negative length or
   capacity of any signed integer type, or a capacity larger than 2^48 bytes,
   where Go panics `makeslice: len out of range` or `cap out of range`.
+- A failed single-result type assertion `x.(T)` or `x.(I)` (the dynamic type
+  is not `T`, does not implement `I`, or `x` is nil), where Go panics
+  ([interfaces](GO_INTERFACES.md#traps)).
+- Comparing two interface values (with `==`, `!=` or a `switch`, directly or
+  as elements of arrays or fields of structs) whose identical dynamic type is
+  not comparable, where Go panics `comparing uncomparable type`.
+- Calling a method on a nil interface value, after the receiver and the
+  arguments are evaluated (Go's nil pointer dereference).
 
 A program built with a heap budget above 32 KiB whose transaction did not
 request a large enough heap frame fails at its first allocation with a VM
@@ -64,6 +74,9 @@ because fixtures compare them byte for byte:
   trap fires at the first allocation that does not fit (32 KiB default, so
   32,760 usable bytes; `heap_bytes` up to 256 KiB). Locals moved to the heap by
   escape analysis consume budget the same way; `gosvm features` reports them.
+  Converting a value to an interface allocates its Go size rounded up to 8
+  bytes, except pointers and zero-size values, which allocate nothing
+  ([interfaces](GO_INTERFACES.md#boxing-cost)).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
 ## Error codes
@@ -178,3 +191,9 @@ Handler results propagate unchanged.
   exactly as the equivalent hand-written code.
 - 2026-10-14: append growth and heap accounting recorded as contracted
   behaviour at Qushta's request (documentation only, no behaviour change).
+- 2026-10-14: addition (interface values), no existing behaviour changed: a
+  failed single-result type assertion, comparing interfaces whose identical
+  dynamic type is not comparable, and calling a method on a nil interface
+  abort; boxing allocates as recorded under heap accounting; a value-receiver
+  method through a nil `*T` in an interface and boxing beyond the budget use
+  the existing nil-pointer and out-of-memory traps.

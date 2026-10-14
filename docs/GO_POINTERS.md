@@ -22,8 +22,9 @@ opaque SDK Context are rejected.
 Direct calls support value receivers, pointer receivers, Go's implicit addressing
 of addressable values, implicit dereferencing for value receivers, and explicit
 method expressions such as `Value.Read(v, n)` and `(*Value).Read(p, n)`. Imported
-methods use their actual named types and method identities. Method values,
-interfaces and recursion remain unsupported.
+methods use their actual named types and method identities. Method values and
+recursion remain unsupported; calls through [interface values](GO_INTERFACES.md)
+dispatch dynamically. Pointers to interface values (`*any`) are admitted.
 
 A value receiver gets a copy. A pointer receiver updates the caller's storage and
 may return a pointer borrowing from that storage. For example:

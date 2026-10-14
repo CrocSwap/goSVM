@@ -100,7 +100,12 @@ func (g *generator) emitArray(node ast.Node, a *types.Array) {
 	g.line("typedef struct { %s items[%d]; } %s;", element, storage, name)
 	g.line("static inline %s *%s_at(%s *a,u64 i) { if (i >= %dULL) abort(); return &a->items[i]; }", element, name, name, a.Len())
 	g.line("static inline boolean %s_equal(%s a,%s b) {", name, name, name)
-	g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", a.Len())
+	if isIface(a.Elem()) {
+		// Elements compare in order; an uncomparable dynamic type aborts.
+		g.line("for (u64 i=0;i<%dULL;i++) { if (!gosvm_iface_eq(a.items[i],b.items[i])) return 0; }", a.Len())
+	} else {
+		g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", a.Len())
+	}
 	g.line("return 1;\n}")
 }
 

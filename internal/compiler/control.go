@@ -72,7 +72,9 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 		for _, test := range clause.List {
 			g.line("if (!%s) {", matched)
 			value := g.expr(test)
-			if s.Tag != nil {
+			if s.Tag != nil && (isIface(g.info.Types[s.Tag].Type) || isIface(g.info.Types[test].Type)) {
+				g.line("%s=%s;", matched, g.ifaceEqual(test, s.Tag, tag, test, value))
+			} else if s.Tag != nil {
 				if a, ok := g.info.Types[s.Tag].Type.Underlying().(*types.Array); ok {
 					g.line("%s=%s_equal(%s,%s);", matched, g.arrayName(s.Tag, a), tag, value)
 				} else {
@@ -165,6 +167,9 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 	}
 	assign := func(id *ast.Ident, v string) {
 		o := object(id)
+		if conv := g.ifaces.byExpr[id]; conv != nil && conv.rng {
+			v = g.boxValue(id, conv, v) // an element assigned to an interface variable
+		}
 		if s.Tok == token.DEFINE && g.moved[o] {
 			g.declareMoved(id, o, v)
 		} else if s.Tok == token.DEFINE {
@@ -173,13 +178,20 @@ func (g *generator) rangeLoop(s *ast.RangeStmt) {
 			g.line("%s = %s;", g.name(o), v)
 		}
 	}
+	// The element (or key) type; an interface variable converts it.
+	elementType := func(id *ast.Ident) types.Type {
+		if conv := g.ifaces.byExpr[id]; conv != nil && conv.rng {
+			return conv.From
+		}
+		return object(id).Type()
+	}
 	read := ""
 	if value != nil {
 		// Read the element before any store, as an assignment would.
-		read = g.temp(value, object(value).Type(), element(counter))
+		read = g.temp(value, elementType(value), element(counter))
 	}
 	if key != nil {
-		assign(key, "("+g.variable(key, object(key).Type())+")"+counter)
+		assign(key, "("+g.variable(key, elementType(key))+")"+counter)
 	}
 	if value != nil {
 		assign(value, read)

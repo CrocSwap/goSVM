@@ -51,6 +51,11 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			return c.declareArrays(n)
 		})
 	}
+	// Dispatchers pass and return the arrays of called method slots, whose
+	// interface declarations are not part of the lowered files.
+	for _, a := range slotArrays(c.ifaces.slots) {
+		c.declareArray(posNode(a.site), a.typ)
+	}
 	for _, d := range decls {
 		if gen, ok := d.(*ast.GenDecl); ok && gen.Tok == token.TYPE {
 			for _, sp := range gen.Specs {
@@ -73,6 +78,12 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 	}
 	for _, call := range bitsResults(c.info, files) {
 		c.declareResults(call, c.info.Types[call].Type.(*types.Tuple))
+	}
+	// Dynamic calls return the results of their method slot.
+	for _, slot := range c.ifaces.slots {
+		if slot.Called {
+			c.declareResults(posNode(slot.Site), slot.Signature.Results())
+		}
 	}
 	for _, d := range decls {
 		switch d := d.(type) {
@@ -165,13 +176,14 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 			c.declareArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
 			c.namedType(node, f.Type())
-		} else if memoryValue(f.Type()) {
+		} else if memoryValue(f.Type()) || isIface(f.Type()) {
 			// Pointer and slice fields hold only heap or SDK storage; the
 			// borrow analysis moves any local stored into one to the heap.
+			// Interface fields hold such storage or heap copies.
 			c.variableRule(node, f.Type())
 		} else {
 			if _, ok := f.Type().Underlying().(*types.Basic); !ok {
-				c.fail(node, "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers or slices")
+				c.fail(node, "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers, slices or interfaces")
 			}
 			c.variableRule(node, f.Type())
 		}
@@ -335,6 +347,8 @@ func (c *checker) stmt(s ast.Stmt) {
 		c.rangeStatement(s)
 	case *ast.SwitchStmt:
 		c.switchStatement(s)
+	case *ast.TypeSwitchStmt:
+		c.typeSwitch(s)
 	case *ast.IncDecStmt:
 		id, ok := s.X.(*ast.Ident)
 		if !ok {
@@ -456,6 +470,11 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 			c.variableRule(id, c.info.Defs[id].Type())
 		}
 	}
+	for _, target := range []ast.Expr{s.Key, s.Value} {
+		if conv := c.ifaces.byExpr[target]; target != nil && conv != nil {
+			c.conversionRule(target, conv)
+		}
+	}
 	c.loops++
 	c.block(s.Body)
 	c.loops--
@@ -559,6 +578,7 @@ func (c *checker) valuesAs(expressions []ast.Expr, expected []types.Type) int {
 		c.exprAs(expression, want)
 		if t, ok := c.info.Types[expression].Type.(*types.Tuple); ok && t.Len() > 1 {
 			count += t.Len()
+			c.tupleConversions(expression)
 		} else {
 			count++
 		}
@@ -590,7 +610,18 @@ func (c *checker) exprAs(e ast.Expr, expected types.Type) {
 // checkedPointer is a nil-checked use of a pointer value of type p.
 func (c *checker) checkedPointer(n ast.Node, p types.Type) { c.variableRule(n, p) }
 
+// expr checks e; a value Check recorded as converted to an interface must
+// also be admitted as an interface value.
 func (c *checker) expr(e ast.Expr) {
+	if conv := c.ifaces.byExpr[e]; conv != nil && !conv.rng {
+		c.exprValue(e)
+		c.conversionRule(e, conv)
+		return
+	}
+	c.exprValue(e)
+}
+
+func (c *checker) exprValue(e ast.Expr) {
 	tv := c.info.Types[e]
 	if tv.IsNil() {
 		return
@@ -700,12 +731,22 @@ func (c *checker) expr(e ast.Expr) {
 		c.typeRule(e, tv.Type)
 	case *ast.CallExpr:
 		c.call(e, tv)
+	case *ast.TypeAssertExpr:
+		c.typeAssert(e, tv)
 	default:
 		c.fail(e, "unsupported expression %T", e)
 	}
 }
 
 func (c *checker) binary(e *ast.BinaryExpr, tv types.TypeAndValue) {
+	if isIface(c.info.Types[e.X].Type) || isIface(c.info.Types[e.Y].Type) {
+		// == and != with an interface operand compare dynamic types and
+		// values; nothing is converted or allocated.
+		c.expr(e.X)
+		c.expr(e.Y)
+		c.typeRule(e, tv.Type)
+		return
+	}
 	sliceType := c.info.Types[e.X].Type
 	if _, ok := sliceType.(*types.Slice); !ok {
 		sliceType = c.info.Types[e.Y].Type
@@ -753,6 +794,13 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 		}
 	}
 	if c.info.Types[e.Fun].IsType() {
+		if isIface(tv.Type) {
+			// I(x): the argument is converted (or copied, when it is an
+			// interface value already).
+			c.expr(e.Args[0])
+			c.typeRule(e, tv.Type)
+			return
+		}
 		if s, ok := tv.Type.(*types.Slice); ok {
 			if len(e.Args) != 1 {
 				c.fail(e, "invalid slice conversion")
@@ -856,6 +904,18 @@ func (c *checker) sdkCall(call *ast.CallExpr, selector *ast.SelectorExpr) {
 // saved before the arguments, and a value copy through a pointer is taken
 // after them.
 func (c *checker) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, selection *types.Selection) {
+	if isIface(c.info.Types[selector.X].Type) {
+		if selection.Kind() != types.MethodVal {
+			c.fail(call, "method expressions of interface types unsupported")
+		}
+		// A dynamic call: the receiver, then the arguments.
+		c.expr(selector.X)
+		c.callValues(call)
+		if tup, ok := c.info.Types[call].Type.(*types.Tuple); !ok || tup.Len() != 0 {
+			c.typeRule(call, c.info.Types[call].Type)
+		}
+		return
+	}
 	sig := c.method(selector).Type().(*types.Signature)
 	receiver := sig.Recv().Type()
 	if selection.Kind() == types.MethodExpr {

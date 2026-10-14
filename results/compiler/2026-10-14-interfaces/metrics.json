@@ -1,0 +1,64 @@
+{
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "runner": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0, Agave 4.0)"
+  },
+  "schema": 1,
+  "host_differential": {
+    "vectors": 14324,
+    "go_panics": 3195,
+    "heap_bytes": 32768
+  },
+  "targets": {
+    "fogo-v0": {
+      "aborts": 184,
+      "boxes-kind0-4095-fits_cu": 98427,
+      "boxes-kind0-4096-oom_cu": 98428,
+      "boxes-kind1-1365-fits_cu": 42462,
+      "boxes-kind1-1366-oom_cu": 42464,
+      "boxes-kind2-5000-fits_cu": 60148,
+      "boxes-kind3-5000-fits_cu": 60148,
+      "boxes-kind4-4095-fits_cu": 98427,
+      "boxes-kind4-4096-oom_cu": 98428,
+      "boxes-kind5-4095-fits_cu": 102522,
+      "boxes-kind5-4096-oom_cu": 102525,
+      "cases": 530,
+      "cu_per_iteration_direct": 38.14,
+      "cu_per_iteration_dynamic": 43.15,
+      "cu_per_iteration_dynamic_second_type": 41.65,
+      "cu_per_iteration_no_call": 38.14,
+      "dispatch_elf_sha256": "06da97f1e0eb07294f68f13bd7aa96f74cd2031577a4c08cfd502987d6d60a1c",
+      "iface_elf_sha256": "c7daf64332c80faf207ba22222c149db04c91d82611ee4624081ddbb2fd83f77",
+      "max_vector_cu": 29411,
+      "profile": "fogo-v0"
+    },
+    "solana-v3": {
+      "aborts": 184,
+      "boxes-kind0-4095-fits_cu": 102515,
+      "boxes-kind0-4096-oom_cu": 102515,
+      "boxes-kind1-1365-fits_cu": 43820,
+      "boxes-kind1-1366-oom_cu": 43821,
+      "boxes-kind2-5000-fits_cu": 60141,
+      "boxes-kind3-5000-fits_cu": 60141,
+      "boxes-kind4-4095-fits_cu": 102515,
+      "boxes-kind4-4096-oom_cu": 102515,
+      "boxes-kind5-4095-fits_cu": 106610,
+      "boxes-kind5-4096-oom_cu": 106612,
+      "cases": 530,
+      "cu_per_iteration_direct": 38.14,
+      "cu_per_iteration_dynamic": 43.15,
+      "cu_per_iteration_dynamic_second_type": 41.65,
+      "cu_per_iteration_no_call": 38.14,
+      "dispatch_elf_sha256": "7caa887b4415b1b69695cdbab47f2a735002443dc54e3e548a8ef29ee640d49c",
+      "iface_elf_sha256": "8e88eb9ed17968cfde4fe5765da12ec3f6565e0ce5c76e09c18e4cc26aae5915",
+      "max_vector_cu": 30348,
+      "profile": "solana-v3"
+    }
+  },
+  "full_swap_rebuild": {
+    "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+    "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"
+  }
+}

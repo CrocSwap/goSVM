@@ -109,6 +109,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	g.entry = program.Process
 	g.externals = libraryBindings(program.Libraries)
 	g.instantiated = program.Instantiated
+	if program.ifaces != nil {
+		g.ifaces = program.ifaces
+	}
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -144,7 +147,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	// Allocation needs slice capacities and the pointer/memory helpers. Only
 	// programs that use it get the heap runtime, so the C of every other
 	// program is byte-identical to earlier compilers.
-	hasHeap := usesAllocation(program)
+	// Interface values box into the heap and need its runtime too.
+	hasHeap := usesAllocation(program) || g.ifaces.used
 	if hasHeap {
 		hasViews, hasPointers = true, true
 	}
@@ -172,6 +176,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	if hasHeap {
 		g.WriteString(heapRuntimeFor(program.Program.HeapBytes))
+	}
+	if g.ifaces.used {
+		g.WriteString(ifaceRuntime)
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
@@ -282,6 +289,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			return true
 		})
 	}
+	for _, a := range slotArrays(g.ifaces.slots) {
+		g.emitArray(posNode(a.site), a.typ)
+	}
 	for _, d := range decls {
 		if gen, ok := d.(*ast.GenDecl); ok && gen.Tok == token.TYPE {
 			for _, sp := range gen.Specs {
@@ -301,10 +311,18 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	for _, call := range bitsResults(g.info, files) {
 		g.emitResults(call, g.info.Types[call].Type.(*types.Tuple))
 	}
+	for _, slot := range g.ifaces.slots {
+		if slot.Called {
+			g.emitResults(posNode(slot.Site), slot.Signature.Results())
+		}
+	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.WriteString(g.signature(fn) + ";\n")
 		}
+	}
+	if g.ifaces.used {
+		g.emitInterfaces(program)
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
@@ -371,6 +389,9 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	}
 	if p, ok := pointer(t); ok {
 		return g.pointerType(n, p)
+	}
+	if isIface(t) {
+		return "gosvm_iface"
 	}
 	if isContext(t) {
 		return "Context *"
@@ -465,7 +486,17 @@ func (g *generator) temp(n ast.Node, t types.Type, value string) string {
 	g.line("%s %s = %s;", g.ctype(n, t), name, value)
 	return name
 }
+
+// expr evaluates e; a value Check recorded as converted to an interface is
+// converted.
 func (g *generator) expr(e ast.Expr) string {
+	if conv := g.ifaces.byExpr[e]; conv != nil && !conv.rng {
+		return g.convert(e, conv)
+	}
+	return g.exprValue(e)
+}
+
+func (g *generator) exprValue(e ast.Expr) string {
 	tv := g.info.Types[e]
 	if tv.IsNil() {
 		if _, ok := tv.Type.(*types.Slice); ok {
@@ -573,7 +604,20 @@ func (g *generator) expr(e ast.Expr) string {
 			return g.temp(e, tv.Type, g.element(e, g.info.Types[e.X].Type, x, i))
 		}
 		return g.temp(e, tv.Type, fmt.Sprintf("*at(%s,%s)", x, i))
+	case *ast.TypeAssertExpr:
+		return g.typeAssert(e)
 	case *ast.BinaryExpr:
+		if isIface(g.info.Types[e.X].Type) || isIface(g.info.Types[e.Y].Type) {
+			x := g.expr(e.X)
+			y := g.expr(e.Y)
+			comparison := g.ifaceEqual(e, e.X, x, e.Y, y)
+			if e.Op == token.NEQ {
+				comparison = "!" + comparison
+			} else if e.Op != token.EQL {
+				g.unchecked(e)
+			}
+			return g.temp(e, tv.Type, comparison)
+		}
 		sliceType := g.info.Types[e.X].Type
 		if _, ok := sliceType.(*types.Slice); !ok {
 			sliceType = g.info.Types[e.Y].Type
@@ -652,6 +696,9 @@ func (g *generator) expr(e ast.Expr) string {
 			}
 		}
 		if g.info.Types[e.Fun].IsType() {
+			if isIface(tv.Type) {
+				return g.expr(e.Args[0]) // converted, or copied from an interface value
+			}
 			if _, ok := tv.Type.(*types.Slice); ok {
 				if len(e.Args) != 1 {
 					g.unchecked(e)
@@ -864,6 +911,8 @@ func (g *generator) stmt(s ast.Stmt) {
 		g.rangeLoop(s)
 	case *ast.SwitchStmt:
 		g.switchStatement(s)
+	case *ast.TypeSwitchStmt:
+		g.typeSwitch(s)
 	case *ast.IncDecStmt:
 		id, ok := s.X.(*ast.Ident)
 		t := g.info.Types[s.X].Type

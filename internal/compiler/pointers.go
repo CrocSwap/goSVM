@@ -83,6 +83,9 @@ func (g *generator) arrayPointer(e ast.Expr) string {
 	return "&" + g.expr(e)
 }
 func (g *generator) methodCall(call *ast.CallExpr, selector *ast.SelectorExpr, selection *types.Selection) string {
+	if isIface(g.info.Types[selector.X].Type) {
+		return g.dynamicCall(call, selector)
+	}
 	fn := g.method(selector)
 	sig := fn.Type().(*types.Signature)
 	receiver := sig.Recv().Type()
@@ -234,7 +237,18 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		for {
 			a.changed = false
 			ast.Inspect(fn.Body, func(n ast.Node) bool {
+				if e, ok := n.(ast.Expr); ok {
+					a.conversions(e)
+				}
 				switch n := n.(type) {
+				case *ast.TypeSwitchStmt:
+					// A clause variable of pointer or slice type holds the
+					// interface's data: heap or SDK storage.
+					for _, stmt := range n.Body.List {
+						if obj := f.info.Implicits[stmt]; obj != nil && memoryValue(obj.Type()) {
+							a.assign(stmt, obj, a.loaded())
+						}
+					}
 				case *ast.AssignStmt:
 					values := a.values(n.Rhs)
 					for i, lhs := range n.Lhs {
@@ -355,6 +369,26 @@ func (a *borrowAnalysis) store(value borrowSet) {
 	}
 }
 
+// conversions stores the references converted to interfaces at e: an
+// interface value may be copied anywhere, so (as for heap data) the
+// referenced storage must outlive every scope. A local moves to the heap; a
+// parameter's storage becomes the caller's obligation.
+func (a *borrowAnalysis) conversions(e ast.Expr) {
+	if conv := a.f.ifaces.byExpr[e]; conv != nil && !conv.rng && memoryValue(conv.From) {
+		a.store(a.expr(e))
+	}
+	for _, conv := range a.f.ifaces.byTuple[e] {
+		if !memoryValue(conv.From) {
+			continue
+		}
+		if call, ok := ast.Unparen(e).(*ast.CallExpr); ok {
+			if values := a.call(call); conv.Index < len(values) {
+				a.store(values[conv.Index])
+			}
+		}
+	}
+}
+
 // loaded is the origin of a reference read from a field or element: the
 // store rule guarantees it is heap or SDK storage, never a local.
 func (a *borrowAnalysis) loaded() borrowSet {
@@ -456,6 +490,11 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 		if memoryValue(a.f.info.Types[e].Type) {
 			return a.loaded()
 		}
+	case *ast.TypeAssertExpr:
+		// A pointer or slice held by an interface value: heap or SDK storage.
+		if e.Type != nil && memoryValue(a.f.info.Types[e.Type].Type) {
+			return a.loaded()
+		}
 	case *ast.CompositeLit:
 		// Slice literals and the elided &T{...} elements of slice literals
 		// are allocated on the heap.
@@ -542,6 +581,20 @@ func (a *borrowAnalysis) call(call *ast.CallExpr) []borrowSet {
 	results := make([]borrowSet, sig.Results().Len())
 	for i := range results {
 		results[i] = borrowSet{}
+	}
+	if a.f.ifaces.calls[call] != nil {
+		// A dynamic call may run any implementation: every reference
+		// argument may be stored, and a reference result is heap or SDK
+		// storage.
+		for _, arg := range args {
+			a.store(arg)
+		}
+		for i := range results {
+			if memoryValue(sig.Results().At(i).Type()) {
+				results[i] = a.loaded()
+			}
+		}
+		return results
 	}
 	if fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" {
 		for i := range results {

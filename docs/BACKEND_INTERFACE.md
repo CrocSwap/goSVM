@@ -52,9 +52,10 @@ Every field is documented in `check.go`. In summary:
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
 | `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, its `Borrows`, and the locals it moves to the heap (`HeapVars`, `HeapLiterals`); a generic declaration is replaced by its instances (`Instance` set), each with its own `Borrows` and heap moves |
-| `CallOrder` | The same functions, callees before callers (acyclic) |
+| `CallOrder` | The same functions, callees before callers (acyclic); the possible targets of a dynamic call come before its caller |
 | `Libraries` | Pure native library bindings in the graph |
 | `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
+| `Conversions`, `DynamicTypes`, `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` | Interface values ([interfaces](#interfaces)); empty without them |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
@@ -156,6 +157,57 @@ conversions), as specified in [GO_INTEGERS.md](GO_INTEGERS.md). SBF has no
 signed divide instruction, so signed division needs a lowering that does not
 call `__divdi3`.
 
+## Interfaces
+
+Interface values ([GO_INTERFACES.md](GO_INTERFACES.md)) are ordinary
+`types.Interface` values in the typed program; Check adds what lowering them
+needs. All fields are additive and empty (or an empty map) for programs without
+interface values:
+
+- `Conversions` lists, in source order, every conversion of a non-interface
+  value to an interface type: `Expr` (as written), `Index` (-1, or the element
+  of a multiple-value call or comma-ok assertion), `From` (the concrete type,
+  or `types.Typ[types.UntypedNil]` for nil, the zero interface value) and `To`.
+  Implicit conversions are not visible in go/types' `Types` (an argument keeps
+  its concrete type), so a backend must convert exactly these expressions where
+  it evaluates them. For a range statement that assigns to interface
+  variables, `Expr` is the key or value identifier and each element is
+  converted when assigned. Interface-to-interface conversions copy the two
+  words and are not listed. Explicit `I(x)` is a `*ast.CallExpr` whose `Fun`
+  is a type; its argument is the listed conversion (or an interface value).
+- `DynamicTypes` lists the concrete types interface values may hold or are
+  compared or asserted against, sorted by `Key`; `ID` is the index plus 1 (0 is
+  the nil interface). `Boxed` types are converted somewhere; `Direct` (pointer)
+  types store the pointer in the data word; otherwise a conversion allocates
+  `(Size+7)&^7` bytes (nothing when `Size` is 0) and copies the value.
+  `Comparable` is false where equality must abort. `Methods` is the type's
+  method table: for each slot its method set implements, the `Func` to call (an
+  `Instance.Object` for methods of generic types, which Check instantiates even
+  when only dynamic calls reach them) and whether the call copies `*data`
+  (`Deref`, a value method of `*T`, which traps on nil).
+- `MethodSlots` are the distinct interface methods (name, package of an
+  unexported name, signature) called dynamically (`Called`) or required by an
+  interface that code asserts to, sorted by `Key`. `DynamicCalls` maps each
+  method call on an interface value (a `*ast.CallExpr` whose selector's
+  `Selections` entry is a `MethodVal` on an interface type) to its slot. A
+  dynamic call evaluates the receiver, then the arguments, then aborts if the
+  interface is nil.
+- `TypeAssertions` and `TypeSwitches` are the sites in source order. A
+  comma-ok assertion's `Types` entry is a two-element tuple (go/types records
+  it so); it is not a `resultsN` value. A type switch clause's variable is
+  `Info.Implicits[clause]` (Check now records `Implicits`, including for
+  instance bodies); it may be in `HeapVars`.
+- `(*CheckedProgram).Implementers(I)` lists the boxed dynamic types that
+  implement `I`.
+
+A backend must reproduce the representation where it is observable: dynamic
+type identity (types identical in Go, including `byte`/`uint8` spellings, are
+one dynamic type), boxing copies and their heap bytes (the out-of-memory point),
+Go's comparison order (struct fields and array elements in order, an
+uncomparable identical dynamic type aborts) and the three interface traps. The
+type IDs, the two-word layout and the dispatch code are the built-in backend's
+choice.
+
 ## `project.LoadSchema`
 
 `func LoadSchema(dir string) (*ResolvedSchema, error)` in
@@ -201,8 +253,10 @@ or the SHA-256 of the emitted C. The recording is never edited: programs whose
 verdict changed on purpose since are listed with their new expected outcome in
 the test's `corpusChanges` table. These are: range loops and `uint16` became
 supported; signed integers, `int` and `uint` became supported; the two recorded
-generic programs are now accepted; interface values are rejected with a message
-naming the constraint rule; the array-element and pointer-element messages now
+generic programs are now accepted; interface values were first rejected with a
+message naming the constraint rule, and became supported, so two recorded
+interface programs compile and `error` keeps its position with a message
+naming strings; the array-element and pointer-element messages now
 name the admitted types; and allocation turned 32 recorded rejections (escaping
 locals, `copy`, `make`, slice literals, `[]uint64`, non-byte views and
 pointer/slice fields) into accepted programs. Two of those (a `[]byte` and a
@@ -215,7 +269,9 @@ integers. A backend must lower `*ast.RangeStmt` as described in
 arithmetic, and signed integers as in [GO_INTEGERS.md](GO_INTEGERS.md).
 Generics added the `Instances`, `TypeInstances` and `Instantiated` fields and
 `Function.Instance`; allocation added the `HeapVars`, `HeapLiterals`, `Escapes`
-and `Heap` fields above. Existing fields keep their meaning, and the new ones
+and `Heap` fields above; interfaces added `Conversions`, `DynamicTypes`,
+`MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` and
+`Implementers`. Existing fields keep their meaning, and the new ones
 are empty or false for every program that compiled before. Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0

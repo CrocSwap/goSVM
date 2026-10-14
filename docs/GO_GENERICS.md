@@ -59,23 +59,25 @@ func Process(s, i []byte) uint64 {
 
 Every type argument must be a type the subset can store: an integer scalar
 (signed or unsigned), `bool`, a named scalar, a value struct (including one
-with pointer or slice fields), a scalar array of at most 1,024 bytes, a slice
-of an admitted element, or a pointer to an admitted element. Each instance's body must
+with pointer, slice or interface fields), a scalar array of at most 1,024
+bytes, a slice of an admitted element, a pointer to an admitted element, or an
+interface type other than `error`. Each instance's body must
 then satisfy every subset rule with the arguments substituted; for example
 `Eq[T comparable]` instantiated with a struct is rejected because struct
 comparison is unsupported, while `Eq[[4]byte]` is accepted.
 
-## Interfaces are constraints only
+## Interfaces
 
-An interface type may be declared and used as a constraint. A value of
-interface type (a variable, parameter, field, result or type argument of
-interface type) is rejected:
-
-```text
-g.go:2:40: interface values unsupported (any); interfaces are only usable as type parameter constraints
-```
-
-Dynamic interface values are a separate, later phase.
+Interfaces are constraints and, since interface values became supported
+([GO_INTERFACES.md](GO_INTERFACES.md)), value types too: interfaces are valid
+type arguments (`Box[Shape]`, `Same[any]`), generic functions take and return
+interface values, `any(v)` inside an instance converts the instance's concrete
+type, and generic interfaces (`Getter[T]`) can be instantiated as value types.
+Each instance of a generic type is its own dynamic type (`Box[int8]` and
+`Box[uint8]` are different, `Box[byte]` and `Box[uint8]` the same), and the
+methods of an instance that an interface needs are instantiated even when only
+dynamic calls reach them. Interfaces with type sets (`~uint64 | ~uint32`)
+remain constraints only, as in Go.
 
 ## Lowering
 
@@ -103,7 +105,9 @@ The C name is `gosvm_fn_` or `gosvm_ty_` and the key, encoded injectively:
 letters and digits stay, `_` becomes `__`, `.` `_D`, `/` `_S`, `[` `_L`, `]` `_R`,
 `,` `_C`, `*` `_P`, space `_W`, and any other byte `_xHH`. `byte` and `uint8`
 (`rune` and `int32`) are one type and give one key: Go's `Box[byte]` and
-`Box[uint8]` are one C struct and share every method instance. Fields of an
+`Box[uint8]` are one C struct and share every method instance. An unnamed
+interface type argument is spelled by its method set (`any` and `interface{}`
+are both `interface{}`: `Box[interface{}]`). Fields of an
 instantiated struct keep the names of the declaration's fields.
 
 Naming guarantee: a key and its C symbol depend only on the generic
@@ -121,7 +125,8 @@ instance and type-instance symbol; as for all code, local temporaries
   `too many instantiations of Id (limit 64)` (methods: `B.M`).
 - **Type arguments.** A disallowed type argument is rejected at the
   instantiation site, naming it:
-  `g.go:3:40: instantiation Id[string]: type argument string for T: unsupported type string`.
+  `g.go:3:40: instantiation Id[string]: type argument string for T: unsupported type string`
+  (`Id[error]` is rejected the same way, naming the `error` rule).
   An untyped constant argument infers `int`, which is rejected as storage
   (`Id[int]`); convert the argument (`Id(uint64(1))`).
 - **Instance bodies.** A subset or borrow violation that occurs only for some
@@ -139,7 +144,6 @@ instance and type-instance symbol; as for all code, local temporaries
 
 ## Not supported
 
-- Interface values (above), type switches and type assertions.
 - Function values and method values of generic functions and methods
   (`f := Min[uint64]`), as for all functions.
 - Generic types in schema-2 wire layouts. An uninstantiated layout type is a Go
@@ -185,6 +189,6 @@ counters ([feature report](FEATURES_REPORT.md)).
   naming.
 - Programs without generics emit byte-identical C: the frozen corpus
   (`TestCorpusMatchesPreCheckCompiler`) still matches except for the two
-  recorded generic programs, now accepted, and three interface rejections whose
-  message names the constraint rule. The full-swap ELFs are unchanged (fogo-v0
+  recorded generic programs, now accepted, and three interface programs whose
+  outcome interface values changed later. The full-swap ELFs are unchanged (fogo-v0
   `4697a9f5…`, solana-v3 `2b5f21d9…`).

@@ -19,10 +19,14 @@ type frontend struct {
 	// instantiated resolves generic callees to their instances
 	// (CheckedProgram.Instantiated); empty for programs without generics.
 	instantiated map[*ast.Ident]*Instance
+	// ifaces is the program's interface information (conversions, dynamic
+	// types and calls); empty for programs without interface values.
+	ifaces       *ifaceProgram
+	ifaceChecked map[*types.Interface]bool // interface types interfaceRule admitted
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
-	return &frontend{fset: fset, info: info}
+	return &frontend{fset: fset, info: info, ifaces: &ifaceProgram{}}
 }
 
 type compileError string
@@ -92,8 +96,9 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 			return
 		}
 	}
-	if _, ok := t.Underlying().(*types.Interface); ok {
-		f.fail(n, "interface values unsupported (%s); interfaces are only usable as type parameter constraints", t)
+	if isIface(t) {
+		f.interfaceRule(n, t)
+		return
 	}
 	f.fail(n, "unsupported type %s", t)
 }
@@ -111,7 +116,8 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 		f.fail(n, "pointers to Context unsupported")
 	}
 	switch t.Underlying().(type) {
-	case *types.Pointer, *types.Slice, *types.Signature, *types.Interface:
+	case *types.Pointer, *types.Slice, *types.Signature:
+		// Pointers to interface values are admitted (the message predates them).
 		f.fail(n, "pointer elements must be integer/bool scalars, value structs or scalar arrays")
 	}
 	f.variableRule(n, t)
@@ -119,8 +125,9 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
+	// Interface elements are admitted too (the message predates them).
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool) || b.Info()&types.IsUntyped != 0 {
+	if !isIface(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool) || b.Info()&types.IsUntyped != 0) {
 		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())

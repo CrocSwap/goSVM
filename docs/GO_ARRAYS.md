@@ -2,7 +2,9 @@
 
 The first milestone 2 compiler increment supports fixed-size arrays of any
 [integer type](GO_INTEGERS.md) (`byte`, `uint16`, `uint32`, `uint64`, `uint`,
-`int8`, `int16`, `int32`, `int64`, `int`), `bool`, and named versions of those scalar types. Named array
+`int8`, `int16`, `int32`, `int64`, `int`), `bool`, named versions of those scalar types,
+and [interface values](GO_INTERFACES.md) (`[4]any`; equality compares elements in
+order and aborts for an uncomparable dynamic type, as Go panics). Named array
 types such as `type PublicKey [32]byte` are supported. This is compiler support;
 the schema-1 project generator still accepts only flat unsigned wire fields.
 [Shared-package imports](GO_PACKAGES.md) and [schema-2 scalar-array codecs](SCHEMA2.md)

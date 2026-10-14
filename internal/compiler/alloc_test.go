@@ -161,7 +161,7 @@ func TestAllocationRejections(t *testing.T) {
 	}
 	for name, c := range map[string]struct{ source, want string }{
 		"named slice":    {"package p\ntype L []uint64\nfunc Process(s, i []byte) uint64 { return 0 }\n", "unsupported type program.L"},
-		"map field":      {"package p\ntype M struct{ m map[uint64]uint64 }\nfunc Process(s, i []byte) uint64 { return 0 }\n", "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers or slices"},
+		"map field":      {"package p\ntype M struct{ m map[uint64]uint64 }\nfunc Process(s, i []byte) uint64 { return 0 }\n", "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers, slices or interfaces"},
 		"context slices": {"package p\nimport \"gosvm/solana\"\nfunc Process(c solana.Context) uint64 { var cs []solana.Context; _ = cs; return 0 }\n", "slices of Context unsupported"},
 		"context field":  {"package p\nimport \"gosvm/solana\"\ntype C struct{ c *solana.Context }\nfunc Process(c solana.Context) uint64 { return 0 }\n", "pointers to Context unsupported"},
 	} {

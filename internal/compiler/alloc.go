@@ -73,7 +73,7 @@ func zeroSizePart(t types.Type) bool {
 // et.PtrBytes != 0), which selects the malloc-header rounding in growslice.
 func containsReferences(t types.Type) bool {
 	switch u := t.Underlying().(type) {
-	case *types.Pointer, *types.Slice:
+	case *types.Pointer, *types.Slice, *types.Interface:
 		return true
 	case *types.Array:
 		return containsReferences(u.Elem())

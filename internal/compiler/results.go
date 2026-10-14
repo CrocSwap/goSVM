@@ -57,10 +57,18 @@ func (g *generator) expressionValuesAs(expressions []ast.Expr, expected []types.
 		if i < len(expected) {
 			want = expected[i]
 		}
+		if assert, ok := ast.Unparen(expression).(*ast.TypeAssertExpr); ok {
+			if t, ok := g.info.Types[expression].Type.(*types.Tuple); ok && t.Len() == 2 {
+				// v, ok := x.(T) produces both values directly.
+				v, ok := g.typeAssertOK(assert, t)
+				values = append(values, g.convertAt(expression, 0, v), ok)
+				continue
+			}
+		}
 		value := g.exprAs(expression, want)
 		if t, ok := g.info.Types[expression].Type.(*types.Tuple); ok && t.Len() > 1 {
 			for i := 0; i < t.Len(); i++ {
-				values = append(values, fmt.Sprintf("%s.r%d", value, i))
+				values = append(values, g.convertAt(expression, i, fmt.Sprintf("%s.r%d", value, i)))
 			}
 		} else {
 			values = append(values, value)

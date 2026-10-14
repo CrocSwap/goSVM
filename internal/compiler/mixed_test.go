@@ -80,8 +80,8 @@ func TestMixedRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
 		"generic zero-size elements": {`_ = Lit[[0]byte]([0]byte{}, [0]byte{})`,
 			"instantiation Lit[[0]uint8]: alloc.go:15:1: slice elements must not contain zero-length arrays or empty structs"},
-		"generic make of interfaces": {`_ = Box[any](nil)`,
-			"instantiation Box[any]: type argument any for T: interface values unsupported (any); interfaces are only usable as type parameter constraints"},
+		"generic box of error": {`_ = Box[error](nil)`,
+			"instantiation Box[error]: type argument error for T: " + errorRule},
 		"generic box of slice": {`b := Box([]int8{1}); _ = b`,
 			"instantiation Box[[]int8]: alloc.go:11:1: pointer elements must be integer/bool scalars, value structs or scalar arrays"},
 		"generic compound append": {`var v Vec[int8]; v.Add(1); v.items[0] += 1`, "compound assignment unsupported"},

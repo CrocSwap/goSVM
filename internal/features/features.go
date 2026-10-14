@@ -243,6 +243,12 @@ var ConstructNames = []string{
 	// arithmetic/shift/bitwise operations with a signed integer result, and
 	// expressions whose value has an interface type.
 	"signed_operations", "interface_values",
+	// Interface values (added within gosvm-features-v1): conversions of
+	// non-interface values to interfaces (implicit or explicit; nil and
+	// interface-to-interface conversions excluded), method calls on interface
+	// values, and x.(T) type assertions (type switch guards excluded; type
+	// switches are type_switch).
+	"interface_conversions", "dynamic_calls", "type_assertions",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -626,6 +632,14 @@ func integerName(b *types.Basic) string {
 }
 
 func (w *walker) file(f *ast.File) {
+	conversions, calls, asserts := compiler.ScanInterfaces(w.tp.Info, []*ast.File{f})
+	for _, c := range conversions {
+		if c.From != types.Typ[types.UntypedNil] {
+			w.count("interface_conversions")
+		}
+	}
+	w.side.Constructs["dynamic_calls"] += len(calls)
+	w.side.Constructs["type_assertions"] += len(asserts)
 	elseIf := map[ast.Stmt]bool{}
 	// Generic function names with written type arguments (F[T] or pkg.F[T]).
 	explicit := map[*ast.Ident]bool{}

@@ -38,10 +38,12 @@ observe those effects before panic/abort. Actual SBF transactions must still
 roll back all account updates on failure. The generated C result structs are
 internal compiler representations, not Go memory-layout or wire-format promises.
 
-`switch` supports scalar/bool tags, supported scalar-array tags, expressionless
+`switch` supports scalar/bool tags, supported scalar-array tags, interface tags
+and cases ([interfaces](GO_INTERFACES.md)), expressionless
 conditions, init statements, multiple case expressions, and default anywhere in
-the source. Case calls run in order and stop once a case matches. Struct comparisons,
-type switches, `fallthrough` and labeled branches remain unsupported. An unlabeled
+the source. Case calls run in order and stop once a case matches. Type switches
+follow the same rules ([interfaces](GO_INTERFACES.md)). Struct comparisons,
+`fallthrough` and labeled branches remain unsupported. An unlabeled
 break exits the nearest switch or loop. An unlabeled continue targets the nearest
 loop, including from a nested switch, and executes the loop post statement once.
 
@@ -105,7 +107,7 @@ platform-tools v1.57 or the managed runners are not installed).
 The explicit error representation is an unsigned status code: zero means success,
 and a nonzero handler status is returned unchanged by the adapter. The SDK's
 encoded runtime/CPI statuses remain unchanged; an ordinary small handler code is
-a Solana custom error. Built-in `error`, interfaces, named results/naked returns,
+a Solana custom error. Built-in `error` (its `Error()` returns a string), named results/naked returns,
 variadics and compound assignments remain unsupported. This is not an `error`
 interface implementation. Runtime arithmetic/bounds failures still abort.
 

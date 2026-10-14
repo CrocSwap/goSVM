@@ -476,7 +476,7 @@ Native tests can construct it with callbacks.
 Also supported: named integer scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
 and returns. Struct fields are integer scalars, bools, scalar arrays, other value
-structs, pointers or slices.
+structs, pointers, slices or interfaces.
 Struct comparisons/conversions, embedding, aliases, and build constraints are
 rejected explicitly. Wire layout is generated independently of C or Go layout.
 
@@ -525,17 +525,29 @@ with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`
 emitted as its own function or struct with a deterministic name derived from its
 type arguments, at most 64 per generic declaration. Generic code may allocate
 (`make([]T, n)`, `append` on `[]T`, `new(T)`), and each instance gets its own
-escape analysis. Interfaces are only usable as constraints. See
+escape analysis. Interfaces are also usable as type arguments. See
 [generics semantics, naming and SBF evidence](../docs/GO_GENERICS.md) and the
 [mixed fixture](../examples/mixed-values/program.go), which combines signed
 integers, generics and allocation and is checked against ordinary Go on the
 host and on SBF.
 
+Interface values have Go's semantics: method sets, embedded interfaces, `any`,
+implicit and explicit conversions, dynamic dispatch through value and pointer
+receivers, type assertions (single and comma-ok), type switches, comparisons
+(an uncomparable identical dynamic type aborts), and interfaces in fields,
+slices, arrays and behind pointers, including generic dynamic types. Converting
+a non-pointer value boxes a copy on the heap (its Go size rounded up to 8
+bytes). `error` is rejected because strings are unsupported. See
+[interface semantics, boxing cost and SBF evidence](../docs/GO_INTERFACES.md)
+and the [interface fixture](../examples/iface-values/program.go), checked
+against ordinary Go on the host and on SBF.
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, named slices, interface values, maps,
-strings, closures/function values, recursion, named results, variadics,
-range over strings/maps/channels/functions, type switches, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
-division, negative-shift, `make` range and out-of-memory failures abort; there is no recovery or stack growth. LLVM/VM stack limits
+floating-point and complex types, globals, `init`, named slices, `error` values, maps,
+strings, closures/function and method values, recursion (including through dynamic calls), named results, variadics,
+range over strings/maps/channels/functions, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
+division, negative-shift, `make` range, out-of-memory, failed type assertion,
+uncomparable interface comparison and nil interface call failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

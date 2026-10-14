@@ -81,8 +81,28 @@ type CheckedProgram struct {
 	// and in instance bodies, to the instance the call runs.
 	Instantiated map[*ast.Ident]*Instance
 
+	// Interface values (docs/GO_INTERFACES.md); all empty without them.
+	//
+	// Conversions lists every conversion of a non-interface value (or nil)
+	// to an interface type in Functions' bodies, in source order. An
+	// interface-to-interface conversion copies the value and is not listed.
+	Conversions []*Conversion
+	// DynamicTypes lists the concrete types interface values may hold or are
+	// compared or asserted against, sorted by Key; DynamicTypes[i].ID is i+1.
+	DynamicTypes []*DynamicType
+	// MethodSlots lists the distinct interface methods called dynamically or
+	// required by an asserted interface, sorted by Key.
+	MethodSlots []*MethodSlot
+	// DynamicCalls maps each method call on an interface value to its slot.
+	DynamicCalls map[*ast.CallExpr]*MethodSlot
+	// TypeAssertions and TypeSwitches are the x.(T) expressions (not type
+	// switch guards) and type switches, in source order.
+	TypeAssertions []*ast.TypeAssertExpr
+	TypeSwitches   []*ast.TypeSwitchStmt
+
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
+	ifaces  *ifaceProgram
 }
 
 // Function is one checked function or method declaration.
@@ -232,11 +252,20 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	// Monomorphize: each instantiation becomes an ordinary declaration.
 	gp := newGenericProgram(f, f.info, importer.ctxt, decls, true)
 	gp.run(importer.files)
+	gp.runInterfaces(importer.files)
 	f.instantiated = gp.instantiated
 	checked.lowered = gp.lowered(importer.files)
 	checked.Instances = gp.sortedInstances(importer.files)
 	checked.TypeInstances = gp.sortedTypeInstances()
 	checked.Instantiated = gp.instantiated
+	f.ifaces = buildInterfaces(f.info, checked.lowered, gp.instances)
+	checked.ifaces = f.ifaces
+	checked.Conversions = f.ifaces.conversions
+	checked.DynamicTypes = f.ifaces.dynamic
+	checked.MethodSlots = f.ifaces.slots
+	checked.DynamicCalls = f.ifaces.calls
+	checked.TypeAssertions = f.ifaces.asserts
+	checked.TypeSwitches = f.ifaces.switches
 	var lowered []ast.Decl
 	for _, file := range checked.lowered {
 		lowered = append(lowered, file.Decls...)
@@ -269,7 +298,14 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 		defer func() { ordering[function.Object] = false }()
 		ast.Inspect(function.Decl.Body, func(n ast.Node) bool {
 			if c, ok := n.(*ast.CallExpr); ok {
-				if id := callIdent(f.callFun(c.Fun)); id != nil {
+				if slot := f.ifaces.calls[c]; slot != nil {
+					// A dynamic call may run any method that fills its slot.
+					for _, target := range f.ifaces.targets(slot) {
+						if callee := instances[target]; callee != nil {
+							order(callee)
+						}
+					}
+				} else if id := callIdent(f.callFun(c.Fun)); id != nil {
 					if callee := instances[f.callee(id)]; callee != nil {
 						order(callee)
 						function.addCallee(callee.Object)
@@ -308,7 +344,7 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	f := newFrontend(token.NewFileSet(), &types.Info{
 		Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
 		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{},
-		Instances: map[*ast.Ident]types.Instance{},
+		Instances: map[*ast.Ident]types.Instance{}, Implicits: map[ast.Node]types.Object{},
 	})
 	importer := &programImporter{f: f, ctxt: types.NewContext(), entryPath: program.Entry, sdk: sdkImporter{version: program.SDK}, units: map[string]PackageSources{}, checked: map[string]*types.Package{}, active: map[string]bool{}}
 	for _, unit := range program.Packages {
@@ -393,7 +429,14 @@ func exportMoves(s borrowSummary) ([]*types.Var, []*ast.CompositeLit) {
 	for o := range s.vars {
 		vars = append(vars, o.(*types.Var))
 	}
-	sort.Slice(vars, func(i, j int) bool { return vars[i].Pos() < vars[j].Pos() })
+	sort.Slice(vars, func(i, j int) bool {
+		if vars[i].Pos() != vars[j].Pos() {
+			return vars[i].Pos() < vars[j].Pos()
+		}
+		// A type switch's clause variables share the guard's position;
+		// order them by clause.
+		return vars[i].Parent() != nil && vars[j].Parent() != nil && vars[i].Parent().Pos() < vars[j].Parent().Pos()
+	})
 	var lits []*ast.CompositeLit
 	for lit := range s.lits {
 		lits = append(lits, lit)

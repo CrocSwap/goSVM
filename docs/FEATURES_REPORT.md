@@ -39,7 +39,7 @@ construct counter is present even when zero.
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
 | `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
 | `generics[]` | every generic function, method and type declared in program code: `name` (`pkg/path.F`, `pkg/path.T.M`, `pkg/path.T`), `package`, `kind` (`function`, `method`, `type`), `count` and the sorted canonical `instances` the compiler would monomorphize (added October 14, 2026; additive, schema unchanged; see [generics](GO_GENERICS.md)) |
-| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`; `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations` and `interface_values`): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Lets a backend that supports a subset reject a program with a named reason |
+| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`; `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations` and `interface_values`; programs with interface values pass Check, so `checked` is true for them unless another rule rejects them, for example an `error` value): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Interface conversions alone do not set `allocation`, but boxing allocates, so a backend that supports `interfaces` needs the allocator too ([interfaces](GO_INTERFACES.md#boxing-cost)). Lets a backend that supports a subset reject a program with a named reason |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as
@@ -78,7 +78,13 @@ Each `language` side has:
   instantiated generic type expressions, `type_instantiations`) and
   allocation builtins (`new_calls`, `make_calls`, `append_calls`,
   `append_spreads` for `append(s, t...)`, `copy_calls`; they also count in
-  `builtin_calls` and `builtins`); all added within gosvm-features-v1 on
+  `builtin_calls` and `builtins`) and interface values
+  (`interface_conversions`: implicit or explicit conversions of a
+  non-interface value to an interface type, including a type parameter
+  converted in a generic body, but not nil or interface-to-interface
+  conversions; `dynamic_calls`: method calls on interface values;
+  `type_assertions`: `x.(T)` expressions, not type switch guards, which
+  `type_switch` counts); all added within gosvm-features-v1 on
   October 14, 2026, schema unchanged. An SDK method call counts as both
   `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of `F`,
   and `F[T]` is not an `index_expressions` entry.

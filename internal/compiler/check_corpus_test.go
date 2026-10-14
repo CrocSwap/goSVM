@@ -100,11 +100,13 @@ var corpusChanges = map[int]corpusEntry{
 	// emits nothing.
 	27:  {CSHA256: "b4b469cbd78f41a300064e2a6d229a2e0788dd4542820fcae073fd414f7651a0"}, // s03.go: was "generics and bodyless functions are unsupported"
 	106: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // s00.go: was "generic types unsupported"
-	// Interface values are still rejected at the same position; the message
-	// now says interfaces are only usable as constraints.
-	140: {Error: "s42.go:2:40: interface values unsupported (interface{}); " + interfaceRule},
-	198: {Error: "s43.go:2:1: interface values unsupported (interface{}); " + interfaceRule},
-	272: {Error: "control-reject.go:1:11: interface values unsupported (error); " + interfaceRule},
+	// Interface values became supported (docs/GO_INTERFACES.md): an empty
+	// type switch on a nil interface{} and an unused interface{} parameter
+	// compile; error stays rejected at the same position, because its
+	// Error() method returns a string.
+	140: {CSHA256: "b76a35c879f61af5b2046c6dbab39bdc742bb1ddb506c94d72836761bb03bb63"}, // s42.go `var x interface{}; switch x.(type) {}`: was "unsupported type interface{}" (generics reworded it to name the constraint rule)
+	198: {CSHA256: "5ecfd0b8d3130ec2399c4dc682be098180ba51f249066bb862c4579f49461f3c"}, // s43.go `func f(x interface{})`: likewise
+	272: {Error: "control-reject.go:1:11: " + errorRule},                               // `func pair() (uint64, error)`: was "unsupported type error", then the constraint-rule message
 	// Invocation-heap allocation (docs/GO_ALLOCATION.md): escaping locals move
 	// to the heap instead of being rejected, and new/make/append/copy, slice
 	// literals, slices of any element type, non-byte views and pointer/slice
@@ -147,8 +149,6 @@ const (
 	arrayElementRule   = "array elements must be integer or bool scalars, or named versions of those scalars"
 	pointerElementRule = "pointer elements must be integer/bool scalars, value structs or scalar arrays"
 )
-
-const interfaceRule = "interfaces are only usable as type parameter constraints"
 
 // Check must accept exactly the programs the pre-Check compiler accepted and
 // reject the rest with the identical first error; CompileProgram must still

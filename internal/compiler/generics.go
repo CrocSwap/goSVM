@@ -144,6 +144,11 @@ func (gp *genericProgram) run(files []*ast.File) {
 			gp.discover(d)
 		}
 	}
+	gp.drain()
+}
+
+// drain discovers the instantiations that queued instance bodies need.
+func (gp *genericProgram) drain() {
 	for len(gp.queue) > 0 {
 		inst := gp.queue[0]
 		gp.queue = gp.queue[1:]
@@ -243,8 +248,9 @@ func (gp *genericProgram) collect(t types.Type, site ast.Node, seen map[types.Ty
 		if t.TypeParams().Len() > 0 {
 			return
 		}
-		if st, ok := t.Underlying().(*types.Struct); ok {
-			gp.collect(st, site, seen)
+		switch u := t.Underlying().(type) {
+		case *types.Struct, *types.Interface:
+			gp.collect(u, site, seen)
 		}
 	case *types.Pointer:
 		gp.collect(t.Elem(), site, seen)
@@ -264,6 +270,13 @@ func (gp *genericProgram) collect(t types.Type, site ast.Node, seen map[types.Ty
 	case *types.Tuple:
 		for i := 0; i < t.Len(); i++ {
 			gp.collect(t.At(i).Type(), site, seen)
+		}
+	case *types.Interface:
+		// Dynamic calls pass and return the methods' values.
+		for i := 0; i < t.NumMethods(); i++ {
+			sig := t.Method(i).Type().(*types.Signature)
+			gp.collect(sig.Params(), site, seen)
+			gp.collect(sig.Results(), site, seen)
 		}
 	case *types.Signature:
 		if t.TypeParams().Len() > 0 || t.RecvTypeParams().Len() > 0 {
@@ -299,26 +312,36 @@ func (gp *genericProgram) requestType(t *types.Named, site ast.Node) {
 		}
 	}
 	gp.typeInstances[key] = &TypeInstance{Type: t, Key: key, Name: name, Symbol: "gosvm_ty_" + mangle(key), Site: site.Pos()}
-	if st, ok := t.Underlying().(*types.Struct); ok {
-		gp.collect(st, site, map[types.Type]bool{})
+	switch u := t.Underlying().(type) {
+	case *types.Struct, *types.Interface:
+		gp.collect(u, site, map[types.Type]bool{})
 	}
 }
 
 // request records the instance of origin for args that the call at site
 // runs, building it on first use.
 func (gp *genericProgram) request(origin *types.Func, args []types.Type, site *ast.Ident) {
+	gp.requestAt(origin, args, site, site)
+}
+
+// requestAt is request with a diagnostic position site; id, when not nil, is
+// the call identifier that runs the instance (CheckedProgram.Instantiated).
+// It returns the instance, or nil past the limit when not validating.
+func (gp *genericProgram) requestAt(origin *types.Func, args []types.Type, site ast.Node, id *ast.Ident) *Instance {
 	for i, arg := range args {
 		args[i] = gp.canonical(arg)
 	}
 	key, name := instanceKey(origin, args)
 	if inst := gp.instances[key]; inst != nil {
-		gp.instantiated[site] = inst
-		return
+		if id != nil {
+			gp.instantiated[id] = inst
+		}
+		return inst
 	}
 	gp.counts[origin]++
 	if gp.counts[origin] > MaxInstantiations {
 		if !gp.validate {
-			return
+			return nil
 		}
 		display := origin.Name()
 		if recv := origin.Type().(*types.Signature).Recv(); recv != nil {
@@ -337,9 +360,12 @@ func (gp *genericProgram) request(origin *types.Func, args []types.Type, site *a
 	}
 	inst := &Instance{Origin: origin, TypeArgs: args, Key: key, Name: name, Symbol: "gosvm_fn_" + mangle(key), Site: site.Pos()}
 	gp.instances[key] = inst
-	gp.instantiated[site] = inst
+	if id != nil {
+		gp.instantiated[id] = inst
+	}
 	gp.build(inst)
 	gp.queue = append(gp.queue, inst)
+	return inst
 }
 
 func genericParams(origin *types.Func) *types.TypeParamList {
@@ -558,6 +584,23 @@ func (gp *genericProgram) build(inst *Instance) {
 			object = o // receiver type parameters and other non-value names
 		}
 		info.Defs[id] = object
+	}
+	// A type switch clause's implicit variable gets the substituted type.
+	for _, n := range nodes {
+		clause, ok := n.(*ast.CaseClause)
+		if !ok {
+			continue
+		}
+		o, ok := info.Implicits[original[n]].(*types.Var)
+		if !ok {
+			continue
+		}
+		object := types.NewVar(o.Pos(), o.Pkg(), o.Name(), s.typ(o.Type()))
+		objects[o] = object
+		if scope := scopes[o.Parent()]; scope != nil {
+			scope.Insert(object)
+		}
+		info.Implicits[clause] = object
 	}
 	variable := func(v *types.Var) *types.Var {
 		if v == nil {
@@ -894,6 +937,8 @@ func writeType(b *strings.Builder, t types.Type, qualifier types.Qualifier) {
 	case *types.Array:
 		fmt.Fprintf(b, "[%d]", t.Len())
 		writeType(b, t.Elem(), qualifier)
+	case *types.Interface:
+		writeInterface(b, t, qualifier)
 	case *types.Map:
 		b.WriteString("map[")
 		writeType(b, t.Key(), qualifier)
@@ -1101,7 +1146,8 @@ type Instantiation struct {
 func Instantiations(tp *TypedProgram) (out []Instantiation, err error) {
 	defer recoverCompileError(&err)
 	info := &types.Info{Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
-		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{}, Instances: map[*ast.Ident]types.Instance{}}
+		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{}, Instances: map[*ast.Ident]types.Instance{},
+		Implicits: map[ast.Node]types.Object{}}
 	for k, v := range tp.Info.Types {
 		info.Types[k] = v
 	}
@@ -1120,6 +1166,9 @@ func Instantiations(tp *TypedProgram) (out []Instantiation, err error) {
 	for k, v := range tp.Info.Instances {
 		info.Instances[k] = v
 	}
+	for k, v := range tp.Info.Implicits {
+		info.Implicits[k] = v
+	}
 	f := newFrontend(tp.Fset, info)
 	var decls []ast.Decl
 	for _, file := range tp.Files {
@@ -1128,6 +1177,7 @@ func Instantiations(tp *TypedProgram) (out []Instantiation, err error) {
 	gp := newGenericProgram(f, info, types.NewContext(), decls, false)
 	f.instantiated = gp.instantiated
 	gp.run(tp.Files)
+	gp.runInterfaces(tp.Files)
 	for _, inst := range gp.instances {
 		kind, generic := "function", inst.Origin.Pkg().Path()+"."+inst.Origin.Name()
 		if recv := inst.Origin.Type().(*types.Signature).Recv(); recv != nil {

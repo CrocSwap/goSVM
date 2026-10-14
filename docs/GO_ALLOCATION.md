@@ -23,8 +23,9 @@ allocator is emitted only when a program needs it.
 
 Slices may hold any storable element: integer scalars of every
 [integer type](GO_INTEGERS.md), `bool`, value structs,
-declared scalar arrays (`[][32]byte`), pointers (`[]*Node`) and slices
-(`[][]byte`). Elements must not contain zero-length arrays or empty structs
+declared scalar arrays (`[][32]byte`), pointers (`[]*Node`), slices
+(`[][]byte`) and [interface values](GO_INTERFACES.md) (`[]any`, `[]Shape`;
+their growth uses Go's pointer-holding size classes). Elements must not contain zero-length arrays or empty structs
 (their Go and C sizes could differ). Named slice types, slices of
 `solana.Context`, arrays of pointers or slices, pointers to slices or pointers,
 maps, strings and `append`/`copy` with strings remain rejected. `[]int`,
@@ -65,6 +66,18 @@ goSVM's allocator is a bump allocator over that region:
 Heap storage lives until the invocation ends. It is not visible to other
 instructions, CPI callees or later transactions; persistent state still belongs
 in account data.
+
+### Interface boxing
+
+Converting a value to an [interface](GO_INTERFACES.md) is an allocation like
+any other: a pointer is stored directly and a zero-size value allocates
+nothing; every other value is copied into a new allocation of its Go size
+rounded up to 8 bytes (`uint64`, `int8` or `bool`: 8 bytes; `[3]uint64`: 24; a
+slice header: 24). Comparisons, assertions, type switches, dynamic calls and
+interface-to-interface conversions allocate nothing. With the default budget,
+4,095 `uint64` conversions fit and the 4,096th aborts
+([boxing cost](GO_INTERFACES.md#boxing-cost)). Programs with interface values
+always carry the heap runtime.
 
 ## Heap budget
 
@@ -133,7 +146,9 @@ variable or an `&T{...}` literal) **escapes** when it may be:
 - kept in a variable declared outside the local's lexical scope (block, branch
   or loop);
 - stored into heap data: assigned to a field, an element or through a pointer,
-  written into a struct or slice literal, or appended; or
+  written into a struct or slice literal, or appended;
+- converted to an interface (an interface value can be copied anywhere), or
+  passed to a dynamic method call, which may run any implementation; or
 - passed as an argument that the callee may store into heap data (the callee's
   `BorrowSummary.Escapes`, propagated through calls and returned borrows).
 
@@ -194,7 +209,8 @@ fogo-v0 and solana-v3 ([mixed_test.go](../internal/compiler/mixed_test.go)).
 Allocation adds two aborts to the [failure contract](ERROR_CONTRACT.md):
 
 - **Out of memory**: `new`, `make`, a growing `append`, a slice literal, an
-  escaping `&T{...}` or a moved local needs more than the remaining budget.
+  escaping `&T{...}`, a moved local or an interface conversion needs more than
+  the remaining budget.
 - **make length or capacity out of range**: `len > cap`, a negative signed
   length, or a capacity whose size exceeds Go's 2^48-byte `maxAlloc` (Go panics
   `makeslice: len out of range` or `cap out of range`).
@@ -210,8 +226,8 @@ element `i` of a `[]T` is at `ptr + i*sizeof(T)`, and Go and C sizes agree for
 admitted elements. Programs that allocate always carry capacities. The heap
 runtime (allocator, `growslice`, `makeslice`, `memmove`) is emitted only for
 programs that call `new`/`make`/`append`/`copy`, write a slice literal or
-elided `&T{...}`, move a local, or use a non-byte slice or a pointer/slice
-field. An alternative backend must reproduce the allocator layout and budget
+elided `&T{...}`, move a local, use a non-byte slice or a pointer/slice
+field, or use interface values. An alternative backend must reproduce the allocator layout and budget
 (observable only through out-of-memory boundaries), the growth rule and the
 heap moves; see [BACKEND_INTERFACE.md](BACKEND_INTERFACE.md).
 

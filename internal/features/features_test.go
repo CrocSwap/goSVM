@@ -409,7 +409,9 @@ func Process(s, i []byte) uint64 { return link(7).v }`,
 func Id[T any](x T) T { return x }
 func Process(s, i []byte) uint64 { h, _ := bits.Mul64(Id(uint64(3)), 4); return h }`,
 			Uses{Checked: true, MathBits: true, Generics: true}},
-		"interface value rejected": {`func Process(s, i []byte) uint64 { var x any = s; _ = x; return 0 }`,
+		"interface value": {`func Process(s, i []byte) uint64 { var x any = s; _ = x; return 0 }`,
+			Uses{Checked: true, Interfaces: true}},
+		"error rejected": {`func Process(s, i []byte) uint64 { var e error; _ = e; return 0 }`,
 			Uses{Interfaces: true}},
 	} {
 		dir := t.TempDir()
