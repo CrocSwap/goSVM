@@ -56,6 +56,68 @@ v1.57, the caller's own backend. Should a pairing ever be accepted ahead of its
 qualification, `library add` notes it; run `gosvm test -svm` before deploying
 such a build.
 
+## Build from Bend source
+
+Instead of pinning published manifests, a project can declare a Bend source and
+root; GoSVM then runs the Bend checkout's own `build:library` for every project
+target, as it builds [Rust crates](RUST_LIBRARIES.md):
+
+```sh
+gosvm library add -name bend -bend-source ../bendSVM/tests/mixed-library/PROOF.bend \
+  -root mixed.evaluate -bend-checkout ../bendSVM      # or set GOSVM_BEND
+```
+
+```json
+"libraries": {
+  "bend": {
+    "function": "Evaluate",
+    "bend_source": {"checkout": "../bendSVM", "file": "../bendSVM/tests/mixed-library/PROOF.bend", "root": "mixed.evaluate"}
+  }
+}
+```
+
+`bend_source` is exclusive with `bend` pins and `rust`. Paths in or beside the
+project are recorded relative to it, others absolutely. Without `checkout`,
+`$GOSVM_BEND` names the bendSVM checkout. Per target, GoSVM runs
+
+```sh
+npm --prefix <checkout> run -s build:library -- <PROOF.bend> <root> <project>/build/bend-libraries/<name>/<key16>/library --target <profile> --json
+```
+
+with `SBF_V157_TOOLS` set to GoSVM's platform-tools v1.57 `llvm/bin` (the full
+tree from `gosvm toolchain install -rust`, else `~/.cache/solana/v1.57/platform-tools`;
+Clang/LLD are checked against GoSVM's content pins and Bend checks Clang and
+`llvm-readelf` against its own). It parses the single `--json` result, requires
+the requested profile and root, an accepted platform-tools pin and the manifest
+at `<key16>/<profile>/<tools>/library.manifest.json`, and verifies the reported
+`manifestSha256` against the file. The resulting manifests are then bound
+exactly like pinned ones, so every check below applies.
+
+The build key covers the source and its transitive `import … as …` files, the
+root, the target list, the checkout's git HEAD and a hash of its uncommitted
+changes (a dirty checkout is built with a warning), the pinned Bend dependency
+and platform-tools v1.57. `generate`, `build` and `test` reuse a completed build
+while the key is unchanged and drop superseded builds of that library.
+
+Before building, GoSVM checks the prerequisites and stops with the fix: a
+bendSVM checkout (`package.json` with `build:library`), `npm` on `PATH`,
+installed dependencies (`node_modules/.bin/bun`; run `npm --prefix <checkout> ci`),
+a clean `.deps/bend` at `7561656155a4285c1e4ccfcb3505ab59524de973` (GoSVM never
+lets Bend fetch it), a host `clang` (or `$CC`) and the v1.57 tools. GoSVM writes
+nothing in the checkout; it compares `git status --porcelain` (and the
+uncommitted-content hash) before and after each build and discards the build if
+they differ.
+
+Rebuilt bundles are evidence only for their own inputs; Bend reruns no
+qualification for consumer builds. On October 14 the mixed fixture built this way
+reproduced the published bundles' objects, C source, header and schema byte for
+byte on both targets (only the `.su` stack reports, and so the manifest SHA-256,
+differ), linked to the same Go+Bend images and passed `gosvm test --svm` on
+fogo-v0 and solana-v3. The opt-in integration test is
+`GOSVM_BEND=/abs/bendSVM make test` (`TestBendSourceIntegration`).
+
+## Low-level binding
+
 The lower-level `gosvm library bind -manifest … -sha256 … -allow-library-tools v1.53
 -package bend -function Evaluate -output dir` still binds a single producer into a
 new directory.

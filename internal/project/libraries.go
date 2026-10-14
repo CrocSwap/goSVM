@@ -14,12 +14,23 @@ import (
 )
 
 // LibraryDeclaration binds a pure foreign library as the Go package libs/<name>.
-// Bend maps each network (or profile) to its pinned producer manifest; Rust
-// names a crate GoSVM builds for every project target.
+// Bend maps each network (or profile) to its pinned producer manifest;
+// BendSource names a Bend source and root that GoSVM builds with Bend's own
+// build:library for every project target; Rust names a crate GoSVM builds for
+// every project target. Exactly one form is declared.
 type LibraryDeclaration struct {
-	Function string                `json:"function"`
-	Bend     map[string]LibraryPin `json:"bend,omitempty"`
-	Rust     *RustCrate            `json:"rust,omitempty"`
+	Function   string                `json:"function"`
+	Bend       map[string]LibraryPin `json:"bend,omitempty"`
+	BendSource *BendSource           `json:"bend_source,omitempty"`
+	Rust       *RustCrate            `json:"rust,omitempty"`
+}
+
+// BendSource is a Bend library built from source. Checkout is the bendSVM
+// checkout that builds it; when empty, $GOSVM_BEND names it.
+type BendSource struct {
+	Checkout string `json:"checkout,omitempty"`
+	File     string `json:"file"`
+	Root     string `json:"root"`
 }
 
 type RustCrate struct {
@@ -41,11 +52,25 @@ func validateLibraries(c Config) error {
 		if !token.IsIdentifier(l.Function) || !token.IsExported(l.Function) {
 			return fmt.Errorf("library %s: function %q must be an exported Go identifier", name, l.Function)
 		}
-		if (len(l.Bend) == 0) == (l.Rust == nil) {
-			return fmt.Errorf("library %s must declare either Bend producer manifests or a Rust crate", name)
+		forms := 0
+		for _, declared := range []bool{len(l.Bend) != 0, l.BendSource != nil, l.Rust != nil} {
+			if declared {
+				forms++
+			}
+		}
+		if forms != 1 {
+			return fmt.Errorf("library %s must declare exactly one of Bend producer manifests, a Bend source or a Rust crate", name)
 		}
 		if l.Rust != nil && l.Rust.Crate == "" {
 			return fmt.Errorf("library %s: rust requires a crate directory", name)
+		}
+		if b := l.BendSource; b != nil {
+			if !strings.HasSuffix(b.File, ".bend") {
+				return fmt.Errorf("library %s: bend_source requires a .bend file", name)
+			}
+			if !library.ValidBendRoot(b.Root) {
+				return fmt.Errorf("library %s: bend_source root %q must have the form namespace.function", name, b.Root)
+			}
 		}
 		seen := map[string]bool{}
 		for key, pin := range l.Bend {
@@ -74,6 +99,12 @@ func SyncLibraries(dir string, c Config) error {
 	for name, l := range c.Libraries {
 		if l.Rust != nil {
 			if err := syncRust(dir, c, name, l); err != nil {
+				return fmt.Errorf("library %s: %w", name, err)
+			}
+			continue
+		}
+		if l.BendSource != nil {
+			if err := syncBendSource(dir, c, name, l); err != nil {
 				return fmt.Errorf("library %s: %w", name, err)
 			}
 			continue
@@ -230,11 +261,7 @@ func AddRustLibrary(dir, name, function, crate string) error {
 	if err != nil {
 		return err
 	}
-	rel, err := filepath.Rel(dir, abs)
-	if err != nil || strings.HasPrefix(rel, "../../") {
-		rel = abs
-	}
-	l := LibraryDeclaration{Function: function, Rust: &RustCrate{Crate: filepath.ToSlash(rel)}}
+	l := LibraryDeclaration{Function: function, Rust: &RustCrate{Crate: projectPath(dir, abs)}}
 	if c.Libraries == nil {
 		c.Libraries = map[string]LibraryDeclaration{}
 	}

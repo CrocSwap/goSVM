@@ -91,11 +91,17 @@ Implemented on `targets-and-libraries` (root tests/vet pass):
   on both targets; linked ELFs and per-case CU are identical to the v1.53 run.
   It is no longer `untested` and is the documented fogo-v0 default; v1.53 stays
   accepted and qualified.
+- **Bend libraries from source (October 14).** `gosvm library add -name X
+  -bend-source PROOF.bend -root ns.fn [-bend-checkout dir | $GOSVM_BEND]` records
+  `bend_source` in `gosvm.json`; GoSVM runs Bend's `build:library --json` per
+  target into `build/bend-libraries/<name>/<key16>` (Bend's reply:
+  `../bendSVM/docs/coordination/2026-10-14-gosvm-reply.md`), then binds
+  the manifests through the pinned path. See
+  [Build from Bend source](docs/BEND_LIBRARIES.md#build-from-bend-source).
+  The mixed fixture rebuilt this way matched the published objects and passed
+  `gosvm test --svm` on both targets; the Bend checkout stayed unchanged.
 
 Open:
-- GoSVM invoking Bend's library build from a declared Bend source (like Rust
-  crates today) awaits Bend's answer on output location and JSON output; see
-  the [follow-up request](docs/coordination/2026-10-14-bend-build-request.md).
 - Probe programs stay deployed for future network checks: devnet
   `Db91CBr77NWLrQJ83ud2h3nL1AtEYrF1EftwKzznsVpp`, Fogo testnet
   `G1aZmYxscrVjKg7Mw7u4PForusZoWCtn2Ry9N5vFtThW` (authority: the throwaway

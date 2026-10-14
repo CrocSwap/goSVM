@@ -81,7 +81,9 @@ pinned local packages for now (`gosvm runner install -archive ...`); add
 reads the cluster's live feature gates before deploying with a dedicated
 per-network payer, and `gosvm call` simulates or sends an instruction.
 Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with
-`gosvm library add`. [Targets, deployment and migration](docs/TARGET_PROFILES.md)
+`gosvm library add`, from published manifests or built from a `.bend` source
+(`-bend-source PROOF.bend -root ns.fn`); [Rust crates](docs/RUST_LIBRARIES.md)
+with `-rust`. [Targets, deployment and migration](docs/TARGET_PROFILES.md)
 cover the details. Public signed CLI and runner downloads are still planned; see
 [installation details](docs/DEVELOPMENT.md#start-a-go-project).
 
