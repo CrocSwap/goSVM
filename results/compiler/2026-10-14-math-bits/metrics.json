@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-14",
+  "network_validation": false,
+  "backend": "platform-tools v1.57 LLVM (unmanaged ~/.cache/solana/v1.57/platform-tools/llvm, content pins = ModernBackendHashes)",
+  "go": "go1.22.0 darwin/arm64",
+  "host_differential": {
+    "test": "TestBitsDifferentialAgainstGo",
+    "vectors": 552163,
+    "operations": 115,
+    "rotation_constants": 29,
+    "traps_where_go_panics": 24408,
+    "oracle": "host math/bits (arm64, intrinsified Add64/Sub64)"
+  },
+  "full_swap_elf_identity": {
+    "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+    "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+    "method": "scripts/verify_rebuild.py, fresh -no-cache builds from two paths, both identical"
+  },
+  "targets": {
+    "fogo-v0": {
+      "vectors": 4261,
+      "trap_cases": 11,
+      "programs": {
+        "bitsprobe": {
+          "elf_sha256": "49fa267cb775b0ab01fcf0beadfdfbfd6521e1e662aba7be3a39adc5a7420d8f",
+          "fixtures_sha256": "91cc8405575c92e8be74e26c4faced0015682cb9a0ef76f6fcedf26a9d232114",
+          "runner": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "cases": 18,
+          "trap_error": [
+            "{\"InstructionError\": [0, \"ProgramFailedToComplete\"]}"
+          ]
+        },
+        "bitscu": {
+          "elf_sha256": "18c8a27869e2e2190259dc34d475749db7b66a616ce0a4de4e539a2c60762a00",
+          "fixtures_sha256": "748b3c74bb27c5aeceb6bdebbd444ba83df2d90ee11ae8d11d1b11492912351e",
+          "runner": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+          "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+          "cases": 9,
+          "tx_cu": {
+            "cu-narrow-hand": 10737,
+            "cu-narrow-bits": 10545,
+            "cu-narrow-baseline": 7537,
+            "cu-wide-hand": 16757,
+            "cu-wide-bits": 17219,
+            "cu-wide-baseline": 7537,
+            "cu-skewed-hand": 23673,
+            "cu-skewed-bits": 16911,
+            "cu-skewed-baseline": 7537
+          },
+          "mulDiv_cu_per_call": {
+            "narrow": {
+              "hand": 50.0,
+              "bits": 47.0
+            },
+            "wide": {
+              "hand": 144.0625,
+              "bits": 151.28125
+            },
+            "skewed": {
+              "hand": 252.125,
+              "bits": 146.46875
+            }
+          }
+        }
+      }
+    },
+    "solana-v3": {
+      "vectors": 4261,
+      "trap_cases": 11,
+      "programs": {
+        "bitsprobe": {
+          "elf_sha256": "1197a582fc5a02c14dfa7abc3b5162696a00c7a0bec5f83ad15b92eef4d00c19",
+          "fixtures_sha256": "91cc8405575c92e8be74e26c4faced0015682cb9a0ef76f6fcedf26a9d232114",
+          "runner": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "cases": 18,
+          "trap_error": [
+            "{\"InstructionError\": [0, \"ProgramFailedToComplete\"]}"
+          ]
+        },
+        "bitscu": {
+          "elf_sha256": "17e6a8b0a796c91a83a53e02f5f0374f71930e77da0c2db7f70dfc436249299f",
+          "fixtures_sha256": "748b3c74bb27c5aeceb6bdebbd444ba83df2d90ee11ae8d11d1b11492912351e",
+          "runner": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+          "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+          "cases": 9,
+          "tx_cu": {
+            "cu-narrow-hand": 10737,
+            "cu-narrow-bits": 10545,
+            "cu-narrow-baseline": 7537,
+            "cu-wide-hand": 16757,
+            "cu-wide-bits": 17219,
+            "cu-wide-baseline": 7537,
+            "cu-skewed-hand": 23673,
+            "cu-skewed-bits": 16911,
+            "cu-skewed-baseline": 7537
+          },
+          "mulDiv_cu_per_call": {
+            "narrow": {
+              "hand": 50.0,
+              "bits": 47.0
+            },
+            "wide": {
+              "hand": 144.0625,
+              "bits": 151.28125
+            },
+            "skewed": {
+              "hand": 252.125,
+              "bits": 146.46875
+            }
+          }
+        }
+      }
+    }
+  }
+}

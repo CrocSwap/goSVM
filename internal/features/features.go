@@ -42,6 +42,9 @@ type Usage struct {
 	SDKCalls []CallSite `json:"sdk_calls"`
 	// LibraryCalls are calls into generated pure-library bindings (Bend/Rust).
 	LibraryCalls []CallSite `json:"library_calls"`
+	// StdlibCalls are calls into standard-library packages the compiler
+	// provides on-chain (math/bits). Added within gosvm-features-v1.
+	StdlibCalls []CallSite `json:"stdlib_calls"`
 }
 
 // Program identifies the measured program. Module and Targets are filled by
@@ -241,9 +244,9 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	sort.Slice(inputs, func(i, j int) bool { return inputs[i].info.Path < inputs[j].info.Path })
 
 	u := &Usage{Schema: Schema, Program: Program{EntryPackage: tp.Entry.Path(), Packages: sorted(packages), SDKPackages: sortedSet(sdkPackages)},
-		Files: []File{}, SDKCalls: []CallSite{}, LibraryCalls: []CallSite{},
+		Files: []File{}, SDKCalls: []CallSite{}, LibraryCalls: []CallSite{}, StdlibCalls: []CallSite{},
 		Language: Language{Handwritten: newSide(), Generated: newSide()}}
-	sdkCalls, libCalls := map[string]*CallSite{}, map[string]*CallSite{}
+	sdkCalls, libCalls, stdCalls := map[string]*CallSite{}, map[string]*CallSite{}, map[string]*CallSite{}
 	imports := map[string]map[string]bool{Handwritten: {}, Generated: {}}
 	arrays := map[string]map[string]*ArrayUse{Handwritten: {}, Generated: {}}
 	for _, in := range inputs {
@@ -264,7 +267,7 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 			imports[in.info.Kind][strings.Trim(im.Path.Value, `"`)] = true
 		}
 		w := &walker{tp: tp, side: side, kind: in.info.Kind, path: in.info.Path, pkg: in.pkg, libraries: libraries,
-			sdk: sdkCalls, lib: libCalls, arrays: arrays[in.info.Kind]}
+			sdk: sdkCalls, lib: libCalls, std: stdCalls, arrays: arrays[in.info.Kind]}
 		w.file(in.file)
 		if d := maxLoopDepth(in.file); d > side.MaxLoopNesting {
 			side.MaxLoopNesting = d
@@ -282,6 +285,7 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	}
 	u.SDKCalls = flatten(sdkCalls)
 	u.LibraryCalls = flatten(libCalls)
+	u.StdlibCalls = flatten(stdCalls)
 	return u, nil
 }
 
@@ -298,6 +302,11 @@ func Marshal(u *Usage) ([]byte, error) {
 }
 
 func isSDK(path string) bool { return path == "gosvm/solana" || strings.HasPrefix(path, "gosvm/sdk/") }
+
+// isStdlib reports the standard-library packages the compiler provides to
+// on-chain code. Their calls are listed in stdlib_calls and, as calls into
+// another package, still count as cross_package_calls.
+func isStdlib(path string) bool { return path == "math/bits" }
 
 func isGenerated(data []byte) bool {
 	// Go's convention: the marker must precede the package clause.
@@ -384,6 +393,7 @@ type walker struct {
 	pkg       string
 	libraries map[string]bool
 	sdk, lib  map[string]*CallSite
+	std       map[string]*CallSite
 	arrays    map[string]*ArrayUse
 }
 
@@ -758,6 +768,9 @@ func (w *walker) call(n *ast.CallExpr) {
 		w.count("function_calls")
 	default:
 		w.count("cross_package_calls")
+		if isStdlib(pkg) {
+			w.site(w.std, fn, pkg, method, n)
+		}
 	}
 }
 

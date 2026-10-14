@@ -493,6 +493,12 @@ updates. SDK buffers have capacity equal to their supplied lengths. Local/block
 escapes are rejected; no allocation or append is provided. See
 [view semantics and SBF evidence](../docs/GO_VIEWS.md).
 
+`import "math/bits"` is available on-chain, the one standard-library exception:
+the 64-, 32- and 8-bit carry, multiply, divide, count, reverse and rotate
+functions (constant rotation counts), with Go's exact results and its divide
+panics as aborts. The `uint` and 16-bit variants are rejected. See
+[math/bits semantics and SBF evidence](../docs/GO_BITS.md).
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, signed variables
 and arithmetic, globals, `init`, allocation, append, non-byte/named slices, slice fields, interfaces, maps,
 strings, generics, closures/function values, recursion, named results, variadics,

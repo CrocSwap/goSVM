@@ -17,6 +17,8 @@ fails with no custom error code and the transaction rolls back.
 - Array index, slice index or slice-expression bounds out of range.
 - Nil pointer dereference, field access or method receiver.
 - Account index out of range in SDK account accessors.
+- `math/bits.Div64(hi, lo, y)` and `Div32` with `y == 0` or `y <= hi`, and
+  `Rem64`/`Rem32` with `y == 0`, where Go panics ([math/bits](GO_BITS.md)).
 
 These are **not** traps:
 
@@ -24,6 +26,8 @@ These are **not** traps:
 - A shift by the operand's width or more yields 0.
 - Unsigned conversions truncate or zero-extend.
 - Signed arithmetic is not in the subset, so it never runs.
+- Other `math/bits` calls never fail. [GO_BITS.md](GO_BITS.md) specifies their
+  exact results, including `Add64`/`Sub64` carry inputs other than 0 and 1.
 
 ## Error codes
 
@@ -121,3 +125,6 @@ Handler results propagate unchanged.
 - 2026-10-14: contract established at `da6bf04` plus this document.
 - 2026-10-14: steps 4 and 12–15 spelled out to match existing generated code
   (no behaviour change).
+- 2026-10-14: addition (new functions), no existing behaviour changed:
+  `math/bits` traps for `Div64`/`Div32` (`y == 0` or `y <= hi`) and
+  `Rem64`/`Rem32` (`y == 0`).

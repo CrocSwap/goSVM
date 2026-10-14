@@ -133,6 +133,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		g.ensureMemory()
 		g.WriteString(libraryMemory)
 	}
+	if usesBits(g.info, files) {
+		g.WriteString(bitsRuntime)
+	}
 	if program.SDKPackage != nil {
 		ownedLifecycle := false
 		for _, object := range g.info.Uses {
@@ -218,6 +221,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.emitResults(fn, g.info.Defs[fn.Name].Type().(*types.Signature).Results())
 		}
+	}
+	for _, call := range bitsResults(g.info, files) {
+		g.emitResults(call, g.info.Types[call].Type.(*types.Tuple))
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
@@ -524,6 +530,9 @@ func (g *generator) expr(e ast.Expr) string {
 			}
 			if imported.Imported().Path() == "gosvm/solana" {
 				return g.importedCall(e, callee)
+			}
+			if imported.Imported().Path() == bitsPath {
+				return g.bitsCall(e)
 			}
 			o = g.info.Uses[callee.Sel]
 		case *ast.Ident:
