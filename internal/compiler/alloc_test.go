@@ -134,7 +134,7 @@ func TestAllocationRejections(t *testing.T) {
 		"panic":               {`panic(1)`, builtinRule},
 		"elided array":        {`ps := []*K{{1}}; _ = ps`, "elided &T{...} literals require a struct type; write &T{...}"},
 		"pointer to slice":    {`p := new([]byte); _ = p`, "pointer elements must be integer/bool scalars, value structs or scalar arrays"},
-		"pointer to pointer":  {`p := new(*V); _ = p`, "pointer elements must be integer/bool scalars, value structs or scalar arrays"},
+		"pointer to pointer":  {`p := new(*V); _ = p`, ""},
 		"array of pointers":   {`var a [2]*V; _ = a`, arrayElementRule},
 		"array of slices":     {`var a [2][]byte; _ = a`, arrayElementRule},
 		"int copy result":     {`n := copy(s, i); _ = n`, ""},

@@ -210,9 +210,6 @@ func (c *checker) signature(fn *ast.FuncDecl) {
 		c.fail(fn, "generics and bodyless functions are unsupported")
 	}
 	sig := c.info.Defs[fn.Name].Type().(*types.Signature)
-	if sig.Variadic() {
-		c.fail(fn, "variadics are unsupported")
-	}
 	if sig.Results().Len() > 1 {
 		c.lookupResult(fn, sig.Results())
 	}

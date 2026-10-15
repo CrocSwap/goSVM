@@ -99,7 +99,7 @@ type Uses struct {
 	// those import. Their sources are compiled with the program but are not
 	// program code: they are not counted in Language, Files or the flags
 	// above (added within gosvm-features-v1).
-	Stdlib []string `json:"stdlib"`
+	Stdlib []string `json:"stdlib,omitempty"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -498,7 +498,9 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	}
 	u.Generics = generics
 	summarize(u)
-	u.Uses.Stdlib = sortedSet(stdlibPackages)
+	if len(stdlibPackages) > 0 {
+		u.Uses.Stdlib = sortedSet(stdlibPackages)
+	}
 	return u, nil
 }
 

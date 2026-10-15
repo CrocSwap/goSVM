@@ -1,0 +1,379 @@
+{
+  "go": "go1.22.0",
+  "license": "LICENSE (Go's BSD-style license, $GOROOT/LICENSE)",
+  "identity": "bdd288095039789787c74f7a5d3833960c9076be7ce1689ea3f4d26437e97145",
+  "files": [
+    {
+      "overlay": "bytes/bytes.go",
+      "sha256": "261788793789011bd46b8991a229ad789131fa6f53db4dd4768aee828dbdba1e",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "bytes/bytes.go",
+          "sha256": "80ede9282603b647218cc981c13d2b91641ea4d214d8550470305905c0fc03e6"
+        }
+      ]
+    },
+    {
+      "overlay": "bytes/gosvm.go",
+      "sha256": "1b61398f08e64070976e04d030d46831db994a2196922935c0633e37de699367",
+      "kind": "goSVM helpers; maxInt from the origin",
+      "origins": [
+        {
+          "path": "bytes/buffer.go",
+          "sha256": "7309491855f1109f2e77cf8c9ac4ebe4b712c347f3e97c96d9d3c6936446b665"
+        }
+      ]
+    },
+    {
+      "overlay": "encoding/binary/binary.go",
+      "sha256": "4c80f3c8b1677d5e8c29fe9e8815ad9c449ada1dbf0c937396137420b33960c9",
+      "kind": "extract",
+      "origins": [
+        {
+          "path": "encoding/binary/binary.go",
+          "sha256": "5f4a2d1febde5921a746312d78b69e52ab3a1038a28a85764e5972be51fb5a0b"
+        }
+      ]
+    },
+    {
+      "overlay": "encoding/binary/native_endian_little.go",
+      "sha256": "a8c9cf230b66263b93a97512b0c656254c776356eef5fdb1f7587b6e3c182e0b",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "encoding/binary/native_endian_little.go",
+          "sha256": "b031ac2a0198ad9091aba55eaea935b258fac69e2025502aa3d50f194c12918f"
+        }
+      ]
+    },
+    {
+      "overlay": "encoding/binary/varint.go",
+      "sha256": "307d97925b007c61203d35d456978d4fe5a04432e7152615d1ef30fc368268be",
+      "kind": "extract",
+      "origins": [
+        {
+          "path": "encoding/binary/varint.go",
+          "sha256": "87b0145e3cbb30a0c7fcf508084584526ba234587922fe3c191a49cc719e1756"
+        }
+      ]
+    },
+    {
+      "overlay": "errors/errors.go",
+      "sha256": "6408682d10324a5f8ed9c64e97bcd6191d4c9d9941247aa902ab6c301ef52038",
+      "kind": "verbatim",
+      "origins": [
+        {
+          "path": "errors/errors.go",
+          "sha256": "6408682d10324a5f8ed9c64e97bcd6191d4c9d9941247aa902ab6c301ef52038"
+        }
+      ]
+    },
+    {
+      "overlay": "errors/gosvm.go",
+      "sha256": "539a0acd270a0e70ee8b8c183013279cccb4656df4337cff04a21be0fa52c93a",
+      "kind": "goSVM helpers",
+      "origins": []
+    },
+    {
+      "overlay": "errors/join.go",
+      "sha256": "a67a9565d2ce347e9d3547da50bfb86a26e788cd4c449223838f0ef1f357a9d0",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "errors/join.go",
+          "sha256": "5b6461998017a07232c4e89550d48c5fc21891c4e51c700a69199e133701ec64"
+        }
+      ]
+    },
+    {
+      "overlay": "errors/wrap.go",
+      "sha256": "5d424546c69ee96be60bb9f96ee3e10ea72565c316be018dee9f378ef3ba1725",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "errors/wrap.go",
+          "sha256": "5738497d4d8b5d46d69c1b5ca422e0b807d1f61fa0ae443e9ec644d9169fbcaf"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/bytealg.go",
+      "sha256": "531449c4fe1b214ecf5c38297c62ce5aca543cc549bfabb40413b9fa79bd94d1",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "internal/bytealg/bytealg.go",
+          "sha256": "311f23611a3362b4b8c099152655e868c124e60fbdf53db2335c2f047d33bb74"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/compare_generic.go",
+      "sha256": "d575c08ee41e71cdf2b7a6c417bdf5a22281b507679d4078a8b3eadea2489add",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "internal/bytealg/compare_generic.go",
+          "sha256": "0a89e6c3d553b6597a803535801aa8c63fefe7fe749253b0a0cdfe47aa5e0dbb"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/count_generic.go",
+      "sha256": "8ce2880e37aacdca59a3ca2d169ced9e9c6402244a5fed4372d2e923a2ad79eb",
+      "kind": "verbatim apart from the build constraint",
+      "origins": [
+        {
+          "path": "internal/bytealg/count_generic.go",
+          "sha256": "392c17f9838a1dd8a76c28c2d27a5ff521b80e642fbd1c208d16be775357196e"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/equal_generic.go",
+      "sha256": "ce6640db47b08763ced93c22da7acf2645c75065f35fe34e9a4bee5c95abfcff",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "internal/bytealg/equal_generic.go",
+          "sha256": "d6c5c106505c972fab2400024c14e04aa7eee1f972826e3b56787ee09f169247"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/index_generic.go",
+      "sha256": "295911cb6fba2dce7195724617e83529c79864396e08b5b62659a32aa6e0f99b",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "internal/bytealg/index_generic.go",
+          "sha256": "3b5673e455245f94735301eaf7b3c22d869a1436c826418cea9448f129652c35"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/indexbyte_generic.go",
+      "sha256": "c35b4565cad5f6febfe665b7257b91cd8881b62335c4538735b8fc59c062d72e",
+      "kind": "verbatim apart from the build constraint",
+      "origins": [
+        {
+          "path": "internal/bytealg/indexbyte_generic.go",
+          "sha256": "9df5f6ea75e7251d50c0fea53ad4fa29f689275f2c6a94f498fa8459c343602a"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/bytealg/lastindexbyte_generic.go",
+      "sha256": "805638ce68b2a5f9d4a50506834224738a85603bb2535f65d599030addd3b4df",
+      "kind": "verbatim",
+      "origins": [
+        {
+          "path": "internal/bytealg/lastindexbyte_generic.go",
+          "sha256": "632273eb2537352d9c14c6f37bf531bf95ff98431e212a24ce3777f436331c2d"
+        }
+      ]
+    },
+    {
+      "overlay": "internal/errtext/errtext.go",
+      "sha256": "00e962b2d8a59dfb6b96e0fef176c9959130e1bfb081e1c5075b4e788c072a2b",
+      "kind": "goSVM; replaces the recursive Error methods of the origins",
+      "origins": [
+        {
+          "path": "errors/join.go",
+          "sha256": "5b6461998017a07232c4e89550d48c5fc21891c4e51c700a69199e133701ec64"
+        },
+        {
+          "path": "strconv/atoi.go",
+          "sha256": "fc1ac2c9602d7e7b8036a0de6e2c7ab03c87dec5465ffbf32eb64bd5435cef81"
+        }
+      ]
+    },
+    {
+      "overlay": "math/const.go",
+      "sha256": "af9e0940bb4192b955308094e95a25ba4b60c246b2ad9c5f92204199236e9fa8",
+      "kind": "extract",
+      "origins": [
+        {
+          "path": "math/const.go",
+          "sha256": "859fedd369b0359b356ee4c54345a8d528e8a19f69c2eb93e7256a073689fe5c"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/atob.go",
+      "sha256": "4a3390dde19b86b3bcbd42c18e973aed049a2fd0376cc83b1186cad205931aff",
+      "kind": "verbatim",
+      "origins": [
+        {
+          "path": "strconv/atob.go",
+          "sha256": "a811df1f66377d76716b133aaa0e0029f8b8432f39b9128e60aeb792c5e70fdb"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/atoi.go",
+      "sha256": "67dcca74a8f680f264e54e226c0c435f7dc262e01757694991c97920f0e9f8b6",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strconv/atoi.go",
+          "sha256": "fc1ac2c9602d7e7b8036a0de6e2c7ab03c87dec5465ffbf32eb64bd5435cef81"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/bytealg.go",
+      "sha256": "02aa76b4de3ddc33869a683ed8fde1862f8737a7d02e65212a7e55ad6d6fe2c6",
+      "kind": "verbatim apart from the build constraint",
+      "origins": [
+        {
+          "path": "strconv/bytealg.go",
+          "sha256": "210ed5dd413d26575dabbb917c047ba52a144d133414f5e06b9595a4b30d3c60"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/gosvm.go",
+      "sha256": "cec0daa9b07ffa2fada4325833c815a7c0174af3e4163f6bb8b32878f172e2a8",
+      "kind": "goSVM helpers",
+      "origins": []
+    },
+    {
+      "overlay": "strconv/isprint.go",
+      "sha256": "878dc8ec38691e89f07b804bcc758935e600dc6071c33a6684aba86d0b2a7c9f",
+      "kind": "verbatim",
+      "origins": [
+        {
+          "path": "strconv/isprint.go",
+          "sha256": "24114557c2b3cad7b80c8e71683831bfbe1c72eb99e8fd28a3a48eaf77705fb4"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/itoa.go",
+      "sha256": "43f86a5f31442e53679c21eaf1e6f77a0cb1188bdd34ceaff128d399bf6832b3",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strconv/itoa.go",
+          "sha256": "8d24d4cefb5a172455f30669ecc47840d962eb317e18e71ff533fdbc6c8b5056"
+        }
+      ]
+    },
+    {
+      "overlay": "strconv/quote.go",
+      "sha256": "330ad2151ec73412cba8be83736dba6fb8616d2855d6addc003758e25caf5c34",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strconv/quote.go",
+          "sha256": "78295f53fbcf77266ceae2f2c9321fecbf1c3183e512d43875d1171dc6a6589d"
+        }
+      ]
+    },
+    {
+      "overlay": "strings/builder.go",
+      "sha256": "064cd346136a45ee3d14504a7ee04eff4530e6d8be534bec900025fa75421373",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strings/builder.go",
+          "sha256": "02c1ff5eeae191155c047fc7bdbf3dbc22e8dfbda7cb77d2d1a8328cb29a36a6"
+        }
+      ]
+    },
+    {
+      "overlay": "strings/clone.go",
+      "sha256": "080dc6aba68c5ee28c7dd68f9866540b42afb257ac151cad6fccabbf6403fbc7",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strings/clone.go",
+          "sha256": "980cf5a2e7b650dd50970b6a85b818268130ba37a2584820bfef26174213f82c"
+        }
+      ]
+    },
+    {
+      "overlay": "strings/compare.go",
+      "sha256": "19a83c1113a42517a9a0b701c8b79fb4ced69756e45dac589fe0d0faff13c10b",
+      "kind": "verbatim",
+      "origins": [
+        {
+          "path": "strings/compare.go",
+          "sha256": "293c2a6734d8d22c63dae85313b92e6d5cd4f165fd945b252311aa38dba81d85"
+        }
+      ]
+    },
+    {
+      "overlay": "strings/gosvm.go",
+      "sha256": "20c36ae490031df272014aca5ccdd94196bfea26c85dacb2bed135d4d7779009",
+      "kind": "goSVM helpers; noescape after the origin's",
+      "origins": [
+        {
+          "path": "strings/builder.go",
+          "sha256": "02c1ff5eeae191155c047fc7bdbf3dbc22e8dfbda7cb77d2d1a8328cb29a36a6"
+        }
+      ]
+    },
+    {
+      "overlay": "strings/strings.go",
+      "sha256": "ad94090bcfd516a36bd84e20ccf6bb3d2597c803b02e546b7fb8644cb208cce8",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "strings/strings.go",
+          "sha256": "d61c2e6eb243a800402a8bd0f6b8ccfe345566dd156a5eb50c1dd03d7a61a836"
+        }
+      ]
+    },
+    {
+      "overlay": "unicode/graphic.go",
+      "sha256": "f2c0ac212cdb77c9a4e722bf9fa1c7e8fae767102f4889149f5cac93d59dee80",
+      "kind": "extract, specialized to White_Space",
+      "origins": [
+        {
+          "path": "unicode/graphic.go",
+          "sha256": "46a43107a87c88cf17a05a557e00dbf6b0f4bb53ebcd7d3035e02f1e67c428be"
+        },
+        {
+          "path": "unicode/letter.go",
+          "sha256": "6be2e26975e7e4bfe167e7c1f8698cb919729f1e3a76aa75cdabc7afb96ef8d7"
+        }
+      ]
+    },
+    {
+      "overlay": "unicode/letter.go",
+      "sha256": "e1913e4934dcb79a14605c8455539745f261b90e3fa65630e8fc6f6fad72eaed",
+      "kind": "extract",
+      "origins": [
+        {
+          "path": "unicode/letter.go",
+          "sha256": "6be2e26975e7e4bfe167e7c1f8698cb919729f1e3a76aa75cdabc7afb96ef8d7"
+        }
+      ]
+    },
+    {
+      "overlay": "unicode/tables.go",
+      "sha256": "a91844760a608847d8ceb131848bfc7ba7da8348b4319a20e7e11f146b25e0e2",
+      "kind": "generated extract (TestStdlibUnicodeTables)",
+      "origins": [
+        {
+          "path": "unicode/tables.go",
+          "sha256": "80a109e5dd4ed40a85d69ddf95175f647bbd68c577d27eb475cda63790bb2487"
+        }
+      ]
+    },
+    {
+      "overlay": "unicode/utf8/utf8.go",
+      "sha256": "71df1efc156fb6fa53d7ad72777fe7313cb339b41f5f6373a51d28624f76c300",
+      "kind": "modified",
+      "origins": [
+        {
+          "path": "unicode/utf8/utf8.go",
+          "sha256": "8070cdd409b30d1c15094f079ab0f0496f3d731d12d3b4b04ad26c422adf4113"
+        }
+      ]
+    }
+  ]
+}

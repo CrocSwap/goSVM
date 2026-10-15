@@ -54,23 +54,24 @@ type MethodSlot struct {
 	Called bool
 	// Site is the first call or assertion that needs the slot.
 	Site token.Pos
-	// Except lists, sorted, the keys of dynamic types a dispatch slot of a
-	// standard-library overlay function never runs (docs/GO_STDLIB.md#intrinsics):
-	// those types do not fill the slot, and its dispatcher aborts for them
-	// as for a nil interface. Empty for every other slot. A slot with Except
-	// is distinct from the unrestricted slot of the same method (its Key
-	// ends with " except " and the keys).
-	Except []string
+	// ExceptImplementers is set only on the slots of the dynamic calls in
+	// standard-library overlay functions marked //gosvm:dispatch-except
+	// (docs/GO_STDLIB.md#intrinsics): an interface type whose implementers
+	// the slot never runs. They do not fill the slot, and its dispatcher
+	// aborts for them as for a nil interface; Except lists their keys, in
+	// dynamic type order. Such a slot is distinct from the unrestricted slot
+	// of the same method: its Key ends with " except implementers of " and
+	// the interface's key. Both are nil for every other slot.
+	ExceptImplementers types.Type
+	Except             []string
 }
 
-// excludes reports whether the slot never dispatches to dynamic type key.
-func (slot *MethodSlot) excludes(key string) bool {
-	for _, k := range slot.Except {
-		if k == key {
-			return true
-		}
+// sameExcept reports whether two slot exclusions are the same.
+func sameExcept(a, b types.Type) bool {
+	if a == nil || b == nil {
+		return a == b
 	}
-	return false
+	return types.Identical(a, b)
 }
 
 // DynamicType is a concrete type that an interface value may hold, or that
@@ -551,16 +552,16 @@ func methodSlotKey(m *types.Func) string {
 }
 
 // findSlot returns the slot of an interface method, adding it if new.
-func findSlot(slots *[]*MethodSlot, m *types.Func, site token.Pos, except []string) *MethodSlot {
+func findSlot(slots *[]*MethodSlot, m *types.Func, site token.Pos, except types.Type) *MethodSlot {
 	sig := m.Type().(*types.Signature)
 	for _, slot := range *slots {
-		if slot.Name == m.Name() && (m.Exported() || slot.Pkg == m.Pkg()) && types.Identical(slot.Signature, sig) && strings.Join(slot.Except, ",") == strings.Join(except, ",") {
+		if slot.Name == m.Name() && (m.Exported() || slot.Pkg == m.Pkg()) && types.Identical(slot.Signature, sig) && sameExcept(slot.ExceptImplementers, except) {
 			return slot
 		}
 	}
-	slot := &MethodSlot{Key: methodSlotKey(m), Name: m.Name(), Signature: sig, Site: site, Except: except}
-	if len(except) > 0 {
-		slot.Key += " except " + strings.Join(except, ",")
+	slot := &MethodSlot{Key: methodSlotKey(m), Name: m.Name(), Signature: sig, Site: site, ExceptImplementers: except}
+	if except != nil {
+		slot.Key += " except implementers of " + typeKey(except)
 	}
 	if !m.Exported() {
 		slot.Pkg = m.Pkg()
@@ -586,9 +587,9 @@ func methodFunc(m *types.Func, recv types.Type, instances map[string]*Instance) 
 
 // buildInterfaces derives the interface information of lowered files.
 // instances resolves methods of instantiated generic types; excepts maps the
-// dynamic calls of standard-library dispatch-except functions to the type
-// keys their slots exclude (stdlibExcepts).
-func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*Instance, excepts map[*ast.CallExpr][]string) *ifaceProgram {
+// dynamic calls of standard-library dispatch-except functions to the
+// interface whose implementers their slots exclude (stdlibExcepts).
+func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*Instance, excepts map[*ast.CallExpr]types.Type) *ifaceProgram {
 	s := scanInterfaces(info, files)
 	p := &ifaceProgram{byExpr: map[ast.Expr]*Conversion{}, byTuple: map[ast.Expr][]*Conversion{}, byKey: map[string]*DynamicType{},
 		calls: map[*ast.CallExpr]*MethodSlot{}, conversions: s.conversions, asserts: s.asserts, switches: s.switches}
@@ -686,7 +687,8 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 		}
 		set := types.NewMethodSet(d.Type)
 		for _, slot := range slots {
-			if slot.excludes(d.Key) {
+			if slot.ExceptImplementers != nil && types.Implements(d.Type, slot.ExceptImplementers.Underlying().(*types.Interface)) {
+				slot.Except = append(slot.Except, d.Key)
 				continue
 			}
 			selection := set.Lookup(slot.Pkg, slot.Name)

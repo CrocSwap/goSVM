@@ -58,7 +58,6 @@ func TestPointerValuesDifferential(t *testing.T) {
 func TestPointerLifetimeRejections(t *testing.T) {
 	for name, source := range map[string]string{
 		"named pointer":    `type P *uint64;func Process(s,i []byte)uint64{var p P;return *p}`,
-		"pointer pointer":  `func Process(s,i []byte)uint64{var p *uint64;pp:=&p;return **pp}`,
 		"pointer slice":    `func Process(s,i []byte)uint64{p:=&s;return uint64(len(*p))}`,
 		"context pointer":  `import "gosvm/solana";func Process(c solana.Context)uint64{p:=&c;return solana.Count(*p)}`,
 		"method recursion": `type V uint64;func(v V)Read()uint64{return v.Read()};func Process(s,i []byte)uint64{return V(1).Read()}`,

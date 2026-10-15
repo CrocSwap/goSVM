@@ -91,9 +91,7 @@ var corpusChanges = map[int]corpusEntry{
 	// var; it is listed with package-level variables below.
 	// Rule messages now say "integer" where they said "unsigned"; positions
 	// and rejections are unchanged.
-	3:   {Error: "s51.go:2:1: " + pointerElementRule},
 	32:  {Error: "s28.go:2:1: " + pointerElementRule},
-	190: {Error: "pointer-reject.go:1:60: " + pointerElementRule},
 	233: {Error: "pointer-reject.go:1:45: " + pointerElementRule},
 	// Generics became supported (docs/GO_GENERICS.md): the instantiation
 	// f[uint64] is emitted as its own function, and an unused generic type
@@ -145,9 +143,10 @@ var corpusChanges = map[int]corpusEntry{
 	// Strings and error became supported (docs/GO_STRINGS.md): the error
 	// result and the []byte("abc") conversion compile, and a standard-library
 	// import names math/bits as the only one available.
-	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"},                                                       // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
-	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"},                                                       // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
-	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; the only standard-library package on-chain is math/bits)`}, // was "...; use a module-backed program for user packages"
+	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"}, // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
+	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"}, // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
+	// (Entry 249's message changed again with the standard-library
+	// overlay; it is listed there.)
 	// No entry is affected by both strings and function values: merging them
 	// changed no verdict or C hash recorded by either side.
 	//
@@ -193,6 +192,15 @@ var corpusChanges = map[int]corpusEntry{
 	245: {CSHA256: "4eabe761928394e3e9621d26e72c3f41718db099c544148366a078100dab2f1b"}, // s23.go `var G uint64` (same C as entry 54): was "only functions and constants are supported at package scope"
 	259: {CSHA256: "18dc882b49fc9e9ffe5ee80a1095e92310d8e1b21565f05830d01d3a1b7dd1b3"}, // dep/program.go `func init()`: was "init functions are unsupported"
 	273: {CSHA256: "fb9a7312d4f614e48dccc2d2a4a407c4f867d4852338c4f119b39d7f834039c0"}, // swap/bad.go `var Mutable uint64` (the generation test now uses a float64): was "only functions ... at package scope"
+	// Standard-library packages (docs/GO_STDLIB.md): an unsupported
+	// standard-library import lists the packages available on chain, and
+	// pointers to pointers (errors.As(err, &p) for a pointer-typed p needs
+	// a **T) and variadic functions (errors.Join) became supported. No
+	// other entry is affected.
+	120: {CSHA256: "2b9582e51181d45cc9b9fd00100941f70d4e76706fe044ed25a3401e2112166d"},                                                                                                                                                   // s02.go `func f(xs ...uint64)` called as f(): was "variadics are unsupported"
+	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; standard-library packages on chain: bytes, encoding/binary, errors, math, strconv, strings, unicode, unicode/utf8 and math/bits (docs/GO_STDLIB.md))`}, // was "...; use a module-backed program for user packages", then "...; the only standard-library package on-chain is math/bits"
+	3:   {CSHA256: "35e30e3a3b6c5b64a7bf16ab58665fc2616eeb85e7362cc64e837a805105a3b6"},                                                                                                                                                   // s51.go `func f(p **uint64)`: was pointerElementRule
+	190: {CSHA256: "877ada41476ba1837ae0f9276ed3222dcd48d27e644e436dfdcc06deb8acceeb"},                                                                                                                                                   // pointer-reject.go `pp:=&p;return **pp`: was pointerElementRule (it now compiles; the nil dereference traps at run time)
 }
 
 const (
@@ -243,10 +251,10 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 		}
 	}
 	// Signed integers, generics, allocation, strings, function values, maps,
-	// compound assignment and package-level variables each turned recorded
-	// rejections into accepted programs (corpusChanges); the rest still
-	// exercise Check.
-	if rejected < 70 {
+	// compound assignment, package-level variables, pointers to pointers
+	// and variadic functions each turned recorded rejections into accepted programs
+	// (corpusChanges); the rest still exercise Check.
+	if rejected < 67 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

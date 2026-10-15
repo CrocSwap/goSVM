@@ -151,7 +151,7 @@ func TestBitsCheckRejections(t *testing.T) {
 	for name, tc := range map[string]struct{ source, want string }{
 		"dot import": {"package main\nimport . \"math/bits\"\nfunc Process(s, i []byte) uint64 { return Reverse64(1) }\n", "dot and blank imports unsupported"},
 		"blank":      {"package main\nimport _ \"math/bits\"\nfunc Process(s, i []byte) uint64 { return 1 }\n", "dot and blank imports unsupported"},
-		"other std":  {"package main\nimport \"math\"\nfunc Process(s, i []byte) uint64 { return math.MaxUint32 }\n", `unsupported import "math"`},
+		"other std":  {"package main\nimport \"math/big\"\nfunc Process(s, i []byte) uint64 { return big.MaxBase }\n", `unsupported import "math/big"`},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if _, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "p.go", Data: []byte(tc.source)}}}}}); err == nil || !strings.Contains(err.Error(), tc.want) {

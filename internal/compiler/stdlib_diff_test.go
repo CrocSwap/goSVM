@@ -3,7 +3,6 @@ package compiler
 import (
 	"fmt"
 	"math/rand"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -42,7 +41,7 @@ func nativeStdlibCall(in []byte) (result string) {
 var stdlibGroupOps = [stdlibvalues.Groups]int{
 	stdlibvalues.StringsOps, stdlibvalues.BytesOps, stdlibvalues.StrconvOps, stdlibvalues.BinaryOps,
 	stdlibvalues.ErrorsOps, stdlibvalues.UnicodeOps, stdlibvalues.MathOps, stdlibvalues.BuilderOps,
-	stdlibvalues.QuoteOps,
+	stdlibvalues.QuoteOps, stdlibvalues.LangOps,
 }
 
 // textPieces are fragments strings are built from: ASCII letters of both
@@ -250,12 +249,10 @@ func TestStdlibDifferential(t *testing.T) {
 			}
 		}
 	}
-	for _, g := range []int{0, 1, 2, 3, 4, 5, 7} {
+	for _, g := range []int{0, 1, 2, 3, 4, 5, 7, 9} {
 		if panics[g] == 0 {
 			t.Errorf("group %d: no vector panics", g)
 		}
 	}
 	t.Logf("%d vectors (%d panics: %v) match native Go", len(vectors), total, panics)
 }
-
-var _ = filepath.Join

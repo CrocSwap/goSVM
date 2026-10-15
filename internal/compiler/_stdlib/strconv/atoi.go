@@ -3,14 +3,17 @@
 // license that can be found in the LICENSE file.
 
 // goSVM on-chain overlay of Go 1.22.0 strconv/atoi.go. Changes (marked
-// "goSVM:"): NumError.Error follows *NumError causes in a loop instead of
-// recursing through the error interface (see numErrorCause); cloneString
+// "goSVM:"): NumError.Error builds its text with internal/errtext instead
+// of recursing through the error interface (see ErrorParts); cloneString
 // copies once (make, copy and the unsafeString intrinsic) instead of
 // string([]byte(x)), which goSVM would copy twice.
 
 package strconv
 
-import "errors"
+import (
+	"errors"
+	"internal/errtext"
+)
 
 // lower(c) is a lower-case letter if and only if
 // c is either that lower-case letter or the equivalent upper-case letter.
@@ -34,47 +37,22 @@ type NumError struct {
 }
 
 func (e *NumError) Error() string {
-	// goSVM: Go returns the line below with e.Err.Error() in place of
-	// numErrorCause(e.Err). e.Err.Error() may be another *NumError's Error,
-	// which is recursion through the error interface; goSVM rejects
-	// recursion, so a *NumError cause is handled by nestedError instead.
-	if inner, ok := e.Err.(*NumError); ok {
-		return e.nestedError(inner)
-	}
-	return "strconv." + e.Func + ": " + "parsing " + Quote(e.Num) + ": " + numErrorCause(e.Err)
+	// goSVM: Go returns the line below. e.Err.Error() may be another
+	// *NumError's (or a *errors.joinError's) Error, which is recursion
+	// through the error interface; goSVM rejects recursion, so the text is
+	// built by internal/errtext from ErrorParts:
+	//
+	//	return "strconv." + e.Func + ": " + "parsing " + Quote(e.Num) + ": " + e.Err.Error()
+	return errtext.Error(e)
 }
 
-// nestedError is e.Error() when e.Err is the *NumError inner: Go's
-// recursion as a loop. It builds each level's text from the innermost out,
-// as the recursive calls return, so the result is the same.
+// ErrorParts describes e's text to errtext: Go's Error text, with e.Err's
+// text last.
 //
-// goSVM: not in Go.
-func (e *NumError) nestedError(inner *NumError) string {
-	levels := []*NumError{e, inner}
-	for {
-		next, ok := levels[len(levels)-1].Err.(*NumError)
-		if !ok {
-			break
-		}
-		levels = append(levels, next)
-	}
-	text := numErrorCause(levels[len(levels)-1].Err)
-	for i := len(levels) - 1; i >= 0; i-- {
-		level := levels[i]
-		text = "strconv." + level.Func + ": " + "parsing " + Quote(level.Num) + ": " + text
-	}
-	return text
-}
-
-// numErrorCause returns cause.Error() for a cause that is not a *NumError.
-//
-// goSVM: not in Go. The directive below makes this method call dispatch
-// to every Error method but (*NumError).Error, which cannot reach it, so
-// the call graph stays acyclic; a *NumError cause aborts as a nil one does.
-//
-//gosvm:dispatch-except *strconv.NumError
-func numErrorCause(cause error) string {
-	return cause.Error()
+// goSVM: not in Go (and not callable from outside the standard library).
+func (e *NumError) ErrorParts(p *errtext.Parts) {
+	p.Lit("strconv." + e.Func + ": " + "parsing " + Quote(e.Num) + ": ")
+	p.Err(e.Err)
 }
 
 func (e *NumError) Unwrap() error { return e.Err }

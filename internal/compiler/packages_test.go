@@ -209,7 +209,7 @@ func TestModuleImportsAndCache(t *testing.T) {
 func TestModuleImportFailures(t *testing.T) {
 	for name, dep := range map[string][3]string{
 		"cycle":            {`import "example.com/app/program";func F()uint64{return program.Process(nil,nil)}`, "example.com/app/lib", "import cycle"},
-		"standard library": {`func F()uint64{return 0}`, "fmt", "standard library"},
+		"standard library": {`func F()uint64{return 0}`, "fmt", `unsupported import "fmt"; standard-library packages on chain`},
 		"missing":          {`func F()uint64{return 0}`, "example.com/missing/model", "disabled"},
 		"blank":            {`func F()uint64{return 0}`, "_ example.com/app/lib", "blank imports"},
 		"internal":         {`func F()uint64{return 0}`, "example.com/other/internal/lib", "internal package"},

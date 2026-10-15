@@ -73,7 +73,7 @@ func buildErr(p []byte) (error, []error) {
 	}
 	for j := 0; j+1 < len(p); j += 2 {
 		arg := p[j+1]
-		switch p[j] % 9 {
+		switch p[j] % 11 {
 		case 0:
 			stack = append(stack, errors.New(string(rune('a'+arg%4))))
 		case 1:
@@ -117,6 +117,24 @@ func buildErr(p []byte) (error, []error) {
 				stack = append(stack, nil)
 			} else if len(stack) > 0 {
 				stack = stack[:len(stack)-1]
+			}
+		case 9: // errors.Join of the top k errors, spread from a slice
+			k := int(arg % 4)
+			if k > len(stack) {
+				k = len(stack)
+			}
+			joined := errors.Join(stack[len(stack)-k:]...)
+			stack = append(stack[:len(stack)-k], joined)
+		case 10: // errors.Join with arguments, nil ones included
+			switch arg % 4 {
+			case 0:
+				stack = append(stack, errors.Join())
+			case 1:
+				stack = append(stack, errors.Join(top()))
+			case 2:
+				stack = append(stack, errors.Join(nil, top(), ErrA))
+			default:
+				stack = append(stack, errors.Join(top(), errors.Join(ErrB, codeErr(arg)), nil))
 			}
 		}
 	}
@@ -172,7 +190,7 @@ func errorsGroup(w *W, v Input) {
 		w.flag(errors.As(err, &ae))
 		var e error
 		w.flag(asInto(err, &e)) // vet rejects errors.As(err, &e) for e of type error
-		w.flag(e == err) // panics when err holds an uncomparable listErr
+		w.flag(e == err)        // panics when err holds an uncomparable listErr
 	case 2: // As panics for a nil pointer or a type that is not an error
 		w.u8(0x41)
 		switch v.h1 % 3 {

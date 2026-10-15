@@ -326,6 +326,9 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	// Package-level variables: each package's initializers become one
 	// synthetic function in the lowered files, analyzed like any other.
 	checked.lowered = f.buildGlobals(importer, checked.lowered)
+	// Calls of variadic functions pass their final parameter as a slice
+	// (variadic.go).
+	lowerVariadicCalls(f.info, checked.lowered)
 	if f.globals != nil {
 		for _, vars := range f.globals.vars {
 			funcs[vars.Object] = vars
@@ -334,7 +337,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	checked.Instances = gp.sortedInstances(importer.files)
 	checked.TypeInstances = gp.sortedTypeInstances()
 	checked.Instantiated = gp.instantiated
-	f.ifaces = buildInterfaces(f.info, checked.lowered, gp.instances, stdlibExcepts(f.fset, checked.lowered))
+	f.ifaces = buildInterfaces(f.info, checked.lowered, gp.instances, stdlibExcepts(f.info, f.fset, checked.lowered))
 	checked.ifaces = f.ifaces
 	checked.Conversions = f.ifaces.conversions
 	checked.DynamicTypes = f.ifaces.dynamic

@@ -203,15 +203,30 @@ var stdlibAPI = func() map[string]map[string]string {
 // stdlibReasons explains why a Go 1.22 symbol is not in an overlay; the
 // default is that goSVM has not added it.
 var stdlibReasons = map[string]string{
-	"encoding/binary.Read":   "it uses reflection",
-	"encoding/binary.Write":  "it uses reflection",
-	"encoding/binary.Size":   "it uses reflection",
-	"encoding/binary.Append": "it uses reflection",
-	"encoding/binary.Encode": "it uses reflection",
-	"encoding/binary.Decode": "it uses reflection",
-	// ReadUvarint and ReadVarint read from an io.ByteReader.
+	"encoding/binary.Read":        "it uses reflection",
+	"encoding/binary.Write":       "it uses reflection",
+	"encoding/binary.Size":        "it uses reflection",
 	"encoding/binary.ReadUvarint": "it reads from an io.ByteReader; package io is not available on chain",
 	"encoding/binary.ReadVarint":  "it reads from an io.ByteReader; package io is not available on chain",
+	"bytes.Buffer":                "it implements io interfaces; package io is not available on chain",
+	"bytes.NewBuffer":             "it implements io interfaces; package io is not available on chain",
+	"bytes.NewBufferString":       "it implements io interfaces; package io is not available on chain",
+	"bytes.MinRead":               "it belongs to Buffer, which implements io interfaces; package io is not available on chain",
+	"bytes.ErrTooLarge":           "it belongs to Buffer, which implements io interfaces; package io is not available on chain",
+	"bytes.Reader":                "it implements io interfaces; package io is not available on chain",
+	"bytes.NewReader":             "it implements io interfaces; package io is not available on chain",
+	"strings.Reader":              "it implements io interfaces; package io is not available on chain",
+	"strings.NewReader":           "it implements io interfaces; package io is not available on chain",
+	"strings.Replacer":            "it writes to an io.Writer; package io is not available on chain",
+	"strings.NewReplacer":         "it writes to an io.Writer; package io is not available on chain",
+	"strings.Title":               "it needs Unicode letter and digit tables (and is deprecated)",
+	"bytes.Title":                 "it needs Unicode letter and digit tables (and is deprecated)",
+	"strings.ToUpperSpecial":      "unicode.SpecialCase is not available on chain",
+	"strings.ToLowerSpecial":      "unicode.SpecialCase is not available on chain",
+	"strings.ToTitleSpecial":      "unicode.SpecialCase is not available on chain",
+	"bytes.ToUpperSpecial":        "unicode.SpecialCase is not available on chain",
+	"bytes.ToLowerSpecial":        "unicode.SpecialCase is not available on chain",
+	"bytes.ToTitleSpecial":        "unicode.SpecialCase is not available on chain",
 }
 
 // floatSymbol reports whether a Go 1.22 symbol of an overlay package is
@@ -242,10 +257,9 @@ func stdlibUnavailable(pkg, name string) string {
 	return fmt.Sprintf("%s.%s is not available on chain: %s (docs/GO_STDLIB.md)", pkg, name, reason)
 }
 
-var (
-	undefinedQualified = regexp.MustCompile(`^undefined: ([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)$`)
-	undefinedMethod    = regexp.MustCompile(`^[^ ]+ undefined \(type \*?([A-Za-z_][A-Za-z0-9_./]*)\.([A-Za-z_][A-Za-z0-9_]*) has no field or method ([A-Za-z_][A-Za-z0-9_]*)`)
-)
+// undefinedQualified matches go/types' error for a name a package does not
+// declare.
+var undefinedQualified = regexp.MustCompile(`^undefined: ([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)$`)
 
 // stdlibTypeError rewrites a type-checking error that refers to a Go 1.22
 // symbol an overlay package leaves out into a diagnostic naming it, at the
@@ -259,12 +273,6 @@ func stdlibTypeError(err error, files []*ast.File, fset *token.FileSet) error {
 		pkg := importedAs(files, fset, te.Pos, m[1])
 		if pkg != "" && stdlibPackage(pkg) && stdlibAPI[pkg][m[2]] != "" {
 			return fmt.Errorf("%s: %s", fset.Position(te.Pos), stdlibUnavailable(pkg, m[2]))
-		}
-	}
-	if m := undefinedMethod.FindStringSubmatch(te.Msg); m != nil {
-		// m[1] is the package path as go/types qualifies it.
-		if stdlibPackage(m[1]) && stdlibAPI[m[1]][m[2]+"."+m[3]] != "" {
-			return fmt.Errorf("%s: %s", fset.Position(te.Pos), stdlibUnavailable(m[1], m[2]+"."+m[3]))
 		}
 	}
 	if call := errorsAsCall(files, fset, te.Pos); call != "" {
@@ -340,14 +348,14 @@ const (
 )
 
 // stdlibExcepts maps every dynamic method call in the body of an overlay
-// function marked "//gosvm:dispatch-except K1,K2" to the dynamic type keys
-// it excludes (sorted): the function's own code guarantees that the
-// receiver never holds those types, and excluding them keeps the call
-// graph acyclic where Go recurses through an interface (for example
-// NumError.Error calling the Error method of its cause, which may be another
-// *NumError: strconv follows those causes in a loop instead).
-func stdlibExcepts(fset *token.FileSet, files []*ast.File) map[*ast.CallExpr][]string {
-	excepts := map[*ast.CallExpr][]string{}
+// function marked "//gosvm:dispatch-except path.Name" to the interface type
+// path.Name: the call never dispatches to that interface's implementers.
+// The overlay guarantees that the receiver never holds one, and excluding
+// them keeps the call graph acyclic where Go recurses through an interface
+// (internal/errtext: (*strconv.NumError).Error calls the Error method of its
+// cause, which may be another *NumError or a *errors.joinError).
+func stdlibExcepts(info *types.Info, fset *token.FileSet, files []*ast.File) map[*ast.CallExpr]types.Type {
+	excepts := map[*ast.CallExpr]types.Type{}
 	for _, file := range files {
 		for _, d := range file.Decls {
 			fn, ok := d.(*ast.FuncDecl)
@@ -359,11 +367,13 @@ func stdlibExcepts(fset *token.FileSet, files []*ast.File) map[*ast.CallExpr][]s
 				if !ok {
 					continue
 				}
-				keys := strings.Split(strings.TrimSpace(list), ",")
-				sort.Strings(keys)
+				iface := stdlibType(info, strings.TrimSpace(list))
+				if iface == nil || !isIface(iface) {
+					panic(fmt.Sprintf("dispatch-except: no interface %q", list))
+				}
 				ast.Inspect(fn.Body, func(n ast.Node) bool {
 					if call, ok := n.(*ast.CallExpr); ok {
-						excepts[call] = keys
+						excepts[call] = iface
 					}
 					return true
 				})
@@ -371,6 +381,20 @@ func stdlibExcepts(fset *token.FileSet, files []*ast.File) map[*ast.CallExpr][]s
 		}
 	}
 	return excepts
+}
+
+// stdlibType is the type declared as "path.Name" in a checked package.
+func stdlibType(info *types.Info, qualified string) types.Type {
+	i := strings.LastIndex(qualified, ".")
+	if i < 0 {
+		return nil
+	}
+	for _, o := range info.Defs {
+		if tn, ok := o.(*types.TypeName); ok && tn.Pkg() != nil && tn.Pkg().Path() == qualified[:i] && tn.Name() == qualified[i+1:] && tn.Parent() == tn.Pkg().Scope() {
+			return tn.Type()
+		}
+	}
+	return nil
 }
 
 // stdlibIntrinsic is the intrinsic an overlay function declaration is

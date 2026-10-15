@@ -194,7 +194,7 @@ type borrowAnalysis struct {
 	// literals live on the heap, so a reference stored in one is stored into
 	// heap data and one read from it is heap or SDK storage, like a field.
 	// Literal results are returned to unknown callers: stored likewise.
-	captured   map[types.Object]bool
+	captured map[types.Object]bool
 	// indirect holds the function's pointer-typed variables whose address
 	// is taken (&p, a **T): a reference stored through that address is
 	// stored into heap data, so the variable is treated like heap storage

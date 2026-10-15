@@ -99,10 +99,12 @@ func TestStringRejections(t *testing.T) {
 			}
 		})
 	}
-	// The standard library on-chain is math/bits alone.
-	for _, path := range []string{"errors", "fmt", "strings", "unicode/utf8", "strconv"} {
+	// Standard-library packages outside the overlay are rejected
+	// (docs/GO_STDLIB.md); errors, strings, unicode/utf8 and strconv are
+	// available on chain.
+	for _, path := range []string{"fmt", "io", "math/big"} {
 		source := fmt.Sprintf("package p\nimport _x %q\nfunc Process(s, i []byte) uint64 { return 0 }\n", path)
-		want := fmt.Sprintf("alloc.go:2:11: could not import %s (unsupported import %q; the only standard-library package on-chain is math/bits)", path, path)
+		want := fmt.Sprintf("alloc.go:2:11: could not import %s (%s)", path, stdlibImportRule(path))
 		_, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "alloc.go", Data: []byte(source)}}}}})
 		if err == nil || err.Error() != want {
 			t.Errorf("import %s: got %v\nwant %s", path, err, want)

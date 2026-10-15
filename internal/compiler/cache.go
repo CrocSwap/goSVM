@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // BuildCached keeps a small receipt beside the output. Source and frontend use
@@ -106,6 +107,9 @@ func DependencyKey(source string) (string, error) {
 	for _, src := range program.Metadata {
 		fmt.Fprintf(h, "%s\x00%x\n", src.Name, sha256.Sum256(src.Data))
 	}
+	if err = writeStdlibIdentity(h, program); err != nil {
+		return "", err
+	}
 	exe, err := os.Executable()
 	if err != nil {
 		return "", err
@@ -136,6 +140,9 @@ func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	}
 	for _, src := range program.Metadata {
 		fmt.Fprintf(h, "module:%s\x00%x\n", src.Name, sha256.Sum256(src.Data))
+	}
+	if err = writeStdlibIdentity(h, program); err != nil {
+		return "", err
 	}
 	for _, path := range []string{compiler} {
 		s, err := fileHash(path)
@@ -195,4 +202,18 @@ func writeReceipt(output, key, h string) error {
 	// An interrupted/torn receipt merely causes a rebuild. The output hash also
 	// protects against a replaced/truncated ELF or a competing writer.
 	return os.WriteFile(output+".gosvm-cache", append(b, '\n'), 0644)
+}
+
+// writeStdlibIdentity adds the identity of the standard-library overlay
+// packages the program reaches (docs/GO_STDLIB.md) to a receipt or
+// dependency key; programs that import none keep their earlier keys.
+func writeStdlibIdentity(h io.Writer, program *Program) error {
+	paths, err := ProgramStdlib(program)
+	if err != nil {
+		return err
+	}
+	if id := StdlibIdentity(paths); id != "" {
+		fmt.Fprintf(h, "stdlib:%s\x00%s\x00%s\n", StdlibVersion, strings.Join(paths, ","), id)
+	}
+	return nil
 }
