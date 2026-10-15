@@ -111,13 +111,14 @@ return values, methods, `range` loops, constrained pointers, borrowed byte slice
 [generics](docs/GO_GENERICS.md) (monomorphized at compile time), bounded
 [heap allocation](docs/GO_ALLOCATION.md) (`new`, `make`, `append`, `copy`,
 slices of any element type), [interface values](docs/GO_INTERFACES.md)
-(dynamic dispatch, type assertions and switches) and
+(dynamic dispatch, type assertions and switches),
 [strings and `error`](docs/GO_STRINGS.md) (UTF-8 `range`, concatenation,
-conversions), and [function values, closures and `defer`](docs/GO_FUNCTIONS.md).
-It lowers Go through checked C and Solana Clang/LLD to SBF.
+conversions), [function values, closures and `defer`](docs/GO_FUNCTIONS.md),
+and [maps](docs/GO_MAPS.md) (every operation except iteration, whose order Go
+randomizes). It lowers Go through checked C and Solana Clang/LLD to SBF.
 
-Full Go language support is outside the current scope: garbage collection, maps,
-goroutines, and on-chain standard-library imports other than
+Full Go language support is outside the current scope: garbage collection, map
+iteration, goroutines, and on-chain standard-library imports other than
 [`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
 toolchain without a production audit.
 [Language details](docs/DEVELOPMENT.md#supported-subset-and-remaining-blockers).

@@ -87,6 +87,7 @@ Converting a value of type `T` to an interface:
 | `T` | Heap bytes | Data word |
 | --- | --- | --- |
 | pointer type `*E` | 0 | the pointer |
+| map type `map[K]V` | 0 | the map's header pointer ([maps](GO_MAPS.md)) |
 | zero-size type (empty struct, `[0]E`, structs of those) | 0 | the heap base address (never read) |
 | any other storable type | its Go size rounded up to 8 (`(size+7)&^7`) | a new allocation holding a copy |
 
@@ -182,9 +183,12 @@ out-of-memory trap.
 - Method values (`f := x.M`) and method expressions (`I.M`, `I.M(x)`) of
   interface types are rejected (`method values of interface types
   unsupported; use a function literal that calls the method`); method values
-  of concrete types are supported ([function values](GO_FUNCTIONS.md)). Maps
-  (and so interfaces as map keys) and embedding an interface in a struct
-  (struct embedding is rejected) remain unsupported.
+  of concrete types are supported ([function values](GO_FUNCTIONS.md)).
+  Embedding an interface in a struct (struct embedding is rejected) remains
+  unsupported.
+- Interfaces are valid [map](GO_MAPS.md) keys (hashed by dynamic type and
+  value; an uncomparable dynamic type aborts in every map operation, as Go
+  panics) and elements, and maps convert to interfaces.
 - [Function values](GO_FUNCTIONS.md) can be stored in interfaces (8-byte
   box), asserted and switched on; function types are not comparable, so
   comparing two interfaces holding the same function type aborts.

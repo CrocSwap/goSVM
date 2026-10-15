@@ -170,6 +170,11 @@ var corpusChanges = map[int]corpusEntry{
 	229: {CSHA256: "7eddff6040fb04145527c0be61efebe70613f1f192a61b6c5ffeb2d2ca2d377b"},                               // f:=v.Read: was "method values unsupported; call the method directly"
 	248: {CSHA256: "b67fe362e0be4e216b50547f1d21dc9fc2ffa56cd5ef7c4d386fa94f27a256ff"},                               // s37.go f := s.M: was "method values unsupported; call the method directly"
 	291: {CSHA256: "8d94780bbebf314088d1744dbe48b51229e9ee8c0e2c39cb322695416d752a5c"},                               // imported f:=G: was "unsupported identifier"
+	// Maps became supported (docs/GO_MAPS.md): the unused nil map compiles.
+	// No entry is affected by both maps and function values: entry 258 has no
+	// function value, and none of the function-value entries uses a map, so
+	// merging them changed no verdict or C hash recorded by either side.
+	258: {CSHA256: "442b6bf53e5b5481667f9c4a8e6acd0d7cbb288f10b84ef789cf57ec03917ad7"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
 }
 
 const (
@@ -219,10 +224,10 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics, allocation, strings and function values each
+	// Signed integers, generics, allocation, strings, function values and maps each
 	// turned recorded rejections into accepted programs (corpusChanges); the
 	// rest still exercise Check.
-	if rejected < 83 {
+	if rejected < 82 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

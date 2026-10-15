@@ -97,9 +97,48 @@ Heap costs add up as listed below and in
 declared in a loop costs 16 (the moved header) + 16 (the environment) per
 iteration, a value-receiver method value of a named string 8 + 16, and a loop
 `defer f(s)` record 16 + 16. `TestClosureStringHeap` checks these
-out-of-memory points exactly, and `TestFuncStringsDifferential` compares
+out-of-memory points exactly, `TestFuncStringsDifferential` compares
 [`examples/func-strings`](../examples/func-strings/program.go) natively and as
-host-compiled C.
+host-compiled C, and `TestFuncCombinationsSBF` runs it on fogo-v0 and
+solana-v3 ([with maps](#with-maps)).
+
+## With maps
+
+Function values and [maps](GO_MAPS.md) combine with no extra rules. Function
+types may take and return maps (`func(map[string]uint64) uint64`); maps may
+hold function values (`map[string]Op`, `map[uint8][]func() uint64`, structs
+with function fields), and a lookup of an absent key yields a nil function
+value, whose call aborts after its arguments are evaluated; closures capture
+map variables by reference (the 8-byte reference moves to the heap, the
+table is never copied, and assigning a new map to the captured variable is
+seen everywhere); `defer` saves a map operand as its reference, so a deferred
+call sees writes made after the `defer` statement, and deferred closures can
+change named map results; method values of map-backed named types bind the
+map reference (`c.Inc` with `type Counter map[string]uint64`: reassigning `c`
+later does not change the bound map, writes through it do), pointer-receiver
+method values bind `&c`, and method values of generic map types work alike.
+Function values are not comparable, so a map keyed by `any` aborts when a
+function value is used as a key (Go panics: hash of unhashable type), and a
+nil-map write inside a closure or deferred call aborts where Go panics.
+
+The recursion check treats map-typed signatures like any other: a literal of
+type `func(map[K]V) V` that calls a value of the identical signature, or a
+function value stored in a map that looks itself up and calls itself, is
+rejected; `func(map[uint8]uint32)` and `func(map[uint8]uint64)`, or a named
+map type and its underlying type, are different signatures.
+
+Heap costs add up: a closure capturing a map declared in a loop costs 8 (the
+moved reference) + 24 (the header of `make`) + 16 (the environment) per
+iteration, a closure capturing an outer map 16, a loop `defer f(m, k)` record
+16 + 8 + 8, and a value-receiver method value of a map type 8 + 8.
+`TestClosureMapHeap` checks these out-of-memory points exactly,
+`TestFuncMapsDifferential` compares
+[`examples/func-maps`](../examples/func-maps/program.go) natively and as
+host-compiled C (9,060 vectors, 2,487 Go panics), and
+`TestFuncCombinationsSBF` runs it and
+[`examples/func-strings`](../examples/func-strings/program.go) on fogo-v0
+and solana-v3 through the pinned runners
+([results](../results/compiler/2026-10-14-func-maps/README.md)).
 
 ## Representation
 

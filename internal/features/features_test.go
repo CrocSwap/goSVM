@@ -415,8 +415,10 @@ func Process(s, i []byte) uint64 { h, _ := bits.Mul64(Id(uint64(3)), 4); return 
 			Uses{Checked: true, Interfaces: true}},
 		"strings": {`func Process(s, i []byte) uint64 { x := string(i); return uint64(len(x + "a")) }`,
 			Uses{Checked: true, Strings: true}},
-		"map rejected": {`func Process(s, i []byte) uint64 { var m map[uint8]uint8; _ = m; return 0 }`,
-			Uses{}},
+		"maps": {`func Process(s, i []byte) uint64 { m := map[string]uint8{"a": 1}; m["b"]++; return uint64(len(m)) }`,
+			Uses{Checked: true, Allocation: true, Maps: true}},
+		"map range rejected": {`func Process(s, i []byte) uint64 { var m map[uint8]uint8; for range m {}; return 0 }`,
+			Uses{Maps: true, Range: true}},
 	} {
 		dir := t.TempDir()
 		if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte("package main\n"+tc.src+"\n"), 0644); err != nil {

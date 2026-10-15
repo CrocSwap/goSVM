@@ -57,6 +57,7 @@ Every field is documented in `check.go`. In summary:
 | `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
 | `Conversions`, `DynamicTypes`, `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` | Interface values ([interfaces](#interfaces)); empty without them |
 | `FuncTargets`, `FuncValues`, `FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` | Function values, closures and `defer` ([function values](#function-values)); empty without them |
+| `Maps` | Map types ([maps](#maps)); empty without them |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
@@ -178,8 +179,9 @@ interface values:
   is a type; its argument is the listed conversion (or an interface value).
 - `DynamicTypes` lists the concrete types interface values may hold or are
   compared or asserted against, sorted by `Key`; `ID` is the index plus 1 (0 is
-  the nil interface). `Boxed` types are converted somewhere; `Direct` (pointer)
-  types store the pointer in the data word; otherwise a conversion allocates
+  the nil interface). `Boxed` types are converted somewhere; `Direct` (pointer
+  and map) types store the pointer (for a map, its header pointer) in the data
+  word; otherwise a conversion allocates
   `(Size+7)&^7` bytes (nothing when `Size` is 0) and copies the value.
   `Comparable` is false where equality must abort. `Methods` is the type's
   method table: for each slot its method set implements, the `Func` to call (an
@@ -310,6 +312,67 @@ parameters and results may be strings or `error` (a `gosvm_string` or an
 interface value in the built-in backend), closures capture string variables by
 reference like any variable (16 bytes moved to the heap), and loop `defer`
 records save string and interface operands at their Go size (16 bytes each).
+## Maps
+
+Maps ([GO_MAPS.md](GO_MAPS.md)) are ordinary `types.Map` values (or named
+types with that underlying type) in the typed program, and the operations are
+ordinary syntax: `make` (a `*types.Builtin` call, with an optional hint of any
+integer type), `*ast.CompositeLit` of a map type (every element a
+`*ast.KeyValueExpr`), `m[k]` (`*ast.IndexExpr` whose `X` has a map type; in
+`v, ok := m[k]` its `Types` entry is a two-element tuple, as go/types records
+comma-ok forms), `m[k]` as an assignment, `++`/`--` or `+=` target,
+`delete`, `len` and `clear` builtin calls, `== nil`/`!= nil`, and conversions
+between map types. `*ast.RangeStmt` over a map never reaches a backend (Check
+rejects it). `struct{}` (an unnamed `*types.Struct` with no fields) is
+admitted as a zero-size value. Check adds one field:
+
+- `Maps` lists every map type checked code uses, sorted by `Key`
+  (`typeKey` of the unnamed `*types.Map`, so identical map types share one
+  entry); `Index` is the position. `KeySize` and `ElemSize` are Go sizes,
+  `SlotSize` is `8 + roundup8(KeySize) + roundup8(ElemSize)`, and
+  `KeyInterfaces` reports that the key holds interface values (directly, or
+  in struct fields or array elements), so hashing it can abort.
+
+Map keys converted to an interface key type are listed in `Conversions` like
+any other conversion (the key of `m[k]`, `delete(m, k)` and a literal key, and
+literal elements). In the borrow analysis, a pointer or slice stored into a
+map as a key or element (by assignment or in a literal) is stored into heap
+data, so a local it refers to moves to the heap; elements read from a map are
+heap or SDK storage (`ResultBorrow.Heap`).
+
+A backend must reproduce what is observable:
+
+- Go's results for every operation: zero values for absent keys and nil maps,
+  key equality as Go's `==` (strings bytewise, structs field by field, arrays
+  element by element, interfaces by dynamic type and value, pointers by
+  address), reference semantics, and evaluation order (the map, then the key,
+  then the value, then the store; tuple assignments store left to right after
+  all operands; `m[k] += x` evaluates `x` before reading `m[k]`);
+- the two traps (assignment to an entry in a nil map; hashing an interface
+  key whose dynamic type is not comparable, in every operation, even on nil
+  and empty maps), and that a `make` hint never traps;
+- the heap accounting, which depends only on `SlotSize` and the live-key
+  counts: a 24-byte header, `cap(h)` or `cap(n)` slots for a positive hint or
+  a literal of `n` entries, doubling when `4 * (len + 1) > 3 * slots`, never
+  shrinking or freeing ([contracted](ERROR_CONTRACT.md#contracted-runtime-behaviour)).
+
+The table layout, probing scheme and hash function are the backend's choice:
+none of them is observable without iteration. The built-in backend's C
+representation is `gosvm_map *` with per-type `gosvm_map<Index>_find`,
+`_set` and `_delete` helpers. A map in an interface is `Direct` (no box), and
+`[]map[K]V` grows as a pointer-holding 8-byte element. `gosvm features`
+reports `uses.maps`.
+
+Maps and [function values](#function-values) combine without new fields: a
+function type's parameters and results may be maps (and share a `FuncClass`
+with every target of the identical signature, so the recursion check treats a
+`func(map[K]V) V` like any other signature), map elements may be function
+values (`map[string]func(uint64) uint64`; a lookup of an absent key yields a nil
+function value, whose call aborts), closures capture map variables by
+reference (the 8-byte reference moves to the heap, never the table), loop
+`defer` records save a map operand as its 8-byte reference, and method values
+of named map types bind the reference (a value receiver copies the
+reference, so the bound value still sees later writes, as in Go).
 
 ## `project.LoadSchema`
 
@@ -375,8 +438,8 @@ Generics added the `Instances`, `TypeInstances` and `Instantiated` fields and
 and `Heap` fields above; interfaces added `Conversions`, `DynamicTypes`,
 `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` and
 `Implementers`; function values added `FuncTargets`, `FuncValues`,
-`FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` and `CallTargets`.
-Strings and `error` added no field. Existing fields keep their meaning, and the
+`FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` and `CallTargets`;
+maps added `Maps`. Strings and `error` added no field. Existing fields keep their meaning, and the
 new ones are empty or false for every program that compiled before. Strings
 and `error` turned three recorded entries into new outcomes (the `error` result
 and `[]byte("abc")` compile, and the `fmt` import names `math/bits`). Function
@@ -384,7 +447,10 @@ values, closures, `defer` and named results turned 12 recorded rejections into
 accepted programs, and two rejections are now reached first by a new rule
 (a call through a `Context` field reports that `Context` fields are opaque; an
 SDK function used as a value reports that `gosvm/solana` functions cannot be
-values). Separately, the
+values). Maps turned the corpus's one map program (`var m map[uint64]uint64;
+_ = m`) into a compiled program; no entry is affected by both maps and
+function values, so the merged corpus requires 82 rejections (83 with function
+values alone, less the map entry). Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

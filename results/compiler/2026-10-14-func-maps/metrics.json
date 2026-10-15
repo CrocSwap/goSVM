@@ -1,0 +1,37 @@
+{
+  "network_validation": false,
+  "full_swap_elf": {
+    "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+    "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+    "rebuild_identical": true
+  },
+  "corpus": {
+    "entries_affected_by_both_features": 0,
+    "min_rejections": 82
+  },
+  "host_differential": {
+    "fixture": "examples/func-maps",
+    "heap_bytes": 32768,
+    "vectors": 9060,
+    "go_panics": 2487
+  },
+  "heap_limits_32k": {
+    "upfront_bytes": 280,
+    "closure_fresh_map_48B": 676,
+    "closure_outer_map_16B": 2030,
+    "loop_defer_map_uint64_32B": 1015,
+    "map_method_value_16B": 2030
+  },
+  "sbf": {
+    "fogo-v0": {
+      "runner": "gosvm-svm-runner 0.5.0",
+      "func_strings": {"cases": 311, "aborts": 118, "elf_sha256": "e2e63d72735e2a40e02745e51f2b870682048dae08f6d6ee5dbb577b44ca2070"},
+      "func_maps": {"cases": 369, "aborts": 118, "elf_sha256": "99662e2787c11f7efb6a48930b5c95e784bdff35111534f550afe22f0fd3bcf9"}
+    },
+    "solana-v3": {
+      "runner": "gosvm-svm-runner 0.6.0",
+      "func_strings": {"cases": 311, "aborts": 118, "elf_sha256": "7cf1458222d088c841695997c90301849f654b617bda2892859a92d0c6affd5d"},
+      "func_maps": {"cases": 369, "aborts": 118, "elf_sha256": "280a454cdc658f7a3077c4a2a105db5e3d59a732327b662db583062bf81e68c1"}
+    }
+  }
+}

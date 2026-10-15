@@ -90,7 +90,10 @@ for j := range uint64(len(data)) / 8 { // j is uint64
   variables hold the last assigned values, or are unchanged if no iteration ran.
 - Unlabeled `break` and `continue` behave as in other loops. Labels, and range
   over maps, channels and functions, are rejected. Range over a string decodes
-  UTF-8 runes ([strings](GO_STRINGS.md)).
+  UTF-8 runes ([strings](GO_STRINGS.md)). Range over a map is rejected in every
+  form because Go randomizes its order: `range over maps unsupported: Go
+  randomizes map iteration order, so it cannot be deterministic on-chain; keep
+  the keys in a slice and range over that` ([maps](GO_MAPS.md#no-iteration)).
 
 **The `int` key.** Array, slice, untyped-constant and `len` ranges produce an
 `int` key. It is an ordinary `int` value ([integers](GO_INTEGERS.md)): copy it,

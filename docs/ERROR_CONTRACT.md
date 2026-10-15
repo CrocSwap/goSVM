@@ -26,8 +26,9 @@ fails with no custom error code and the transaction rolls back.
   ([math/bits](GO_BITS.md)).
 - Out of memory: an allocation (`new`, `make`, a growing `append`, a slice
   literal, an escaping `&T{...}`, a local moved to the heap, a conversion to
-  an interface, or a string concatenation or conversion) needs more than the
-  remaining invocation heap budget ([allocation](GO_ALLOCATION.md)).
+  an interface, a string concatenation or conversion, or a map header, map
+  literal or map growth) needs more than the remaining invocation heap budget
+  ([allocation](GO_ALLOCATION.md)).
 - `make` length or capacity out of range: `len > cap`, a negative length or
   capacity of any signed integer type, or a capacity larger than 2^48 bytes,
   where Go panics `makeslice: len out of range` or `cap out of range`.
@@ -46,10 +47,18 @@ fails with no custom error code and the transaction rolls back.
   method through a nil pointer, in a `defer` statement aborts at the statement
   after its arguments are evaluated (the existing nil-interface and
   nil-pointer traps), as Go panics there.
+- Assignment to an entry in a nil map (`m[k] = v`, `m[k]++`, `m[k] += s`),
+  after the operands are evaluated, where Go panics `assignment to entry in nil
+  map` ([maps](GO_MAPS.md#traps)).
+- Hashing a map key that is, or contains, an interface value whose dynamic type
+  is not comparable, in any map operation (including lookups and deletes on
+  nil and empty maps), where Go panics `hash of unhashable type`.
 
 A trap aborts without running pending deferred calls (there is no `recover`);
 the instruction's effects roll back, so this is indistinguishable on chain
-from Go's unwinding.
+from Go's unwinding. This includes a deferred call that would have changed a
+map: its change never happens, and the rollback leaves no trace of the
+function's earlier map writes either.
 
 A program built with a heap budget above 32 KiB whose transaction did not
 request a large enough heap frame fails at its first allocation with a VM
@@ -68,6 +77,9 @@ These are **not** traps:
 - Conversions truncate, or sign- or zero-extend by the source's signedness.
 - Other `math/bits` calls never fail. [GO_BITS.md](GO_BITS.md) specifies their
   exact results, including `Add64`/`Sub64` carry inputs other than 0 and 1.
+- `make(map[K]V, hint)` with a negative hint, or one whose table would exceed
+  2^48 bytes, is treated as 0, as Go does. Reading, `len`, `delete` and `clear`
+  on a nil map succeed.
 
 ## Contracted runtime behaviour
 
@@ -107,6 +119,16 @@ because fixtures compare them byte for byte:
   post statement); a `defer` statement inside a loop allocates a 16-byte header
   plus its saved values as a C struct, rounded up to 8, per execution, and one
   outside loops allocates nothing ([function values](GO_FUNCTIONS.md#heap-cost)).
+  A map header is 24 bytes (`make`, `map[K]V{}`); with the slot size
+  `S = 8 + roundup8(sizeof(K)) + roundup8(sizeof(V))` and `cap(n)` the smallest
+  power of two of at least 8 with `4n <= 3 cap(n)`, `make(m, h)` with `h > 0`
+  and a literal of `n > 0` entries also allocate `cap(h) * S` or `cap(n) * S`
+  at once; inserting a new key when `4 * (len + 1) > 3 * slots` allocates
+  `2 * slots * S` (8 slots when there are none), and the old slots are never
+  freed; every other map operation, including `delete` and `clear`, allocates
+  nothing and never shrinks the table. Converting a map to an interface
+  allocates nothing. The full table is in
+  [GO_MAPS.md](GO_MAPS.md#heap-accounting).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
 ## Error codes
@@ -240,3 +262,15 @@ Handler results propagate unchanged.
   aborts. A nil interface or nil pointer in a `defer` statement, closures
   beyond the budget and comparisons of interfaces holding function values use
   the existing traps.
+- 2026-10-14: addition (maps), no existing behaviour changed: two new traps
+  (assignment to an entry in a nil map; hashing an interface key whose dynamic
+  type is not comparable), map heap accounting recorded under contracted
+  runtime behaviour (24-byte header, slot arrays sized by live-key count,
+  growth at load factor 3/4, never freed), map allocations use the
+  out-of-memory trap, and a negative or oversized `make` hint is treated as 0.
+- 2026-10-14: maps combined with function values, no trap added and no
+  existing behaviour changed: the two sets of heap costs add up (a closure
+  capturing a map variable moves its 8-byte reference to the heap and never
+  copies the table; a loop `defer` saving a map saves the 8-byte reference),
+  and the nil-map write and unhashable-key traps fire inside closures and
+  deferred calls at the points listed above.

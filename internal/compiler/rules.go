@@ -30,6 +30,12 @@ type frontend struct {
 	// calls, closures and defer sites); empty for programs without them.
 	funcs       *funcProgram
 	funcChecked map[*types.Signature]bool // function types funcTypeRule admitted
+	// maps records the map types typeRule admitted, by key
+	// (docs/GO_MAPS.md); nil for programs without maps.
+	maps map[string]*MapType
+	// usesEmpty is set when typeRule admits the unnamed empty struct type
+	// struct{}.
+	usesEmpty bool
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
@@ -64,7 +70,7 @@ func recoverCompileError(err *error) {
 // typeRule admits integer scalars (uint8, uint16, uint32, uint64, uint, int8,
 // int16, int32, int64, int), bool, strings, untyped integer/bool/string
 // constants, slices of
-// admitted elements (sliceRule), solana.Context, value structs, declared
+// admitted elements (sliceRule), maps (mapRule), solana.Context, value structs, declared
 // scalar arrays, declared multiple-result tuples and pointers to admitted
 // elements.
 func (f *frontend) typeRule(n ast.Node, t types.Type) {
@@ -87,6 +93,15 @@ func (f *frontend) typeRule(n ast.Node, t types.Type) {
 	}
 	if a, ok := t.Underlying().(*types.Array); ok {
 		f.lookupArray(n, a)
+		return
+	}
+	if m, ok := t.Underlying().(*types.Map); ok {
+		f.mapRule(n, m)
+		return
+	}
+	if isEmptyStruct(t) {
+		// struct{}: a zero-size value, as in map[K]struct{} sets.
+		f.usesEmpty = true
 		return
 	}
 	if named, ok := t.(*types.Named); ok {
@@ -140,10 +155,10 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 
 // arrayRule bounds an array value type before it is declared.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
-	// Interface, function and string elements are admitted too (the message
+	// Interface, function, string and map elements are admitted too (the message
 	// predates them).
 	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !isIface(a.Elem()) && !isFuncValue(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
+	if !isIface(a.Elem()) && !isFuncValue(a.Elem()) && !isMap(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
 		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
 	}
 	f.variableRule(node, a.Elem())

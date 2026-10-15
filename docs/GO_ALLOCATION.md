@@ -24,11 +24,12 @@ allocator is emitted only when a program needs it.
 Slices may hold any storable element: integer scalars of every
 [integer type](GO_INTEGERS.md), `bool`, value structs,
 declared scalar arrays (`[][32]byte`), pointers (`[]*Node`), slices
-(`[][]byte`) and [interface values](GO_INTERFACES.md) (`[]any`, `[]Shape`;
-their growth uses Go's pointer-holding size classes). Elements must not contain zero-length arrays or empty structs
+(`[][]byte`), [interface values](GO_INTERFACES.md) (`[]any`, `[]Shape`;
+their growth uses Go's pointer-holding size classes) and [maps](GO_MAPS.md)
+(`[]map[K]V`, an 8-byte pointer-holding element). Elements must not contain zero-length arrays or empty structs
 (their Go and C sizes could differ). Named slice types, slices of
-`solana.Context`, arrays of pointers or slices, pointers to slices or pointers
-and maps remain rejected. Slices of [strings](GO_STRINGS.md) (`[]string`, a
+`solana.Context`, arrays of pointers or slices, and pointers to slices or pointers
+remain rejected. Slices of [strings](GO_STRINGS.md) (`[]string`, a
 16-byte pointer-holding element) and `append(b, s...)`/`copy(b, s)` with a
 string source are supported. `[]int`,
 `[]int8` and the other signed slices are ordinary slices, and `copy`'s result
@@ -81,6 +82,17 @@ non-empty; `string(b)` allocates `len(b)` rounded up (nothing when empty);
 size); `[]byte` of a constant allocates exactly its length (rounded up to 8).
 Programs with strings carry the heap runtime only when a string operation
 allocates.
+
+### Maps
+
+A [map](GO_MAPS.md#heap-accounting) header takes 24 bytes (`make`, a map
+literal); a positive `make` hint or a literal of `n` entries also allocates its
+slot array at once; inserting a new key when the table would pass 3/4 full
+allocates a slot array twice as large (8 slots at first). Slots are
+`8 + roundup8(sizeof(K)) + roundup8(sizeof(V))` bytes. Lookups, overwrites,
+`delete` and `clear` allocate nothing; slot arrays are never freed or shrunk.
+With the default budget, `make(map[uint64]uint64)` holds 384 keys and the
+385th aborts. Programs with map values always carry the heap runtime.
 
 ### Interface boxing
 
@@ -244,8 +256,9 @@ fogo-v0 and solana-v3 ([mixed_test.go](../internal/compiler/mixed_test.go)).
 Allocation adds two aborts to the [failure contract](ERROR_CONTRACT.md):
 
 - **Out of memory**: `new`, `make`, a growing `append`, a slice literal, an
-  escaping `&T{...}`, a moved local, an interface conversion, or a string
-  concatenation or conversion needs more than the remaining budget.
+  escaping `&T{...}`, a moved local, an interface conversion, a string
+  concatenation or conversion, or a map header, literal or growth needs more
+  than the remaining budget.
 - **make length or capacity out of range**: `len > cap`, a negative signed
   length, or a capacity whose size exceeds Go's 2^48-byte `maxAlloc` (Go panics
   `makeslice: len out of range` or `cap out of range`).
@@ -262,7 +275,7 @@ admitted elements. Programs that allocate always carry capacities. The heap
 runtime (allocator, `growslice`, `makeslice`, `memmove`) is emitted only for
 programs that call `new`/`make`/`append`/`copy`, write a slice literal or
 elided `&T{...}`, move a local, use a non-byte slice or a pointer/slice
-field, use interface values, or concatenate or convert strings. An alternative backend must reproduce the allocator layout and budget
+field, use interface values or map values, or concatenate or convert strings. An alternative backend must reproduce the allocator layout and budget
 (observable only through out-of-memory boundaries), the growth rule and the
 heap moves; see [BACKEND_INTERFACE.md](BACKEND_INTERFACE.md).
 

@@ -167,8 +167,8 @@ failed `x.(string)` and a nil-interface `Error()` call use the interface aborts
 
 ## Limits and rejections
 
-- Maps (and so strings as map keys) remain unsupported:
-  `unsupported type map[string]uint8`.
+- Strings are valid [map](GO_MAPS.md) keys and elements (`map[string]V`,
+  hashed by length and bytes); range over a map is rejected.
 - Compound assignment other than `+=` on strings remains rejected
   (`compound assignment unsupported`), including `+=` on integers.
 - Named slice types stay rejected, including byte slices converted from

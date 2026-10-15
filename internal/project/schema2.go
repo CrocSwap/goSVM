@@ -598,6 +598,9 @@ func (m *multiModel) wireField(name string, t types.Type, offset int, active map
 				return f, fmt.Errorf("wire struct %s exceeds 1024 bytes", name)
 			}
 		}
+	case *types.Map:
+		// Maps have no fixed size or wire encoding.
+		return f, fmt.Errorf("wire field %s: %s is a map; wire layouts are fixed-size, use a [N] array of key/value structs", name, t)
 	default:
 		return f, fmt.Errorf("wire field %s has unsupported type %s", name, t)
 	}

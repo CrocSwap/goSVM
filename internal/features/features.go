@@ -84,6 +84,9 @@ type Uses struct {
 	Closures bool `json:"closures"`
 	// Defer: defer statements (added within gosvm-features-v1).
 	Defer bool `json:"defer"`
+	// Maps: any non-nil value of a map type, a map literal or make of a
+	// map. Added within gosvm-features-v1.
+	Maps bool `json:"maps"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -140,7 +143,7 @@ func summarize(u *Usage) {
 	values := func(s *Side) map[string]int { return s.IntegerValues }
 	conversions := func(s *Side) map[string]int { return s.Conversions }
 	signed := []string{"int8", "int16", "int32", "int64", "int"}
-	u.Uses.Allocation = sum("new_calls")+sum("make_calls")+sum("append_calls")+sum("copy_calls")+sum("slice_literals") > 0
+	u.Uses.Allocation = sum("new_calls")+sum("make_calls")+sum("append_calls")+sum("copy_calls")+sum("slice_literals")+sum("map_literals") > 0
 	u.Uses.Interfaces = sum("interface_values") > 0
 	u.Uses.SignedIntegers = has(types, signed...) || has(conversions, signed...) || sum("signed_operations") > 0
 	u.Uses.MathBits = len(u.StdlibCalls) > 0
@@ -150,6 +153,7 @@ func summarize(u *Usage) {
 	u.Uses.Strings = sum("string_values") > 0
 	u.Uses.Closures = sum("function_literals")+sum("function_values")+sum("method_values")+sum("method_expressions")+sum("indirect_calls") > 0
 	u.Uses.Defer = sum("defer") > 0
+	u.Uses.Maps = sum("map_values")+sum("map_literals")+sum("map_makes") > 0
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -283,6 +287,11 @@ var ConstructNames = []string{
 	// literals with named results. Literals are function_literals, calls
 	// through values indirect_calls and defer statements defer.
 	"function_values", "method_values", "method_expressions", "named_results",
+	// Maps (added within gosvm-features-v1): non-constant, non-nil
+	// expressions of a map type, map composite literals, make of a map,
+	// single-value m[k] reads, v, ok := m[k] reads, m[k] as an assignment,
+	// ++/-- or += target, delete calls and clear calls on maps.
+	"map_values", "map_literals", "map_makes", "map_lookups", "map_comma_ok_lookups", "map_assignments", "map_deletes", "map_clears",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -659,6 +668,15 @@ func isString(t types.Type) bool {
 	return ok && b.Info()&types.IsString != 0
 }
 
+// isMapType reports whether t is a map type (or a named one).
+func isMapType(t types.Type) bool {
+	if t == nil {
+		return false
+	}
+	_, ok := t.Underlying().(*types.Map)
+	return ok
+}
+
 func isSignedInteger(t types.Type) bool {
 	if t == nil {
 		return false
@@ -684,6 +702,7 @@ func (w *walker) file(f *ast.File) {
 	w.side.Constructs["dynamic_calls"] += len(calls)
 	w.side.Constructs["type_assertions"] += len(asserts)
 	elseIf := map[ast.Stmt]bool{}
+	mapTargets := map[ast.Expr]bool{} // m[k] written by an assignment or ++/--
 	// Generic function names with written type arguments (F[T] or pkg.F[T]).
 	explicit := map[*ast.Ident]bool{}
 	// Callee expressions of calls (a function value is one that is not
@@ -744,6 +763,9 @@ func (w *walker) file(f *ast.File) {
 				}
 				if isString(tv.Type) && tv.Value == nil {
 					w.count("string_values")
+				}
+				if _, isParam := tv.Type.(*types.TypeParam); !isParam && isMapType(tv.Type) && tv.Value == nil {
+					w.count("map_values")
 				}
 			}
 		}
@@ -850,6 +872,8 @@ func (w *walker) file(f *ast.File) {
 					w.count("array_literals")
 				case *types.Slice:
 					w.count("slice_literals")
+				case *types.Map:
+					w.count("map_literals")
 				}
 			}
 		case *ast.ArrayType:
@@ -933,6 +957,17 @@ func (w *walker) file(f *ast.File) {
 			if !w.instantiation(n.X) {
 				w.count("index_expressions")
 			}
+			if isMapType(w.typeOf(n.X)) {
+				_, commaOK := w.typeOf(n).(*types.Tuple)
+				switch {
+				case mapTargets[n]:
+					w.count("map_assignments")
+				case commaOK:
+					w.count("map_comma_ok_lookups")
+				default:
+					w.count("map_lookups")
+				}
+			}
 		case *ast.SelectorExpr:
 			if s := w.tp.Info.Selections[n]; s != nil && s.Kind() == types.FieldVal {
 				w.count("field_selections")
@@ -949,6 +984,11 @@ func (w *walker) file(f *ast.File) {
 		case *ast.CallExpr:
 			w.call(n)
 		case *ast.AssignStmt:
+			if n.Tok != token.DEFINE {
+				for _, lhs := range n.Lhs {
+					mapTargets[ast.Unparen(lhs)] = true
+				}
+			}
 			switch n.Tok {
 			case token.DEFINE:
 				w.count("short_var_decls")
@@ -965,6 +1005,7 @@ func (w *walker) file(f *ast.File) {
 				w.count("multi_value_assignments")
 			}
 		case *ast.IncDecStmt:
+			mapTargets[ast.Unparen(n.X)] = true
 			w.op(n.Tok.String())
 		case *ast.ReturnStmt:
 			w.count("returns")
@@ -1161,6 +1202,14 @@ func (w *walker) call(n *ast.CallExpr) {
 				if b.Name() == "append" && n.Ellipsis.IsValid() {
 					w.count("append_spreads")
 				}
+			}
+			switch {
+			case b.Name() == "make" && len(n.Args) > 0 && isMapType(w.typeOf(n.Args[0])):
+				w.count("map_makes")
+			case b.Name() == "delete":
+				w.count("map_deletes")
+			case b.Name() == "clear" && len(n.Args) == 1 && isMapType(w.typeOf(n.Args[0])):
+				w.count("map_clears")
 			}
 			return
 		}

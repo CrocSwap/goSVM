@@ -59,6 +59,7 @@ type generator struct {
 	forward        map[any]bool               // structs (by structID) forward-declared for pointer fields
 	defined        map[any]bool               // structs (by structID) whose definition was emitted
 	movedParams    map[*ast.FuncDecl][]types.Object
+	maps           *mapProgram // map types (CheckedProgram.Maps); nil without maps
 }
 
 // Source is a Go file in a single on-chain package.
@@ -116,6 +117,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	if program.funcs != nil {
 		g.funcs = program.funcs
 	}
+	g.maps = program.maps
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -153,8 +155,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	// program is byte-identical to earlier compilers.
 	// Interface values box into the heap and need its runtime too.
 	// So do string concatenations and conversions (docs/GO_STRINGS.md).
-	// Function values and defer records live there as well.
-	hasHeap := usesAllocation(program) || g.ifaces.used || g.funcs.used || program.usesStrings && stringAllocates(g.info, files)
+	// Function values and defer records live there as well, and so do maps
+	// (docs/GO_MAPS.md).
+	hasHeap := usesAllocation(program) || g.ifaces.used || g.funcs.used || program.usesStrings && stringAllocates(g.info, files) || g.maps != nil
 	if hasHeap {
 		hasViews, hasPointers = true, true
 	}
@@ -196,6 +199,17 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	}
 	if g.funcs.used {
 		g.WriteString(funcRuntime)
+	}
+	if g.maps != nil {
+		// Only programs with map values get the map runtime, so the C of
+		// every other program is byte-identical to earlier compilers.
+		g.WriteString(mapRuntime)
+		if program.usesStrings {
+			g.WriteString(stringHashRuntime)
+		}
+	}
+	if program.usesEmpty {
+		g.WriteString(emptyStructRuntime)
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
@@ -255,7 +269,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			f := st.Field(i)
 			if a, ok := f.Type().Underlying().(*types.Array); ok {
 				g.emitArray(node, a)
-			} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
+			} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {
 				emitType(node, f.Type())
 			} else if p, ok := pointer(f.Type()); ok {
 				// A pointer field may refer to a struct defined later, or to
@@ -350,6 +364,9 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	if g.ifaces.used {
 		g.emitInterfaces(program)
 	}
+	if g.maps != nil {
+		g.emitMaps()
+	}
 	g.emitFuncDispatchers()
 	functions := map[*ast.FuncDecl]*Function{}
 	for _, function := range program.Functions {
@@ -437,6 +454,12 @@ func (g *generator) ctype(n ast.Node, t types.Type) string {
 	}
 	if isFuncValue(t) {
 		return "gosvm_func"
+	}
+	if isMap(t) {
+		return "gosvm_map *" // every map type shares the header; see maps.go
+	}
+	if isEmptyStruct(t) {
+		return "gosvm_empty"
 	}
 	if isContext(t) {
 		return "Context *"
@@ -598,6 +621,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		if s, ok := tv.Type.(*types.Slice); ok {
 			return g.sliceLiteral(e, s)
 		}
+		if isMap(tv.Type) {
+			return g.mapLiteral(e, tv.Type)
+		}
 		literal := tv.Type
 		if p, ok := pointer(literal); ok {
 			literal = p.Elem() // an elided &T{...} element, boxed below
@@ -639,6 +665,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		return g.temp(e, tv.Type, x+"."+g.name(field))
 	case *ast.IndexExpr:
+		if isMap(g.info.Types[e.X].Type) {
+			return g.mapIndex(e)
+		}
 		if _, ok := pointer(g.info.Types[e.X].Type); ok {
 			if a, ok := arrayValue(g.info.Types[e.X].Type); ok {
 				base, index := g.arrayPointer(e.X), g.expr(e.Index)
@@ -676,6 +705,11 @@ func (g *generator) exprValue(e ast.Expr) string {
 				g.unchecked(e)
 			}
 			return g.temp(e, tv.Type, comparison)
+		}
+		if isMap(g.info.Types[e.X].Type) || isMap(g.info.Types[e.Y].Type) {
+			// A map compares only with nil.
+			x, y := g.expr(e.X), g.expr(e.Y)
+			return g.temp(e, tv.Type, fmt.Sprintf("(%s %s %s)", x, e.Op, y))
 		}
 		sliceType := g.info.Types[e.X].Type
 		if _, ok := sliceType.(*types.Slice); !ok {
@@ -764,6 +798,12 @@ func (g *generator) exprValue(e ast.Expr) string {
 			if isIface(tv.Type) {
 				return g.expr(e.Args[0]) // converted, or copied from an interface value
 			}
+			if isMap(tv.Type) {
+				if g.info.Types[e.Args[0]].IsNil() {
+					return g.temp(e, tv.Type, "0")
+				}
+				return g.temp(e, tv.Type, g.expr(e.Args[0]))
+			}
 			if _, ok := tv.Type.(*types.Slice); ok {
 				if len(e.Args) != 1 {
 					g.unchecked(e)
@@ -810,6 +850,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
 			return g.allocBuiltin(e, b.Name())
+		}
+		if name, ok := g.mapBuiltinCall(e); ok {
+			return g.mapBuiltin(e, name)
 		}
 		args := g.callValues(e)
 		if _, ok := o.(*types.TypeName); ok {
@@ -918,6 +961,13 @@ func (g *generator) stmt(s ast.Stmt) {
 			v := g.exprAs(s.Rhs[0], g.info.Types[lhs].Type)
 			g.line("%s = %s;", target, v)
 		case *ast.IndexExpr:
+			if isMap(g.info.Types[lhs.X].Type) {
+				// The map and key, then the value, then the insertion.
+				target := g.mapTarget(lhs)
+				v := g.exprAs(s.Rhs[0], g.info.Types[lhs].Type)
+				g.line("%s = %s;", target, v)
+				return
+			}
 			if _, ok := pointer(g.info.Types[lhs.X].Type); ok {
 				target := g.captureTarget(lhs)
 				v := g.expr(s.Rhs[0])
@@ -993,6 +1043,10 @@ func (g *generator) stmt(s ast.Stmt) {
 	case *ast.TypeSwitchStmt:
 		g.typeSwitch(s)
 	case *ast.IncDecStmt:
+		if ix, ok := g.isMapIndex(s.X); ok {
+			g.mapIncDec(ix, s.Tok.String())
+			return
+		}
 		id, ok := s.X.(*ast.Ident)
 		t := g.info.Types[s.X].Type
 		if !ok {

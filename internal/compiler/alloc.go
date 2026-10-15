@@ -31,7 +31,7 @@ func ValidateHeapBytes(n int) error {
 // remain the only other supported builtins.
 var allocBuiltins = map[string]bool{"new": true, "make": true, "append": true, "copy": true}
 
-const builtinRule = "only len, cap, new, make, append and copy builtins supported"
+const builtinRule = "only len, cap, new, make, append, copy, delete and clear builtins supported"
 
 // sliceRule admits a slice of any storable element: unsigned scalars, bool,
 // value structs, declared scalar arrays, pointers and slices. Elements must
@@ -73,7 +73,7 @@ func zeroSizePart(t types.Type) bool {
 // et.PtrBytes != 0), which selects the malloc-header rounding in growslice.
 func containsReferences(t types.Type) bool {
 	switch u := t.Underlying().(type) {
-	case *types.Pointer, *types.Slice, *types.Interface:
+	case *types.Pointer, *types.Slice, *types.Interface, *types.Map: // a map is a pointer to its header
 		return true
 	case *types.Basic:
 		return u.Info()&types.IsString != 0 // a string holds a data pointer
@@ -116,8 +116,8 @@ func (c *checker) allocBuiltin(e *ast.CallExpr, name string, tv types.TypeAndVal
 	case "new":
 		c.typeRule(e, tv.Type)
 	case "make":
-		if _, ok := tv.Type.(*types.Slice); !ok {
-			c.fail(e, "make supports only slices")
+		if _, ok := tv.Type.(*types.Slice); !ok && !isMap(tv.Type) {
+			c.fail(e, "make supports only slices and maps")
 		}
 		c.typeRule(e, tv.Type)
 		for _, size := range e.Args[1:] {
@@ -373,6 +373,9 @@ func (g *generator) allocBuiltin(e *ast.CallExpr, name string) string {
 		elem := g.variable(e, tv.Type.(*types.Pointer).Elem())
 		return g.temp(e, tv.Type, fmt.Sprintf("(%s *)gosvm_alloc(sizeof(%s))", elem, elem))
 	case "make":
+		if isMap(tv.Type) {
+			return g.mapMake(e, tv.Type)
+		}
 		elem := g.variable(e, tv.Type.(*types.Slice).Elem())
 		length := g.length(e.Args[1])
 		capacity := length

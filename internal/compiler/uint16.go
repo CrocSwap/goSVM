@@ -37,6 +37,8 @@ func usesBasic(files []*ast.File, info *types.Info, want func(*types.Basic) bool
 			return mentions(t.Elem())
 		case *types.Slice:
 			return mentions(t.Elem())
+		case *types.Map:
+			return mentions(t.Key()) || mentions(t.Elem())
 		case *types.Struct:
 			for i := 0; i < t.NumFields(); i++ {
 				if mentions(t.Field(i).Type()) {

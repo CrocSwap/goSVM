@@ -566,15 +566,29 @@ against ordinary Go on the host and on SBF. The two combine: closures capture
 strings, function types take and return strings and `error`, and deferred
 closures change named `string`/`error` results
 ([combined fixture](../examples/func-strings/program.go), checked against
-ordinary Go on the host).
+ordinary Go on the host and on SBF).
+
+Maps have Go's results for every operation except iteration: `make` (with or
+without a hint), literals, `m[k]`, `v, ok := m[k]`, assignment, `++`/`--` and
+`+=` on elements, `delete`, `len`, `clear`, nil maps (writes abort), keys of
+every comparable admitted type (interfaces whose dynamic type is uncomparable
+abort, as Go panics) and maps in fields, slices, arrays, pointers, interfaces
+and generic code. `range` over a map is rejected because Go randomizes its
+order; keep the keys in a slice. The table's heap use is documented exactly.
+See [map semantics, heap accounting, CU and SBF evidence](../docs/GO_MAPS.md)
+and the [map fixture](../examples/map-values/program.go). Maps combine with
+function values: closures capture maps, maps hold function values, function
+types take and return maps, and deferred calls change maps
+([combined fixture](../examples/func-maps/program.go), checked against
+ordinary Go on the host and on SBF).
 
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, named slices, maps,
+floating-point and complex types, globals, `init`, named slices, map iteration,
 method values of interface types, recursion (including through dynamic calls and function values), variadics,
 compound assignment other than `+=` on strings,
 range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
-uncomparable interface comparison, nil interface call and nil function call failures abort; there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits
+uncomparable interface comparison, nil interface call, nil function call, nil-map write and unhashable map key failures abort; there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 
