@@ -1,0 +1,266 @@
+// Hand-written cases (examples/eval-order/gen/special.go.txt): receivers,
+// function values, map literals, map keys, the map-append form,
+// conversions to interfaces, strings, slices, builtins, type assertions,
+// multiple assignment and traps against panics.
+
+// PM holds a map in a struct reached through a pointer.
+type PM struct {
+	m map[uint64][]uint64
+}
+
+var (
+	pm   *PM
+	gu   uint64
+	gn   int
+	x8   uint8
+	gm8  map[uint8][]uint64
+	gmu  map[uint64][]uint64
+	gmn  map[int][]uint64
+	gpny any
+)
+
+func resetSpecial(in []byte) {
+	pm = &PM{m: map[uint64][]uint64{0: {1}, 1: {2}, 2: {3}}}
+	gu, gn, x8 = uint64(in[9]%3), int(in[9]%3), uint8(in[9]%3)
+	gm8 = map[uint8][]uint64{0: {1}, 1: {2}, 2: {3}, 10: {4}, 11: {5}}
+	gmu = map[uint64][]uint64{0: {1}, 1: {2}, 2: {3}}
+	gmn = map[int][]uint64{0: {1}, 1: {2}, 2: {3}}
+	gpny = &T{v1, v1}
+}
+
+func dumpSpecial(w *W) {
+	w.u64(gu)
+	w.u64(uint64(x8))
+	for k := uint64(0); k < 3; k++ {
+		w.u64(uint64(len(pm.m[k])) | uint64(len(gmu[k]))<<8 | uint64(len(gmn[int(k)]))<<16 | uint64(len(gm8[uint8(k)]))<<24)
+	}
+}
+
+func wPM() uint64 {
+	step()
+	pm = &PM{m: map[uint64][]uint64{0: {7}, 1: {8}, 2: {9}}}
+	gu = (gu + 1) % 3
+	return v3
+}
+func wGu() uint64   { step(); gu = (gu + 1) % 3; return v3 }
+func wGn() uint64   { step(); gn = (gn + 1) % 3; return v3 }
+func wX8() uint64   { step(); x8 = x8 + 10; return v3 }
+func wGpny() uint64 { step(); gpny = &T{v2, v2}; return v3 }
+func boom() uint64 {
+	if pw {
+		panic("boom")
+	}
+	return v3
+}
+func callMV(f func() uint64, _ uint64) uint64 { return f() }
+func recI(w *W, i I, _ uint64)                { w.u64(i.M(0)) }
+func str(v uint64) string                     { return string(rune('0' + v%10)) }
+func strBytes(w *W, s string) {
+	w.u64(uint64(len(s)))
+	for j := 0; j < len(s); j++ {
+		w.u64(uint64(s[j]))
+	}
+}
+func anyT(a any, b uint64) uint64 { return a.(T).a*1000 + b }
+func anyA(a any, b uint64) uint64 { return a.([1]uint64)[0]*1000 + b }
+func anyP(a any, b uint64) uint64 { return *a.(*uint64)*1000 + b }
+func anyB(a any, b uint64) uint64 { return b2u(a.(bool))*1000 + b }
+
+// specialCases is the number of hand-written cases.
+const specialCases = 66
+
+func special(w *W, k int) {
+	k1 := v1 - v1 + 1
+	switch k {
+	// Receivers and function values: read after the arguments' calls.
+	case 0:
+		w.u64(gif.M(wGif()))
+	case 1:
+		w.u64(gfv(wGfv()))
+	case 2:
+		w.u64(callMV(gt.Val, wGt()))
+	case 3:
+		w.u64(gt.Arg(wGt()))
+	case 4:
+		w.u64(gp.Arg(wGp()))
+	case 5:
+		w.u64(gp.PArg(wGp()))
+	case 6:
+		w.u64((*gp).Arg(wGp()))
+	case 7:
+		w.u64(two(gt.a, gt.Arg(wGt())))
+	case 8:
+		func() {
+			defer recI(w, gif, wGif())
+		}()
+	case 9:
+		var ni I
+		func() {
+			defer ni.M(boom())
+		}()
+	// Map literals: static entries are inserted first.
+	case 10:
+		m := map[uint64]uint64{k1: 3, 1: 2}
+		w.u64(m[1])
+	case 11:
+		m := map[uint64]uint64{1: 2, k1: 3}
+		w.u64(m[1])
+	case 12:
+		m := map[uint64]any{k1: 3, 1: nil}
+		w.u64(b2u(m[1] == nil))
+	case 13:
+		m := map[uint64]any{k1: 3, 1: "s"}
+		_, isString := m[1].(string)
+		w.u64(b2u(isString))
+	case 14:
+		m := map[uint64][2]uint64{k1: {9, 9}, 1: {2, 3}}
+		w.u64(m[1][0])
+	case 15:
+		k2 := k1
+		m := map[uint64]uint64{k1: 3, 1: 2, k2: 4}
+		w.u64(m[1])
+	case 16:
+		m := map[uint64][]uint64{k1: {3}, 1: nil}
+		w.u64(uint64(len(m[1])))
+	case 17:
+		m := map[uint64]uint64{1: g, 2: wG()}
+		w.u64(m[1])
+		w.u64(m[2])
+	// m[k] = append(m[k], ...): gc's copies of non-variable operands.
+	case 18:
+		old := pm
+		pm.m[gu] = append(pm.m[gu], wPM())
+		w.u64(uint64(len(old.m[0])) | uint64(len(old.m[1]))<<8 | uint64(len(old.m[2]))<<16)
+	case 19:
+		gmu[gu] = append(gmu[gu], wGu())
+	case 20:
+		gmn[gn] = append(gmn[gn], wGn())
+	case 21:
+		gm8[x8] = append(gm8[x8], wX8())
+	case 22:
+		gm8[x8+0] = append(gm8[x8+0], wX8())
+	// Map keys of gc's generic map path are read where they appear.
+	case 23:
+		m8 := map[uint8]uint64{0: 1, 1: 2, 2: 3, 10: 4, 11: 5, 12: 6}
+		w.u64(m8[x8+0] + wX8())
+	case 24:
+		m8 := map[uint8]uint64{0: 1, 1: 2, 2: 3, 10: 4, 11: 5, 12: 6}
+		w.u64(m8[x8] + wX8())
+	case 25:
+		ma := map[any]uint64{uint64(0): 1, uint64(1): 2, uint64(2): 3}
+		w.u64(ma[g%3] + wG())
+	case 26:
+		m16 := map[uint16]uint64{0: 1, 1: 2, 2: 3}
+		w.u64(m16[uint16(g%3)] + wG())
+	case 27:
+		m32 := map[int32]uint64{0: 1, 1: 2, 2: 3}
+		w.u64(m32[int32(g%3)] + wG())
+	case 28:
+		ms := map[T]uint64{{0, 0}: 1, {1, 0}: 2, {2, 0}: 3}
+		w.u64(ms[T{g % 3, 0}] + wG())
+	case 29:
+		m8 := map[uint8]uint64{}
+		m8[x8+0] = wX8()
+		w.u64(m8[0] + m8[1]*10 + m8[2]*100 + m8[10]*1000 + m8[11]*10000 + m8[12]*100000)
+	case 30:
+		m8 := map[uint8]uint64{}
+		m8[x8+0] += 5 + wX8()
+		w.u64(m8[0] + m8[1]*10 + m8[2]*100 + m8[10]*1000 + m8[11]*10000 + m8[12]*100000)
+	case 31:
+		m8 := map[uint8]uint64{x8 + 0: wX8()}
+		w.u64(m8[0] + m8[1]*10 + m8[2]*100 + m8[10]*1000 + m8[11]*10000 + m8[12]*100000)
+	case 32:
+		mu := map[uint64]uint64{}
+		mu[gu+0] = wGu()
+		w.u64(mu[0] + mu[1]*10 + mu[2]*100)
+	// Conversions to interfaces: operands converted by address are read
+	// where they appear unless addressable.
+	case 33:
+		w.u64(any8(x8+0, wX8()))
+	case 34:
+		w.u64(any8(x8, wX8()))
+	case 35:
+		w.u64(anyT(T{g, 0}, wG()))
+	case 36:
+		w.u64(anyT(gt, wGt()))
+	case 37:
+		w.u64(anyA([1]uint64{g}, wG()))
+	case 38:
+		w.u64(anyP(&gs[gi], wGi()))
+	case 39:
+		w.u64(anyB(g == v1, wG()))
+	case 40:
+		w.u64(anyU(g+0, wG()))
+	// Strings and byte slices.
+	case 41:
+		strBytes(w, gstr+str(wGstr()))
+	case 42:
+		w.u64(b2u(gstr == str(wGstr())+"q"))
+	case 43:
+		strBytes(w, string(gb)+str(wGb()))
+	case 44:
+		w.u64(uint64([]byte(gstr)[0]) + wGstr())
+	case 45:
+		strBytes(w, gstr[0:1]+str(wGstr()))
+	case 46:
+		w.u64(uint64(len(gstr)) + wGstr())
+	// Slices and builtins: slicing, len, cap, append and copy run in order.
+	case 47:
+		w.u64(gs[0:2][0] + wGs())
+	case 48:
+		w.u64(gs[0:2][0] + wGs0())
+	case 49:
+		w.u64(sl2(gs[0:2]) + wGs())
+	case 50:
+		w.u64(uint64(cap(gs)) + wApp())
+	case 51:
+		w.u64(uint64(len(append(gs, g))) + wG())
+	case 52:
+		w.u64(gs[0] + uint64(copy(gs, []uint64{77})))
+	case 53:
+		w.u64(gs[0] + uint64(len(append(gs[:0], 55))))
+	case 54:
+		sum := uint64(0)
+		for _, v := range gs[:wGs()%1+2] {
+			sum += v
+		}
+		w.u64(sum)
+	// Type assertions: to a non-pointer type in order, to a pointer late.
+	case 55:
+		w.u64(gany.(uint64) + wGany())
+	case 56:
+		w.u64(gpny.(*T).a + wGpny())
+	case 57:
+		w.u64(b2u(g == v1 && wG() != 99 && g == v2))
+	// Multiple assignment: index operands before any store.
+	case 58:
+		s2 := []uint64{0, 0, 0}
+		j := 0
+		s2[j], j = 1, 2
+		w.u64(s2[0]*100 + s2[2]*10 + uint64(j))
+	case 59:
+		s2 := []uint64{0, 0, 0}
+		j := 0
+		j, s2[j] = 1, 2
+		w.u64(s2[0]*100 + s2[1]*10 + uint64(j))
+	// Traps against a panicking call: the call runs first.
+	case 60:
+		var z []uint64
+		w.u64(z[gi] + boom())
+	case 61:
+		var z []uint64
+		z[gi] = boom()
+	case 62:
+		var q *T
+		w.u64(q.a + boom())
+	case 63:
+		var nm map[uint64]uint64
+		nm[1] = boom()
+	case 64:
+		var nf func(v uint64) uint64
+		w.u64(nf(boom()))
+	case 65:
+		var ni I
+		w.u64(ni.M(boom()))
+	}
+}

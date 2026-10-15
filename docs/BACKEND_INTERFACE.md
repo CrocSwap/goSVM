@@ -59,6 +59,7 @@ Every field is documented in `check.go`. In summary:
 | `FuncTargets`, `FuncValues`, `FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` | Function values, closures and `defer` ([function values](#function-values)); empty without them |
 | `Maps` | Map types ([maps](#maps)); empty without them |
 | `Globals`, `GlobalBytes`, `Inits` | Package-level variables, the globals block size and each package's initialization in Go's order ([package-level variables](#package-level-variables)); empty (0) without them |
+| `Hoisted`, `HoistedConversions`, `MapLiteralOrder`, `SharedOperands`; `Sequenced(e)` | gc's evaluation order where left to right would observably differ, and the sequenced operations ([evaluation order](#evaluation-order)); empty where it would not |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
@@ -194,8 +195,9 @@ interface values:
   interface that code asserts to, sorted by `Key`. `DynamicCalls` maps each
   method call on an interface value (a `*ast.CallExpr` whose selector's
   `Selections` entry is a `MethodVal` on an interface type) to its slot. A
-  dynamic call evaluates the receiver, then the arguments, then aborts if the
-  interface is nil.
+  dynamic call evaluates its operands in [gc's order](#evaluation-order) (the
+  receiver is a plain operand, read after the arguments' calls), then aborts
+  if the interface is nil.
 - `TypeAssertions` and `TypeSwitches` are the sites in source order. A
   comma-ok assertion's `Types` entry is a two-element tuple (go/types records
   it so); it is not a `resultsN` value. A type switch clause's variable is
@@ -242,9 +244,10 @@ A backend must reproduce what is observable:
   constant `c`) and `[]rune(s)` (`rawruneslice`), both contracted in
   [ERROR_CONTRACT.md](ERROR_CONTRACT.md#contracted-runtime-behaviour); a
   concatenation is a maximal tree of non-constant string `+` operators
-  (parentheses included), evaluated left to right, allocating nothing when at
-  most one operand is non-empty; `x += y` evaluates the target's operands,
-  then `y`, then reads `x`;
+  (parentheses included), its operands evaluated in
+  [gc's order](#evaluation-order), allocating nothing when at most one
+  operand is non-empty; `x += y` evaluates `y` and the target's operands in
+  that order, then reads `x`;
 - boxing a string allocates 16 bytes (`DynamicType.Size`), and `[]string`
   grows as a 16-byte pointer-holding element.
 
@@ -296,9 +299,9 @@ additive and empty for programs without them:
   execution's record is then heap-allocated: `RecordBytes`), and `Saved`, the
   types the statement evaluates and saves, in order.
 
-A backend must reproduce what is observable: evaluation order (a function
-value, then its arguments, then the nil check at the call; deferred
-operands at the `defer` statement; a nil interface or a value method
+A backend must reproduce what is observable: [evaluation order](#evaluation-order)
+(the function value is a plain operand, read after the arguments' calls; the
+nil check at the call; deferred operands at the `defer` statement; a nil interface or a value method
 through a nil pointer in a `defer` statement aborts there), last-in
 first-out deferred calls after the results are set (named results visible to
 deferred closures), deferred calls not running on a trap, Go 1.22
@@ -320,7 +323,8 @@ adds no field: it is an `*ast.AssignStmt` with one left and one right
 operand and a `Tok` of `token.ADD_ASSIGN` … `token.AND_NOT_ASSIGN`, whose
 left operand has an integer type (string `+=` is the case above). A backend
 must lower `x op= y` as `x = x op y` with the target's index and pointer
-operands evaluated once, before `y`; the target read after `y`; the binary
+operands evaluated once, in [gc's order](#evaluation-order) (after `y`'s
+calls, except early map keys); the target read after `y`; the binary
 operator's values and traps (division or modulo by zero, negative shift
 count); and the target's traps (bounds, nil pointer, nil-map write) after
 `y`. A map element is looked up once after `y`, inserted with the zero value
@@ -359,9 +363,12 @@ A backend must reproduce what is observable:
 - Go's results for every operation: zero values for absent keys and nil maps,
   key equality as Go's `==` (strings bytewise, structs field by field, arrays
   element by element, interfaces by dynamic type and value, pointers by
-  address), reference semantics, and evaluation order (the map, then the key,
-  then the value, then the store; tuple assignments store left to right after
-  all operands; `m[k] op= x` evaluates `x` before reading `m[k]`);
+  address), reference semantics, and [evaluation order](#evaluation-order)
+  (the map and key are plain operands read after the value's calls, except
+  keys of gc's generic map path, which are read where they appear; the store
+  last; tuple assignments store left to right after all operands; `m[k] op= x`
+  evaluates `x` before reading `m[k]`; map literals insert static entries
+  first, `MapLiteralOrder`);
 - the two traps (assignment to an entry in a nil map; hashing an interface
   key whose dynamic type is not comparable, in every operation, even on nil
   and empty maps), and that a `make` hint never traps;
@@ -500,6 +507,56 @@ traps. The built-in backend emits the panic runtime (`gosvm_panic`,
 unchanged; arrays of composite elements are tagged C structs defined after
 their element types, and arrays of the earlier element kinds keep their
 earlier C.
+
+## Evaluation order
+
+goSVM evaluates expressions in gc's order, contracted in
+[ERROR_CONTRACT.md](ERROR_CONTRACT.md#evaluation-order): within each
+*owner* (a simple statement, a root expression, a sequenced operation, an
+operand of `&&`/`||`, a dynamic map-literal entry), the sequenced operations
+(calls, `len`/`cap`/`append`/`copy`/`make`/`new`, `&&`/`||`, slice
+expressions, string-to-slice conversions, type assertions to non-pointer
+shapes, dynamic map literals, and gc's early-copied conversion operands and
+map keys) run first, left to right, each by the same rule; then the plain
+operands are read and the plain operations (and their traps) performed, left
+to right.
+
+**Where the decision lives.** Check makes it and records it in
+`CheckedProgram`; the C emitter applies no rule of its own:
+
+- `Sequenced(e)` reports whether `e` is a sequenced operation. Together with
+  the contract's owner rule it determines the complete order of any checked
+  program, so a backend that hoists every sequenced operation of every owner
+  into a temporary, left to right, then reads the rest, is exact.
+- `Hoisted` maps each owner whose left-to-right evaluation would observably
+  differ from that order to the sequenced operations (in source order) to
+  evaluate first. "Observably" is a sound, conservative analysis: a plain
+  operation before a sequenced one in source order reads storage the
+  sequenced one may write (a package variable; a local whose address is taken
+  or that a closure captures; anything through a pointer, slice or map), or
+  may trap while the sequenced one may log (a `panic`, a CPI or return data,
+  an unknown function value or interface method). Calls are summarized
+  transitively: a function that assigns only its own locals writes nothing,
+  and one that never reaches `panic`, `Invoke`, `Transfer`,
+  `TransferSigned`, `SetReturnData` or a dynamic call never logs. Everywhere
+  else evaluating left to right is gc's order, which is what keeps programs
+  without such hazards (the full swap included) byte-identical.
+- `HoistedConversions` lists hoisted generic-path map keys whose interface
+  conversion belongs to the early evaluation.
+- `MapLiteralOrder` gives a map literal's insertion order when a static
+  entry follows a dynamic one (static entries first).
+- `SharedOperands` maps the map operand or key of the first `append`
+  argument in `m[k] = append(m[k], ...)` to the target's operand whose early
+  value it reuses; the statement is then in `Hoisted`.
+
+The built-in emitter evaluates each `Hoisted` owner's list first (each
+expression with its own `Hoisted` entry, if any), saves the values, and then
+emits the owner left to right using them; every saved value must be used
+exactly where its expression appears (an unused one is an internal error).
+Keeping the order as data rather than rewriting the syntax keeps
+`CheckedProgram`'s typed syntax unchanged for every analysis (escape
+analysis, closures, interfaces) and for backends. A backend may apply the
+rule only at `Hoisted` owners, as the emitter does, or everywhere.
 
 ## `project.LoadSchema`
 

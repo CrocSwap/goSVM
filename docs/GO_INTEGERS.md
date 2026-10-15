@@ -94,27 +94,24 @@ The result is exactly `x = x op y` with `x` evaluated once:
   Go panics. So do the target's own failures: an index out of range, a nil
   pointer, and (for `m[k] op= y`) a nil map (`assignment to entry in nil
   map`).
-- **Order.** The target's index and pointer operands are evaluated first, once
-  (`a[f()] += g()` calls `f` once, before `g`, following the spec's
-  assignment order: left-hand index and pointer operands, then the right-hand
-  side), then the right operand, then the target is read, combined and
-  stored. A right operand that changes the target's value is therefore seen
-  (`x += f()` where `f` sets `x` to 100 adds to 100, as gc does), and the
-  target's traps (bounds, nil pointer, nil map) and the operator's traps come
-  after every side effect of the right operand.
-- **Maps.** `m[k] op= y` evaluates the map and key, then `y`, then looks the
-  key up once, inserting it with the zero value when absent (so the result is
-  `0 op y`), and updates the element in place. A nil map aborts there. Heap
-  accounting is that of an insertion ([maps](GO_MAPS.md#heap-accounting)).
-
-The spec leaves unspecified when plain variables used as the target's
-operands are read relative to calls on the right; gc reads them after the
-right operand's calls, while goSVM reads them first, exactly as it does for
-`=` ([control](GO_CONTROL.md)). The difference is visible only when the right
-operand reassigns the slice, map, pointer or index variable of its own target
-(`b[0] += f()` where `f` sets `b` to a new slice: goSVM updates the old
-slice, gc the new one). `TestCompoundOperandOrder` pins goSVM's choice;
-avoid depending on either.
+- **Order.** gc's [evaluation order](ERROR_CONTRACT.md#evaluation-order):
+  the right operand's calls run first; the target's index and pointer
+  operands are plain operands read after them, once (`a[f()] += g()` calls
+  `f`, then `g`, then reads `a`), except a map key of gc's generic map path,
+  read where it appears; then the right operand's own plain operands, then
+  the target is read, combined and stored. A right operand that changes the
+  target's value is therefore seen (`x += f()` where `f` sets `x` to 100 adds
+  to 100), a right operand that reassigns the slice, map, pointer or index
+  variable of its own target updates the new target (`b[0] += f()` where `f`
+  sets `b` to a new slice updates the new one), as gc does, and the target's
+  traps (bounds, nil pointer, nil map) and the operator's traps come after
+  every side effect of the right operand.
+- **Maps.** `m[k] op= y` evaluates `y`'s calls, the map and key, then `y`,
+  then looks the key up once, inserting it with the zero value when absent
+  (so the result is `0 op y`), and updates the element in place. A nil map
+  aborts there. Heap accounting is that of an insertion
+  ([maps](GO_MAPS.md#heap-accounting)). `TestCompoundOperandOrder` pins gc's
+  results.
 
 Programs without compound assignment emit byte-identical C. A compound
 assignment lowers to C like the binary operator: the target is read into a

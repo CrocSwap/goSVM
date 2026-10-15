@@ -1,0 +1,214 @@
+x + f()                        10
+f() + x                        10
+-x + f()                       -10
+x*2 + f()                      20
+x + f() + x                    20
+id(x) + f()                    1
+uint8(x) + f()                 10
+x / (f()+1)                    10
+two(x, f())                    10000
+two(x, two(x, f()))            20000
+two(x+f(), x)                  10010
+(*p).Arg(f()) value recv       4000
+p.PArg(f()) ptr recv           4000
+two(p.Val(), f())              1000
+iface.M(f())                   7000
+fv()+f() fv read               1
+fvArg(fv, f())                 2
+fv2(f()) callee var            2
+variadic vs(x, f())            [10 0]
+method value p.Val, f()        40
+s[0] + f() (new s)             100
+s[0] + f() (s[0]=77)           77
+s[i] + f() (i=2)               3
+arr[0] + f()                   55
+m[1] + f() (m[1]=99)           99
+m[1] + f() (new m)             500
+m[string(b)] + f()             1
+p.a + f() (new p)              40
+p.a + f() (p.a=33)             33
+(*p).b + f()                   41
+s[0:1][0] + f()                1
+two(len(s[0:1]), f())          [1 2]
+str[0:1] + f()                 a0
+arr[0:1][0] + f()              55
+len(s) + f()                   3
+cap(s) + f()                   3
+len(str) + f()                 2
+len(append(s,x)) + f()         4
+s[0] + copy(s, ...)            10
+s[0] + len(append(s[:0],9))    10
+x + *new-ish()                 10
+str + f()                      zz0
+str == f()                     false
+str[0] + f()                   122
+string(b) + f()                Qb0
+[]byte(str)[0] + f()           97
+any(x) == f()                  true
+eq(any(x), f())                10
+*p == T{f()+40,41}             true
+arr == [3]int{55+f(),2,3}      true
+ii.(int) + f()                 1
+ii.(*T).a + f()                40
+ii.(I) == f()                  false
+two(bint(x==1 && true), f())   1000
+(x==1 || false) != f()         false
+(x == 1) != f()                true
+T{x, f()}                      {10 0}
+[]int{x, f()}                  [10 0]
+[2]int{x, f()}                 [10 0]
+&T{x, f()}                     {10 0}
+map{1: x, 2: f()}              1 0
+map{f(): 1, 2: x}              1 10
+map{x: f()}                    map[10:0]
+map{k: 3, 1: 2} (k=1)          3
+map{1: 2, k: 3} (k=1)          3
+map{k: 3, 1: T{2,2}}           {3 3}
+map{k: 3, 1: v} dyn            2
+map[any]{k: 3, 1: 2}           2
+map[int]any{k: 3, 1: 2}        2
+map[string]{k: 3, "a": 2}      3
+map[[1]int]{k: 3, {1}: 2}      3
+sv[i] = f() (i=2)              [0 0 0]
+s[0] = f() (new s)             [1 2 3] [0 200 300]
+p.a = f() (new p)              {1 2} {0 41}
+*p = T{f(), 9} (new p)         {1 2} {0 9}
+arr[i] = f() (i=2)             [1 2 7]
+m[i] = f() (i=2)               map[1:1 2:7]
+m[1] = f() (new m)             map[1:1] map[1:7]
+s[0] += f() (new s)            [1 2 3] [100 200 300]
+x += f()                       10
+m[1] += f() (new m)            map[1:1] map[1:500]
+sv[i] += f() (i=2)             [0 0 1]
+sv[i]++                        [1 0 0]
+r1, r2 = x, f()                10 0
+var a, c = x, f()              10 0
+a, c = c, a                    2 1
+s2[j], j = 1, 2                [1 0 0] 2
+j, s2[j] = 1, 2                [2 0 0] 1
+sv[i], r = pairI()             [0 0 5] 6
+sv[i], r = f(), g()            [0 0 5] 0
+s = append(s, x, f())          [1 2 3 10 0]
+s = append(s[:1], f())         [1 0]
+v, ok := m[i] i=f              0 false
+return x, f()                  10 0
+return x+0, f() named          10 0
+defer record(x, f())           [10 0]
+defer recordM(iface, f())      [7000]
+defer iface.M(f())             [1]
+defer fv-call(f())             [2]
+switch x {case f()+1}          case f()+1
+switch x+f() {}                10
+if x == f()+10                 eq
+for range s[:f()+1]            100
+closure c + set()              10
+closure two(c, set())          10000
+c + setPtr(&c)                 10
+c + setPtr(&c) direct          10
+z[5] = panic()                 panic: rhs
+z[5] + panic()                 panic: call
+z[f()] = panic()               panic: rhs
+q.a + panic() (nil q)          panic: call
+q.a = panic() (nil q)          panic: rhs
+x/z + panic() (z=0)            panic: call
+nilmap[1] = panic()            panic: rhs
+nilmap[1] += panic()           panic: rhs
+nilfv(panic())                 panic: arg
+niliface.M(panic())            panic: arg
+ii.(string) + panic()          panic: interface conversion: interface {} is int, not string
+ii.(*T).a + panic()            panic: call
+z[5:9] + panic()               panic: runtime error: slice bounds out of range [:9] with capacity 0
+x << -z + panic()              panic: call
+z[0], r = panic(), 1           panic: rhs
+two(z[5], panic())             panic: arg
+make neg + panic()             panic: runtime error: makeslice: len out of range
+str[9] + panic()               panic: call
+(*q).Val() vs panic() arg      panic: arg
+defer q.Arg(panic()) nil q     panic: arg
+anyK[k] + panic()              panic: call
+map[int]any{k: 3, 1: nil}      3
+map[int]any{k: 3, 1: (*T)(nil)} <nil>
+map[int]any{k: 3, 1: "s"}      s
+map[int]S{k:, 1: {A: 1}} iface 0
+map[int]S{k:, 1: {B: 1}}       3
+map[int][]int{k: {3}, 1: nil}  [3]
+map[int][]int{k: nil, 1: {1}}  [1]
+map[int]*T{k: p, 1: nil}       false
+map[int]*T{k: nil, 1: {}}      false
+map[int]func(){k: f, 1: nil}   false
+map[int]map[int]int{k:{}, 1: nil} false
+map[int]Named{k: 3, 1: Cn}     3
+map[int]int{k: 3, 1: 1<<2}     3
+map[int]int{k: 3, 1: -2}       3
+map[int]bool{k: false, 1: true} false
+map[int][2]string{k:, 1: {a,b}} [x ]
+map[S2]int{k: 3, {1,2}: 2}     3
+map[int]int{k: 3, len("a"): 2} 3
+map[int]int{k: 3, 1: 2, k2: 4} 4
+map[int]int{k: 3, 1: 2}[1]     3
+[]map{{k: 3, 1: 2}}            3
+pm.m[i] = append(pm.m[i], f()) map[0:[1 0] 2:[2]] map[0:[9] 2:[8]]
+gm[i] = append(gm[i], f())     map[0:[1 0] 2:[2]]
+gm[i] = append(gm[i], f()) new map[0:[1] 2:[2]] map[0:[7 0]]
+pm.n[i] += f()                 map[0:1 2:2] map[0:9 2:8]
+pm.n[i] = f()                  map[0:1 2:2] map[0:9 2:5]
+p.Val() + f()                  1
+two(gt.a, gt.Arg(f()))         5500
+gt.Arg(f()) value recv global  500
+gt.PArg(f()) ptr recv global   500
+garr[i] + f()                  3
+s[i] = s[i] + f()              [1 2 3]
+two(s[id(0)+f()], s[0])        100100
+str + str2 + f()               zzc0
+x == 1 && f() && x == 10       true
+f() && x == 10                 true
+two(x, bint(f() && true))      10001
+closure two(c, inc()), c       2002 2
+two(*q, f()) local ptr         10000
+two(a[0], f(a[:])) local array 10000
+eqArr(a, f(a[:])) local array  [10 2]
+two(t.a, t.Set()) ptr method   10000
+m8[x8+0] + f()                 1
+m8[x8] + f()                   10
+m64[x64+0] + f()               10
+mi[x+0] + f()                  10
+m16[uint16(x)] + f()           1
+m32[int32(x)] + f()            10
+mb[x == 1] + f()               1
+ms2[S2{x, 0}] + f()            1
+ms3[S3{x8}] + f() (1-byte)     1
+ma[x] + f() (any key)          1
+mstr[str+""] + f()             2
+mbig[x+0] + f() (elem>128)     1
+mbig[x] + f() (elem>128)       10
+m8[x8+0] = f()                 map[1:5]
+m8[x8+0] += f()                map[1:5]
+mi[x+0] = f()                  map[10:5]
+map[uint8]int{x8+0: f()}       map[1:0]
+map[int]int{x+0: f()}          map[10:0]
+map[any]int{x: f()}            map[1:0]
+v, ok := m8[x8+0+f()]          10 true
+two(m8[x8+0], f())             1000
+gm8[x8+0] = append(gm8[x8+0], f()) map[1:[1 0] 10:[10]]
+gm64[x64] = append(gm64[x64], f()) map[1:[1] 10:[10 0]]
+gms[str] = append(gms[str], f()) map[ab:[1] zz:[2 0]]
+gmn[ns] = append(gmn[ns], f()) map[ab:[1 0] zz:[2]]
+gm8[x8] = append(gm8[x8], f()) map[1:[1] 10:[10 0]]
+eqa(x8+0, f())                 1
+eqa(x8, f())                   10
+eqa(x+0, f())                  10
+eqa(uint16(x)+0, f())          10
+eqa(uint32(x)+0, f())          10
+eqa(x == 1, f())               true
+eqa(T{x, 0}, f())              {1 0}
+eqa(gt, f())                   {5 6}
+eqa(&s[x-1], f()) ptr          true
+eqa(str+"", f())               zz
+eqa(s[0:1]...) slice           [1 2 3]
+eqa(any(x8+0), f()) explicit   1
+eqa(m8x[x8], f()) map read     1
+ia == x8+0 vs f()              1000
+eqa(S3{x8}, f())               {1}
+eqa([1]int{x}, f())            [10]
+eqa(struct{a int}{x}, f())     {10}
+gmp[gp] = append(gmp[gp], f()) 2 0

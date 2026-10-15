@@ -229,14 +229,10 @@ error (an index out of range, say) logs nothing, as for any trap
 
 ## Deviations and notes
 
-- **Operand order around calls.** goSVM reads a variable used as an operand
-  where it appears, left to right, exactly as it does for locals: in
-  `x + f()` where `f` assigns `x`, goSVM uses the old `x`, while gc evaluates
-  calls first and reads the new one. The spec leaves this order unspecified,
-  and package variables make it easier to observe than locals; do not depend
-  on either (`TestGlobalOperandOrder` pins goSVM's choice). This is the same
-  choice already documented for compound-assignment targets
-  ([integers](GO_INTEGERS.md#compound-assignment)).
+- **Operand order around calls** is gc's
+  ([evaluation order](ERROR_CONTRACT.md#evaluation-order)): in `x + f()`
+  where `f` assigns `x`, the new `x` is read, as for every operand a call may
+  write (`TestGlobalOperandOrder`).
 - **`var _ I = v`** discards `v` without converting it to `I` (nothing is
   boxed), as gc also allocates nothing for it.
 - **No persistence.** Unlike a long-running Go process that calls `Process`

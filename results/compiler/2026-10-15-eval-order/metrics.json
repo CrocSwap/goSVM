@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "date": "2026-10-15",
+  "go_version": "go1.22.0 darwin/arm64",
+  "baseline_commit": "48fb51f",
+  "probes": {"cases": 214, "flag_sets": ["default", "-gcflags=-l", "-gcflags=-N -l"], "identical_across_flags": true, "output": "probe/gc-1.22.0.txt"},
+  "optimizer_exception": "inlined nil-pointer fault after a later inlined panic (probe/optimizer); not matched, excluded from vectors",
+  "example": {"path": "examples/eval-order", "generated_cases": 912, "special_cases": 66},
+  "host": {"test": "TestEvalOrderDifferential", "vectors": 5868, "aborts": 2990, "panic_lines": 2834, "mismatches": 0,
+    "mismatches_without_hoisting": {"vectors": 1499, "cases": 538}},
+  "sbf": {
+    "test": "TestEvalOrderSBF",
+    "fogo-v0": {"runner": "0.5.0", "cases": 2934, "aborts": 1505, "panic_lines": 1425, "elf_sha256": "17c6a47b68d3e5dd936891cad099b925384878160e04b731562f109f6efd6696"},
+    "solana-v3": {"runner": "0.6.0", "cases": 2934, "aborts": 1505, "panic_lines": 1425, "elf_sha256": "5bdbff7d832b291f6e5ce42d99ee3ca88c7c0e41889666965f4d47527ab6a0f7"}
+  },
+  "rebuild": {
+    "reference": "results/compiler/2026-10-14-v157-rebuild/metrics.json",
+    "full-swap": {"fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0", "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"},
+    "clock2": {"fogo-v0": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804", "solana-v3": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5"},
+    "matches_reference": true
+  },
+  "corpus_c_changes": [47, 130, 139, 164],
+  "elf_changes_vs_baseline": {
+    "compound": {"fogo-v0": ["bb53b2c0c8bb57b29dfaa7160d249722073145b6455d2152874d6783cb05c694", "3f77e5be5aca241e1101610ad1351b4d3cafed868ec28160d30e720e7ac9590a"],
+                 "solana-v3": ["ebcc2f97ba662d3a43869b23d2658c93a8a21a21d4c25461828a46a14d6e4a5f", "61bbcd74aeff6c492c42f91f1ff2fd69063b9abcb126ce16c899a8f9388cbbb4"]},
+    "func_values": {"fogo-v0": ["e6519f9c176f8fab02c1eaa7a13b35bcddd24b41bfa8013bfb1d4ac1eec70d32", "cf7daa5d946eb7fcd72d338cc6a07950894d9e12634e71935dbf94b77c4a7ec8"],
+                    "solana-v3": ["fa1777bfc6af81e54b1b7ae59e4c7a080f80655740bcfd4c041bfb0cc5b48115", "1429d7f946bc275cff2c31c568b77c33a0ad1bcb975e8814a7c027bb8037dda3"]},
+    "func_maps": {"fogo-v0": ["99662e2787c11f7efb6a48930b5c95e784bdff35111534f550afe22f0fd3bcf9", "ae286ef221afd73949c733d545125a1d518ab8ea6d58ce573cf3732dcc146f8b"],
+                  "solana-v3": ["280a454cdc658f7a3077c4a2a105db5e3d59a732327b662db583062bf81e68c1", "27b6d15b47b68013745c9ba7316b9ce32dffc87918e751c161aa5fe5872d193d"]},
+    "func_strings": {"fogo-v0": ["e2e63d72735e2a40e02745e51f2b870682048dae08f6d6ee5dbb577b44ca2070", "b3dc14f103c6162b8c2c7e1829dd5b4e4c00efc70f6927060324ad3e5f789e23"],
+                     "solana-v3": ["7cf1458222d088c841695997c90301849f654b617bda2892859a92d0c6affd5d", "e38212346bbf72f7baf0c924fa62d7700b9275e5d03d159ab8db103838e2f18b"]},
+    "maps": {"fogo-v0": ["1c9d45e06d78b8203bdee09da416b4b7198c56761ab2d7bbb4ebb64f039cfa1a", "21f086a1db47f2788cc699c98d9c08f9238d3dca2771953cd5e0cbee24b34f94"],
+             "solana-v3": ["4f2108e1954839ff1fe46bb948760eafc8a7f8b5f3db434ecc9a6bc6b93fb029", "68a27dcfa8ec8e3b0736ac6bbb390b2b9a9a9adcd4d5283e5831c4c800e3e1a3"]},
+    "strings": {"fogo-v0": ["998161cc8173226d9f8bad90d937d1093aa82ee7d5150de7c127e367d154b0ba", "9913aa2f02c28ad0339efd35d4c6cd354c667708df6e7830058eed9dd173017c"],
+                "solana-v3": ["70174787036a5e222b60cdbbb6a2fcc7963667e60e9b7680cd56b32fce8737ca", "943a070b2ff4f0eefcba254617a9178df60687b9a1f220aa686b5cd13d3ea284"]},
+    "allocation_heap32": {"fogo-v0": ["21ac0e94af7bea70e7077a715d7ff9af5f588d6574b4167127f97c7a874c2e05", "1dbc3061aec8d6c23c7da5f0e8058595b9844c4f763593444c13373c01f51133"],
+                          "solana-v3": ["4e6b6ee00d926abb9729a3e3d3b57e43b1ed4862706eeb0645758b6731b5f1f9", "13ba40a919ba80f23d92de6c190335457c66900f0c9ffbec29f1872518b7a42b"]},
+    "allocation_heap64": {"fogo-v0": ["f1d481d894842464e324fb87e927aee441cc5d51ed1428fdb307b246551be3ef", "b26f72d9d285e703f486dd4ecbae2726862cf6ba6f5ea63558a31eff4e4cab65"],
+                          "solana-v3": ["91005d64ba33c4559698a7f63a50b903655d957cf8336e88a267ead3bb73b573", "daad889bbe0937a8bd6b4cceb7fa59b9c517c41ca43f70aa6f0deeb5c0423d50"]}
+  },
+  "elf_unchanged_suites": ["globals", "global-value-types", "interfaces", "int-values", "mixed", "value-types", "generics", "bits", "range-uint16", "full-swap", "clock2"]
+}

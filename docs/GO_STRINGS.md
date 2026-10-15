@@ -106,10 +106,11 @@ of the [contracted runtime behaviour](ERROR_CONTRACT.md#contracted-runtime-behav
 
 A *concatenation* is a maximal tree of non-constant string `+` operators, as
 Go's compiler flattens them: `a + b + (c + d)` is one concatenation of four
-operands, evaluated left to right, and `s += t + u` concatenates `s`, `t` and
-`u` once. Operands are evaluated in order before anything is allocated; for
-`x += y` the target's index and pointer operands are evaluated first, then
-`y`, then `x` is read (as gc orders `x op= f()`).
+operands, and `s += t + u` concatenates `s`, `t` and `u` once. Operands are
+evaluated in [gc's order](ERROR_CONTRACT.md#evaluation-order) (calls first,
+then the plain operands, left to right) before anything is allocated; for
+`x += y`, `y`'s calls run before the target's index and pointer operands are
+read, then `y`, then `x` is read.
 
 Examples with the default 32 KiB heap (32,760 usable bytes): 4,095
 `string(rune)` conversions fit and the 4,096th aborts; 2,047 strings boxed in
