@@ -44,6 +44,8 @@ type allocCase struct {
 	// panicLog is a panic's log line, which the failure must also produce
 	// exactly once ("" for none).
 	panicLog string
+	// noPanicLog requires a failure without any panic log line.
+	noPanicLog bool
 }
 
 // Both the abort trap and a heap access violation fail the instruction with
@@ -111,6 +113,9 @@ func allocFixtures(cases []allocCase) ([]byte, error) {
 			}
 			if c.panicLog != "" {
 				step.Expect.LogCounts[c.panicLog] = 1
+			}
+			if c.noPanicLog {
+				step.Expect.LogCounts["Program log: panic: "] = 0
 			}
 		}
 		step.Expect.Accounts[0].State = &expected

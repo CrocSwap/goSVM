@@ -111,12 +111,10 @@ func TestCompoundRejections(t *testing.T) {
 	}
 }
 
-// The target's index and pointer operands are evaluated before the right
-// operand, as for =, and the target is read after it. A right operand that
-// reassigns the slice, map, pointer or index variable of its own target
-// therefore updates the target as it was before the right operand ran (the
-// spec leaves this order unspecified; gc reads such variables after the
-// right operand's calls). Elements changed by the right operand are seen.
+// The target's operands are read after the right operand's calls, as gc
+// does (docs/ERROR_CONTRACT.md#evaluation-order): a right operand that
+// reassigns the slice, map or index variable of its own target updates the
+// new target. Elements changed by the right operand are seen.
 func TestCompoundOperandOrder(t *testing.T) {
 	source := `package p
 func Process(s, i []byte) uint64 {
@@ -150,10 +148,11 @@ func Process(s, i []byte) uint64 {
 	}
 	bin := hostCompile(t, c, DefaultHeapBytes, allocDriver, false)
 	got := runHost(t, bin, strings.Repeat("00", 128)+"\n")
-	// old[0] = 1+1, the new b untouched (10); cc[0] = 2 (j was 0); the old
-	// map's element 1+2, the new map's 500 (byte 0xf4); a[0] = 50+7; the
-	// plain assignment likewise stores into the old slice.
-	want := fmt.Sprintf("0:%x%s\n", []byte{2, 10, 2, 2, 3, 0xf4, 57, 9, 10}, strings.Repeat("00", 1024-9))
+	// The old b untouched (1), the new b's element 10+1; cc[1] = 2+1 (j
+	// became 1); the old map untouched (1), the new map's 500+2 (byte 0xf6);
+	// a[0] = 50+7; the plain assignment likewise stores into the new slice.
+	// These are native Go 1.22.0's results.
+	want := fmt.Sprintf("0:%x%s\n", []byte{1, 11, 1, 3, 1, 0xf6, 57, 1, 9}, strings.Repeat("00", 1024-9))
 	if got != want {
 		t.Fatalf("got  %.40s\nwant %.40s", got, want)
 	}

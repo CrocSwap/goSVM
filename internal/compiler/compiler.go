@@ -71,6 +71,9 @@ type generator struct {
 	// a local at entry (byval.go).
 	copied       map[types.Object]bool
 	copiedParams map[ast.Node][]types.Object
+	// order holds hoisted operands (CheckedProgram.Hoisted) while their owner
+	// is emitted.
+	order *hoisting
 }
 
 // Source is a Go file in a single on-chain package.
@@ -156,6 +159,11 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	g.globals = program.globals
 	g.initializes = program.initializes()
 	g.panics = program.Panics
+	order := program.order
+	if order == nil {
+		order = &evalOrder{}
+	}
+	g.order = &hoisting{order: order, value: map[ast.Expr]string{}, boxed: map[ast.Expr]string{}, used: map[ast.Expr]bool{}}
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -555,6 +563,9 @@ func (g *generator) temp(n ast.Node, t types.Type, value string) string {
 // expr evaluates e; a value Check recorded as converted to an interface is
 // converted.
 func (g *generator) expr(e ast.Expr) string {
+	if v, ok := g.hoisted(e, true); ok {
+		return v
+	}
 	if conv := g.ifaces.byExpr[e]; conv != nil && !conv.rng {
 		return g.convert(e, conv)
 	}
@@ -562,6 +573,12 @@ func (g *generator) expr(e ast.Expr) string {
 }
 
 func (g *generator) exprValue(e ast.Expr) string {
+	if v, ok := g.hoisted(e, false); ok {
+		return v
+	}
+	// Evaluation order (CheckedProgram.Hoisted): an owner's sequenced
+	// operands first, when left to right would observably differ.
+	defer g.hoist(e)()
 	tv := g.info.Types[e]
 	if tv.IsNil() {
 		if _, ok := tv.Type.(*types.Slice); ok {
@@ -912,6 +929,7 @@ func (g *generator) block(b *ast.BlockStmt) {
 	g.line("}")
 }
 func (g *generator) stmt(s ast.Stmt) {
+	defer g.hoist(s)()
 	switch s := s.(type) {
 	case *ast.BlockStmt:
 		g.block(s)
@@ -1024,24 +1042,9 @@ func (g *generator) stmt(s ast.Stmt) {
 		}
 		for _, sp := range d.Specs {
 			v := sp.(*ast.ValueSpec)
-			if len(v.Names) != 1 || len(v.Values) > 1 {
-				g.multiDeclaration(v)
-				continue
-			}
-			o := g.info.Defs[v.Names[0]]
-			rhs := "{0}"
-			if len(v.Values) == 1 {
-				rhs = g.exprAs(v.Values[0], o.Type())
-				if _, ok := o.Type().Underlying().(*types.Array); ok && !g.moved[o] {
-					g.names[o] = rhs
-					continue
-				}
-			}
-			if g.moved[o] {
-				g.declareMoved(v, o, rhs)
-				continue
-			}
-			g.line("%s %s = %s;", g.variable(v, o.Type()), g.name(o), rhs)
+			release := g.hoist(v)
+			g.valueSpec(v)
+			release()
 		}
 	case *ast.IfStmt:
 		g.line("{")
@@ -1106,6 +1109,28 @@ func (g *generator) stmt(s ast.Stmt) {
 	default:
 		g.unchecked(s)
 	}
+}
+
+// valueSpec declares the variables of one var specification.
+func (g *generator) valueSpec(v *ast.ValueSpec) {
+	if len(v.Names) != 1 || len(v.Values) > 1 {
+		g.multiDeclaration(v)
+		return
+	}
+	o := g.info.Defs[v.Names[0]]
+	rhs := "{0}"
+	if len(v.Values) == 1 {
+		rhs = g.exprAs(v.Values[0], o.Type())
+		if _, ok := o.Type().Underlying().(*types.Array); ok && !g.moved[o] {
+			g.names[o] = rhs
+			return
+		}
+	}
+	if g.moved[o] {
+		g.declareMoved(v, o, rhs)
+		return
+	}
+	g.line("%s %s = %s;", g.variable(v, o.Type()), g.name(o), rhs)
 }
 
 // Targets preserve storage identity. Pointer operands are saved now; the

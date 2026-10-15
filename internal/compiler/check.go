@@ -148,6 +148,33 @@ type CheckedProgram struct {
 	// init functions.
 	Inits []*PackageInit
 
+	// Evaluation order (docs/ERROR_CONTRACT.md#evaluation-order and
+	// docs/BACKEND_INTERFACE.md#evaluation-order); all empty when evaluating
+	// every operand left to right is observably gc's order.
+	//
+	// Hoisted maps each evaluation owner (an *ast.AssignStmt, IncDecStmt,
+	// ReturnStmt, DeferStmt or *ast.ValueSpec; a root expression; a
+	// sequenced expression; or a map literal's *ast.KeyValueExpr entry)
+	// whose left-to-right evaluation would observably differ from gc's to
+	// its sequenced operands (Sequenced), in source order: evaluate each of
+	// them first, in this order (each by the same rule), then evaluate the
+	// owner left to right using their saved values.
+	Hoisted map[ast.Node][]ast.Expr
+	// HoistedConversions lists the hoisted map keys (of maps gc accesses
+	// through its generic path) whose conversion to the map's interface key
+	// type is part of the early evaluation; every other hoisted value is
+	// converted to an interface where it is used.
+	HoistedConversions map[ast.Expr]bool
+	// MapLiteralOrder maps each map literal that inserts a static entry
+	// (constant key and value) after a dynamic one to its entry indices in
+	// gc's insertion order: static entries, in source order, when the map
+	// is made; then the dynamic ones, in source order.
+	MapLiteralOrder map[*ast.CompositeLit][]int
+	// SharedOperands maps the map operand or key of the first argument of
+	// append in m[k] = append(m[k], ...) to the target's identical operand,
+	// whose early value it reuses (the statement is then in Hoisted).
+	SharedOperands map[ast.Expr]ast.Expr
+
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
 	ifaces  *ifaceProgram
@@ -161,6 +188,20 @@ type CheckedProgram struct {
 	// globals indexes Globals; nil without package-level variables or init
 	// functions.
 	globals *globalProgram
+	// order is the evaluation-order lowering (Hoisted and the fields after
+	// it).
+	order *evalOrder
+}
+
+// Sequenced reports whether gc evaluates e into a temporary where it
+// appears, after the sequenced expressions inside it and before the plain
+// operands around it (docs/ERROR_CONTRACT.md#evaluation-order): calls,
+// builtin calls, &&, ||, slice expressions, string-to-slice conversions,
+// type assertions to non-pointer-shaped types, map literals with a
+// non-constant entry, map reads keyed by string(bytes), and the
+// non-addressable conversion operands and map keys listed there.
+func (p *CheckedProgram) Sequenced(e ast.Expr) bool {
+	return p.order != nil && p.order.sequenced[e]
 }
 
 // Function is one checked function or method declaration.
@@ -478,6 +519,11 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 		checked.maps = sortedMaps(f.maps)
 		checked.Maps = checked.maps.types
 	}
+	checked.order = f.analyzeEvalOrder(checked)
+	checked.Hoisted = checked.order.hoisted
+	checked.HoistedConversions = checked.order.converted
+	checked.MapLiteralOrder = checked.order.mapOrder
+	checked.SharedOperands = checked.order.shared
 	return checked, nil
 }
 

@@ -526,16 +526,24 @@ func (g *generator) mapLiteral(e *ast.CompositeLit, t types.Type) string {
 	mt := g.mapFor(e, t)
 	r := g.temp(e, t, fmt.Sprintf("gosvm_map_make(%d,%dULL)", len(e.Elts), mt.SlotSize))
 	ec := g.variable(e, mt.Type.Elem())
-	for _, elt := range e.Elts {
-		kv := elt.(*ast.KeyValueExpr)
+	entries := g.order.order.mapOrder[e] // static entries first, as gc inserts them
+	if entries == nil {
+		for i := range e.Elts {
+			entries = append(entries, i)
+		}
+	}
+	for _, i := range entries {
+		kv := e.Elts[i].(*ast.KeyValueExpr)
+		release := g.hoist(kv)
 		k := g.mapKeyAs(kv.Key, mt)
 		v := g.exprAs(kv.Value, mt.Type.Elem())
 		set := fmt.Sprintf("gosvm_map%d_set(%s,&%s)", mt.Index, r, k)
 		if mt.ElemSize == 0 {
 			g.line("(void)%s;", set)
-			continue
+		} else {
+			g.line("*(%s *)%s = %s;", ec, set, v)
 		}
-		g.line("*(%s *)%s = %s;", ec, set, v)
+		release()
 	}
 	return r
 }

@@ -32,7 +32,8 @@ Multiple `:=` can reuse existing variables while declaring new ones; `var` can
 initialize or zero multiple variables.
 
 Assignment evaluates left-hand operands and right-hand expressions before
-left-to-right stores. Swaps use old values; index expressions run once. A later
+left-to-right stores, in [gc's order](ERROR_CONTRACT.md#evaluation-order)
+(calls on either side first; `a[i] = f()` reads `a` and `i` after `f`). Swaps use old values; index expressions run once. A later
 bounds failure can follow an earlier local write, and native-Go/generated-C tests
 observe those effects before panic/abort. Actual SBF transactions must still
 roll back all account updates on failure. The generated C result structs are

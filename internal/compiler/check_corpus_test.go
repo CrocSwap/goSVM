@@ -202,6 +202,15 @@ var corpusChanges = map[int]corpusEntry{
 	151: {CSHA256: "56496b4bd1ca69f1da1265cf375e95b1bdcc8bada64869be69a9244263f11516"}, // `if a==a`: was "struct comparisons unsupported; compare fields explicitly"
 	168: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // `type V = uint64`, unused (same C as 106): was "type aliases unsupported"
 	80:  {Error: "arrays-reject.go:1:40: arrays of Context unsupported"},               // `type K [2]solana.Context`: was the array element rule
+	// Evaluation order became gc's (docs/ERROR_CONTRACT.md#evaluation-order):
+	// no verdict changed; these programs read an operand that a later call
+	// in the same expression may write (Check cannot prove the call does
+	// not), so the operand is now read after the call. Their results are
+	// unchanged.
+	47:  {CSHA256: "11ce2954064a98ab5dbc52911cd072a2ef0b03c6a909f94daa650b989a752043"}, // pointer-values: b.Value(next(s)) copies *b after next(s), which writes through a slice
+	164: {CSHA256: "11ce2954064a98ab5dbc52911cd072a2ef0b03c6a909f94daa650b989a752043"}, // the same program from the examples sweep
+	130: {CSHA256: "b5ada5afea1f2b0d2171ed66a5d9f05826076f307b86c7b5848629ec893d5101"}, // control-values: s[uint64(i[1])] reads i[1] after next(s), next(s)
+	139: {CSHA256: "b5ada5afea1f2b0d2171ed66a5d9f05826076f307b86c7b5848629ec893d5101"}, // the same program from the examples sweep
 	// Package-level variables and value types were developed in parallel;
 	// no package-variable entry uses a value-type feature and vice versa,
 	// so merging them changed no verdict or C hash recorded by either side

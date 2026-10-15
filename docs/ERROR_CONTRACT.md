@@ -217,6 +217,152 @@ because fixtures compare them byte for byte:
   ([package-level variables](GO_GLOBALS.md#heap-accounting)).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
+## Evaluation order
+
+goSVM evaluates expressions in gc's order: Go 1.22.0's
+`cmd/compile/internal/walk/order.go` (the "order" pass), checked against
+native Go 1.22.0 on the probe table in
+[results/compiler/2026-10-15-eval-order](../results/compiler/2026-10-15-eval-order/README.md).
+The spec fixes only the order of calls, method calls and receives; gc
+evaluates calls (and the other *sequenced* operations below) into
+temporaries where they appear and reads plain operands afterwards. Which
+values a program computes, which trap fires first, and whether a panic line is
+logged before a trap all follow from these rules.
+
+**Owners.** Every evaluation belongs to an *owner*:
+
+- a simple statement: an assignment (`=`, `:=`, `op=`), `++`/`--`, `return`,
+  a `var` specification, or a `defer` statement (whose operands are the
+  function value or receiver and the arguments; the deferred call itself runs
+  when the function returns);
+- a root expression: an expression statement, an `if` or `for` condition
+  (each time it is evaluated), a `switch` tag (evaluated and saved first), each
+  `case` expression (evaluated lazily, in source order, until one matches), a
+  `range` operand, a type switch's operand;
+- each operand of `&&` and `||` (the left one, then the right one only when
+  needed), and each dynamic entry of a map literal (below);
+- every sequenced operation, for its own operands.
+
+**Rule.** To evaluate an owner: first evaluate every sequenced operation in
+it that is not inside another sequenced operation (or a function literal), in
+source order, each by this same rule; then perform its plain operations in
+source order (operands before the operation using them); then the owner's own
+operation (the call, the store, the comparison with the tag...). A sequenced
+operation's value is computed once and used where it appears.
+
+**Sequenced operations** (gc's `copyExpr` cases):
+
+1. calls of declared functions, methods (static and interface), function
+   values, literals, `gosvm/solana` and `math/bits` functions;
+2. the builtins `len` and `cap` (when not constant), `append`, `copy`, `make`
+   and `new`; the conversions `[]byte(s)` and `[]rune(s)` of strings;
+3. `x && y` and `x || y` as a whole;
+4. slice expressions `a[i:j]` and `a[i:j:k]` of slices, arrays, pointers to
+   arrays and strings;
+5. single-value type assertions `x.(T)` where `T` is an interface type or is
+   not pointer-shaped (pointer-shaped: a pointer, map, function or channel, or
+   a struct with exactly one field, or an array of length one, of a
+   pointer-shaped type);
+6. a map literal with at least one dynamic entry;
+7. a map read `m[k]` whose key is `string(b)` of a byte slice, directly or as a
+   field or element of struct and array literals;
+8. the operand of a conversion to an interface type (explicit or implicit:
+   assignment, argument, result, composite-literal element, comparison with an
+   interface) when the operand is neither addressable nor constant (a
+   constant, `nil`, or a struct or array literal of constants) and gc converts
+   its type by address: every type except those of Go size 2 and alignment 2,
+   size 4 and alignment 4 without pointers, size 8 and alignment 8 without
+   pointers, and types whose sole component (through one-field structs and
+   length-one arrays) is a string or slice. The operand's value is computed
+   there; boxing it (and its out-of-memory trap) happens where the conversion
+   is used;
+9. a map key, in a read `m[k]`, an assignment, `op=` or `++`/`--` target
+   `m[k]`, or a dynamic map-literal entry, when gc accesses the map through its
+   generic path and the key is not constant and is not an addressable
+   operand of exactly the key type. The generic path is every map whose
+   element is larger than 128 bytes, or whose key type does not compare as 4
+   bytes of memory without pointers, 8 bytes of memory, or a string (integer,
+   boolean, pointer, and padding-free array and struct types of other sizes,
+   interfaces, and structs or arrays containing strings or interfaces). A key
+   converted to an interface key type is converted there too.
+10. in `m[k] = append(m[k], args...)` (the same map index on both sides, as
+    gc's `SameSafeExpr` decides), the target's map operand unless it is a
+    variable, and its key unless it is a constant or a variable of exactly
+    `uint32`, `uint64` or `string` type for a 4-byte, 8-byte or string key
+    path (or any variable, for the generic path), are evaluated before the
+    other arguments; the first argument reuses those values.
+
+**Plain operations** are everything else: reading a variable, a field, an
+element or a map element; indirection; arithmetic, shifts and comparisons
+(including string, struct, array and interface comparisons); string
+concatenation and the other conversions (`string(b)`, integer conversions);
+boxing a value in an interface; struct, array and slice literals and map
+literals of constant entries; function literals; method values; `&x`; and
+type assertions to pointer-shaped types.
+
+Consequences, as gc computes them: in `x + f()` where `f` assigns `x`, the
+new `x`; in `f(x, g())`, `x` is read after `g`; a function value (`fv(g())`),
+an interface receiver (`i.M(g())`) and a value receiver (`v.M(g())`,
+`p.M(g())` copying `*p`) are read after the arguments' calls; in
+`two(x, h(x, g()))`, `h`'s `x` is read before `h` runs and `two`'s after it;
+`len(s) + f()` reads `len(s)` before `f`; `s[0:1][0] + f()` slices before `f`
+and reads the element after it; `T{x, f()}`, `[]T{x, f()}` and
+`string(b) + str(f())` read `x` and `b` after `f`.
+
+A call of a variadic function with extra arguments is evaluated as the call
+with those arguments in a slice literal (`f(a, x, g())` as
+`f(a, []T{x, g()}...)`, as gc does): `x` is read after `g`, and the literal's
+allocation is a plain operation; `f(a, g()...)` passes `g`'s slice. Pointers
+to pointers add nothing: each indirection (`**pp`, `*pp = q`) is a plain
+operation, so `**pp + f()` and `*p + f()` read through the pointers after `f`
+has replaced them.
+
+**Assignments.** In an assignment, the left-hand index and pointer operands
+are plain operands of the statement: `a[i] = f()`, `p.x = f()`, `*p = f()`,
+`b[0] += f()` and `m[k] op= f()` read `a`, `i`, `p`, `b` and `m` after `f` (the
+store goes to the new slice, map or pointer when `f` replaced it), except for
+the map keys of rule 9, which are read before `f`. All operands of a tuple
+assignment are evaluated by the rule before any store; stores then happen
+left to right (`a[i], i = 1, 2` stores at the old `i`). `x op= y` reads the
+target after `y`, once.
+
+**Map literals.** gc makes the map with the static entries (constant key and
+value, including struct and array literals of constants, with no conversion
+to an interface other than of untyped `nil`), in source order, then inserts
+each dynamic entry in source order, each entry an owner of its key and value.
+A dynamic entry with a computed key equal to a static key therefore wins
+whatever their source order (`map[int]int{k: 3, 1: 2}` with `k == 1` holds
+3).
+
+**Traps.** A sequenced operation's traps happen where it is evaluated (a
+failed type assertion, slice bounds, a `make` length, an out-of-memory
+`append`). A plain operation's trap (index or slice-element bounds, nil
+dereference, division or modulo by zero, a negative shift count, an
+uncomparable interface comparison or map key, a nil-map store, out of memory
+for a literal, concatenation, conversion or closure) happens after every
+sequenced operation of its owner: `z[5] + f()`, `z[5] = f()`, `p.x + f()`
+(nil `p`), `x/z + f()`, `m[k] = f()` (nil `m`) and `nilFunc(f())` all run `f`
+first, so a `panic` in `f` logs its line and wins. A store's traps happen at
+the store, after all operands; calling a nil function value or a method of a
+nil interface traps after the function value and the arguments.
+
+**Where gc's optimizer differs.** gc's SSA back end may move the nil-pointer
+fault of an operand evaluated early (inside an inlined sequenced call such as
+`b(*q == v)`, or a byte converted to an interface, `f(uint8(p.x), g())`)
+after a later inlined call's panic; with inlining disabled (`-gcflags=-l`) gc
+follows the order pass. goSVM always follows the order pass. Only which of a
+nil-pointer trap and a panic line comes first can differ; values never do.
+gc also evaluates `new(T)` arguments and builds slice-literal arguments of a
+deferred call when the deferred call runs, while goSVM does so at the `defer`
+statement (only the out-of-memory point can differ).
+
+**Backend reproduction.** `CheckedProgram.Sequenced` reports the sequenced
+operations; `Hoisted` lists, per owner, the sequenced operations to evaluate
+first where evaluating left to right would observably differ;
+`MapLiteralOrder` records the map-literal insertion order and
+`SharedOperands` rule 10 ([backend interface](BACKEND_INTERFACE.md#evaluation-order)).
+A backend may apply the rule everywhere or only at `Hoisted` owners.
+
 ## Error codes
 
 A nonzero `Process` result is returned unchanged as the transaction's custom
@@ -410,3 +556,16 @@ Handler results propagate unchanged.
   extra arguments allocates its argument slice as a slice literal of `k`
   elements (no allocation for none, or for a spread `s...`); recorded under
   heap accounting. Pointers to pointers use the existing nil-pointer trap.
+- 2026-10-15: change (evaluation order; announce to Qushta), no trap or code
+  added: expressions are evaluated in gc's (Go 1.22.0) order, now contracted
+  under [evaluation order](#evaluation-order). Before, goSVM read plain
+  operands where they appeared, left to right, before the calls to their
+  right; now they are read after their owner's calls (and the other
+  sequenced operations), as gc does. Observable changes, only where a call
+  writes an operand of its own expression or a plain operand's trap races a
+  logging call: the value read (`x + f()`, `a[i] = f()`, `b[0] += f()`, a
+  function value or receiver read after the arguments' calls), which trap or
+  panic line comes first (`z[5] + f()` now logs `f`'s panic line), and map
+  literals inserting constant entries before computed ones (a computed key
+  equal to a constant key now keeps the computed value). Programs where no
+  call can change an earlier operand compile to the same C.

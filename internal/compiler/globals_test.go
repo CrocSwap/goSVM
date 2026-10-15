@@ -378,17 +378,16 @@ func Process(o, in []byte) uint64 { o[0] = 1; return 0 }`,
 	}
 }
 
-// Operands are read where they appear, left to right, as for locals: a
-// call that changes a package variable read earlier in the same expression
-// does not change that operand (gc reads it after the call; the spec leaves
-// the order unspecified). See docs/GO_GLOBALS.md.
+// A package variable used as an operand is read after the calls of the
+// same expression, as gc does: a call that changes it is seen
+// (docs/ERROR_CONTRACT.md#evaluation-order).
 func TestGlobalOperandOrder(t *testing.T) {
 	src := `package p
 var x uint64 = 1
 func f() uint64 { x = 10; return 0 }
 func Process(o, in []byte) uint64 { return x + f() }`
-	if got := resultOf(t, runGlobalHost(t, globalsProgram(unitFiles("program", src)), nil)); got != "1" {
-		t.Fatalf("goSVM reads x before f(): got %s", got)
+	if got := resultOf(t, runGlobalHost(t, globalsProgram(unitFiles("program", src)), nil)); got != "10" {
+		t.Fatalf("x must be read after f(), as gc reads it: got %s", got)
 	}
 }
 

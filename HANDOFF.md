@@ -1,6 +1,6 @@
 # goSVM session handoff
 
-Updated October 14, 2026 (America/New_York).
+Updated October 15, 2026 (America/New_York).
 **Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
@@ -31,10 +31,8 @@ conservatively by signature), [maps](docs/GO_MAPS.md) and compound assignment
 on every integer type and target. User decisions (October 14): maps give Go's
 results but every `range` over a map is rejected (Go randomizes order); floats
 stay out (fixed-point integers); escaping locals keep moving to the heap;
-`Add64`/`Sub64` treat any nonzero carry as 1 (compiled Go). Known documented
-deviation: compound-assignment and `=` targets read plain operand variables
-before the right side's calls, where gc reads them after (unspecified order;
-only visible when the right side reassigns its own target's operands). Then,
+`Add64`/`Sub64` treat any nonzero carry as 1 (compiled Go). Evaluation order
+within expressions is gc's (see the October 15 entry below). Then,
 from the [library survey](results/compiler/2026-10-14-library-shakeout/README.md):
 [struct `==`, type aliases and `panic`](docs/GO_TYPES.md) and
 [arrays of composite elements](docs/GO_ARRAYS.md)
@@ -57,8 +55,8 @@ runs (they can trap), so computed constants such as `MustFromHex(...)` cost CU
 on every invocation. Check lowers each package's initializers into a synthetic
 `init.vars` function (`CheckedProgram.Globals`, `GlobalBytes`, `Inits`), so
 borrow checking, escape analysis, closures and interfaces need no special
-cases. Deviation (spec-unspecified, as for locals): an operand variable is read
-before later calls in the same expression. Evidence: a five-package example
+cases. Operands follow gc's [evaluation order](docs/ERROR_CONTRACT.md#evaluation-order)
+(October 15). Evidence: a five-package example
 against one fresh native process per vector (2,042 host vectors; 242 SBF cases
 on both targets), [results](results/compiler/2026-10-14-globals/README.md);
 full-swap ELFs unchanged; the nine recorded corpus rejections now compile.
@@ -105,6 +103,33 @@ user decision (`byvalCopiesProgramCode`). Evidence:
 [results](results/compiler/2026-10-14-stdlib/README.md) (30,906 host vectors,
 306 SBF cases on both targets, CU probes, real-stdlib shakeout rerun);
 full-swap ELFs unchanged.
+
+**Evaluation order (October 15, branch `worktree-agent-a5aa296099e430346`,
+merged with the standard library):**
+at the user's decision goSVM now matches gc (Go 1.22.0) exactly, as
+Qushta asked, and the order is contracted in
+[ERROR_CONTRACT](docs/ERROR_CONTRACT.md#evaluation-order): within each
+statement or root expression, calls and the other *sequenced* operations of
+gc's order pass run first, left to right; plain operands (variables, fields,
+elements, indirections) are read afterwards, and their traps fire after the
+calls' panics. Probes of native gc (default, `-l`, `-N -l`) fixed the rules,
+including gc's early copies (`len`/`cap`/`append`, slices, `&&`/`||`,
+non-pointer type assertions, interface-conversion operands converted by
+address, generic-path map keys, the `m[k] = append(m[k], ...)` form) and map
+literals inserting constant entries first. Check records the order
+(`CheckedProgram.Sequenced`, `Hoisted`, `MapLiteralOrder`,
+`SharedOperands`; [backend interface](docs/BACKEND_INTERFACE.md#evaluation-order));
+a sound analysis hoists only where left to right could observably differ, so
+the full-swap ELFs are byte-identical. One gc-optimizer effect is documented,
+not matched: inlined nil-dereference faults may move after a later inlined
+panic. Evidence: `examples/eval-order` (978 cases, 5,868 host vectors; 2,934
+SBF cases on both targets), [results](results/compiler/2026-10-15-eval-order/README.md).
+Merged with the standard library: the analysis also covers the overlay's
+code, variadic calls (Check's slice literal is an ordinary plain operand) and
+pointers to pointers; 20 cases for these were added (998 cases: 5,988 host
+vectors, 2,994 SBF cases on both targets, all matching native Go), the
+standard-library differential and SBF suites pass unchanged, the corpus
+needed no new entry, and the full-swap ELFs are still `4697a9f5…`/`2b5f21d9…`.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
