@@ -481,13 +481,19 @@ Also supported: named integer scalars, named value structs, nested structs,
 keyed/positional literals, field reads/writes, zero values, and by-value arguments
 and returns. Struct fields are integer scalars, bools, scalar arrays, other value
 structs, pointers, slices or interfaces.
-Struct comparisons/conversions, embedding, aliases, and build constraints are
-rejected explicitly. Wire layout is generated independently of C or Go layout.
+Struct `==`/`!=` (non-blank fields in order, stopping at the first difference),
+`switch` on structs, type aliases (`type A = T`, including aliases of types in
+other packages and of generic instantiations) and `panic` (a trap that logs one
+contracted line) are supported; see [value types](../docs/GO_TYPES.md). Struct
+conversions, embedding, `recover` and build constraints are rejected
+explicitly. Wire layout is generated independently of C or Go layout.
 
 Fixed-size scalar arrays, including named `[32]byte` key types, now support value
 copies, literals, indexed reads/writes, equality, `len`/`cap` and matching-underlying
-array conversions. Each array value is limited to 1,024 bytes. Nested arrays and
-struct elements remain unsupported (non-byte views of arrays came with
+array conversions. Each array value is limited to 1,024 bytes. Elements may be
+structs, arrays, pointers, slices, maps, strings, interfaces or function values
+([value types](../docs/GO_TYPES.md), checked against ordinary Go on the host and
+on SBF) (non-byte views of arrays came with
 [allocation](../docs/GO_ALLOCATION.md)); schema-1 generated codecs
 remain flat unsigned fields; schema 2 adds packed scalar-array codecs. See [semantics and validation](../docs/GO_ARRAYS.md).
 
@@ -591,7 +597,7 @@ floating-point and complex types, globals, `init`, named slices, map iteration,
 method values of interface types, recursion (including through dynamic calls and function values), variadics,
 range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
-uncomparable interface comparison, nil interface call, nil function call, nil-map write and unhashable map key failures abort; there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits
+uncomparable interface comparison, nil interface call, nil function call, nil-map write and unhashable map key failures abort, and so does `panic` (after logging one line); there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

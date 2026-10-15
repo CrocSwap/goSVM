@@ -60,15 +60,11 @@ var corpusChanges = map[int]corpusEntry{
 	60:  {CSHA256: "b24001c7cfe06b63cfa8a1787a5009f2b59bb1667f3e9cfd6b356feeeb7b97f3"}, // s26.go: `type U uint16` was "unsupported type program.U"
 	88:  {CSHA256: "67eba2cd0da9026e35ac7315ef8fd16bccf9b680b70e55e7cd355c55bff5bd29"}, // arrays-reject.go: `for _,v:=range a` over [32]byte
 	260: {CSHA256: "8a7e3e83cd5a13e9acfa665da71172b34b20137583cdda1761869b349a41eb62"}, // s36.go: `for i := range a` over a byte slice
-	// The array element rule now admits every integer type; the position and the
-	// rejection are unchanged, only the message text describes the admitted
-	// element types.
-	16:  {Error: "s29.go:3:8: " + arrayElementRule},
-	80:  {Error: "arrays-reject.go:1:40: " + arrayElementRule},
-	138: {Error: "arrays-reject.go:1:44: " + arrayElementRule},
-	148: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
-	224: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
-	310: {Error: "arrays-reject.go:1:18: " + arrayElementRule},
+	// The array element rule was reworded when it admitted every integer type
+	// (entries 16, 80, 138, 148, 224 and 310); arrays of composite elements
+	// later made five of them compile and gave arrays of Context their own
+	// message (listed with value types below).
+	//
 	// Signed integers and uint became supported (docs/GO_INTEGERS.md): int is
 	// an ordinary type, and len/cap results are ordinary int values.
 	33:  {CSHA256: "f76de6d7e64f37a30a48cf662a5ebd1eade24a7588c6ebc2ef610546ebc58fd0"}, // s71.go: `type N int` with a method was "int variables are unsupported"
@@ -180,10 +176,23 @@ var corpusChanges = map[int]corpusEntry{
 	// function value, and none of the function-value entries uses a map, so
 	// merging them changed no verdict or C hash recorded by either side.
 	258: {CSHA256: "442b6bf53e5b5481667f9c4a8e6acd0d7cbb288f10b84ef789cf57ec03917ad7"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
+	// Struct comparison, type aliases and arrays of composite elements became
+	// supported (docs/GO_TYPES.md, docs/GO_ARRAYS.md): each was a rejection
+	// and now compiles. Arrays of Context stay rejected, with their own
+	// message at the same position. No other entry's C changed.
+	16:  {CSHA256: "2a1ce67ca1a068273f98f61b88dc81e25628ba3321f3ff1b2535718d9328a34f"}, // s29.go `type A [2]S`: was the array element rule
+	138: {CSHA256: "2a1ce67ca1a068273f98f61b88dc81e25628ba3321f3ff1b2535718d9328a34f"}, // `type K [2]S` (same C as 16): was the array element rule
+	148: {CSHA256: "4f3a9fd70eb54ef3cf5c03afba67be79b501e47c55b3ebcc9b52d7100caa07bc"}, // `type K [2][32]byte`: was the array element rule
+	224: {CSHA256: "af0540f769e7e0d7a21a5fee2b40c338e268470bbe88a98187e3583d8336767c"}, // `type K [2][]byte`: was the array element rule
+	310: {CSHA256: "dbfbeb58ec6cb358ccde4e1369a0336ae2696c328704bdabd8c14d14be193599"}, // `type K [2]*uint64`: was the array element rule
+	98:  {CSHA256: "9ab28d50e96367ed1bb8d27295320337acb3d1fa2c672bada91a88ea0d7d014c"}, // s58.go `switch s { case S{}: }`: was "struct switch comparisons unsupported; ..."
+	193: {CSHA256: "a2e9a8b29dc0b3db21768d789a28e7f97f63c9fd8db202ba75d134e76d83147c"}, // `switch (V{}) {case V{}: ...}`: was "struct switch comparisons unsupported; ..."
+	151: {CSHA256: "56496b4bd1ca69f1da1265cf375e95b1bdcc8bada64869be69a9244263f11516"}, // `if a==a`: was "struct comparisons unsupported; compare fields explicitly"
+	168: {CSHA256: "d80e4236ff975aa36ae8a3ecf70cc2d1a0ca458449015d327c86e5413a0814d6"}, // `type V = uint64`, unused (same C as 106): was "type aliases unsupported"
+	80:  {Error: "arrays-reject.go:1:40: arrays of Context unsupported"},               // `type K [2]solana.Context`: was the array element rule
 }
 
 const (
-	arrayElementRule   = "array elements must be integer or bool scalars, or named versions of those scalars"
 	pointerElementRule = "pointer elements must be integer/bool scalars, value structs or scalar arrays"
 )
 
@@ -229,10 +238,11 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics, allocation, strings, function values, maps
-	// and compound assignment each turned recorded rejections into accepted
-	// programs (corpusChanges); the rest still exercise Check.
-	if rejected < 80 {
+	// Signed integers, generics, allocation, strings, function values, maps,
+	// compound assignment and value types (struct comparison, aliases,
+	// composite arrays) each turned recorded rejections into accepted
+	// programs (corpusChanges); the rest (71) still exercise Check.
+	if rejected < 70 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

@@ -34,9 +34,14 @@ stay out (fixed-point integers); escaping locals keep moving to the heap;
 `Add64`/`Sub64` treat any nonzero carry as 1 (compiled Go). Known documented
 deviation: compound-assignment and `=` targets read plain operand variables
 before the right side's calls, where gc reads them after (unspecified order;
-only visible when the right side reassigns its own target's operands). Still
-out: floats, goroutines/channels/select, `recover`/`panic`, map iteration,
-`clear` on slices.
+only visible when the right side reassigns its own target's operands). Then,
+from the [library survey](results/compiler/2026-10-14-library-shakeout/README.md):
+[struct `==`, type aliases and `panic`](docs/GO_TYPES.md) and
+[arrays of composite elements](docs/GO_ARRAYS.md)
+([evidence](results/compiler/2026-10-14-value-types/README.md)). `panic` is a
+trap that logs one contracted line (no custom error code is possible; deferred
+calls do not run; `recover` is rejected). Still out: floats,
+goroutines/channels/select, `recover`, map iteration, `clear` on slices.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

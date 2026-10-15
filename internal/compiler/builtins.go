@@ -21,6 +21,7 @@ var legacySyscalls = map[string]bool{
 	"sol_get_clock_sysvar":       true,
 	"sol_get_rent_sysvar":        true,
 	"sol_set_return_data":        true,
+	"sol_log_":                   true, // panic's log line (docs/ERROR_CONTRACT.md#panic)
 }
 
 func undefinedSymbols(path string, dynamic bool) ([]string, error) {

@@ -125,6 +125,10 @@ type CheckedProgram struct {
 	// Maps lists every map type checked code uses (docs/GO_MAPS.md),
 	// sorted by Key; MapType.Index is the position. Empty without maps.
 	Maps []*MapType
+	// Panics maps every call of the panic builtin to the log line it
+	// writes before the abort trap (docs/ERROR_CONTRACT.md#panic); empty
+	// without panics.
+	Panics map[*ast.CallExpr]*PanicSite
 
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
@@ -420,6 +424,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	c.program(checked.lowered, lowered)
 	checked.usesStrings = f.usesStrings
 	checked.usesEmpty = f.usesEmpty
+	checked.Panics = f.panics
 	if f.maps != nil {
 		checked.maps = sortedMaps(f.maps)
 		checked.Maps = checked.maps.types

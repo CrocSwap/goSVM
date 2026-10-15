@@ -87,6 +87,17 @@ type Uses struct {
 	// Maps: any non-nil value of a map type, a map literal or make of a
 	// map. Added within gosvm-features-v1.
 	Maps bool `json:"maps"`
+	// StructEquality: == or != on struct operands, or a switch whose tag is
+	// a struct (docs/GO_TYPES.md#struct-equality). Comparisons of interface
+	// values holding structs are interfaces. TypeAliases: type alias
+	// declarations (type A = T). CompositeArrays: array types written with
+	// struct, array, pointer or slice elements (docs/GO_ARRAYS.md). Panic:
+	// calls of the panic builtin (docs/ERROR_CONTRACT.md#panic). Added
+	// within gosvm-features-v1.
+	StructEquality  bool `json:"struct_equality"`
+	TypeAliases     bool `json:"type_aliases"`
+	CompositeArrays bool `json:"composite_arrays"`
+	Panic           bool `json:"panic"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -154,6 +165,10 @@ func summarize(u *Usage) {
 	u.Uses.Closures = sum("function_literals")+sum("function_values")+sum("method_values")+sum("method_expressions")+sum("indirect_calls") > 0
 	u.Uses.Defer = sum("defer") > 0
 	u.Uses.Maps = sum("map_values")+sum("map_literals")+sum("map_makes") > 0
+	u.Uses.StructEquality = sum("struct_equality")+sum("struct_switch_cases") > 0
+	u.Uses.TypeAliases = sum("type_aliases") > 0
+	u.Uses.CompositeArrays = sum("composite_array_types") > 0
+	u.Uses.Panic = has(func(s *Side) map[string]int { return s.Builtins }, "panic")
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -292,6 +307,10 @@ var ConstructNames = []string{
 	// single-value m[k] reads, v, ok := m[k] reads, m[k] as an assignment,
 	// ++/-- or += target, delete calls and clear calls on maps.
 	"map_values", "map_literals", "map_makes", "map_lookups", "map_comma_ok_lookups", "map_assignments", "map_deletes", "map_clears",
+	// Value types (added within gosvm-features-v1): case values compared
+	// with a struct switch tag, and array type expressions whose element
+	// type is a struct, array, pointer or slice.
+	"struct_switch_cases", "composite_array_types",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -882,6 +901,10 @@ func (w *walker) file(f *ast.File) {
 				break
 			}
 			if a, ok := w.typeOf(n).(*types.Array); ok {
+				switch a.Elem().Underlying().(type) {
+				case *types.Struct, *types.Array, *types.Pointer, *types.Slice:
+					w.count("composite_array_types")
+				}
 				key := w.typeString(a)
 				use := w.arrays[key]
 				if use == nil {
@@ -1027,6 +1050,12 @@ func (w *walker) file(f *ast.File) {
 			w.count("switch")
 			if n.Tag == nil {
 				w.count("switch_tagless")
+			} else if t := w.typeOf(n.Tag); t != nil {
+				if _, ok := t.Underlying().(*types.Struct); ok {
+					for _, stmt := range n.Body.List {
+						w.side.Constructs["struct_switch_cases"] += len(stmt.(*ast.CaseClause).List)
+					}
+				}
 			}
 		case *ast.TypeSwitchStmt:
 			w.count("type_switch")

@@ -53,7 +53,7 @@ func TestIntegerChecksReject(t *testing.T) {
 		"int slice":         {`func Process(s, i []byte) uint64 { var w []int8; _ = w; return 0 }`, ""},
 		"int view":          {`func Process(s, i []byte) uint64 { var k [4]int8; w := k[:]; return uint64(w[0]) }`, ""},
 		"array limit":       {`type K [129]int;func Process(s, i []byte) uint64 { return 0 }`, "array storage exceeds experimental 1024-byte per-value limit"},
-		"float element":     {`type K [2]float32;func Process(s, i []byte) uint64 { return 0 }`, arrayElementRule},
+		"float element":     {`type K [2]float32;func Process(s, i []byte) uint64 { return 0 }`, "unsupported type float32"},
 		"other builtin":     {`func Process(s, i []byte) uint64 { return uint64(min(int8(i[0]), -1)) }`, builtinRule},
 	} {
 		t.Run(name, func(t *testing.T) {

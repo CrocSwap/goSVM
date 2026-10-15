@@ -53,12 +53,46 @@ fails with no custom error code and the transaction rolls back.
 - Hashing a map key that is, or contains, an interface value whose dynamic type
   is not comparable, in any map operation (including lookups and deletes on
   nil and empty maps), where Go panics `hash of unhashable type`.
+- A call of the `panic` builtin, after its argument is evaluated and one log
+  line is written ([below](#panic)). This is the only trap that logs.
 
 A trap aborts without running pending deferred calls (there is no `recover`);
 the instruction's effects roll back, so this is indistinguishable on chain
 from Go's unwinding. This includes a deferred call that would have changed a
 map: its change never happens, and the rollback leaves no trace of the
 function's earlier map writes either.
+
+### Panic
+
+`panic(v)` ([GO_TYPES.md](GO_TYPES.md#panic)) is a trap: after `v` is
+evaluated, it calls the VM `sol_log_` syscall once (static hash `0x207559bd`
+on v3, the legacy `sol_log_` import on v0) and then the `abort` syscall. The
+instruction fails with `ProgramFailedToComplete`, like every trap, and the
+transaction log contains the line `Program log: <line>`. There is no custom
+error code: the SVM cannot unwind a call stack to return one from the
+entrypoint, so the line identifies the panic. Deferred calls do not run and
+`recover` is rejected at compile time (the transaction fails either way).
+
+The line is `panic: ` followed by:
+
+1. for `panic(nil)`, or an interface value that is nil:
+   `panic called with nil argument`;
+2. for an argument of a string, integer or `bool` type with no `Error` or
+   `String` method in its method set: the value as Go 1.22 prints it (the
+   string's bytes, the integer in decimal with a leading `-` when negative,
+   `true` or `false`); for a named type, wrapped as `T(value)`, or `T("value")`
+   for a string type, where `T` is the package name, `.` and the type name
+   (with type arguments for an instance of a generic type), as Go's runtime
+   spells it;
+3. for any other argument: `(` + its static type spelled as in rule 2 + `)`
+   (for example `(error)` or `(pkg.Pair)`); Go would print an error's
+   `Error()`, a `String()` result or an address.
+
+The line is then truncated to its first 512 bytes, and every byte that does not
+start a valid UTF-8 sequence (as Go's `utf8.DecodeRune` decides, with
+`RuneError` of width 1) is replaced by `?`, because `sol_log_` rejects invalid
+UTF-8. `CheckedProgram.Panics` gives each call's prefix, suffix or complete
+text.
 
 A program built with a heap budget above 32 KiB whose transaction did not
 request a large enough heap frame fails at its first allocation with a VM
@@ -279,3 +313,13 @@ Handler results propagate unchanged.
   negative-shift, bounds, nil-pointer and nil-map-write traps of the
   equivalent `x = x op y`, after the right operand is evaluated
   ([integers](GO_INTEGERS.md#compound-assignment)).
+- 2026-10-14: addition (value types), no existing trap or code changed: the
+  panic trap (`panic(v)` logs one contracted line with `sol_log_`, then
+  aborts; no custom error code exists because the SVM cannot unwind to the
+  entrypoint; deferred calls do not run; `recover` is a compile-time
+  rejection). Struct `==`/`!=` and `switch` on a struct use the existing
+  uncomparable-interface trap, arrays of composite elements the existing
+  bounds, nil-pointer, nil-map and out-of-memory traps, and type aliases add
+  nothing. Correction: struct map keys and interface comparisons of structs
+  now ignore blank (`_`) fields, as Go does; before, keys differing only in a
+  blank field were distinct.

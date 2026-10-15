@@ -84,21 +84,49 @@ func (g *generator) arrayName(node ast.Node, a *types.Array) string {
 }
 
 // emitArray declares the C wrapper for an array type arrayRule admitted.
+// Arrays of composite elements (structs, arrays, pointers and slices) first
+// define what their element needs, and use a tagged struct so that a pointer
+// to the array may appear inside its own element type.
 func (g *generator) emitArray(node ast.Node, a *types.Array) {
 	if g.declaredArray(a) {
 		return
 	}
+	composite := compositeElem(a.Elem())
+	name := ""
+	if composite {
+		g.next++
+		name = fmt.Sprintf("array%d", g.next)
+		g.arrays = append(g.arrays, arrayType{a, name})
+		g.line("typedef struct %s %s;", name, name)
+		g.emitElement(node, a.Elem())
+	}
 	element := g.variable(node, a.Elem())
 	g.ensureMemory()
-	g.next++
-	name := fmt.Sprintf("array%d", g.next)
-	g.arrays = append(g.arrays, arrayType{a, name})
+	if !composite {
+		g.next++
+		name = fmt.Sprintf("array%d", g.next)
+		g.arrays = append(g.arrays, arrayType{a, name})
+	}
 	storage := a.Len()
 	if storage == 0 {
 		storage = 1 // C11 requires positive storage; no element is accessible.
 	}
-	g.line("typedef struct { %s items[%d]; } %s;", element, storage, name)
+	if composite {
+		g.line("struct %s { %s items[%d]; };", name, element, storage)
+	} else {
+		g.line("typedef struct { %s items[%d]; } %s;", element, storage, name)
+	}
 	g.line("static inline %s *%s_at(%s *a,u64 i) { if (i >= %dULL) abort(); return &a->items[i]; }", element, name, name, a.Len())
+	if composite {
+		// Elements compare in index order, stopping at the first difference,
+		// as Go compares arrays; uncomparable arrays have no equality.
+		if types.Comparable(a) {
+			g.line("static inline boolean %s_equal(%s a,%s b) {", name, name, name)
+			g.line("for (u64 i=0;i<%dULL;i++) { if (!%s) return 0; }", a.Len(), g.valueEqual(node, a.Elem(), "a.items[i]", "b.items[i]"))
+			g.line("return 1;\n}")
+		}
+		return
+	}
 	g.line("static inline boolean %s_equal(%s a,%s b) {", name, name, name)
 	if isIface(a.Elem()) {
 		// Elements compare in order; an uncomparable dynamic type aborts.
@@ -109,6 +137,104 @@ func (g *generator) emitArray(node ast.Node, a *types.Array) {
 		g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", a.Len())
 	}
 	g.line("return 1;\n}")
+}
+
+// emitElement defines what a composite array element of type t needs
+// before the array: its struct, its array, or the struct or array it
+// points to (a struct only by tag, since it may contain the array).
+func (g *generator) emitElement(node ast.Node, t types.Type) {
+	if p, ok := pointer(t); ok {
+		if a, ok := p.Elem().Underlying().(*types.Array); ok {
+			g.emitArray(node, a)
+			return
+		}
+		if pointee, ok := p.Elem().(*types.Named); ok {
+			g.forwardStruct(pointee)
+		}
+		return
+	}
+	if a, ok := t.Underlying().(*types.Array); ok {
+		g.emitArray(node, a)
+		return
+	}
+	if named, ok := t.(*types.Named); ok {
+		if _, ok := named.Underlying().(*types.Struct); ok {
+			g.emitType(node, named)
+		}
+	}
+}
+
+// forwardStruct declares a struct's tag before its definition, for a
+// pointer that refers to a struct defined later (or to its own struct).
+func (g *generator) forwardStruct(pointee *types.Named) {
+	if _, isStruct := pointee.Underlying().(*types.Struct); isStruct && !g.defined[structID(pointee)] && !g.forward[structID(pointee)] {
+		g.forward[structID(pointee)] = true
+		name := g.structName(pointee)
+		g.line("typedef struct %s %s;", name, name)
+	}
+}
+
+// emitType defines a named type's C struct or array wrapper (named scalars
+// need none), after the types its fields need.
+func (g *generator) emitType(node ast.Node, t types.Type) {
+	named, ok := t.(*types.Named)
+	if !ok {
+		g.unchecked(node)
+	}
+	if g.emitted[t] {
+		return
+	}
+	g.emitted[t] = true
+	if named.TypeArgs().Len() > 0 {
+		if g.emittedInstances[typeKey(named)] {
+			return
+		}
+		g.emittedInstances[typeKey(named)] = true
+	}
+	if a, ok := t.Underlying().(*types.Array); ok {
+		g.emitArray(node, a)
+		return
+	}
+	st, ok := t.Underlying().(*types.Struct)
+	if !ok {
+		g.variable(node, t)
+		return
+	}
+	for i := 0; i < st.NumFields(); i++ {
+		f := st.Field(i)
+		if a, ok := f.Type().Underlying().(*types.Array); ok {
+			g.emitArray(node, a)
+		} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {
+			g.emitType(node, f.Type())
+		} else if p, ok := pointer(f.Type()); ok {
+			// A pointer field may refer to a struct defined later, or to
+			// this struct itself: declare its tag first.
+			if pointee, ok := p.Elem().(*types.Named); ok {
+				g.forwardStruct(pointee)
+			}
+		} else {
+			g.variable(node, f.Type())
+		}
+	}
+	if g.forward[structID(named)] {
+		g.line("struct %s {", g.structName(named))
+	} else {
+		g.line("typedef struct {")
+	}
+	// C11 has no empty structs; Go's zero-sized value has no observable layout here.
+	if st.NumFields() == 0 {
+		g.line("u8 unused;")
+	}
+	for i := 0; i < st.NumFields(); i++ {
+		f := st.Field(i)
+		g.line("%s %s;", g.variable(node, f.Type()), g.name(f))
+	}
+	if g.forward[structID(named)] {
+		g.line("};")
+	} else {
+		g.line("} %s;", g.structName(named))
+	}
+	g.defined[structID(named)] = true
 }
 
 func (g *generator) arrayLiteral(e *ast.CompositeLit, a *types.Array) string {
@@ -124,7 +250,7 @@ func (g *generator) arrayLiteral(e *ast.CompositeLit, a *types.Array) string {
 			}
 			value = kv.Value
 		}
-		v := g.expr(value)
+		v := g.exprAs(value, a.Elem())
 		g.line("%s.items[%d] = %s;", r, index, v)
 		index++
 	}

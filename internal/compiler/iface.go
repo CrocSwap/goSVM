@@ -740,6 +740,13 @@ func mentionsInterfaces(info *types.Info, files []*ast.File) bool {
 				}
 			}
 			if e, ok := n.(ast.Expr); ok {
+				if id, ok := e.(*ast.Ident); ok {
+					if _, builtin := info.Uses[id].(*types.Builtin); builtin {
+						// panic's parameter is interface{}, but its
+						// argument is never converted (docs/GO_TYPES.md#panic).
+						return true
+					}
+				}
 				if tv, ok := info.Types[e]; ok && mentions(tv.Type) {
 					found = true
 				}
@@ -1246,6 +1253,9 @@ func (g *generator) valueEqual(n ast.Node, t types.Type, x, y string) string {
 		var parts []string
 		for i := 0; i < u.NumFields(); i++ {
 			f := u.Field(i)
+			if f.Name() == "_" {
+				continue // Go ignores blank fields
+			}
 			parts = append(parts, g.valueEqual(n, f.Type(), x+"."+g.name(f), y+"."+g.name(f)))
 		}
 		if len(parts) == 0 {
@@ -1254,6 +1264,39 @@ func (g *generator) valueEqual(n ast.Node, t types.Type, x, y string) string {
 		return "(" + strings.Join(parts, " && ") + ")"
 	}
 	return fmt.Sprintf("(%s == %s)", x, y)
+}
+
+// structEqual emits x == y for struct values x and y (C lvalues) as a chain
+// of statements, one per non-blank leaf field in order (nested structs are
+// flattened; arrays, strings and interfaces compare through their helpers),
+// each run only while the earlier ones were equal, as Go stops at the first
+// difference. It returns a boolean temporary. Statements, rather than one
+// && expression, let LLVM keep the comparisons as branches.
+func (g *generator) structEqual(n ast.Node, t types.Type, x, y string) string {
+	var leaves []string
+	var collect func(t types.Type, x, y string)
+	collect = func(t types.Type, x, y string) {
+		st, ok := t.Underlying().(*types.Struct)
+		if !ok || isIface(t) || isString(t) {
+			leaves = append(leaves, g.valueEqual(n, t, x, y))
+			return
+		}
+		for i := 0; i < st.NumFields(); i++ {
+			f := st.Field(i)
+			if f.Name() != "_" {
+				collect(f.Type(), x+"."+g.name(f), y+"."+g.name(f))
+			}
+		}
+	}
+	collect(t, x, y)
+	if len(leaves) == 0 {
+		return g.temp(n, types.Typ[types.Bool], "1")
+	}
+	r := g.temp(n, types.Typ[types.Bool], leaves[0])
+	for _, leaf := range leaves[1:] {
+		g.line("if (%s) %s = %s;", r, r, leaf)
+	}
+	return r
 }
 
 // emitInterfaces defines the per-type equality functions, gosvm_iface_eq,
