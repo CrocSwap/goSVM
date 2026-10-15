@@ -160,6 +160,18 @@ the old hashes as their historical record. Docs: [GO_STDLIB](docs/GO_STDLIB.md#a
 [backend interface](docs/BACKEND_INTERFACE.md#aggregate-parameters) (backends
 must give callees their own copies), ERROR_CONTRACT changelog (bug fix).
 
+**Stack-frame diagnostics are build errors (October 15):** the v1.57 SBF
+backend reports frames over 4,096 bytes as `Error: Function X overflows the
+maximum allowed frame space ...` (v1.51: `... Stack offset of N exceeded
+...`) yet Clang exits 0, so goSVM used to ship such ELFs. `gosvm build` (and
+every in-process build) now fails with `SBF stack frame exceeds 4096 bytes`,
+naming the Go function or the entrypoint (`internal/compiler/stackframe.go`,
+`TestFrameOverflowFailsBuild`). fogo-v0 and solana-v3 both diagnose; the
+legacy v1.51 `-mcpu=v3` profile prints nothing for the same program. No test
+program, example or the full swap hits it. An earlier, discarded variant of
+the byval fix did (`go_Process` 4,480 bytes in the full swap), which is how
+it was noticed.
+
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
 [reply](docs/coordination/2026-10-14-qushta-reply.md). goSVM landed the agreed

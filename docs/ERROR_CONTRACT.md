@@ -581,3 +581,11 @@ Handler results propagate unchanged.
   are values, and writes trap or complete exactly as before. Only programs
   that hit the bug behave differently; the copies cost CU where they run
   (the full swap's wide swap +599/+603).
+- 2026-10-15: change (build), no Check rule or trap changed: when the
+  platform-tools v1.57 SBF backend reports a stack frame over 4,096 bytes (or
+  a call overwriting its caller's frame), the built-in backend's build now
+  fails with `SBF stack frame exceeds 4096 bytes; ...` naming the Go function
+  (or the entrypoint, into which `Process` is usually inlined). Clang printed
+  these as `Error:` lines but exited successfully, so such programs used to
+  build and then read or write outside their frame at run time. `Check` and
+  `CheckedProgram` are unaffected; no recorded program or example hits it.

@@ -109,7 +109,14 @@ func CompileProgram(program *Program) ([]byte, error) {
 
 // emitC lowers a checked program to C. It applies no language rules; a state
 // Check rules out is reported as an internal error, never translated.
-func emitC(program *CheckedProgram) (out []byte, err error) {
+func emitC(program *CheckedProgram) ([]byte, error) {
+	out, _, err := emitCNamed(program)
+	return out, err
+}
+
+// emitCNamed is emitC that also maps the C names of the program's
+// functions to their Go names.
+func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, err error) {
 	defer recoverCompileError(&err)
 	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2,
 		moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, forward: map[any]bool{}, defined: map[any]bool{},
@@ -408,7 +415,26 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		g.WriteString("\n#define GOSVM_CONTEXT_ENTRY 1\n")
 		g.WriteString(accountsABI)
 	}
-	return g.Bytes(), nil
+	names = map[string]string{}
+	for o, name := range g.names {
+		if fn, ok := o.(*types.Func); ok {
+			names[name] = fn.FullName()
+		}
+	}
+	if fn, ok := g.entry.(*types.Func); ok && fn != nil {
+		names[g.rawName(fn)] = fn.FullName()
+	}
+	return g.Bytes(), names, nil
+}
+
+// compileProgramNamed is CompileProgram that also maps the C names of the
+// program's functions to their Go names, for backend diagnostics.
+func compileProgramNamed(program *Program) ([]byte, map[string]string, error) {
+	checked, err := Check(program)
+	if err != nil {
+		return nil, nil, err
+	}
+	return emitCNamed(checked)
 }
 
 // unchecked marks an emitter state that Check rules out. Reaching one is a

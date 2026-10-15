@@ -81,7 +81,7 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 	default:
 		return fmt.Errorf("unsupported SBF target %q", arch)
 	}
-	c, err := CompileProgram(program)
+	c, functionNames, err := compileProgramNamed(program)
 	if err != nil {
 		return err
 	}
@@ -106,10 +106,16 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 		steps[0] = append(steps[0], "-DGOSVM_SBF_V3=1")
 		steps[1] = append(steps[1], "--no-undefined")
 	}
+	// compileOutput is what the Clang steps printed although they
+	// succeeded (frameDiagnostics).
+	var compileOutput []byte
 	run := func(args []string) error {
 		out, err := exec.Command(args[0], args[1:]...).CombinedOutput()
 		if err != nil {
 			return fmt.Errorf("%s: %w\n%s", args[0], err, out)
+		}
+		if filepath.Base(args[0]) == "clang" {
+			compileOutput = append(compileOutput, out...)
 		}
 		return nil
 	}
@@ -145,6 +151,9 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 	}
 
 	if err = run(steps[0]); err != nil {
+		return err
+	}
+	if err = frameDiagnostics(compileOutput, functionNames); err != nil {
 		return err
 	}
 	// helperObject compiles a helper source like program.c and links it.
