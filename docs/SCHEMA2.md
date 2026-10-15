@@ -62,7 +62,10 @@ alignment padding), bounded scalar arrays, and nested exported value structs.
 (`wire field Delta: int is platform-sized; use int64`). [Strings](GO_STRINGS.md)
 are rejected because their length varies (`wire field Name: string has a
 variable length; wire layouts are fixed-size, use a [N]byte array`); handlers
-may still use strings internally, and `idl.json` is unaffected. Embedding, tags, boolean
+may still use strings internally, and `idl.json` is unaffected. [Maps](GO_MAPS.md)
+are rejected likewise (`wire field Owners: map[[32]byte]uint64 is a map; wire
+layouts are fixed-size, use a [N] array of key/value structs`); handlers may
+use maps internally. Embedding, tags, boolean
 wire fields, pointer/slice fields, arrays of structs and nested arrays are
 rejected. `idl.json` and `layouts.json` name signed fields by their Go type
 (`"type": "int16"`).

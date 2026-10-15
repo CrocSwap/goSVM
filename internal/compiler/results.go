@@ -65,6 +65,14 @@ func (g *generator) expressionValuesAs(expressions []ast.Expr, expected []types.
 				continue
 			}
 		}
+		if index, ok := g.isMapIndex(expression); ok {
+			if t, ok := g.info.Types[expression].Type.(*types.Tuple); ok && t.Len() == 2 {
+				// v, ok := m[k] likewise.
+				v, ok := g.mapIndexOK(index)
+				values = append(values, g.convertAt(expression, 0, v), ok)
+				continue
+			}
+		}
 		value := g.exprAs(expression, want)
 		if t, ok := g.info.Types[expression].Type.(*types.Tuple); ok && t.Len() > 1 {
 			for i := 0; i < t.Len(); i++ {
@@ -107,6 +115,9 @@ func (g *generator) captureTarget(e ast.Expr) string {
 	case *ast.StarExpr:
 		return g.fieldTarget(e)
 	case *ast.IndexExpr:
+		if isMap(g.info.Types[e.X].Type) {
+			return g.mapTarget(e)
+		}
 		if _, ok := pointer(g.info.Types[e.X].Type); ok {
 			if a, ok := arrayValue(g.info.Types[e.X].Type); ok {
 				base, index := g.arrayPointer(e.X), g.expr(e.Index)

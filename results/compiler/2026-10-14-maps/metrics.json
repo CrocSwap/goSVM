@@ -1,0 +1,166 @@
+{
+  "corpus_changes": {
+    "258": "var m map[uint64]uint64 now compiles (was \"unsupported type map[uint64]uint64\")"
+  },
+  "fresh_rebuild": {
+    "fogo-v0/clock2": {
+      "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "identical": true,
+      "matches_reference": true
+    },
+    "fogo-v0/full-swap": {
+      "elf_sha256": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+      "identical": true,
+      "matches_reference": true
+    },
+    "solana-v3/clock2": {
+      "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+      "identical": true,
+      "matches_reference": true
+    },
+    "solana-v3/full-swap": {
+      "elf_sha256": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+      "identical": true,
+      "matches_reference": true
+    }
+  },
+  "heap_examples": {
+    "hint_385_to_768_keys_fit": 768,
+    "hint_769": "make runs out of memory",
+    "map[uint64]uint64_keys_fit": 384
+  },
+  "host_differential": {
+    "go_panics": 787,
+    "heap_bytes": 32768,
+    "large_heap_bytes": 262144,
+    "large_max_keys": 3072,
+    "large_vectors": 37,
+    "vectors": 5670
+  },
+  "host_heap_boundaries": 19,
+  "network_validation": false,
+  "other_sbf_tests_passed": [
+    "TestStringSBF",
+    "TestInterfaceSBF",
+    "TestMixedSBF",
+    "TestAllocationSBF"
+  ],
+  "platform_tools": "v1.57",
+  "reproduced_elfs": {
+    "allocation_heap32": {
+      "fogo-v0": "21ac0e94af7bea70e7077a715d7ff9af5f588d6574b4167127f97c7a874c2e05",
+      "solana-v3": "4e6b6ee00d926abb9729a3e3d3b57e43b1ed4862706eeb0645758b6731b5f1f9"
+    },
+    "allocation_heap64": {
+      "fogo-v0": "f1d481d894842464e324fb87e927aee441cc5d51ed1428fdb307b246551be3ef",
+      "solana-v3": "91005d64ba33c4559698a7f63a50b903655d957cf8336e88a267ead3bb73b573"
+    },
+    "interface_dispatch": {
+      "fogo-v0": "06da97f1e0eb07294f68f13bd7aa96f74cd2031577a4c08cfd502987d6d60a1c",
+      "solana-v3": "7caa887b4415b1b69695cdbab47f2a735002443dc54e3e548a8ef29ee640d49c"
+    },
+    "interfaces": {
+      "fogo-v0": "c7daf64332c80faf207ba22222c149db04c91d82611ee4624081ddbb2fd83f77",
+      "solana-v3": "8e88eb9ed17968cfde4fe5765da12ec3f6565e0ce5c76e09c18e4cc26aae5915"
+    },
+    "strings": {
+      "fogo-v0": "998161cc8173226d9f8bad90d937d1093aa82ee7d5150de7c127e367d154b0ba",
+      "solana-v3": "70174787036a5e222b60cdbbb6a2fcc7963667e60e9b7680cd56b32fce8737ca"
+    }
+  },
+  "runner": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0, Agave 4.0)"
+  },
+  "schema": 1,
+  "targets": {
+    "fogo-v0": {
+      "aborts": 46,
+      "cases": 318,
+      "cu_per_operation": {
+        "delete_reinsert_size384": 309.18,
+        "delete_reinsert_size64": 187.28,
+        "delete_reinsert_size8": 149.89,
+        "insert_size384": 62.62,
+        "insert_size64": 71.15,
+        "insert_size8": 68.79,
+        "lookup_hit_size384": 60.43,
+        "lookup_hit_size64": 60.05,
+        "lookup_hit_size8": 57.02,
+        "lookup_miss_size384": 94.11,
+        "lookup_miss_size64": 55.02,
+        "lookup_miss_size8": 50.73,
+        "loop_baseline": 8.02,
+        "string_lookup_hit_size48": 196.11,
+        "string_lookup_hit_size8": 116.51
+      },
+      "elf_sha256": "1c9d45e06d78b8203bdee09da416b4b7198c56761ab2d7bbb4ebb64f039cfa1a",
+      "heap-kind0-hint0-384-fits_cu": 50183,
+      "heap-kind0-hint0-385-oom_cu": 50297,
+      "heap-kind1-hint1-384-fits_cu": 50170,
+      "heap-kind1-hint1-385-oom_cu": 50284,
+      "heap-kind1-hint384-384-fits_cu": 27716,
+      "heap-kind1-hint384-385-oom_cu": 27830,
+      "heap-kind1-hint385-768-fits_cu": 56185,
+      "heap-kind1-hint385-769-oom_cu": 56280,
+      "heap-kind1-hint7-384-fits_cu": 49783,
+      "heap-kind1-hint7-385-oom_cu": 49897,
+      "heap-kind1-hint768-768-fits_cu": 56185,
+      "heap-kind1-hint768-769-oom_cu": 56280,
+      "heap-kind1-hint769-0-oom_cu": 370,
+      "heap-kind2-hint0-512-fits_cu": 210702,
+      "heap-kind2-hint0-513-oom_cu": 211166,
+      "heap-kind3-hint0-2000-fits_cu": 176369,
+      "heap-kind4-hint0-636-fits_cu": 37334,
+      "heap-kind4-hint0-637-oom_cu": 37326,
+      "heap_cases": 18,
+      "max_vector_cu": 116253,
+      "vector_aborts": 37,
+      "vectors": 270
+    },
+    "solana-v3": {
+      "aborts": 46,
+      "cases": 318,
+      "cu_per_operation": {
+        "delete_reinsert_size384": 310.18,
+        "delete_reinsert_size64": 188.28,
+        "delete_reinsert_size8": 150.89,
+        "insert_size384": 63.62,
+        "insert_size64": 72.15,
+        "insert_size8": 69.79,
+        "lookup_hit_size384": 60.43,
+        "lookup_hit_size64": 60.05,
+        "lookup_hit_size8": 57.02,
+        "lookup_miss_size384": 94.11,
+        "lookup_miss_size64": 55.02,
+        "lookup_miss_size8": 50.73,
+        "loop_baseline": 8.02,
+        "string_lookup_hit_size48": 194.11,
+        "string_lookup_hit_size8": 114.52
+      },
+      "elf_sha256": "4f2108e1954839ff1fe46bb948760eafc8a7f8b5f3db434ecc9a6bc6b93fb029",
+      "heap-kind0-hint0-384-fits_cu": 41848,
+      "heap-kind0-hint0-385-oom_cu": 41953,
+      "heap-kind1-hint1-384-fits_cu": 41845,
+      "heap-kind1-hint1-385-oom_cu": 41950,
+      "heap-kind1-hint384-384-fits_cu": 28099,
+      "heap-kind1-hint384-385-oom_cu": 28204,
+      "heap-kind1-hint385-768-fits_cu": 56952,
+      "heap-kind1-hint385-769-oom_cu": 57036,
+      "heap-kind1-hint7-384-fits_cu": 41611,
+      "heap-kind1-hint7-385-oom_cu": 41716,
+      "heap-kind1-hint768-768-fits_cu": 56952,
+      "heap-kind1-hint768-769-oom_cu": 57036,
+      "heap-kind1-hint769-0-oom_cu": 368,
+      "heap-kind2-hint0-512-fits_cu": 203835,
+      "heap-kind2-hint0-513-oom_cu": 204291,
+      "heap-kind3-hint0-2000-fits_cu": 198370,
+      "heap-kind4-hint0-636-fits_cu": 37333,
+      "heap-kind4-hint0-637-oom_cu": 37325,
+      "heap_cases": 18,
+      "max_vector_cu": 109128,
+      "vector_aborts": 37,
+      "vectors": 270
+    }
+  }
+}

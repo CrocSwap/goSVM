@@ -98,7 +98,6 @@ func TestInterfaceRejections(t *testing.T) {
 		"zero-size part":       {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
 		"method expression":    {`_ = Shape.Area(R{})`, "method expressions of interface types unsupported"},
 		"method value":         {`var x Shape = R{}; f := x.Area; _ = f`, "method values unsupported; call the method directly"},
-		"map in interface":     {`var m map[uint8]uint8; var a any = m; _ = a`, "unsupported type map[uint8]uint8"},
 		"generic float getter": {`var g Getter[float32]; _ = g`, "instantiation Getter[float32]: type argument float32 for T: unsupported type float32"},
 	} {
 		t.Run(name, func(t *testing.T) {

@@ -66,7 +66,8 @@ type DynamicType struct {
 	// Boxed is true when the program converts values of the type to an
 	// interface; Methods are listed only then.
 	Boxed bool
-	// Direct is true for pointer types: the data word is the pointer.
+	// Direct is true for pointer and map types: the data word is the pointer
+	// (for a map, its header pointer).
 	Direct bool
 	// Size is the Go size in bytes. A conversion allocates (Size+7)&^7 heap
 	// bytes unless Direct or Size is 0 (then it allocates nothing).
@@ -319,6 +320,11 @@ func (s *ifaceScan) walk(root ast.Node, results *types.Tuple) {
 			s.call(n)
 		case *ast.CompositeLit:
 			s.literal(n)
+		case *ast.IndexExpr:
+			// A map key converts to the map's key type.
+			if t := s.info.Types[n.X].Type; isMap(t) {
+				s.flow(n.Index, mapOf(t).Key())
+			}
 		case *ast.RangeStmt:
 			if n.Tok == token.ASSIGN {
 				s.rangeAssign(n)
@@ -374,6 +380,11 @@ func (s *ifaceScan) call(n *ast.CallExpr) {
 							s.flow(v, slice.Elem())
 						}
 					}
+				}
+			}
+			if b.Name() == "delete" && len(n.Args) == 2 {
+				if t := s.info.Types[n.Args[0]].Type; isMap(t) {
+					s.flow(n.Args[1], mapOf(t).Key())
 				}
 			}
 			return
@@ -438,6 +449,13 @@ func (s *ifaceScan) literal(n *ast.CompositeLit) {
 		s.elements(n, u.Elem())
 	case *types.Slice:
 		s.elements(n, u.Elem())
+	case *types.Map:
+		for _, elt := range n.Elts {
+			if kv, ok := elt.(*ast.KeyValueExpr); ok {
+				s.flow(kv.Key, u.Key())
+				s.flow(kv.Value, u.Elem())
+			}
+		}
 	}
 }
 
@@ -635,7 +653,10 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 	sizes := &types.StdSizes{WordSize: 8, MaxAlign: 8}
 	for i, d := range p.dynamic {
 		d.ID = uint64(i + 1)
-		_, d.Direct = d.Type.(*types.Pointer)
+		_, isPointer := d.Type.(*types.Pointer)
+		// Pointers and maps (a pointer to the map header) are stored in
+		// the data word.
+		d.Direct = isPointer || isMap(d.Type)
 		d.Size = sizes.Sizeof(d.Type)
 		d.Comparable = types.Comparable(d.Type)
 		if !d.Boxed {
@@ -656,7 +677,7 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 				continue
 			}
 			_, pointerRecv := m.Type().(*types.Signature).Recv().Type().(*types.Pointer)
-			d.Methods = append(d.Methods, &DynamicMethod{Slot: slot, Func: fn, Deref: d.Direct && !pointerRecv})
+			d.Methods = append(d.Methods, &DynamicMethod{Slot: slot, Func: fn, Deref: isPointer && !pointerRecv})
 		}
 	}
 	p.used = len(s.conversions) > 0 || len(s.asserts) > 0 || len(s.switches) > 0 || mentionsInterfaces(info, files)
@@ -688,6 +709,8 @@ func mentionsInterfaces(info *types.Info, files []*ast.File) bool {
 			return mentions(t.Elem())
 		case *types.Slice:
 			return mentions(t.Elem())
+		case *types.Map:
+			return mentions(t.Key()) || mentions(t.Elem())
 		case *types.Struct:
 			for i := 0; i < t.NumFields(); i++ {
 				if mentions(t.Field(i).Type()) {
@@ -1252,7 +1275,7 @@ func (g *generator) emitInterfaces(program *CheckedProgram) {
 	g.line("if (a.type == 0) return 1;")
 	for _, d := range p.dynamic {
 		switch {
-		case d.Direct:
+		case d.Direct && d.Comparable:
 			g.line("if (a.type == %dULL) return a.data == b.data;", d.ID)
 		case d.Size == 0:
 			g.line("if (a.type == %dULL) return 1;", d.ID)

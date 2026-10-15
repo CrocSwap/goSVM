@@ -552,13 +552,24 @@ strings, the predeclared `error` interface works like any interface value. See
 [string semantics, allocation and SBF evidence](../docs/GO_STRINGS.md) and the
 [string fixture](../examples/string-values/program.go).
 
+Maps have Go's results for every operation except iteration: `make` (with or
+without a hint), literals, `m[k]`, `v, ok := m[k]`, assignment, `++`/`--` and
+`+=` on elements, `delete`, `len`, `clear`, nil maps (writes abort), keys of
+every comparable admitted type (interfaces whose dynamic type is uncomparable
+abort, as Go panics) and maps in fields, slices, arrays, pointers, interfaces
+and generic code. `range` over a map is rejected because Go randomizes its
+order; keep the keys in a slice. The table's heap use is documented exactly.
+See [map semantics, heap accounting, CU and SBF evidence](../docs/GO_MAPS.md)
+and the [map fixture](../examples/map-values/program.go).
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, named slices, maps,
+floating-point and complex types, globals, `init`, named slices, map iteration,
 closures/function and method values, recursion (including through dynamic calls), named results, variadics,
 compound assignment other than `+=` on strings,
 range over maps/channels/functions, labeled branches, `fallthrough`, `defer`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
-uncomparable interface comparison and nil interface call failures abort; there is no recovery or stack growth. LLVM/VM stack limits
+uncomparable interface comparison, nil interface call, nil-map write and
+unhashable map key failures abort; there is no recovery or stack growth. LLVM/VM stack limits
 still apply. This compiler has neither a production audit nor a comprehensive Go
 conformance claim.
 

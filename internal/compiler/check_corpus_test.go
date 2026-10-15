@@ -148,6 +148,8 @@ var corpusChanges = map[int]corpusEntry{
 	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"},                                                       // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
 	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"},                                                       // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
 	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; the only standard-library package on-chain is math/bits)`}, // was "...; use a module-backed program for user packages"
+	// Maps became supported (docs/GO_MAPS.md): the unused nil map compiles.
+	258: {CSHA256: "442b6bf53e5b5481667f9c4a8e6acd0d7cbb288f10b84ef789cf57ec03917ad7"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
 }
 
 const (
@@ -197,9 +199,9 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics and allocation each turned recorded rejections
+	// Signed integers, generics, allocation and maps each turned recorded rejections
 	// into accepted programs (corpusChanges); the rest still exercise Check.
-	if rejected < 95 {
+	if rejected < 94 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

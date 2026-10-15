@@ -174,12 +174,13 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 		}
 		if a, ok := f.Type().Underlying().(*types.Array); ok {
 			c.declareArray(node, a)
-		} else if _, ok := f.Type().Underlying().(*types.Struct); ok {
+		} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {
 			c.namedType(node, f.Type())
-		} else if memoryValue(f.Type()) || isIface(f.Type()) {
+		} else if memoryValue(f.Type()) || isIface(f.Type()) || isMap(f.Type()) || isEmptyStruct(f.Type()) {
 			// Pointer and slice fields hold only heap or SDK storage; the
 			// borrow analysis moves any local stored into one to the heap.
-			// Interface fields hold such storage or heap copies.
+			// Interface fields hold such storage or heap copies; map
+			// fields refer to heap tables.
 			c.variableRule(node, f.Type())
 		} else {
 			if _, ok := f.Type().Underlying().(*types.Basic); !ok {
@@ -429,7 +430,7 @@ func (c *checker) rangeStatement(s *ast.RangeStmt) {
 			c.fail(s.X, "range requires an integer, a scalar array, a pointer to one, or a slice")
 		}
 	case *types.Map:
-		c.fail(s.X, "range over maps unsupported")
+		c.fail(s.X, rangeMapRule)
 	case *types.Chan:
 		c.fail(s.X, "range over channels unsupported")
 	case *types.Signature:
@@ -661,6 +662,10 @@ func (c *checker) exprValue(e ast.Expr) {
 			c.sliceLiteral(e, s)
 			return
 		}
+		if isMap(tv.Type) {
+			c.mapLiteral(e, tv.Type)
+			return
+		}
 		literal := tv.Type
 		if p, ok := pointer(literal); ok {
 			// An elided &T{...} element of a slice literal: always heap.
@@ -696,6 +701,10 @@ func (c *checker) exprValue(e ast.Expr) {
 		}
 		c.typeRule(e, tv.Type)
 	case *ast.IndexExpr:
+		if isMap(c.info.Types[e.X].Type) {
+			c.mapIndex(e, tv)
+			return
+		}
 		if _, ok := pointer(c.info.Types[e.X].Type); ok {
 			if a, ok := arrayValue(c.info.Types[e.X].Type); ok {
 				c.arrayPointer(e.X)
@@ -811,6 +820,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			c.typeRule(e, tv.Type)
 			return
 		}
+		if isMap(tv.Type) {
+			c.mapConversion(e, tv)
+			return
+		}
 		if s, ok := tv.Type.(*types.Slice); ok {
 			if len(e.Args) != 1 {
 				c.fail(e, "invalid slice conversion")
@@ -865,6 +878,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	}
 	if b, ok := o.(*types.Builtin); ok && allocBuiltins[b.Name()] {
 		c.allocBuiltin(e, b.Name(), tv)
+		return
+	}
+	if name, ok := c.mapBuiltinCall(e); ok {
+		c.mapBuiltin(e, name, tv)
 		return
 	}
 	values := c.callValues(e)

@@ -87,6 +87,7 @@ Converting a value of type `T` to an interface:
 | `T` | Heap bytes | Data word |
 | --- | --- | --- |
 | pointer type `*E` | 0 | the pointer |
+| map type `map[K]V` | 0 | the map's header pointer ([maps](GO_MAPS.md)) |
 | zero-size type (empty struct, `[0]E`, structs of those) | 0 | the heap base address (never read) |
 | any other storable type | its Go size rounded up to 8 (`(size+7)&^7`) | a new allocation holding a copy |
 
@@ -180,8 +181,10 @@ out-of-memory trap.
 - `interface values must not hold T: it contains zero-length arrays or empty
   structs` (see above).
 - Method values (`f := x.M`) and method expressions of interface types
-  (`I.M(x)`) are rejected, as are maps (and so interfaces as map keys), and
-  embedding an interface in a struct (struct embedding is rejected).
+  (`I.M(x)`) are rejected, as is embedding an interface in a struct (struct
+  embedding is rejected). Interfaces are valid [map](GO_MAPS.md) keys (hashed
+  by dynamic type and value; an uncomparable dynamic type aborts in every map
+  operation, as Go panics) and elements, and maps convert to interfaces.
 - Recursion is rejected through dynamic calls too: a dynamic call may reach any
   method that fills its slot, so a cycle through one is `recursion is not
   supported`.

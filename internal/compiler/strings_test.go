@@ -87,7 +87,6 @@ func TestStringAcceptedForms(t *testing.T) {
 func TestStringRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
 		"compound int":      {`x := 1; x += 2; _ = x`, "compound assignment unsupported"},
-		"map key":           {`var m map[string]uint8; _ = m`, "unsupported type map[string]uint8"},
 		"float conversion":  {`var f float64 = 1; _ = f`, "unsupported type float64"},
 		"function of error": {`var f func() error; _ = f`, "unsupported type func() error"},
 		"three-index":       {`x := "abc"; _ = x[0:1:2]`, "invalid operation: 3-index slice of string"},

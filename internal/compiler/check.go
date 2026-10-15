@@ -100,11 +100,19 @@ type CheckedProgram struct {
 	TypeAssertions []*ast.TypeAssertExpr
 	TypeSwitches   []*ast.TypeSwitchStmt
 
+	// Maps lists every map type checked code uses (docs/GO_MAPS.md),
+	// sorted by Key; MapType.Index is the position. Empty without maps.
+	Maps []*MapType
+
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
 	ifaces  *ifaceProgram
 	// usesStrings reports that some checked value has a string type.
 	usesStrings bool
+	// maps indexes Maps by key; nil without maps.
+	maps *mapProgram
+	// usesEmpty reports that some checked value has type struct{}.
+	usesEmpty bool
 }
 
 // Function is one checked function or method declaration.
@@ -330,6 +338,11 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}, gp: gp, typeInstances: checked.TypeInstances}
 	c.program(checked.lowered, lowered)
 	checked.usesStrings = f.usesStrings
+	checked.usesEmpty = f.usesEmpty
+	if f.maps != nil {
+		checked.maps = sortedMaps(f.maps)
+		checked.Maps = checked.maps.types
+	}
 	return checked, nil
 }
 

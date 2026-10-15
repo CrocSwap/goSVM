@@ -124,13 +124,12 @@ func TestAllocationAcceptedForms(t *testing.T) {
 
 func TestAllocationRejections(t *testing.T) {
 	for name, c := range map[string]struct{ body, want string }{
-		"make map":            {`m := make(map[uint64]uint64); _ = m`, "make supports only slices"},
-		"make channel":        {`ch := make(chan uint64); _ = ch`, "make supports only slices"},
+		"make channel":        {`ch := make(chan uint64); _ = ch`, "make supports only slices and maps"},
 		"new int":             {`p := new(int); _ = p`, ""},
 		"int slice":           {`var w []int; _ = w`, ""},
 		"empty struct slice":  {`var w []E; _ = w`, "slice elements must not contain zero-length arrays or empty structs"},
 		"zero array slice":    {`var w [][0]byte; _ = w`, "slice elements must not contain zero-length arrays or empty structs"},
-		"clear":               {`clear(s)`, builtinRule},
+		"clear":               {`clear(s)`, "clear supports only maps"},
 		"min":                 {`x := min(s[0], 1); _ = x`, builtinRule},
 		"panic":               {`panic(1)`, builtinRule},
 		"elided array":        {`ps := []*K{{1}}; _ = ps`, "elided &T{...} literals require a struct type; write &T{...}"},
@@ -138,7 +137,6 @@ func TestAllocationRejections(t *testing.T) {
 		"pointer to pointer":  {`p := new(*V); _ = p`, "pointer elements must be integer/bool scalars, value structs or scalar arrays"},
 		"array of pointers":   {`var a [2]*V; _ = a`, arrayElementRule},
 		"array of slices":     {`var a [2][]byte; _ = a`, arrayElementRule},
-		"slice of maps":       {`var a []map[uint64]uint64; _ = a`, "unsupported type map[uint64]uint64"},
 		"int copy result":     {`n := copy(s, i); _ = n`, ""},
 		"slice compare":       {`a, b := []V{}, []V{}; _ = a == nil && b == nil; s[0] = 1; var w []uint64; _ = w`, ""},
 		"compound append":     {`var w []uint64; w = append(w, 1); w[0] += 1`, "compound assignment unsupported"},
@@ -159,7 +157,6 @@ func TestAllocationRejections(t *testing.T) {
 	}
 	for name, c := range map[string]struct{ source, want string }{
 		"named slice":    {"package p\ntype L []uint64\nfunc Process(s, i []byte) uint64 { return 0 }\n", "unsupported type program.L"},
-		"map field":      {"package p\ntype M struct{ m map[uint64]uint64 }\nfunc Process(s, i []byte) uint64 { return 0 }\n", "struct fields must be integer scalars, bools, scalar arrays, value structs, pointers, slices or interfaces"},
 		"context slices": {"package p\nimport \"gosvm/solana\"\nfunc Process(c solana.Context) uint64 { var cs []solana.Context; _ = cs; return 0 }\n", "slices of Context unsupported"},
 		"context field":  {"package p\nimport \"gosvm/solana\"\ntype C struct{ c *solana.Context }\nfunc Process(c solana.Context) uint64 { return 0 }\n", "pointers to Context unsupported"},
 	} {

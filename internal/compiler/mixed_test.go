@@ -83,7 +83,6 @@ func TestMixedRejections(t *testing.T) {
 		"generic box of slice": {`b := Box([]int8{1}); _ = b`,
 			"instantiation Box[[]int8]: alloc.go:11:1: pointer elements must be integer/bool scalars, value structs or scalar arrays"},
 		"generic compound append": {`var v Vec[int8]; v.Add(1); v.items[0] += 1`, "compound assignment unsupported"},
-		"signed map make":         {`m := make(map[int8]int8); _ = m`, "make supports only slices"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := mixedPrefix + c.body + "\nreturn 0 }\n"

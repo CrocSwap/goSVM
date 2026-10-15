@@ -39,7 +39,7 @@ construct counter is present even when zero.
 | `library_calls[]` | calls into generated Bend/Rust library bindings |
 | `stdlib_calls[]` | calls into `math/bits`, the one standard-library package available on-chain (added October 14, 2026; additive, schema unchanged) |
 | `generics[]` | every generic function, method and type declared in program code: `name` (`pkg/path.F`, `pkg/path.T.M`, `pkg/path.T`), `package`, `kind` (`function`, `method`, `type`), `count` and the sorted canonical `instances` the compiler would monomorphize (added October 14, 2026; additive, schema unchanged; see [generics](GO_GENERICS.md)) |
-| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`, `strings` (added with [strings](GO_STRINGS.md); additive); `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations`, `interface_values` and `string_values`; programs with interface values or strings, including `error` values, pass Check, so `checked` is true for them unless another rule rejects them): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Interface conversions alone do not set `allocation`, but boxing allocates, so a backend that supports `interfaces` needs the allocator too ([interfaces](GO_INTERFACES.md#boxing-cost)); likewise string concatenations and conversions allocate without setting `allocation` ([string allocation](GO_STRINGS.md#allocation)). String constants folded into constant expressions do not set `strings`. Lets a backend that supports a subset reject a program with a named reason |
+| `uses` | per-program feature summary (added October 14, 2026; additive): booleans `allocation`, `interfaces`, `signed_integers`, `math_bits`, `generics`, `uint16`, `range`, `strings` (added with [strings](GO_STRINGS.md); additive), `maps` (added with [maps](GO_MAPS.md); additive: a non-nil map value, a map literal or `make` of a map; a map literal also sets `allocation`); `checked` and `check_error` from `compiler.Check`; `heap_moved_locals` and `heap_moved_literals`, the escaping locals and `&T{}` literals Check moves to the heap. Derived from the counters (including `signed_operations`, `interface_values` and `string_values`; programs with interface values or strings, including `error` values, pass Check, so `checked` is true for them unless another rule rejects them): `int` values used only as `len`/`cap`/count results do not make `signed_integers` true, and heap moves make `allocation` true. Interface conversions alone do not set `allocation`, but boxing allocates, so a backend that supports `interfaces` needs the allocator too ([interfaces](GO_INTERFACES.md#boxing-cost)); likewise string concatenations and conversions allocate without setting `allocation` ([string allocation](GO_STRINGS.md#allocation)). String constants folded into constant expressions do not set `strings`. Lets a backend that supports a subset reject a program with a named reason |
 
 A file is `generated` when it has the standard `// Code generated ... DO NOT
 EDIT.` line before its package clause. SDK package sources are not counted as
@@ -89,7 +89,13 @@ Each `language` side has:
   `+` operators and `+=` on strings; `string_conversions`: non-constant
   conversions between strings and byte or rune slices, or from integers, but
   not string-to-string; `string_ranges`: range over a string, which also
-  counts as `for_range` and `for_range_other`); all added within
+  counts as `for_range` and `for_range_other`) and maps (`map_values`:
+  non-constant, non-nil expressions of a map type; `map_literals`: map
+  composite literals; `map_makes`: `make` of a map, which also counts as
+  `make_calls`; `map_lookups`: single-value `m[k]` reads; `map_comma_ok_lookups`:
+  `v, ok := m[k]` reads; `map_assignments`: `m[k]` as an assignment, `++`/`--`
+  or `+=` target; `map_deletes`: `delete` calls; `map_clears`: `clear` of a
+  map; `map_types` counts map type expressions as before); all added within
   gosvm-features-v1 on October 14, 2026, schema unchanged. An SDK method call counts as both
   `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of `F`,
   and `F[T]` is not an `index_expressions` entry.

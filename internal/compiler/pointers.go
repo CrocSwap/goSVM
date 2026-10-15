@@ -266,6 +266,10 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 							// or SDK storage.
 							a.store(values[i])
 						}
+						if ix, ok := f.isMapIndex(lhs); ok && memoryValue(f.info.Types[ix.Index].Type) {
+							// A map key is stored in the map's heap table.
+							a.store(a.expr(ix.Index))
+						}
 					}
 				case *ast.ValueSpec:
 					values := a.values(n.Values)
@@ -418,6 +422,17 @@ func (a *borrowAnalysis) literal(lit *ast.CompositeLit) {
 				a.store(a.expr(elt))
 			}
 		}
+	case *types.Map:
+		// Keys and values are stored in the map's heap table.
+		for _, elt := range lit.Elts {
+			if kv, ok := elt.(*ast.KeyValueExpr); ok {
+				for _, e := range []ast.Expr{kv.Key, kv.Value} {
+					if memoryValue(a.f.info.Types[e].Type) {
+						a.store(a.expr(e))
+					}
+				}
+			}
+		}
 	}
 }
 func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet) {
@@ -492,6 +507,9 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 	case *ast.SelectorExpr, *ast.IndexExpr, *ast.StarExpr:
 		if memoryValue(a.f.info.Types[e].Type) {
 			return a.loaded()
+		}
+		if ix, ok := a.f.isMapIndex(e); ok && memoryValue(mapOf(a.f.info.Types[ix.X].Type).Elem()) {
+			return a.loaded() // v, ok := m[k]: the element is heap or SDK storage
 		}
 	case *ast.TypeAssertExpr:
 		// A pointer or slice held by an interface value: heap or SDK storage.
