@@ -23,8 +23,20 @@ than rejecting them — a choice the user may revisit) and
 dispatch; `error` stays out because strings are not in the subset). Each added
 traps recorded in [ERROR_CONTRACT](docs/ERROR_CONTRACT.md), which also contracts
 append growth and heap accounting. `gosvm features` reports per-program `uses`
-for Qushta's subset gating. Still out: strings, maps, closures/function values,
-floats, goroutines/defer.
+for Qushta's subset gating. Later the same day:
+[strings](docs/GO_STRINGS.md) (with `error`),
+[function values, closures, `defer` and named results](docs/GO_FUNCTIONS.md)
+(compare-and-branch dispatch; recursion through function values rejected
+conservatively by signature), [maps](docs/GO_MAPS.md) and compound assignment
+on every integer type and target. User decisions (October 14): maps give Go's
+results but every `range` over a map is rejected (Go randomizes order); floats
+stay out (fixed-point integers); escaping locals keep moving to the heap;
+`Add64`/`Sub64` treat any nonzero carry as 1 (compiled Go). Known documented
+deviation: compound-assignment and `=` targets read plain operand variables
+before the right side's calls, where gc reads them after (unspecified order;
+only visible when the right side reassigns its own target's operands). Still
+out: floats, goroutines/channels/select, `recover`/`panic`, map iteration,
+`clear` on slices.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
