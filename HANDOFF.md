@@ -98,8 +98,8 @@ for `&p`). **Found: a latent SBF miscompilation** — clang passes C struct
 parameters `byval` and the SBF backend does not copy them, so a function that
 writes a string/slice/struct parameter and passes it on can corrupt its
 caller; fixed for overlay code only (copy at entry, `byval.go`); applying it to
-program code changes 64 corpus C hashes and the full-swap ELFs, so it needs a
-user decision (`byvalCopiesProgramCode`). Evidence:
+program code changes 64 corpus C hashes and the full-swap ELFs, so it needed a
+user decision (since resolved: see the aggregate-parameter entry below). Evidence:
 [results](results/compiler/2026-10-14-stdlib/README.md) (30,906 host vectors,
 306 SBF cases on both targets, CU probes, real-stdlib shakeout rerun);
 full-swap ELFs unchanged.
@@ -130,6 +130,35 @@ pointers to pointers; 20 cases for these were added (998 cases: 5,988 host
 vectors, 2,994 SBF cases on both targets, all matching native Go), the
 standard-library differential and SBF suites pass unchanged, the corpus
 needed no new entry, and the full-swap ELFs are still `4697a9f5…`/`2b5f21d9…`.
+
+**Aggregate parameters on SBF fixed for all code (October 15, user decision):**
+the SBF backend lowers C `byval` parameters as the caller's own memory without
+copying, so on SBF (never on the host) a callee could change its caller's
+string/slice/struct/array/interface variable by writing its parameter (value
+receivers and interface boxes included), could read the caller's variable's
+*new* value after changing it through a package variable or pointer (found in
+the audit), and `t := append(s, x)` with spare capacity could lengthen a
+package-level or heap `s` (the C runtime's growth helper wrote its parameter).
+`examples/byval-values` reproduces it in plain Go: 15 of its 21 cases differ on
+SBF at the previous commit and all match native Go now (host always matched).
+Every function and literal now copies, at entry, each aggregate parameter it
+writes (plainly) and each one it may read after a write that can change the
+caller's variable (opaquely; a type- and confinement-aware analysis keeps it
+off ordinary code); copies over 128 bytes stay whole in memory; the growth
+helper returns a new header. Programs without such parameters keep their C;
+the corpus lists 111 changed C hashes (64 copies, the rest append's helper).
+**The full-swap reference ELFs changed** (fogo-v0 `4697a9f5…` → `a66c5a97…`,
+solana-v3 `2b5f21d9…` → `b419245b…`, target-less v1.51 `4e96d2bb…` →
+`05f52dd2…`; `clock2` unchanged): only `Swap`, `ManagedSwap` and `CreatePool`
+(their accounts struct) and `pda.AddKey`/`pda.Address` write aggregate
+parameters. Behaviour is unchanged on both targets (same errors, accounts and
+rollback in every fixture); wide swap +603/+599 CU, pool creation +717–807,
+early-failure paths 0; ELFs −224/−152 bytes. The new reference is
+[results/compiler/2026-10-15-byval-rebuild](results/compiler/2026-10-15-byval-rebuild/README.md)
+(`scripts/verify_rebuild.py`'s default `--reference`); earlier results keep
+the old hashes as their historical record. Docs: [GO_STDLIB](docs/GO_STDLIB.md#aggregate-parameters-on-sbf),
+[backend interface](docs/BACKEND_INTERFACE.md#aggregate-parameters) (backends
+must give callees their own copies), ERROR_CONTRACT changelog (bug fix).
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

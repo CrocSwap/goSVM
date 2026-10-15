@@ -98,49 +98,49 @@ var corpusChanges = map[int]corpusEntry{
 	// type switch on a nil interface{} and an unused interface{} parameter
 	// compile. error stayed rejected (its Error() method returns a string)
 	// until strings were added; entry 272 is listed with them below.
-	140: {CSHA256: "b76a35c879f61af5b2046c6dbab39bdc742bb1ddb506c94d72836761bb03bb63"}, // s42.go `var x interface{}; switch x.(type) {}`: was "unsupported type interface{}" (generics reworded it to name the constraint rule)
-	198: {CSHA256: "5ecfd0b8d3130ec2399c4dc682be098180ba51f249066bb862c4579f49461f3c"}, // s43.go `func f(x interface{})`: likewise
+	140: {CSHA256: "63c89e0040819ca7a82cba771a537716c55385192f5d21028afc82d3cd010217"}, // s42.go `var x interface{}; switch x.(type) {}`: was "unsupported type interface{}" (generics reworded it to name the constraint rule)
+	198: {CSHA256: "bac1ea585f5ef40028da5cf56b79789e4e8cb2f7d53b939a4dd55463af60254a"}, // s43.go `func f(x interface{})`: likewise
 	// Invocation-heap allocation (docs/GO_ALLOCATION.md): escaping locals move
 	// to the heap instead of being rejected, and new/make/append/copy, slice
 	// literals, slices of any element type, non-byte views and pointer/slice
 	// struct fields became supported. Each was a rejection; it now compiles.
-	4:   {CSHA256: "a0804eb54eb184e3c464dac41ca9beaeae743e44f0ddee4ec491c24bc1c98afa"}, // return &n: was "reference escapes local storage; heap allocation unsupported"
-	9:   {CSHA256: "7ea53a480f5b9f9956ba4472613af2f6b4dd5b8c18955a37cdd64a2685165272"}, // block escape: was "reference escapes its lexical storage scope; ..."
-	14:  {CSHA256: "94b71334a777db16e7835135a49b3f76e105c50bb12842ad6ef0b1d4889637c1"}, // s13.go copy(a, b): was "only len and cap builtins supported"
-	17:  {CSHA256: "a4c63e1758390004459b92b377913ada81754ab1f4cd11d9caca19a77192286d"}, // tuple local: was "reference escapes local storage; ..."
-	21:  {CSHA256: "3ac15f702a89c7a23c6dd65ea44d99a740010ee1960a148e871e6f3be7dbf9c9"}, // view element pointer: was "reference escapes local storage; ..."
-	36:  {CSHA256: "5ed691e0702c4de0540f9d07452f3732d80c8078fae0f2bc6d0a65b81231458a"}, // parameter copy: was "reference escapes local storage; ..."
-	38:  {CSHA256: "cf7e0f120fb4afee8205675f13e2e7ddcf7b2b52b5602ee1c2dc4e92bb86a35d"}, // value receiver view: was "reference escapes local storage; ..."
-	42:  {CSHA256: "91982e45a08892a3267928a7c5008dea4a31f5e8205d13977f57a399a82c99f0"}, // struct { B []byte }: was "struct fields must be unsigned scalars, bools, scalar arrays, or value structs" (signed integers alone only reworded it; allocation accepts it, and its C uses no signed or generic code)
-	44:  {CSHA256: "baf9602282157acef4614b69fff652a7d5594fbf2be63b88b6b5152188d0ab49"}, // forwarded tuple view: was "reference escapes local storage; ..."
-	67:  {CSHA256: "a0804eb54eb184e3c464dac41ca9beaeae743e44f0ddee4ec491c24bc1c98afa"}, // s74.go return &x: was "reference escapes local storage; ..."
-	71:  {CSHA256: "56fd7966e85aa0b3cd84a797a18cef28b1d3f17818eb7afd871688d30b12536a"}, // imported borrow summary: was "reference escapes local storage; ..."
-	90:  {CSHA256: "69921d5f82d65ac62ba2d425f7939b5b3055b78e40d2a654252d70ee8fe0c909"}, // local array view: was "reference escapes local storage; ..."
-	126: {CSHA256: "855c07853e9d93c43c40ac5c84b9c189b63716b518af28df4a243ac432e37fdb"}, // forwarded local: was "reference escapes local storage; ..."
-	137: {CSHA256: "9872902e190e3a7ec51baea1a728be04ddfcabec720a3f857356e079d79b6c58"}, // loop back edge: was "reference escapes local storage; ..."
-	149: {CSHA256: "bd34b300f230e6b2f2241b6952570f642ca56ffbd5a1f38a89f407da6a1bb0d5"}, // s05.go []byte{1, 2}: was "only value struct literals supported"
-	166: {CSHA256: "e0f04cb67fc1cc10020053b9f6dcef025c7f012e969e249098320b5e4efaef6c"}, // literal return: was "reference escapes local storage; ..."
-	175: {CSHA256: "c03b8c8712aac7bf56a36161fca4cb7b1e903bd4caed25ce875a715f2002d526"}, // block view: was "reference escapes its lexical storage scope; ..."
-	214: {CSHA256: "faf01e2de5ee2a0899cc3320e60fcc09462c09adbc01c0f64186f183b708fb31"}, // loop escape: was "reference escapes its lexical storage scope; ..."
-	234: {CSHA256: "9e255aca30469be4521f512f5fa9c3848f375778922446f7358f2559cb819494"}, // conditional escape: was "reference escapes its lexical storage scope; ..."
-	235: {CSHA256: "eb69930c1524863b52b3fbf359f711d63dee9a0708903931dc2c15caad80cf61"}, // [32]uint64 view: was "slice views require byte/uint8 elements"
-	238: {CSHA256: "ee9954b9f27a2b0430a127e82ae56c7b4bf2398bf9582e14b987817d74f086b2"}, // callee local method: was "reference escapes local storage; ..."
-	241: {CSHA256: "e5fe97047625ade873ae72af734655875223a4845ebcd85fc4e67529ffa86daf"}, // value parameter view: was "reference escapes local storage; ..."
-	253: {CSHA256: "ee9954b9f27a2b0430a127e82ae56c7b4bf2398bf9582e14b987817d74f086b2"}, // method expression local: was "reference escapes local storage; ..."
-	254: {CSHA256: "3222b8dc2283dad7e26dfc1c249a2b68033f991018cc8d7dce8e817db2dc16bd"}, // make([]byte, 1): was "unsupported expression *ast.ArrayType"
-	256: {CSHA256: "1d02328635096474df62c3e9fcf2cfec2a261230fc13d348dbaea644ef4215c8"}, // loop view: was "reference escapes its lexical storage scope; ..."
-	257: {CSHA256: "906563a2ca3839c3e25b87a9b8cf9731087be1b6c6e839c9b50d7a71ef197f6e"}, // struct{P *uint64}: was "struct fields must be unsigned scalars, bools, scalar arrays, or value structs" (as entry 42)
-	261: {CSHA256: "00b525a5d039ddb7ac7f1c5a911905d00cd8a437ef98eced10c7e7309083b6e7"}, // [4]uint64 view: was "slice views require byte/uint8 elements"
-	263: {CSHA256: "6ac5bfb41ddf10e4e2c95b132e5cf94e841f9fb8ea67a77f7cf1fb11cb7a7c13"}, // block tuple: was "reference escapes its lexical storage scope; ..."
-	277: {CSHA256: "39a431aafe16ce94a2ff8e5a2014e373e795c5e1ee7641198b5e3b6b58927be0"}, // value receiver copy: was "reference escapes local storage; ..."
-	288: {CSHA256: "da0fd08a96472bf2a18d478b819ecd80e02e8de101e88dcafda861c8f88da98a"}, // s30.go []uint64 parameter: was "unsupported type []uint64"
-	304: {CSHA256: "1867a3a4f4cfba2e88fe7f58882361492a7aeb580f4c9f83e145b3a47c430657"}, // converted local view: was "reference escapes local storage; ..."
-	307: {CSHA256: "73616bde6d18a3643f5c8b6880b50b27cfdd16b0eb0994184fb05c3ef0b2d2bb"}, // s73.go [4]uint64 view: was "slice views require byte/uint8 elements"
+	4:   {CSHA256: "dfa460fc47456032668252c4e7b9a17f467f0beebaa14e6e38447bee4d46e068"}, // return &n: was "reference escapes local storage; heap allocation unsupported"
+	9:   {CSHA256: "cd30ff1c4341e1e96c12188dc8cf3a77d2aa51a2781245a300ffc3d2d271550f"}, // block escape: was "reference escapes its lexical storage scope; ..."
+	14:  {CSHA256: "d855888bd991a84f6ac4e18bd88a79a058226f6a0464cec77d30a4090c3015cd"}, // s13.go copy(a, b): was "only len and cap builtins supported"
+	17:  {CSHA256: "4a46a782c03b1601edbc3aa2e2e9317df8853e9ad956cafe4a6abf791aae96ba"}, // tuple local: was "reference escapes local storage; ..."
+	21:  {CSHA256: "b2112887a4d2cf9cf27b5e8da1f44e6754493b08240853b97b9c17754687e45e"}, // view element pointer: was "reference escapes local storage; ..."
+	36:  {CSHA256: "fef9553323ecdae42995b9a0a8dc8b932083dc2a2ffe4c39749fa485af764e39"}, // parameter copy: was "reference escapes local storage; ..."
+	38:  {CSHA256: "4345d89e03aea37b054b526f3566d39cc2c49163b4bf79fcaf95a1278545b1b5"}, // value receiver view: was "reference escapes local storage; ..."
+	42:  {CSHA256: "b47d6c94272812e6e0a79c1f2f916f0625730d13c851627d6dd1d3ece1dddb4a"}, // struct { B []byte }: was "struct fields must be unsigned scalars, bools, scalar arrays, or value structs" (signed integers alone only reworded it; allocation accepts it, and its C uses no signed or generic code)
+	44:  {CSHA256: "c654a7cd45597df66f7571a7c260d9b7adfc829734f5a14e7689eed5fea75566"}, // forwarded tuple view: was "reference escapes local storage; ..."
+	67:  {CSHA256: "dfa460fc47456032668252c4e7b9a17f467f0beebaa14e6e38447bee4d46e068"}, // s74.go return &x: was "reference escapes local storage; ..."
+	71:  {CSHA256: "ba3d4e971f0979937f092d0ebdc4ca81df8444192430d12d5f1508ed205a974b"}, // imported borrow summary: was "reference escapes local storage; ..."
+	90:  {CSHA256: "376fce874742f7dd4c4e561dbb3ffd702db45c1b271f9d3c4405bf55846cf580"}, // local array view: was "reference escapes local storage; ..."
+	126: {CSHA256: "1c269501ee630ccddc8ddc2e77e9c28279f77e9d6290a97c8711090dbf48af20"}, // forwarded local: was "reference escapes local storage; ..."
+	137: {CSHA256: "afe6de4b06c08c4491d34ec8cec0ee71f24ea8fdc1f5d9c09837eed7ce8b2a02"}, // loop back edge: was "reference escapes local storage; ..."
+	149: {CSHA256: "d363eaee57022025ba1b452e57484e1e8450329c7e4c7962652c65b4d66f09c9"}, // s05.go []byte{1, 2}: was "only value struct literals supported"
+	166: {CSHA256: "699b8ccc4ee9d494f6d202876a594156a260a7166508c4b295fcb4bf421f8bc7"}, // literal return: was "reference escapes local storage; ..."
+	175: {CSHA256: "8da4cd08107151497f43f2a2295858f39abcb93eec6ec2ec8aab849d1f244497"}, // block view: was "reference escapes its lexical storage scope; ..."
+	214: {CSHA256: "fe156115a9dde3cffdefabf1121aab31cca80717ed824189436792860c9c21f6"}, // loop escape: was "reference escapes its lexical storage scope; ..."
+	234: {CSHA256: "6be7c548b10efd83cc0601ce3b13f02e9191b23c1f0752fa8933e819752b0915"}, // conditional escape: was "reference escapes its lexical storage scope; ..."
+	235: {CSHA256: "b74f1a61815ebd86bf8241ccf7db1b21c56ae0bbbf4d946ec2e472e784e26d7f"}, // [32]uint64 view: was "slice views require byte/uint8 elements"
+	238: {CSHA256: "de1b861bd7f6e99f982fe64b318c2511de1c72b10114181152dc45bf9cce0bdb"}, // callee local method: was "reference escapes local storage; ..."
+	241: {CSHA256: "140ae14c62ae6576e24acd99ab28f2c2defc3405f3bbe13e724c4fef4d90cd4b"}, // value parameter view: was "reference escapes local storage; ..."
+	253: {CSHA256: "de1b861bd7f6e99f982fe64b318c2511de1c72b10114181152dc45bf9cce0bdb"}, // method expression local: was "reference escapes local storage; ..."
+	254: {CSHA256: "45d7603a0b44e96193e60107e6815ff3375a737372e471fa440a71f6caead340"}, // make([]byte, 1): was "unsupported expression *ast.ArrayType"
+	256: {CSHA256: "d7c3b4a654d6252319b369452f8e9a4ca16b5ad627a89c6445d92c497ab7114a"}, // loop view: was "reference escapes its lexical storage scope; ..."
+	257: {CSHA256: "4a87e7c45a994c9046795b681dd000bcb52750c5eb54906d29d002932d339c5f"}, // struct{P *uint64}: was "struct fields must be unsigned scalars, bools, scalar arrays, or value structs" (as entry 42)
+	261: {CSHA256: "8c82ebf0935759a4fbe12f0fca03949d78295be9f2965c86909ae2f3685b1c0d"}, // [4]uint64 view: was "slice views require byte/uint8 elements"
+	263: {CSHA256: "0fcceb5571a63b09d6d6ef933a424a6f2766a6bfa247cc92dfcc3d4af6861ab8"}, // block tuple: was "reference escapes its lexical storage scope; ..."
+	277: {CSHA256: "6284f362b4aaed53ecf4e27372dd9844706bca124be22de1e62cc9eb45e963fe"}, // value receiver copy: was "reference escapes local storage; ..."
+	288: {CSHA256: "6303c066f5933e82e3f5ecb8c0db1ab28d0066658c1af1a6c09fcb0d60347f59"}, // s30.go []uint64 parameter: was "unsupported type []uint64"
+	304: {CSHA256: "8eff277e24f9b0faab2915560880f75a37e6e2378e978d95d2912b75c627c2b3"}, // converted local view: was "reference escapes local storage; ..."
+	307: {CSHA256: "31b62ae4fd10ce4425234960c5dbfb5fa7c4cae7f84a664c47be870818bd4127"}, // s73.go [4]uint64 view: was "slice views require byte/uint8 elements"
 	// Strings and error became supported (docs/GO_STRINGS.md): the error
 	// result and the []byte("abc") conversion compile, and a standard-library
 	// import names math/bits as the only one available.
-	272: {CSHA256: "7520284e3b633d4ca0cc492a84c7682cd8bbf715eb696725e46bd9d5089926a8"}, // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
-	308: {CSHA256: "36e841b2d4dc26790911b4e1aa4543b79ac8e550d30ddce0709716833ac0c3a8"}, // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
+	272: {CSHA256: "01aed7d5a8b1c0ad1d9da6cbfad2ccc30365abb378ac8024d4e421d041442c68"}, // control-reject.go `func pair() (uint64, error)`: was "unsupported type error", then the error-values message
+	308: {CSHA256: "bc34f4f2f213a97d82503cbedb6d13bd1e59174e4ffe033f76f7cd380bdfe8d1"}, // s10.go `x := []byte("abc")`: was "slice conversion requires identical byte slices or nil"
 	// (Entry 249's message changed again with the standard-library
 	// overlay; it is listed there.)
 	// No entry is affected by both strings and function values: merging them
@@ -151,20 +151,20 @@ var corpusChanges = map[int]corpusEntry{
 	// remaining rejections are reached by the new rules first: a call
 	// through a Context field (Context fields stay opaque) and an SDK
 	// function used as a value (gosvm/solana has no Go bodies).
-	34:  {CSHA256: "1cde42fcf4acfdeeda674ed84256c5dbc9cf867a585c65dd9cd164c2ff381fbe"},                               // f2:=f; f2(): was "unsupported identifier"
+	34:  {CSHA256: "8595544262d26a763411c7c8bb44880c6d03ef0098ca4d04fe4568289960101e"},                               // f2:=f; f2(): was "unsupported identifier"
 	65:  {CSHA256: "ef1906da10e87cf29e30eda8b6f0a2a282a822ced60e07f452c71264c962fc3c"},                               // func f()(a,b uint64): was "named results are unsupported"
-	81:  {CSHA256: "cf0127a1717128e24d768bff71cd96e6a1a1cbf0c6d46b71d68a1dd00eac9d39"},                               // defer f(): was "unsupported statement *ast.DeferStmt"
-	91:  {CSHA256: "9e102f8b87c9f629cfbe2ed4d3883eb1c5d927085b37ca6656dc169216d772c9"},                               // s14.go f := func() {}: was "unsupported expression *ast.FuncLit"
+	81:  {CSHA256: "d8fdbfe5a5991e3521b1d9159b8c65f32cf81aeb3295d8991d5195069e806898"},                               // defer f(): was "unsupported statement *ast.DeferStmt"
+	91:  {CSHA256: "d5fa4c049fd9b3c5a0950d8f82a285779965847f7a57d41c88b0a315e79de9e4"},                               // s14.go f := func() {}: was "unsupported expression *ast.FuncLit"
 	116: {Error: "reject.go:1:78: Context fields are opaque"},                                                        // c.Invoke(...) through a Context field: was "methods and function values unsupported"
 	122: {Error: "reject.go:1:74: gosvm/solana functions cannot be used as values; call them in a function literal"}, // f:=solana.Count: was "only value struct fields supported"
-	134: {CSHA256: "97a5a93e561d1f86560b970655224b54a083551325f2823f9c1038cc7e22cf68"},                               // s27.go type F func(): was "unsupported type program.F"
+	134: {CSHA256: "2f25d7579d7e34f590edfc32ee596dcf6789b5e6e869b59f0d87bc942c80de08"},                               // s27.go type F func(): was "unsupported type program.F"
 	136: {CSHA256: "ef1906da10e87cf29e30eda8b6f0a2a282a822ced60e07f452c71264c962fc3c"},                               // func pair()(a,b uint64): was "named results are unsupported" (same C as 65)
-	153: {CSHA256: "f318bb3f6ebf79714559de24c1b7aa61fa9c9e1b824cb6e106d7aa9ddf5cb3b5"},                               // imported f:=s.F: was "method values unsupported; call the method directly"
-	183: {CSHA256: "cf0127a1717128e24d768bff71cd96e6a1a1cbf0c6d46b71d68a1dd00eac9d39"},                               // s63.go defer f(): was "unsupported statement *ast.DeferStmt" (same C as 81)
-	202: {CSHA256: "2b9319281286f623f5e4930273c1ba8d2886f0bb4d6fa756f7c174e5d60368fb"},                               // s12.go func() uint64 {...}(): was "only direct function calls supported"
-	229: {CSHA256: "7eddff6040fb04145527c0be61efebe70613f1f192a61b6c5ffeb2d2ca2d377b"},                               // f:=v.Read: was "method values unsupported; call the method directly"
-	248: {CSHA256: "b67fe362e0be4e216b50547f1d21dc9fc2ffa56cd5ef7c4d386fa94f27a256ff"},                               // s37.go f := s.M: was "method values unsupported; call the method directly"
-	291: {CSHA256: "8d94780bbebf314088d1744dbe48b51229e9ee8c0e2c39cb322695416d752a5c"},                               // imported f:=G: was "unsupported identifier"
+	153: {CSHA256: "e49ae32ab980d9b8c81e7e69ac6d02d83500f13dba1873e0247eca4099cb9876"},                               // imported f:=s.F: was "method values unsupported; call the method directly"
+	183: {CSHA256: "d8fdbfe5a5991e3521b1d9159b8c65f32cf81aeb3295d8991d5195069e806898"},                               // s63.go defer f(): was "unsupported statement *ast.DeferStmt" (same C as 81)
+	202: {CSHA256: "42fecb8761b7e175e49263b339f58e2e9a6150bb69074218952e49cc2687a411"},                               // s12.go func() uint64 {...}(): was "only direct function calls supported"
+	229: {CSHA256: "663f0499684a21b55fef529a5deb467c2aaf653baa61a27575b330452beaccc0"},                               // f:=v.Read: was "method values unsupported; call the method directly"
+	248: {CSHA256: "b43fe9401e9f9d4486dbb0d3c0cade269fe342a20b523b0067f2ead1217f8b40"},                               // s37.go f := s.M: was "method values unsupported; call the method directly"
+	291: {CSHA256: "97bda7425bf54a6627a8ce226e89ccf3ab3e56925058168bd57dfbf7e9cc4c8a"},                               // imported f:=G: was "unsupported identifier"
 	// Maps became supported (docs/GO_MAPS.md): the unused nil map compiles.
 	// Compound assignment on integers became supported (docs/GO_INTEGERS.md):
 	// both recorded compound assignments compile. Neither is affected by
@@ -174,7 +174,7 @@ var corpusChanges = map[int]corpusEntry{
 	// No entry is affected by both maps and function values: entry 258 has no
 	// function value, and none of the function-value entries uses a map, so
 	// merging them changed no verdict or C hash recorded by either side.
-	258: {CSHA256: "442b6bf53e5b5481667f9c4a8e6acd0d7cbb288f10b84ef789cf57ec03917ad7"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
+	258: {CSHA256: "e445bfeed82dbc1fa96f86a6b3828095fcbd7193fba2d17229cd5f2395871ee5"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
 	// Package-level variables and init functions became supported
 	// (docs/GO_GLOBALS.md): every recorded package-level var and init
 	// function now compiles. Variables never written are read-only data
@@ -183,7 +183,7 @@ var corpusChanges = map[int]corpusEntry{
 	155: {CSHA256: "ab2dd66c3ec98d4a07e30fb136d3886823c84dd04e3b504f85282717567ddda9"}, // reject.go `var x uint64; return x`: likewise
 	177: {CSHA256: "a645437863b63515b86d3ca14de938f134d2c4735fc08715a4cad9e913facf66"}, // dep/program.go `var N uint64=1` read from another package: likewise
 	178: {CSHA256: "abe2bef8566cb6c04e310fec04cdc44011119dc8723956fed488e93b99e0a0fb"}, // swap/bad.go `var UnsupportedGlobal uint64` (the CLI test now uses a float64): likewise
-	186: {CSHA256: "911bdb1c38a75e0456c217bc36963ece47eb21f616c73326ff403d66e696f42a"}, // multi-state/bad.go `var Global uint64` (the schema-2 test now uses a float64): likewise
+	186: {CSHA256: "f891973d3fb7766cb0399984d671bd8ca5669a669b6e35f28589200bd33523ec"}, // multi-state/bad.go `var Global uint64` (the schema-2 test now uses a float64): likewise
 	240: {CSHA256: "b5d064c9094f53c4caf315677ce265070d6822ed82b1cc74301b03050af8b778"}, // reject.go `func init()`: was "init functions are unsupported"
 	245: {CSHA256: "4eabe761928394e3e9621d26e72c3f41718db099c544148366a078100dab2f1b"}, // s23.go `var G uint64` (same C as entry 54): was "only functions and constants are supported at package scope"
 	259: {CSHA256: "18dc882b49fc9e9ffe5ee80a1095e92310d8e1b21565f05830d01d3a1b7dd1b3"}, // dep/program.go `func init()`: was "init functions are unsupported"
@@ -207,10 +207,10 @@ var corpusChanges = map[int]corpusEntry{
 	// in the same expression may write (Check cannot prove the call does
 	// not), so the operand is now read after the call. Their results are
 	// unchanged.
-	47:  {CSHA256: "11ce2954064a98ab5dbc52911cd072a2ef0b03c6a909f94daa650b989a752043"}, // pointer-values: b.Value(next(s)) copies *b after next(s), which writes through a slice
-	164: {CSHA256: "11ce2954064a98ab5dbc52911cd072a2ef0b03c6a909f94daa650b989a752043"}, // the same program from the examples sweep
-	130: {CSHA256: "b5ada5afea1f2b0d2171ed66a5d9f05826076f307b86c7b5848629ec893d5101"}, // control-values: s[uint64(i[1])] reads i[1] after next(s), next(s)
-	139: {CSHA256: "b5ada5afea1f2b0d2171ed66a5d9f05826076f307b86c7b5848629ec893d5101"}, // the same program from the examples sweep
+	47:  {CSHA256: "8431eac63614236f107cd7a8e40f66b89738186cda1782b8a99fde9337905bd9"}, // pointer-values: b.Value(next(s)) copies *b after next(s), which writes through a slice
+	164: {CSHA256: "8431eac63614236f107cd7a8e40f66b89738186cda1782b8a99fde9337905bd9"}, // the same program from the examples sweep
+	130: {CSHA256: "acf26e408a167542466ed2d1aa654a627d998ee1870ad1d87d668c3aca8dd921"}, // control-values: s[uint64(i[1])] reads i[1] after next(s), next(s)
+	139: {CSHA256: "acf26e408a167542466ed2d1aa654a627d998ee1870ad1d87d668c3aca8dd921"}, // the same program from the examples sweep
 	// Package-level variables and value types were developed in parallel;
 	// no package-variable entry uses a value-type feature and vice versa,
 	// so merging them changed no verdict or C hash recorded by either side
@@ -220,13 +220,78 @@ var corpusChanges = map[int]corpusEntry{
 	// pointers to pointers (errors.As(err, &p) for a pointer-typed p needs
 	// a **T) and variadic functions (errors.Join) became supported. No
 	// other entry is affected.
-	120: {CSHA256: "2b9582e51181d45cc9b9fd00100941f70d4e76706fe044ed25a3401e2112166d"},                                                                                                                                                   // s02.go `func f(xs ...uint64)` called as f(): was "variadics are unsupported"
+	120: {CSHA256: "ab554322d245840ef1e11f3e7a52210520fcfe53075ed9cf1abc4ed3c44f2750"},                                                                                                                                                   // s02.go `func f(xs ...uint64)` called as f(): was "variadics are unsupported"
 	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; standard-library packages on chain: bytes, encoding/binary, errors, math, strconv, strings, unicode, unicode/utf8 and math/bits (docs/GO_STDLIB.md))`}, // was "...; use a module-backed program for user packages", then "...; the only standard-library package on-chain is math/bits"
 	3:   {CSHA256: "35e30e3a3b6c5b64a7bf16ab58665fc2616eeb85e7362cc64e837a805105a3b6"},                                                                                                                                                   // s51.go `func f(p **uint64)`: was pointerElementRule
 	190: {CSHA256: "877ada41476ba1837ae0f9276ed3222dcd48d27e644e436dfdcc06deb8acceeb"},                                                                                                                                                   // pointer-reject.go `pp:=&p;return **pp`: was pointerElementRule (it now compiles; the nil dereference traps at run time)
 	// The standard library and value types were developed in parallel: no
 	// entry is affected by both, so merging them changed no verdict or C
 	// hash recorded by either side.
+	// Aggregate parameters on SBF (docs/GO_STDLIB.md#aggregate-parameters-on-sbf):
+	// no verdict changed. These programs copy an aggregate parameter that a
+	// function writes at entry (64 programs, 58 of them listed here; the
+	// same 64 the written-parameter rule alone changes); append's growth
+	// helper no longer writes its slice parameter, which changes the C of
+	// every program that appends. Entries above whose C changed for either
+	// reason carry their new hashes in place (53 entries).
+	6:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	8:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	10:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // program.go
+	11:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"}, // entry.go
+	20:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"}, // model.go
+	22:  {CSHA256: "dd4b8fe6acdc35feb26a086c9e48389a06d93e779aa48b64eb71d1b92691ebe6"}, // pda.go
+	40:  {CSHA256: "8ea5fabbd6de885686956be6f6e294059b5115153b3866006e3d8a1deb7373ca"}, // program.go
+	43:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"}, // model.go
+	48:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	51:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"}, // types.go
+	57:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	58:  {CSHA256: "7e0975a8e457446af4c53308487b583a1fd28d90c586064e235a2c578bb9c6e7"}, // model.go
+	59:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	68:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"}, // model.go
+	77:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	83:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	85:  {CSHA256: "4b3199a3e995310ad3c61320415f382481451b2510de256382b9aad8fff44f52"}, // model.go
+	86:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"}, // model.go
+	92:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	93:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // test.go
+	99:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	105: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	108: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	112: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"}, // model.go
+	114: {CSHA256: "57baa962535ac47f6fcde53076bbb9138f6cfc467cc7e9d729ce4f903421712f"}, // pda.go
+	115: {CSHA256: "ff9d74d9cd831d0c92b087ea98d60ea3d16b969ddd582013014146d070930048"}, // model.go
+	117: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	118: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	121: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	123: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	142: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	143: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	147: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	160: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	167: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"}, // model.go
+	169: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	172: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	176: {CSHA256: "c4320970229098e1a01bca4f4d73f17242472cc2d8ca081d13fab5479e5d078b"}, // model.go
+	181: {CSHA256: "f3ec7d095818e1b1d8339cad5a0a05a40a47c8d14991736b41c7eb6094046e77"}, // model.go
+	192: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	206: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	207: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	208: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	210: {CSHA256: "2157f52add09a2752cf5657c42aad883a793183c0df593203edee727232c7933"}, // pda.go
+	211: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	217: {CSHA256: "81cbd346e56642a8063bd09788313c7714ee4e12bf95a201fdab93b8bed98ec1"}, // model.go
+	219: {CSHA256: "03a66c44f073b48586edb8f45ff3f74cf3d91eceee4f3cf3480ed5e3e17e0950"}, // arrays.go
+	225: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // arrays.go
+	227: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	242: {CSHA256: "54eb5126883501afd5be891aeb609c4f5d55f5ffdd9a540163a889b16c6bac8f"}, // model.go
+	247: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	270: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	278: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // arrays.go
+	281: {CSHA256: "b50201ffc29dbc8dfa9be0bc6a07f2d3eb16488b5d40009303b6b5bddfdad53b"}, // pda.go
+	283: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	300: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	302: {CSHA256: "25b08138fe9dd864e7dbeb13f53c1167b5697621e9311b66363f2bea5d3c65ba"}, // model.go
+	309: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
 }
 
 const (

@@ -67,10 +67,14 @@ type generator struct {
 	emitted          map[types.Type]bool
 	emittedInstances map[string]bool
 	// copied and copiedParams are the aggregate parameters a function or
-	// literal writes, which it receives under another name and copies into
-	// a local at entry (byval.go).
+	// literal receives under another name and copies into a local at entry;
+	// opaqueCopies marks the copied parameters whose copies go through an
+	// opaque pointer (byval.go).
 	copied       map[types.Object]bool
 	copiedParams map[ast.Node][]types.Object
+	opaqueCopies map[types.Object]bool
+	// writeSummaries are Check's call summaries (what calls may write).
+	writeSummaries *evalAnalysis
 	// order holds hoisted operands (CheckedProgram.Hoisted) while their owner
 	// is emitted.
 	order *hoisting
@@ -110,7 +114,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2,
 		moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, forward: map[any]bool{}, defined: map[any]bool{},
 		movedParams: map[*ast.FuncDecl][]types.Object{}, emitted: map[types.Type]bool{}, emittedInstances: map[string]bool{},
-		copied: map[types.Object]bool{}, copiedParams: map[ast.Node][]types.Object{}}
+		copied: map[types.Object]bool{}, copiedParams: map[ast.Node][]types.Object{}, opaqueCopies: map[types.Object]bool{}}
 	for _, fn := range program.Functions {
 		sig := fn.Object.Type().(*types.Signature)
 		for _, v := range fn.HeapVars {
@@ -123,10 +127,12 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			g.movedLits[lit] = true
 		}
 	}
-	// Aggregate parameters a body writes are copied at entry (byval.go),
-	// in standard-library overlay functions.
+	// Aggregate parameters are copied at entry where the SBF backend's
+	// byval lowering could otherwise share them with the caller (byval.go).
+	summaries := program.order.analysis
+	g.writeSummaries = summaries
 	for _, fn := range program.Functions {
-		if fn.Library != nil || fn.Intrinsic != "" || !copiesByvalParams(fn.Object) {
+		if fn.Library != nil || fn.Intrinsic != "" {
 			continue
 		}
 		sig := fn.Object.Type().(*types.Signature)
@@ -137,13 +143,15 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		for i := 0; i < sig.Params().Len(); i++ {
 			params = append(params, sig.Params().At(i))
 		}
-		g.noteCopiedParams(fn.Decl, fn.Decl.Body, params)
+		g.noteCopiedParams(fn.Decl, fn.Decl.Body, params, func() []ast.Node { return summaries.writeSites(fn.Decl.Body, nil, true, false) })
 	}
 	if program.funcs != nil {
 		for _, cl := range program.funcs.closures {
-			if copiesByvalParams(cl.Owner.Object) {
-				g.noteCopiedParams(cl.Lit, cl.Lit.Body, cl.Params)
+			captured := map[types.Object]bool{}
+			for _, v := range cl.Captures {
+				captured[v] = true
 			}
+			g.noteCopiedParams(cl.Lit, cl.Lit.Body, cl.Params, func() []ast.Node { return summaries.writeSites(cl.Lit.Body, captured, true, false) })
 		}
 	}
 	g.entry = program.Process

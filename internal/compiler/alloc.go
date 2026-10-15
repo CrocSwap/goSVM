@@ -216,10 +216,11 @@ static u64 gosvm_roundupsize(u64 size, u64 scan) {
     if (req < size) return size;
     return req & ~8191ULL;
 }
-/* append's growth: Go 1.22 runtime.growslice for an element of size bytes. */
+/* append's growth: Go 1.22 runtime.growslice for an element of size bytes.
+   s is never written: on SBF it may be the caller's variable (byval). */
 static slice gosvm_grow(slice s, u64 num, u64 size, u64 scan) {
     u64 oldlen = (u64)s.len, newlen = oldlen + num;
-    if (newlen <= (u64)s.cap) { s.len = (i64)newlen; return s; }
+    if (newlen <= (u64)s.cap) return (slice){s.ptr, (i64)newlen, s.cap};
     u64 newcap = gosvm_nextcap(newlen, (u64)s.cap);
     if (newcap > GOSVM_HEAP_BYTES / size) abort();
     newcap = gosvm_roundupsize(newcap * size, scan) / size;

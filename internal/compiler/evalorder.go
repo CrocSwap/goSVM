@@ -30,6 +30,8 @@ import (
 
 // evalOrder is Check's result; see the exported CheckedProgram fields.
 type evalOrder struct {
+	// analysis keeps the call summaries (mayWrite) for byval.go.
+	analysis  *evalAnalysis
 	hoisted   map[ast.Node][]ast.Expr
 	converted map[ast.Expr]bool
 	mapOrder  map[*ast.CompositeLit][]int
@@ -77,6 +79,7 @@ type evalAnalysis struct {
 	appendOf  map[*ast.AssignStmt]*ast.CallExpr
 	out       *evalOrder
 	keyConvOf map[ast.Expr]bool
+	written   map[types.Object]*funcSummary // funcWrites (byval.go)
 }
 
 // analyzeEvalOrder computes the evaluation-order lowering of every function
@@ -84,7 +87,7 @@ type evalAnalysis struct {
 func (f *frontend) analyzeEvalOrder(checked *CheckedProgram) *evalOrder {
 	a := &evalAnalysis{f: f, byObject: map[types.Object]*Function{}, pinned: map[types.Object]bool{}, targets: map[ast.Expr]bool{},
 		early: map[ast.Expr]bool{}, logs: map[types.Object]int{}, writes: map[types.Object]int{}, effects: map[ast.Expr]evalEffect{}, litsDone: map[*ast.FuncLit]bool{},
-		appendOf: map[*ast.AssignStmt]*ast.CallExpr{}, keyConvOf: map[ast.Expr]bool{},
+		appendOf: map[*ast.AssignStmt]*ast.CallExpr{}, keyConvOf: map[ast.Expr]bool{}, written: map[types.Object]*funcSummary{},
 		out: &evalOrder{hoisted: map[ast.Node][]ast.Expr{}, converted: map[ast.Expr]bool{}, mapOrder: map[*ast.CompositeLit][]int{},
 			shared: map[ast.Expr]ast.Expr{}, sequenced: map[ast.Expr]bool{}}}
 	for _, fn := range checked.Functions {
@@ -113,6 +116,7 @@ func (f *frontend) analyzeEvalOrder(checked *CheckedProgram) *evalOrder {
 	for _, body := range bodies {
 		a.body(body.List)
 	}
+	a.out.analysis = a
 	return a.out
 }
 
@@ -1318,77 +1322,101 @@ func (a *evalAnalysis) mayWrite(o types.Object) bool {
 	if fn == nil || fn.Library != nil || fn.Decl.Body == nil {
 		return true
 	}
+	if a.bodyMayWrite(fn.Decl.Body, nil) {
+		return true
+	}
+	a.writes[o] = 1
+	return false
+}
+
+// bodyMayWrite reports whether body may write storage outside its own
+// locals, as mayWrite; assignments to the variables in shared (a literal's
+// captured variables) count too.
+func (a *evalAnalysis) bodyMayWrite(body ast.Node, shared map[types.Object]bool) bool {
+	return len(a.writeSites(body, shared, false, true)) > 0
+}
+
+// writeSites lists the statements and calls in body that may write storage
+// outside its own locals (or the variables in shared): assignments,
+// increments and range assignments to such storage (the statement), calls
+// of delete and clear, and calls that may write (the call). With skipLits,
+// function literals' bodies are not searched (their writes happen where
+// they are called, which is a call that may write). With first, it stops
+// at the first site.
+func (a *evalAnalysis) writeSites(body ast.Node, shared map[types.Object]bool, skipLits, first bool) []ast.Node {
 	info := a.f.info
-	writes := false
-	target := func(e ast.Expr) {
+	var sites []ast.Node
+	writes := func(e ast.Expr) bool {
 		for {
 			switch x := e.(type) {
 			case *ast.ParenExpr:
 				e = x.X
 				continue
 			case *ast.Ident:
-				if v, ok := info.Uses[x].(*types.Var); ok && isPackageVar(v) {
-					writes = true
-				}
+				v, ok := info.Uses[x].(*types.Var)
+				return ok && (isPackageVar(v) || shared[v])
 			case *ast.SelectorExpr:
 				if a.f.packageVar(x) != nil {
-					writes = true
+					return true
 				} else if sel := info.Selections[x]; sel == nil || sel.Indirect() {
-					writes = true
+					return true
 				} else if _, isPointer := pointer(info.Types[x.X].Type); isPointer {
-					writes = true
-				} else {
-					e = x.X
-					continue
+					return true
 				}
+				e = x.X
+				continue
 			case *ast.IndexExpr:
 				if _, ok := info.Types[x.X].Type.Underlying().(*types.Array); ok {
 					e = x.X
 					continue
 				}
-				writes = true
-			default:
-				writes = true
+				return true
 			}
-			return
+			return true
 		}
 	}
-	ast.Inspect(fn.Decl.Body, func(n ast.Node) bool {
+	ast.Inspect(body, func(n ast.Node) bool {
+		if first && len(sites) > 0 {
+			return false
+		}
 		switch n := n.(type) {
+		case *ast.FuncLit:
+			return !skipLits
 		case *ast.AssignStmt:
 			for _, l := range n.Lhs {
 				if id, ok := l.(*ast.Ident); ok && (n.Tok == token.DEFINE || id.Name == "_") {
 					continue
 				}
-				target(l)
+				if writes(l) {
+					sites = append(sites, n)
+					break
+				}
 			}
 		case *ast.IncDecStmt:
-			target(n.X)
+			if writes(n.X) {
+				sites = append(sites, n)
+			}
 		case *ast.RangeStmt:
-			if n.Tok == token.ASSIGN {
-				if n.Key != nil {
-					target(n.Key)
-				}
-				if n.Value != nil {
-					target(n.Value)
-				}
+			if n.Tok == token.ASSIGN && (n.Key != nil && writes(n.Key) || n.Value != nil && writes(n.Value)) {
+				sites = append(sites, n)
 			}
 		case *ast.CallExpr:
+			w := false
 			if id, ok := ast.Unparen(n.Fun).(*ast.Ident); ok {
 				if b, ok := info.Uses[id].(*types.Builtin); ok && (b.Name() == "delete" || b.Name() == "clear") {
-					writes = true
+					w = true
 				}
 			}
-			if w, _ := a.callEffect(n); w {
-				writes = true
+			if !w {
+				w, _ = a.callEffect(n)
+			}
+			if w {
+				sites = append(sites, n)
 			}
 		}
-		return !writes
+		return true
 	})
-	if !writes {
-		a.writes[o] = 1
-	}
-	return writes
+	return sites
 }
 
 // hoisting is the emitter's state for CheckedProgram.Hoisted: the saved

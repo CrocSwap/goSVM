@@ -569,3 +569,15 @@ Handler results propagate unchanged.
   literals inserting constant entries before computed ones (a computed key
   equal to a constant key now keeps the computed value). Programs where no
   call can change an earlier operand compile to the same C.
+- 2026-10-15: bug fix (aggregate parameters on SBF; announce to Qushta), no
+  trap or code added: on SBF a callee could change its caller's string,
+  slice, struct, array or interface variable by writing its own parameter
+  (also a value receiver, also through an interface), could read its
+  parameter's new value after changing the caller's variable through a
+  package variable or pointer, and `t := append(s, x)` with spare capacity
+  could lengthen `s`, because the SBF backend does not copy C `byval`
+  parameters ([GO_STDLIB.md](GO_STDLIB.md#aggregate-parameters-on-sbf)).
+  Behaviour now matches Go on SBF (it always did on the host): parameters
+  are values, and writes trap or complete exactly as before. Only programs
+  that hit the bug behave differently; the copies cost CU where they run
+  (the full swap's wide swap +599/+603).

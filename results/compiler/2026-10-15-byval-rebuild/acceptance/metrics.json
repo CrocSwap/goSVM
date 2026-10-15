@@ -1,0 +1,5952 @@
+{
+  "schema": 1,
+  "network_validation": false,
+  "host": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "cli_sha256": "9dfee7187abae33a476362bea337b2a272f2aa64404f544a1ae934d8a69af577",
+  "runs": [
+    {
+      "workload": "token-swap",
+      "target": "fogo-v0",
+      "report_sha256": "0dea7db0067668c769dbb6fd1b980cbd836df2ce05181488c218762f655197f6",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 34165,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 45565,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26436,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 48205,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 74639,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "10907185380843b8a02bf96d05e2ae13d9ded5e74eb2dfb20f36ebc7b10acb5d"
+    },
+    {
+      "workload": "token-swap",
+      "target": "fogo-v0",
+      "report_sha256": "d175af29eafd15105e6b678b3857a590544ee7ee19ebebd1a158cfc3813f682d",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 34165,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 45565,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26436,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 48205,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 74639,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "8b51c8c9d80e4fc13cf78f3ec93f72b446bd596f342252db6e6055d8ec852de6"
+    },
+    {
+      "workload": "token-swap",
+      "target": "fogo-v0",
+      "report_sha256": "8f2fad3eedc3a0985ec1c7c22d8bc9d1c5e2df7fe31f83464e4d715ee66e836f",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 34165,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 45565,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26436,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 48208,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 48205,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 74639,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "099bbd271d86a26fe464ed3a88a4529de104718925ba744c6aa2068aea04ab9c"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "fogo-v0",
+      "report_sha256": "5dd732e1d4eec4c36749b24e25175308f73b3364b4ea004ca43dd6cbc03e9a04",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30083,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30088,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32385,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32387,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33669,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 39022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85857,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45230,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 56017,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53665,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27370,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 117031,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93393,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42248,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89608,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87891,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "4911307a6a49609c5af8848ecacece615c9720c17e2f5974b97270315170a513"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "fogo-v0",
+      "report_sha256": "5a90fee1bed6493ae1dfcf6a0b91f8d4fe7c5dd548cd0c826111f5142093c0f2",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30083,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30088,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32385,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32387,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33669,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 39022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85857,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45230,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 56017,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53665,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27370,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 117031,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93393,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42248,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89608,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87891,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "6b8675c2ecbe2641c275ee128e25b4e6169f647d05327bd62faffc89287b042d"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "fogo-v0",
+      "report_sha256": "204a78db40d7f485ee633c2ecc16901e21833dadefd8c0138aa8070c80bf9ad0",
+      "elf_sha256": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89662,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 50014,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30083,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30088,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32385,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32387,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33669,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 39022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85857,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45230,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 56017,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53665,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27370,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 117031,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93393,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42248,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89608,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87891,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63311,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "5c73cd29aa9007765c1e128f7a246a807f0acf3a2f5cfb61e199f78660d53fb2"
+    },
+    {
+      "workload": "clock",
+      "target": "fogo-v0",
+      "report_sha256": "5efc76eb54c2110c320e11a9d4457f0b2ce381133cbb91f1b5153d3d76e289dd",
+      "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "d66d1e7896a72999d01a9e84bced66179426d02d21c5c83e7bd2491ce2802b1c"
+    },
+    {
+      "workload": "clock",
+      "target": "fogo-v0",
+      "report_sha256": "7c0845f40a3832f9d118490492dbcdcabf6fcd47029703c8b22e613084e5cd35",
+      "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "1e050de01498bdb3270f5dd938150dfb80bd64d8edd874e51730a1c56f51b622"
+    },
+    {
+      "workload": "clock",
+      "target": "fogo-v0",
+      "report_sha256": "d64bbfea63c4065d359c2bb7e0a13e8022f9e79fc3aaec69918c8d13ed759dc7",
+      "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)",
+      "runner_sha256": "886ea29358c3a5f71fcb621d20f92862a250bae35de41a6cc7971967be0a2bc3",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "bb877bc5807d80a5516b0a3133c4413cd33d605cea5bee14cad45c9be0288854"
+    },
+    {
+      "workload": "token-swap",
+      "target": "solana-v3",
+      "report_sha256": "304794c6ba37ef6032532d77dda6db768f682ad622a30d81d4a6814135c2841a",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 29943,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 36721,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26386,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 38910,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 65294,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "9219fc8da2d601918f08e1f828c4855cc09c717730296fe557dc80dc6df1de3c"
+    },
+    {
+      "workload": "token-swap",
+      "target": "solana-v3",
+      "report_sha256": "d058aca724b2742c31e4f02e9f3353742a5e32935164c5eccc7f74f9f00ca087",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 29943,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 36721,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26386,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 38910,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 65294,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "470729f43a6291ff58ad9c60b603d1aa2fc9a1c5079fb35996ff5fec681650bc"
+    },
+    {
+      "workload": "token-swap",
+      "target": "solana-v3",
+      "report_sha256": "e3db4b6d9881dd45b3c3b1a5f7632b8d73d0952aac124361b0f6858844e8c5e2",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "wide-swap",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pool-owner",
+          "steps": [
+            {
+              "cu": 763,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6002
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "no-signer",
+          "steps": [
+            {
+              "cu": 722,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "alias",
+          "steps": [
+            {
+              "cu": 2072,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "vault-substitute",
+          "steps": [
+            {
+              "cu": 14604,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "token-owner",
+          "steps": [
+            {
+              "cu": 4260,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3010
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "mint",
+          "steps": [
+            {
+              "cu": 16295,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "pda",
+          "steps": [
+            {
+              "cu": 20936,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "bump",
+          "steps": [
+            {
+              "cu": 20598,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-frozen",
+          "steps": [
+            {
+              "cu": 29943,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-frozen",
+          "steps": [
+            {
+              "cu": 36721,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "input-overflow",
+          "steps": [
+            {
+              "cu": 26386,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "stateful-swaps-and-atomic-rollback",
+          "steps": [
+            {
+              "cu": 38913,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 38910,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 65294,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 112
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "838286b7731b59a54e84cfdf5102f07b2718799a2e09a8bf4b6319e10dac3d43"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "solana-v3",
+      "report_sha256": "62a4569d75d989339d8a6d339b3415cf6719b5f5a00dfb0fe993764dfc8f0387",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30010,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30018,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32312,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32314,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33602,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 38907,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85491,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45097,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 55832,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53480,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27320,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 116614,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93084,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42113,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89241,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87515,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "d74d1ad19a383c3a5541eb49b8b0e4a416713fd93fdadd38fc2342738e0e6223"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "solana-v3",
+      "report_sha256": "28c8a0b86d2c57865870570761eac06adcf0325a8ca868b9aabe5c5f72d37e18",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30010,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30018,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32312,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32314,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33602,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 38907,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85491,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45097,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 55832,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53480,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27320,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 116614,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93084,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42113,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89241,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87515,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "bf6a9c7b57288dd867e5693619156d1e97ac8422a648a0a6e7c04a18b1bd717d"
+    },
+    {
+      "workload": "managed-lifecycle",
+      "target": "solana-v3",
+      "report_sha256": "2ec7e07e4a7b2b68695a746a5cbf49f23d8b4ed41f9caf9454600e792eae3844",
+      "elf_sha256": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+      "fixtures_sha256": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "create-deposit-swap-drain-close-reuse",
+          "steps": [
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 89295,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 49857,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-zero-reserve",
+          "steps": [
+            {
+              "cu": 30010,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-tokens",
+          "steps": [
+            {
+              "cu": 30018,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-layout",
+          "steps": [
+            {
+              "cu": 32312,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-mint-uninitialized",
+          "steps": [
+            {
+              "cu": 32314,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3012
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wallet-owner",
+          "steps": [
+            {
+              "cu": 11240,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-unsigned",
+          "steps": [
+            {
+              "cu": 961,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-payer-unsigned",
+          "steps": [
+            {
+              "cu": 967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-target-readonly",
+          "steps": [
+            {
+              "cu": 975,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-alias",
+          "steps": [
+            {
+              "cu": 2353,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6006
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-wrong-vault-bump",
+          "steps": [
+            {
+              "cu": 14972,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6008
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-vault-already-funded",
+          "steps": [
+            {
+              "cu": 33602,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-pool-already-funded",
+          "steps": [
+            {
+              "cu": 1904,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6009
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-insufficient-lamports-after-pool",
+          "steps": [
+            {
+              "cu": 38907,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 1
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-second-deposit-frozen-rolls-back",
+          "steps": [
+            {
+              "cu": 85491,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "create-token-program-substitution",
+          "steps": [
+            {
+              "cu": 1067,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6005
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-wrong-creator",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-unsigned-creator",
+          "steps": [
+            {
+              "cu": 723,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6001
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-vault-substitution",
+          "steps": [
+            {
+              "cu": 14967,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-refund-token-authority",
+          "steps": [
+            {
+              "cu": 17022,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6007
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-refund-frozen",
+          "steps": [
+            {
+              "cu": 45097,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 17
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-second-vault-close-authority",
+          "steps": [
+            {
+              "cu": 55832,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 3013
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-lamport-overflow",
+          "steps": [
+            {
+              "cu": 53480,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 14
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "swap-slippage-after-create",
+          "steps": [
+            {
+              "cu": 27320,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-create-bad-swap-rollback",
+          "steps": [
+            {
+              "cu": 116614,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 113
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-close-bad-recreate-rollback",
+          "steps": [
+            {
+              "cu": 93084,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 115
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "close-empty-frozen-vaults",
+          "steps": [
+            {
+              "cu": 42113,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-0",
+          "steps": [
+            {
+              "cu": 89241,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "current-rent-lifecycle-1",
+          "steps": [
+            {
+              "cu": 87515,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 63075,
+              "error": null,
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "51cb60ee2a8df58e18554f85a91c6b1c5327c2158f269705e50d757316b16b8e"
+    },
+    {
+      "workload": "clock",
+      "target": "solana-v3",
+      "report_sha256": "7f809eec15296cb0bf58a0c4ee4437fbc2748cd9ebed63de66928dd97dda50b2",
+      "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "c795456d2a0816c1e43cae31c6e0f5ae952a613dded5784d828310b2a0a47fbd"
+    },
+    {
+      "workload": "clock",
+      "target": "solana-v3",
+      "report_sha256": "615d09454aed287ea7ed4f5895c32c9357eab7b13a1bd520662e39b27a671845",
+      "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "3fc42719c44270eef84f3744e3e972a7bb4a2fc530c2b4ddd555340afb2a7500"
+    },
+    {
+      "workload": "clock",
+      "target": "solana-v3",
+      "report_sha256": "0c733956308563b44742dff0d37d8516113c7665429918511772fa885b2dc9c6",
+      "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+      "fixtures_sha256": "42636cd336a54838c564188771ff9495484a6199ec7edaa95b2a28660454cc1e",
+      "runtime_version": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",
+      "runner_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+      "cases": [
+        {
+          "name": "actual-clock-reward-sequence",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            },
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-minus-one",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "negative-timestamp-min-int64",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6021
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "maximum-positive-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "zero-timestamp",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "word-extremes",
+          "steps": [
+            {
+              "cu": 994,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "time-regression",
+          "steps": [
+            {
+              "cu": 421,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6022
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "uint64-reward-multiply-overflow",
+          "steps": [
+            {
+              "cu": 991,
+              "error": null,
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "read-then-fail-rolls-back",
+          "steps": [
+            {
+              "cu": 992,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-39",
+          "steps": [
+            {
+              "cu": 123,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "output-length-41",
+          "steps": [
+            {
+              "cu": 121,
+              "error": {
+                "InstructionError": [
+                  0,
+                  {
+                    "Custom": 2016
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        },
+        {
+          "name": "atomic-later-instruction-rollback",
+          "steps": [
+            {
+              "cu": 1986,
+              "error": {
+                "InstructionError": [
+                  1,
+                  {
+                    "Custom": 6099
+                  }
+                ]
+              },
+              "committed": true
+            }
+          ]
+        }
+      ],
+      "runtime_info_sha256": "e7ded4aff99ce98ef135c2c11dd48771fa2633f7d0219c2d03f72c72152cb41d"
+    }
+  ],
+  "source_sha256": {
+    "benchmarks/svm-runner-modern/Cargo.lock": "25f7962a4388aad933fa28281e0b7d822509570f0805de655a1f080aba8826bd",
+    "benchmarks/svm-runner-modern/Cargo.toml": "c3727a99ecf6a4badb561bdac2d3cda898f860772bf8a9b65df7858bb909c611",
+    "benchmarks/svm-runner-modern/README.md": "0f5e42d12df654b719eb9d6e6171a99eb22e94da94af2724629514aaaf63fd51",
+    "benchmarks/svm-runner-modern/src/lib.rs": "746cccfa664d9a9abdab87d1a552e936e3a556e9214adf7b62d9db1497043a0a",
+    "benchmarks/svm-runner-modern/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "cmd/gosvm/authority.go": "574ec5e7ca6e4b758f7c86b6734fa81afa19fc0258ff4b9dadca3340e4dac7d4",
+    "cmd/gosvm/call.go": "d342bbfaa7091a169bbe9d7584e6212e7f3d29a9689efb2de72b798b3e52dded",
+    "cmd/gosvm/deploy.go": "3a24943bc181d3909d023095b8272782c75b77e0e731950d67434890b04fda0c",
+    "cmd/gosvm/external_elf_test.go": "4129ced6ef28d268f2072fee22b9548d50c6b4a52d9859fb484494adb518f34c",
+    "cmd/gosvm/features.go": "f29e87084217f29155a9b52e7bc94160e0005b692382003aa9793bd716484f01",
+    "cmd/gosvm/features_test.go": "c7fcc2171c461b861dacaeac347096fc5ba8b949d9d9c7fe5d2f28877aa45dd5",
+    "cmd/gosvm/library.go": "365ac4562584c72522275c34f5afc68649dc49bb23161f291f28e3cfa4838835",
+    "cmd/gosvm/main.go": "13cf5f2e8d953deec47738360187a471cfed42a8252ef62a94d3887e1bca7864",
+    "cmd/gosvm/project.go": "d64fd62992feba59a6b81c33262cb29fb40d202c5e72cd50d3225af238db0411",
+    "cmd/gosvm/project_test.go": "acfbf957e74826e21d3d2f0f5c14315eccbbac9597fd339fe03dbd11d0b61658",
+    "cmd/gosvm/runner.go": "c0d831fc41c56a1a8828a9a7439b0194085a437e9d68d2af38acc80ff2497cf8",
+    "cmd/gosvm/rust_library.go": "7fd7217ac02911a0e2443ec704d9fcac640b54f1dc4bacc77fc044004118ff49",
+    "cmd/gosvm/svm.go": "bd64b719222b6d585824b39b9cfa97e28926feb2ad1a6f8ba6ebd18b067fb788",
+    "cmd/gosvm/timings.go": "583e5f76886f9ecffc1f0c6386c7798e9dbc5a9cbdf2ed668def572c501bc0c0",
+    "go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    "internal/compiler/_stdlib/LICENSE": "2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067",
+    "internal/compiler/_stdlib/PROVENANCE.json": "788ab9f15d1a32fe8a5c8860060ec936e96356ede1792a680767eafd8160a882",
+    "internal/compiler/_stdlib/api.txt": "c3ebd9fc1e809d52302ec68cc3d7c55b98cdc77f457a27ea5d7d28ef334bb86d",
+    "internal/compiler/_stdlib/bytes/bytes.go": "927c727118bce967a58f0fd20c1dea06c36205a1b40ad0712c6c0bf8bd4abf9e",
+    "internal/compiler/_stdlib/bytes/gosvm.go": "f124233561455b4f7773adc9a4e66431d634567cd7b767f64893acb057a5c647",
+    "internal/compiler/_stdlib/encoding/binary/binary.go": "4c80f3c8b1677d5e8c29fe9e8815ad9c449ada1dbf0c937396137420b33960c9",
+    "internal/compiler/_stdlib/encoding/binary/native_endian_little.go": "a8c9cf230b66263b93a97512b0c656254c776356eef5fdb1f7587b6e3c182e0b",
+    "internal/compiler/_stdlib/encoding/binary/varint.go": "307d97925b007c61203d35d456978d4fe5a04432e7152615d1ef30fc368268be",
+    "internal/compiler/_stdlib/errors/errors.go": "6408682d10324a5f8ed9c64e97bcd6191d4c9d9941247aa902ab6c301ef52038",
+    "internal/compiler/_stdlib/errors/gosvm.go": "e7565e328783d070bc09c7ddb6e5569f2813e84a9b9978184ec24653100e0920",
+    "internal/compiler/_stdlib/errors/join.go": "a67a9565d2ce347e9d3547da50bfb86a26e788cd4c449223838f0ef1f357a9d0",
+    "internal/compiler/_stdlib/errors/wrap.go": "83699bee25db935dd2de46f1994d2b0e44a8e047ba6071e41799c86feb200b7b",
+    "internal/compiler/_stdlib/internal/bytealg/bytealg.go": "531449c4fe1b214ecf5c38297c62ce5aca543cc549bfabb40413b9fa79bd94d1",
+    "internal/compiler/_stdlib/internal/bytealg/compare_generic.go": "d575c08ee41e71cdf2b7a6c417bdf5a22281b507679d4078a8b3eadea2489add",
+    "internal/compiler/_stdlib/internal/bytealg/count_generic.go": "8ce2880e37aacdca59a3ca2d169ced9e9c6402244a5fed4372d2e923a2ad79eb",
+    "internal/compiler/_stdlib/internal/bytealg/equal_generic.go": "ce6640db47b08763ced93c22da7acf2645c75065f35fe34e9a4bee5c95abfcff",
+    "internal/compiler/_stdlib/internal/bytealg/index_generic.go": "02d1ed20861cf478978e49e63ec74c58c0702f36d54c81b3878edca38473bfce",
+    "internal/compiler/_stdlib/internal/bytealg/indexbyte_generic.go": "c35b4565cad5f6febfe665b7257b91cd8881b62335c4538735b8fc59c062d72e",
+    "internal/compiler/_stdlib/internal/bytealg/lastindexbyte_generic.go": "805638ce68b2a5f9d4a50506834224738a85603bb2535f65d599030addd3b4df",
+    "internal/compiler/_stdlib/internal/errtext/errtext.go": "00e962b2d8a59dfb6b96e0fef176c9959130e1bfb081e1c5075b4e788c072a2b",
+    "internal/compiler/_stdlib/math/const.go": "af9e0940bb4192b955308094e95a25ba4b60c246b2ad9c5f92204199236e9fa8",
+    "internal/compiler/_stdlib/strconv/atob.go": "4a3390dde19b86b3bcbd42c18e973aed049a2fd0376cc83b1186cad205931aff",
+    "internal/compiler/_stdlib/strconv/atoi.go": "67dcca74a8f680f264e54e226c0c435f7dc262e01757694991c97920f0e9f8b6",
+    "internal/compiler/_stdlib/strconv/bytealg.go": "02aa76b4de3ddc33869a683ed8fde1862f8737a7d02e65212a7e55ad6d6fe2c6",
+    "internal/compiler/_stdlib/strconv/gosvm.go": "a2af7d5170321133d8ba63178e7180d58db96082eff95cd5dccb181338224982",
+    "internal/compiler/_stdlib/strconv/isprint.go": "878dc8ec38691e89f07b804bcc758935e600dc6071c33a6684aba86d0b2a7c9f",
+    "internal/compiler/_stdlib/strconv/itoa.go": "c31e2ca2911bcd172e5cbfdcc7b6bdbbec1dddd8f1f591022e2c27eaedee1e3d",
+    "internal/compiler/_stdlib/strconv/quote.go": "330ad2151ec73412cba8be83736dba6fb8616d2855d6addc003758e25caf5c34",
+    "internal/compiler/_stdlib/strings/builder.go": "77c1c5474989f643977bb25ddf0863f4cf2cbc5ce7c65b1a13436f3d2d2e2963",
+    "internal/compiler/_stdlib/strings/clone.go": "080dc6aba68c5ee28c7dd68f9866540b42afb257ac151cad6fccabbf6403fbc7",
+    "internal/compiler/_stdlib/strings/compare.go": "19a83c1113a42517a9a0b701c8b79fb4ced69756e45dac589fe0d0faff13c10b",
+    "internal/compiler/_stdlib/strings/gosvm.go": "bd0be8c641f768f7e2002b68eafcbc701c1bdb1aa37721b4a8c6df59ff3847b8",
+    "internal/compiler/_stdlib/strings/strings.go": "a4cc8fee753879e36724f493f7fd5ad7ddfdd2bd7966242638452b79aa9f7854",
+    "internal/compiler/_stdlib/unicode/graphic.go": "f2c0ac212cdb77c9a4e722bf9fa1c7e8fae767102f4889149f5cac93d59dee80",
+    "internal/compiler/_stdlib/unicode/letter.go": "e1913e4934dcb79a14605c8455539745f261b90e3fa65630e8fc6f6fad72eaed",
+    "internal/compiler/_stdlib/unicode/tables.go": "a91844760a608847d8ceb131848bfc7ba7da8348b4319a20e7e11f146b25e0e2",
+    "internal/compiler/_stdlib/unicode/utf8/utf8.go": "c8eb14d0326ed281d0b04e37a0e33383f1497dee4758af4bc086f465241c5b1c",
+    "internal/compiler/abi.c.txt": "ddfff3c1a2db9a9992661643c941a0c17c19e9dccc02aa58fdef660b1c3ab73e",
+    "internal/compiler/accounts.c.txt": "5fc9b37e410b3b90b12015886481b7b54b82cf52daffad608b80fc0591b965fb",
+    "internal/compiler/accounts_test.go": "1a0adb8529819f6e230062e6c48a784b199bdd2dbecb0ebf15c2e9db68ce92b1",
+    "internal/compiler/alloc.go": "93ea6dcecbb37f0fa1eba75835527705ceb80398b8511dade6f7e480b6abfe2c",
+    "internal/compiler/alloc_growth_test.go": "eaed2585136ce6d0b2197d2f6f54f47198ff61b77a37d9d3e1d9ff08b025054b",
+    "internal/compiler/alloc_moves_test.go": "7ef4b74e227757ff398d7249d14292429b9cce031e23d91d5dcc418de2de9c47",
+    "internal/compiler/alloc_sbf_test.go": "70c24fe67c56c9503ba3eea1a143c0e4f605708eac093200fa7c48c3957a063e",
+    "internal/compiler/alloc_test.go": "34108b3c9dec0c11e3de01db2c19863adfc4ec422c3e410e62154f57f5ed65ec",
+    "internal/compiler/arrays.go": "89b5b59cf3e0ed807d555e5d4853a544a22e80e91ac54f1628e4a41ac94d525c",
+    "internal/compiler/arrays_test.go": "de6b9ad36e104f210eafaacd39a8a08d809f7935096b9b75a689a8256e694a9e",
+    "internal/compiler/bits.c.txt": "2bb613be03dbc1dd7da1a512f15728996c2e01b7723d44be27cf295f23bfec1d",
+    "internal/compiler/bits.go": "2c45e69ccb47f17422ee897826b601a5419a8bc2a2e91e61a379b4af264fc0dd",
+    "internal/compiler/bits16.c.txt": "a174e4ce2d34e0bfdf3f4b60c586fb3f1b568b52435f6af7590e5638079ed8be",
+    "internal/compiler/bits_api.go.txt": "517d45f2f6e169fc98b95a915525f1cce5ea587feb9fa349cc3a5e4991a318f6",
+    "internal/compiler/bits_diff_test.go": "45ec5c3ccf0aad1ce86a3607de590edc0ca8d02f6e7b211e3f3469c8bb6c91a1",
+    "internal/compiler/bits_sbf_test.go": "f83cc475c56807c4fbbd5fb9cb42e3b6b1af103d1193353db990e929b482f2e1",
+    "internal/compiler/bits_test.go": "e4348e0edf324ccb80e7748c910f8e8deb03ede614d0861c09e38b4fc55bacfe",
+    "internal/compiler/build.go": "4be659aa883e0b6bfaff4b137ec73ec98d2cc9453300b086daa41c95e6d9b49b",
+    "internal/compiler/builtins.c.txt": "5601f30834c866e2f457595508e260ecb44ca8e8b8ae237f8be72d7453afe9ef",
+    "internal/compiler/builtins.go": "f26528e8b9c913df1fde25e924eff5d0ffa4ee4f2ee7ac938fdd901f4309b47d",
+    "internal/compiler/builtins_test.go": "1b4e613a3d90822c64102096def691101ff1609235b8c95254466f5f444642bf",
+    "internal/compiler/byval.go": "3b47778b8a4db7118fb2166ee66630297fb1eaabcd154064c972e27d29153038",
+    "internal/compiler/byval_test.go": "c67c8b68af91b91649b5737ec0b6016100a8af669e2aa7d4dd899102b0b021a3",
+    "internal/compiler/cache.go": "cf34b735ed803fbc5aebf46e4cc4acc7b67dad65b7403254e27737571498193e",
+    "internal/compiler/cache_test.go": "3eb8152d783c03436366023d7c59a5301f04a7dd097d9ee53223c488915a0159",
+    "internal/compiler/check.go": "55b409298c09760e8321b59287bdc91b50e1ae8d810ce2dcbe87bd233bb24117",
+    "internal/compiler/check_corpus_test.go": "17289a94bba3816ab73272c8fadbe9405beb0e09257f1b0a5e4f47ad36650ad0",
+    "internal/compiler/check_test.go": "e2c7a2d4c54f2da68feb5148e197b92213b1abb3b83b3e1a3c768496e59ec4e7",
+    "internal/compiler/clock_test.go": "89dda731fb27bf03d8df26e598005d744c7cf0deb27294651e34cd4e8b3f7880",
+    "internal/compiler/compiler.go": "6b25cabb632cb3f4df85d1bfd3566d39cb78348f647080f995aa5540bea45e00",
+    "internal/compiler/compiler_test.go": "30af09ba411b6d157a81c59b988b8e696c5b64e197a1ae3a6caf509d9895d4a5",
+    "internal/compiler/compound.go": "4a5ba2c4f9224cbe8e178676a2ed0421cfdd5eb6389c820960ce915f2728974f",
+    "internal/compiler/compound_diff_test.go": "289bca23ee8af0950c633d9df848442a0f480bcd03ebf7d094f7304c1bbfed9a",
+    "internal/compiler/compound_sbf_test.go": "9bae693b9d7540289d5b1630a108916fe92f08fe493d6c606d1cc9469104e18e",
+    "internal/compiler/compound_test.go": "5a6292a892c101d7b31138daf51252a7546971bbde0a9a7c4b0a27e9560e69f2",
+    "internal/compiler/control.go": "d3799e33e0cc1e6915b5967c50dabb85be3030ee2847df43cb5c807b1ffe1dc2",
+    "internal/compiler/control_test.go": "39842261023a0267f33b3c300a53f257589a41567755ea0cc05937c41f3bf9bc",
+    "internal/compiler/cpi.c.txt": "4a5bd51626ac0bca041e0cb1fb6540c5e1beba591d3a11f159d05a92d39ad616",
+    "internal/compiler/cpi_test.go": "ceca81980ee8c945b6862fb9760265fc183493058a85a2b4bca2a32d32eeb481",
+    "internal/compiler/evalorder.go": "dbba4c993712abacb230b14a06da5683b734cb753d140a1b81e8722f4e614d74",
+    "internal/compiler/evalorder_diff_test.go": "85ba0e697f1bb70599b515201479fedbff0653fbc6e2a86cfc9b5c3a6425cc16",
+    "internal/compiler/evalorder_sbf_test.go": "9e614294dc50a38d0aa914454d97c0c04cf247eb5a109fca4fe018a936724b59",
+    "internal/compiler/evalorder_test.go": "ca0e3b3c4a306c4bbc2124de7cd9844fa946c47b8aa205320108fe633ce5c73c",
+    "internal/compiler/funccombos_sbf_test.go": "ceaeec0e62f8bac80a49b50dc7fb101e8340ca278945e61449bd344a443ce797",
+    "internal/compiler/funcmaps_diff_test.go": "d7158de88a0fb4d6555bc92d2ccfead256df3f4a25bfc5439916f7b0701c6be2",
+    "internal/compiler/funcmaps_test.go": "d3733365993c1533731518afbd7c054fd5aa2e79002bd4c58170569464ada9a0",
+    "internal/compiler/funcs.go": "a7de37191a93dffc1f152ccfd3a16f0061119610e4670e74f1246f494be2b2f8",
+    "internal/compiler/funcs_check.go": "5aa3fe31c975d8e6f775abea3c1314cd67940a6f2e743b0eabd6abcb952bc7c8",
+    "internal/compiler/funcs_diff_test.go": "47763680dc0859aa08c6d3ea8d971c16d9bcad36301c23cc72e295deb0ddeaad",
+    "internal/compiler/funcs_emit.go": "4e88f9b059692e07244cbfbdb3a2160cd13a22b55d24577f8a7cba641c589aee",
+    "internal/compiler/funcs_sbf_test.go": "9cd101493e7605c3cb01a7122352fdda3ad80690220d5aca81ddcd6700a4ec24",
+    "internal/compiler/funcs_test.go": "e49dbb0f38807268cd3f262e7af8e2b677dcc478f3312de0c78a3554a0eeda29",
+    "internal/compiler/funcstrings_diff_test.go": "e140747acb00140e8f17346d9a028d6e95e6a3bf0e7a9ea4a816f5712655fbb2",
+    "internal/compiler/generics.go": "551bcad37446b267153676109dda27010011802a559325a6cb2961e4d1a0c928",
+    "internal/compiler/generics_sbf_test.go": "2cc678c76290578d0486f22e2f67a5c102f7a55b85abcc17f7c782c11b36b0a5",
+    "internal/compiler/generics_test.go": "c9767af6cac95a10311f52f506ce2b28d9e48e04bcfb6f9298f388d0668d256a",
+    "internal/compiler/globals.go": "f4a0816dd89aeb1b97aa389e01d1da742eac8ed64c79a30cb1fab887626f2172",
+    "internal/compiler/globals_diff_test.go": "67f52cdaba2487c65b4f379ef7335e991731d46dec170a790aa671a656478f9a",
+    "internal/compiler/globals_sbf_test.go": "cd2ab145bf73fd4112c21641f58e5cf74c0243cee1af7956026e478001937c23",
+    "internal/compiler/globals_test.go": "ffdec2013dc4d7d543a7c82990746b1a2f7854afb991120cf6596a3acb0ed557",
+    "internal/compiler/globaltables_test.go": "18f53778e8ca5c7ac21b61e9a60837740d9134292f3ff6f2e283bee4eb78c6e0",
+    "internal/compiler/globalvaluetypes_diff_test.go": "3712d7d4e10da2941e141329271c7d310f7832851a72a0e5b5f16e5ad2a1ca34",
+    "internal/compiler/globalvaluetypes_sbf_test.go": "7f2260aaaf5d2d89c9efb3c3bb5761195860d9873cb6b079e6be77e814aba783",
+    "internal/compiler/iface.go": "745b67d0837aeed39d4d66e018ebd55bbb844becc95fc5adc49c31379b123bee",
+    "internal/compiler/iface_diff_test.go": "6278777690a992e714e03025a78df682052abb681ab9ab5207d999712955c212",
+    "internal/compiler/iface_sbf_test.go": "e07d54991f1f280b8c88a196b5e8979581531df986049433d956621ce2063852",
+    "internal/compiler/iface_test.go": "20936d402f3ca0e38a2aaf61c6ca1b75f1c9c85886133aca828e259f0b79a611",
+    "internal/compiler/intvalues_sbf_test.go": "345c16848dad897f1350104ccba650591d3adc7a3b387616fb972697b4063f05",
+    "internal/compiler/intvalues_test.go": "91eaecd982223a2e69282e133de1e0857e400c5933a6c400244f57d6da9830ce",
+    "internal/compiler/library.go": "860414369ee7d017c8235f90cafc74bde77c653754c0885b1caddada0858993b",
+    "internal/compiler/lifecycle_test.go": "78df81a83809c8efc7ace9f5cdf5c5c2da080efaff71adcd1773e3f9ab6dc815",
+    "internal/compiler/maps.go": "29f581565abf772d3825cbc97cc14faac24c4b0b0ca2d97e60c5c6c65d4135e2",
+    "internal/compiler/maps_diff_test.go": "863b51f46470d320f0bbf04f652fa3d2cff72feb291e82c95e9582703f386415",
+    "internal/compiler/maps_sbf_test.go": "34cb16a3cee30223cf31ae9ef277e6dfc3e2024e313361d5c2af6272b5c729de",
+    "internal/compiler/maps_test.go": "019ff78babd854072277877a89e4167ce9699481b8404905cac7c8f889aad9bc",
+    "internal/compiler/memory_test.go": "cc9fea4f73065187e1ba06ce26ed376feb47865944deca359735c1d75baa35c4",
+    "internal/compiler/mixed_test.go": "7ca0923d186162f22946593b43f1072aea7a7e130cd38650ffa495335c4b2af4",
+    "internal/compiler/packages.go": "c21fbba65ebf443085c72b7d9ca38e87fe2fc4d409e9d4030d2d5b688e6b7a8c",
+    "internal/compiler/packages_test.go": "bcdd29ce2a38458ed16e20a52bae6f2d406b820639591d88e546c6b874476b1d",
+    "internal/compiler/packed.go": "6103c7c21229e8604a1c3e43b3e35ff242dde0abadcd8395ea7e4fd7f4ea6d67",
+    "internal/compiler/packed_test.go": "aff534a388261ad62d714e4f67e3f59b4d95ac2fd531b3bf487eef80ccd1e620",
+    "internal/compiler/panic.go": "3637b69b247f1342db21c419f7ac8c50cf214173b93ea5072f1f0b49bafe0795",
+    "internal/compiler/pointers.go": "4b211a9646c82fe7398205c060c73e3f300f185981f25402fb448ffd107689ee",
+    "internal/compiler/pointers_test.go": "15d797be78808f8bf84b308a98f7b403cdc08235e5d9ee0771f6c20afcefe171",
+    "internal/compiler/range_sbf_test.go": "9cc14f15c7a9dbaefa3941746edbd3ab7a1653aa4c39b348bcf926c9f441d562",
+    "internal/compiler/range_test.go": "ba99e945bf4cc55cdab478483903de049b55db6ceb10f876a1dedf0e5d0d8e0c",
+    "internal/compiler/rebuild_test.go": "1dd135e3d87e5769098e1b96002ef98c0b8794b282952e4ec57ac7ddd6e4ac69",
+    "internal/compiler/results.go": "6096dff7b627be021acea055762a91ecb4c85f9ba57db2b1b6bd86bc53401a98",
+    "internal/compiler/return_data_test.go": "5ff5499e22f210506efefdac71daae01efb595b6b6d016e4dbbd143c97033b2a",
+    "internal/compiler/rules.go": "a802308f7e7883fe954b2fc6ba667f00f5d167045db29f6467ccb969be2e3bdf",
+    "internal/compiler/sbf-modern-v3.ld": "4b32db26be3fbfc31fe2e312236134df7ac442de8f0709b76d5840c799064371",
+    "internal/compiler/sbf-v3.ld": "34fbab75f8af07033519c1c72695e21b0a7b94c34743d154fa396304a3a1d892",
+    "internal/compiler/sbf.ld": "57681e310bb3bdfa1e40c82f5526bb854fcaf82f1a9c9d3ac54cebe795ea969c",
+    "internal/compiler/signed.go": "5afd3b936cc270b067188460ea26221383860550faeb1483f0935e7aa0fb4f5c",
+    "internal/compiler/signed_test.go": "7da9c5b6e094efe081eb06b0798440495b2d08bb4f3ad7b3a1c4e2b667f82cb5",
+    "internal/compiler/solana.c.txt": "a9f69e062878e95103cd89b435d050fec87150fe4edf7e496a48fc897dd071fd",
+    "internal/compiler/solana.go": "767c81c6b9348fbf73b5e37c951ce73a57cfda3b84635cb6360cbee0de7bf1c8",
+    "internal/compiler/sources.go": "72bf270d15d815c98ed103b3275be36519e2988e86f59b206c529f59e64255a2",
+    "internal/compiler/stdlib.go": "e4940b8976f0f1ef27cd60ed837c32e1f8755c86c79a8837f9c031af71591815",
+    "internal/compiler/stdlib_api_test.go": "09cb3c85147071930e7bdcf1fa5577df6b7bfdb496e0f438d85f31654dad7bd1",
+    "internal/compiler/stdlib_diff_test.go": "b285cab2fa0e40c8f879ab20aff1b1412e47c17855c82ad656a53dfe9ae8100c",
+    "internal/compiler/stdlib_sbf_test.go": "0fd102342d5f30ee10a619986bf2c3fee252c955469baaff9be58d842bf62b74",
+    "internal/compiler/stdlib_tables_test.go": "733b13781e3736f68d2c21ddd0ba3b143e2d78f334d721fb1158772224cf5198",
+    "internal/compiler/stdlib_test.go": "2f1fca727e79878bea11187f921dae0d118ed7ace43c3a5ade924578b77e4383",
+    "internal/compiler/strings.go": "003d51b0a30bd61f858aaae7b1ba260fc62332f5792db09e882798954d92fae8",
+    "internal/compiler/strings_diff_test.go": "7605c45aa9a7dd53ce4bebbccdab5f536ce2a96259dadeb8f5a78d8853acf127",
+    "internal/compiler/strings_sbf_test.go": "1d3e9ee486b5969ab0825926e69a65e0d8afaa94d957e5c2897f6e6554ccb250",
+    "internal/compiler/strings_test.go": "0fde81483ff3a194be6dac1e9a25294b782dbc3cfeb9ab6dde5bd3438f6d1509",
+    "internal/compiler/subset.go": "29b0f09da51926296d1bfbdd50cdd4d5667b9e84066b86db28a43c2957a8f282",
+    "internal/compiler/testdata/bitscu/program.go": "7852908a33bab6310449108a02d82d864287d34622448141d37894dc111123b3",
+    "internal/compiler/testdata/bitsprobe/program.go": "17d5f02305c6393f3b52520d2e15128f58c9888f4468d6c9885685390a91e9d7",
+    "internal/compiler/testdata/check_corpus.jsonl.gz": "989b95c2323c56c25f4e30c75d54d82a9ded1e9b32ea20497b7b17058e59f6e1",
+    "internal/compiler/testdata/intprobe/program.go": "1a5d7ea0c04960836510c28212f8941f961a4459f05a1780924fbdee18a42f36",
+    "internal/compiler/types.go": "829885739a81d65d963936fda758e17e0032e9f14ed276559a07b3b785bdd8a4",
+    "internal/compiler/types_test.go": "22d38dbf586daf7f2b68a9aedd66882dc56d50f260343a8a0e5526d81b7b3471",
+    "internal/compiler/uint16.go": "831506999e81968532dc2220966c43ed5d986f1d825f620a4d87037ae2c73055",
+    "internal/compiler/values_test.go": "cbbbc6a9d421aab1bf46044b677aef9fa9e4a2426982affc7e915e5749c80e8b",
+    "internal/compiler/valuetypes_diff_test.go": "172817c1429cd7b9d737532410685257d700c59a462850a67d0e0b500b8074ff",
+    "internal/compiler/valuetypes_sbf_test.go": "87dd490458653f4eec6ae9e02ec63963b8422a5a71a0308c29332885172e1643",
+    "internal/compiler/valuetypes_test.go": "a36f28c9af8c2c9ad7eb97310d36aa58d70b70d274dd2c9f1821ebf58d979f46",
+    "internal/compiler/variadic.go": "7701456d986becdf764e1e1f2422b3f9c831c53ccf041954dc140b46a30f72f6",
+    "internal/compiler/variadic_test.go": "43a39905b133285c546d748804f8038992e5f72d7e57f83d2f15931f0ffe869e",
+    "internal/compiler/views.go": "3024b4dde54e34bb1158dbde2bc9deaedfdc5b652f1989a85ebecb4162d1d2f3",
+    "internal/compiler/views_test.go": "25759eed7d2a36ac9bb1204701725bc710298c9df94965a05928ac3aa1b7f5f1",
+    "internal/library/bend.go": "bbf21a06bb201ccac8814a0b3c781aedd479074d3781d050b4a43d1821a6e0d2",
+    "internal/library/bendbuild.go": "369a94bf9c444dc79e2254a244a12beeb1681b411c9a82b30cc572a41b24aa9c",
+    "internal/library/bendbuild_test.go": "272a18715c8c38efba172c648fab07295cbcd508c400e31da0fb006f481fde84",
+    "internal/library/contract.go": "e644b67eab763cab6c3f426cddf066c0a30337d0dcb952aac003cfeda728f06d",
+    "internal/library/contract_test.go": "9bc262f34e4bb30863ad5326753692ffd2708e796099b117dc930f6206d71c44",
+    "internal/library/generate.go": "7305f4bf731fa788fd2fcc86ba1472e28e541be19bc918f73898b917b031ec5c",
+    "internal/library/rust.go": "8287be0f74ff5a43f8e29423a74eaf4fea556681118d7af32d1b7ca2e9099ed8",
+    "internal/library/rust_test.go": "883d05fa714fa1157aa915af408894b24cb8e4fffebe484062deccd6d4909e3f",
+    "internal/library/testdata/rust/quote/Cargo.toml": "985bf777d9a81e54dc70fe54d6d0ecdb8a1609080e392a8ba2a065674675631d",
+    "internal/library/testdata/rust/quote/src/lib.rs": "0383a5299f2dca2fa7e74a6ca9c1934e716d28d04c087d3ed19b23451205e7f5",
+    "internal/project/bendsource.go": "a13a538b2f5f43c225eb717df0365e84ecb96d749f91adbf4a91b43ccaf48dd6",
+    "internal/project/bendsource_test.go": "35568244051f5af5aa95fa352fdbfa17a0aea478ce4e7ddfd605d5b4c99a3d2e",
+    "internal/project/constraints2.go": "9c53497c22fd75ab199ac72416de8ad009d31443efc7d8c501a41e1a3fa859e9",
+    "internal/project/constraints2_test.go": "3053dcfa090a898a427e76b7011a2d7b8154d50698664316e4c0c955820c0612",
+    "internal/project/generate.go": "395c43741cf9c8c7c0bbad960c56412d679d85a742885d9981b3a223c6d334c7",
+    "internal/project/generate2.go": "bb4ee711dc2809809f52139a5bd039cbe1f6073ea368adcf670c2586afffe2a7",
+    "internal/project/heap_test.go": "5bc6a3fffdb7a8d939c4fff38bb2c557cbd85ef4cba0b8744ddd6d2c7cabeba6",
+    "internal/project/libraries.go": "fc3408626b3553413438da98df845a6ad769b127686c2d98d86a904f2f078212",
+    "internal/project/libraries_test.go": "4a63aafbd53c61198b8f80edf5723b4d8447e7ae4b504c104bd0f13c1dbc5e6a",
+    "internal/project/lifecycle2.go": "b7c23a2c4eb56f56fd3e3c3406ad817ea4eb5680db03f30a195648e62b5d5608",
+    "internal/project/lifecycle2_test.go": "5a7568fe0df1fac83b19cd9be3e19afe24b77d79123566f373238abd6d9f2223",
+    "internal/project/maps_test.go": "976965dbf0bad3969f186109b537c4ad4dfe0cec968738d36e73486e55e4fe11",
+    "internal/project/project.go": "199ee4e1b4a1230fb3fe060798126d81a98f278503977ecdfd22267903244b33",
+    "internal/project/project_test.go": "cea46da2d01ebc1572281a3836f33cc802c1a499dd72fc3cba263fd0012f3f0d",
+    "internal/project/schema2/README.md.tmpl": "5fd8a11c6e32b91986d1d91b53d36560acb712bfbaa599bc663440a17d63f797",
+    "internal/project/schema2/model.go.tmpl": "0a435490eac091aab2fbc321d80203f1905a89107caa66dc1481c08b7e982fe8",
+    "internal/project/schema2/program.go.tmpl": "d04242b5296e0dbe2afeeab051970d9cd696eef54606c27e5054398170790093",
+    "internal/project/schema2/program_test.go.tmpl": "6cce6b3ac8d85d542e963982ce82c1ea3edf6e7756d511b6b860e5fe18e4c168",
+    "internal/project/schema2.go": "957724d45e04fdeb82c4c68f6c0496b5b1c72c984762c132a3c36139524a2801",
+    "internal/project/schema2_test.go": "987b9eb9a8612ccd605164dfb756c8dd06fa84cf3025126703d0e767a348b862",
+    "internal/project/schema_load.go": "7c96ed17627cb41cb28eaf95565e58b7eae2917cbca3de2bbfe4d331bb3efd5c",
+    "internal/project/schema_load_test.go": "90847eea8bfe81fccc61d4b8340483dead32c98449902abcc04b71fe7ea641fb",
+    "internal/project/sdk_test.go": "1e8646d779faf94dd333b1e1f2b72ed695ed026222df5d2d6ff6db47c27a05ab",
+    "internal/project/signed_test.go": "e11d266275507fb4d73f793f77a9aa2990fe7f5ee49457b3a8e1bb5512fe836d",
+    "internal/project/strings_test.go": "0fde33d0b17817b894d61b5de7fbb7f66fdedf5c43416a71971b63bc0c799d97",
+    "internal/project/target.go": "b92dc75aa5e2a1bb6e7f23629f6a8170c939332f0c9c2d48b7af95029ea84bf5",
+    "internal/project/target_test.go": "ee3c0d902326ff1acc9bca35911c15e836e1459ac0b34c267040e2913c79a8fc",
+    "internal/project/templates/README.md.tmpl": "f583eaf29e0cb54ec9f8bff4950803a928a59494374d8cfc18a96ac0275fc95e",
+    "internal/project/templates/program.go.tmpl": "d137e03554318de4e886d9464c759b7a16790edfd6235d9ab4c57ca2dac4a27c",
+    "internal/project/templates/program_test.go.tmpl": "6ab66451866388a8a822021921492b113f853219a7ee207f3e267fd2eedf93e1",
+    "internal/project/templates/sbf.json.tmpl": "95a38ffeb4b8f761d3371df2a9cf794a9bc059cd6031689ad092878bf62157ae",
+    "internal/project/uint16_test.go": "94fa8f37951b8bec56d23f202b2e37a784a4dd1de4c80d4863db86a52abd85bc",
+    "internal/sbftest/fast.go": "32b2f713f2c4e4cf77bb2b53745df88d980be5e02b5176b622458fc62e457682",
+    "internal/sbftest/fast_test.go": "7afcd7c44c282e37a1479caab1775ac060ef30ce5dedef52c6b7835c89c061d9",
+    "internal/sbftest/general.go": "f997b7afa1076d07d948a0d54c89eab9f937a5cc7fa8888295d6ea6ad714f1bd",
+    "internal/sbftest/general_run.go": "ce5c25b269999e6f6697c36deb14fbc2915215676240374378abed7871cc4e15",
+    "internal/sbftest/general_test.go": "94bad3f9fc61c7f9c57d9cfbfb48bdbf55f0506bfb84f1dfd6939ff71576f884",
+    "internal/sbftest/run.go": "265b7bebf7a7768bc29526eaa397f43090474d612fe73af2272555149f855074",
+    "internal/targets/output.go": "178c1e826517dc1f29e666a9a2eab7ea7b01a02cc61ef22cd96100679087ade3",
+    "internal/targets/profile.go": "fcd99cf9608f2c96afc75b8ff4e5a2e3eac6de1f1779348c2f7771df0536b834",
+    "internal/targets/profile_test.go": "8eb172a62b04d810a34d5aea03906bd19888f5987b918ce11351823773951b79",
+    "internal/testvm/command.go": "2fb519befd1936a3cddeab3ff2471e03b665f337e63d0316e32cf13cebb3518a",
+    "internal/testvm/command_test.go": "bac6d6a5a87db22f92178fa0c58b4bff75f4e70e5d49da21daf776b3eb4d238b",
+    "internal/testvm/controls_integration_test.go": "89e52ad2e36769d183584d001074e808a64d8fb6ce98d43a8cc80d4287b08c7a",
+    "internal/testvm/profiles/validator-3.0.15.json": "4347f9bc31c8078940c7e8185dabd1dc7257aac8e37559e0abc413e8f7568228",
+    "internal/testvm/session.go": "f2481e7021c9311c93c4f8153591500ebf083e5bd972f65794f78e472b7e2823",
+    "internal/testvm/session_test.go": "40e441ec59db493a276bcb74d2537482ea047aa57616668603f2283441a03cca",
+    "internal/testvm/sysvars.go": "bd8f4409335137238c58ef24873d710843dd6868bd5a24d6d240ad591838d6aa",
+    "internal/testvm/sysvars_test.go": "f6d808891e852b4c2e9508c2665a0252f3b505300d2f338f87863a42cf753bd4",
+    "internal/testvm/target_test.go": "e931ec0dcec117cdc30062a0bebd5ac281d09aba1409d2f448aa641889385d38",
+    "scripts/build_modern_runner.py": "e22e9a0c9a49779540a9628eeefe2b5b16ac78e703a6024e5c1966e6820c3488",
+    "scripts/verify_target_profiles.py": "c7c4152983daa08eff43859360e1aaf4982dc27f4e8241fc592ca13b645f4d39",
+    "solana/api-v1.go.txt": "973e867d7f9d30e4e6fdb1494581597f6a72924729f6691fa3663a1540fbdc6e",
+    "solana/api.go": "c16d2232c17339649c0358ccf3919c20ec1dd1ac2972ec9816480af2d525dadd",
+    "solana/api_test.go": "7e5dba95c4a2d8fcbd36785980727b303af4d15f12d5c936ea325cbfe4eaa043",
+    "solana/clock_test.go": "82f2af700ba77116fe28425e7b85aa39c85c130d4de260479aaa747bc639d986",
+    "solana/lifecycle_test.go": "b68ae6b892d82ebb3708066a9efce6557f919ff922b634aa40b0a68d717a8598",
+    "solana/return_data_test.go": "e2e86fb39572446e55b27eaa8281afa6fdaa02a755cfeb79937490a62ac86227",
+    "solana/source.go": "cd805f22c14dac83d1d82d3376ff7cc523d673536c18fc7842a3121cf8a1c708"
+  },
+  "unchanged_application_sha256": {
+    "zz_gosvm.go": "da2eeeedbd0c7a1c718ad90bbb264ffaf97120630ec34eb2979d86859cfeca76",
+    "go.mod": "8a6cbf93502371fa0ec02420e6bc6de1550192f357304706d58fd6a28e3a445f",
+    "gosvm.json": "fc3bcb09bbbda0155f2b373df7578938fe9fa271f27f2ac832676d3020258c08",
+    "idl.json": "f9001b5dc8855bee5a31bc2bba15e31b19976c87aaa056aebb99875cc6612097",
+    "program.go": "e3255cfe50fc49d14036c572b6815bd6a2790e7c5d7772ffdd6f13af40368125",
+    "README.md": "6763ec23d46edef5b049f2167321e8bacb85d271efc5775741885289db94ea5f",
+    "lifecycle.go": "ea2afb247e73db01fb272aa6c2123474b6226d94793486f0ac0dcf26bf1fbe38",
+    ".gitignore": "020c2606e8ed484089c2083e0be438b9d0736bee1558a6b76af0d58bd23f69cf",
+    "layouts.json": "40e2f6dd52a40189fd7cdaff7ce80340861cd6a6d9a9f789cdbb063797cc7275",
+    "lifecycle_test.go": "e7a8175bd2083224d42cb62bcba615720c3825c58a74cac29fe631fdee15c5ab",
+    "testdata/spl-token.so": "18264f491c7e0ad056dd36f42f8de6d1fedf9f044d1f521e714b4dc6b61594b6",
+    "testdata/lifecycle.json": "27a4c228e99ff0b1c0dc940176eb43453212bac20418a33269c11b66901a044b",
+    "testdata/svm.json": "9727c4bc66a500eae505cd1c48bb8e7394aefb89d53ee02400865a739da52adb",
+    "model/quote_test.go": "91cb7797a176add6eed5540ff7056735a5bbc09ceb4fc9d3f58a527153fc3050",
+    "model/quote.go": "392e808643abbffb16cc2282d61dd49f591562714518724e94efb6d47266ab6b",
+    "model/model.go": "8fb4bbde17e019f1f065e96fa920ceeb6011aa0422358f4d39f8b352e1b29ef2",
+    "client/zz_gosvm.go": "ecfc39ebc1ade968390df8ad002cd9be7aaeff9d2aef5fae8ea83c6fe48acc24",
+    ".gosvm/sdk/go.mod": "125b277252d683d94281a834d762a750f01e49d31858264cb398d125c86a1637",
+    ".gosvm/sdk/solana/api.go": "c16d2232c17339649c0358ccf3919c20ec1dd1ac2972ec9816480af2d525dadd",
+    ".gosvm/sdk/sdk/token/token.go": "942bd7d2f6a5ebca7125ba4c1eac802e71801bcb0bc8c28a2193160dd97f7862",
+    ".gosvm/sdk/sdk/token/lifecycle.go": "ad4bc0b46725d98399de093c0cecc2ae1f5e293070e21408268459f07402df73",
+    ".gosvm/sdk/sdk/cpi/cpi.go": "83f5fccd880bc9f5abbbd419a94c61853c3074b95593ef2ede3a8476dbd9dd02",
+    ".gosvm/sdk/sdk/pda/pda.go": "338f835b8f5ddde37d12d00e47fd7ea69b26b9098cbad0a07fe9ed5cf13f65a7",
+    ".gosvm/sdk/sdk/system/system.go": "82c0d589a857f6872664f142aaf61151917bcf090d34c83a4897f5bb344f111c",
+    ".gosvm/sdk/sdk/system/rent.go": "7f3ac64c53eacbeaf0f6e67262a5f1d8cb3360a2b52046d6e1e71ca360a5a183"
+  },
+  "passed": true
+}

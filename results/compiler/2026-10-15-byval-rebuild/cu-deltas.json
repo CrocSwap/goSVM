@@ -1,0 +1,1298 @@
+{
+ "clock/fogo-v0": {
+  "elf_before": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+  "elf_after": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+  "cases": {
+   "actual-clock-reward-sequence": {
+    "cu_before": [
+     994,
+     994,
+     994,
+     994
+    ],
+    "cu_after": [
+     994,
+     994,
+     994,
+     994
+    ],
+    "delta": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "negative-timestamp-minus-one": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "negative-timestamp-min-int64": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "maximum-positive-timestamp": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "zero-timestamp": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "word-extremes": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "time-regression": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "uint64-reward-multiply-overflow": {
+    "cu_before": [
+     991
+    ],
+    "cu_after": [
+     991
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "read-then-fail-rolls-back": {
+    "cu_before": [
+     992
+    ],
+    "cu_after": [
+     992
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "output-length-39": {
+    "cu_before": [
+     123
+    ],
+    "cu_after": [
+     123
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "output-length-41": {
+    "cu_before": [
+     121
+    ],
+    "cu_after": [
+     121
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "atomic-later-instruction-rollback": {
+    "cu_before": [
+     1986
+    ],
+    "cu_after": [
+     1986
+    ],
+    "delta": [
+     0
+    ]
+   }
+  }
+ },
+ "clock/solana-v3": {
+  "elf_before": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+  "elf_after": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5",
+  "cases": {
+   "actual-clock-reward-sequence": {
+    "cu_before": [
+     994,
+     994,
+     994,
+     994
+    ],
+    "cu_after": [
+     994,
+     994,
+     994,
+     994
+    ],
+    "delta": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "negative-timestamp-minus-one": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "negative-timestamp-min-int64": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "maximum-positive-timestamp": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "zero-timestamp": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "word-extremes": {
+    "cu_before": [
+     994
+    ],
+    "cu_after": [
+     994
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "time-regression": {
+    "cu_before": [
+     421
+    ],
+    "cu_after": [
+     421
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "uint64-reward-multiply-overflow": {
+    "cu_before": [
+     991
+    ],
+    "cu_after": [
+     991
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "read-then-fail-rolls-back": {
+    "cu_before": [
+     992
+    ],
+    "cu_after": [
+     992
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "output-length-39": {
+    "cu_before": [
+     123
+    ],
+    "cu_after": [
+     123
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "output-length-41": {
+    "cu_before": [
+     121
+    ],
+    "cu_after": [
+     121
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "atomic-later-instruction-rollback": {
+    "cu_before": [
+     1986
+    ],
+    "cu_after": [
+     1986
+    ],
+    "delta": [
+     0
+    ]
+   }
+  }
+ },
+ "managed-lifecycle/fogo-v0": {
+  "elf_before": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+  "elf_after": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+  "cases": {
+   "create-deposit-swap-drain-close-reuse": {
+    "cu_before": [
+     88870,
+     49427,
+     63311,
+     88870,
+     49427,
+     63311
+    ],
+    "cu_after": [
+     89662,
+     50014,
+     63311,
+     89662,
+     50014,
+     63311
+    ],
+    "delta": [
+     792,
+     587,
+     0,
+     792,
+     587,
+     0
+    ]
+   },
+   "create-zero-reserve": {
+    "cu_before": [
+     29366
+    ],
+    "cu_after": [
+     30083
+    ],
+    "delta": [
+     717
+    ]
+   },
+   "create-insufficient-tokens": {
+    "cu_before": [
+     29371
+    ],
+    "cu_after": [
+     30088
+    ],
+    "delta": [
+     717
+    ]
+   },
+   "create-mint-layout": {
+    "cu_before": [
+     31590
+    ],
+    "cu_after": [
+     32385
+    ],
+    "delta": [
+     795
+    ]
+   },
+   "create-mint-uninitialized": {
+    "cu_before": [
+     31592
+    ],
+    "cu_after": [
+     32387
+    ],
+    "delta": [
+     795
+    ]
+   },
+   "create-wallet-owner": {
+    "cu_before": [
+     11240
+    ],
+    "cu_after": [
+     11240
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-pool-unsigned": {
+    "cu_before": [
+     961
+    ],
+    "cu_after": [
+     961
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-payer-unsigned": {
+    "cu_before": [
+     967
+    ],
+    "cu_after": [
+     967
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-target-readonly": {
+    "cu_before": [
+     975
+    ],
+    "cu_after": [
+     975
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-vault-alias": {
+    "cu_before": [
+     2353
+    ],
+    "cu_after": [
+     2353
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-wrong-vault-bump": {
+    "cu_before": [
+     14972
+    ],
+    "cu_after": [
+     14972
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-vault-already-funded": {
+    "cu_before": [
+     32874
+    ],
+    "cu_after": [
+     33669
+    ],
+    "delta": [
+     795
+    ]
+   },
+   "create-pool-already-funded": {
+    "cu_before": [
+     1904
+    ],
+    "cu_after": [
+     1904
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-insufficient-lamports-after-pool": {
+    "cu_before": [
+     38229
+    ],
+    "cu_after": [
+     39022
+    ],
+    "delta": [
+     793
+    ]
+   },
+   "create-second-deposit-frozen-rolls-back": {
+    "cu_before": [
+     85066
+    ],
+    "cu_after": [
+     85857
+    ],
+    "delta": [
+     791
+    ]
+   },
+   "create-token-program-substitution": {
+    "cu_before": [
+     1067
+    ],
+    "cu_after": [
+     1067
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-wrong-creator": {
+    "cu_before": [
+     17022
+    ],
+    "cu_after": [
+     17022
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-unsigned-creator": {
+    "cu_before": [
+     723
+    ],
+    "cu_after": [
+     723
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-vault-substitution": {
+    "cu_before": [
+     14967
+    ],
+    "cu_after": [
+     14967
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-refund-token-authority": {
+    "cu_before": [
+     17022
+    ],
+    "cu_after": [
+     17022
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-second-refund-frozen": {
+    "cu_before": [
+     45230
+    ],
+    "cu_after": [
+     45230
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-second-vault-close-authority": {
+    "cu_before": [
+     56017
+    ],
+    "cu_after": [
+     56017
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-lamport-overflow": {
+    "cu_before": [
+     53665
+    ],
+    "cu_after": [
+     53665
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "swap-slippage-after-create": {
+    "cu_before": [
+     26822
+    ],
+    "cu_after": [
+     27370
+    ],
+    "delta": [
+     548
+    ]
+   },
+   "atomic-create-bad-swap-rollback": {
+    "cu_before": [
+     115691
+    ],
+    "cu_after": [
+     117031
+    ],
+    "delta": [
+     1340
+    ]
+   },
+   "atomic-close-bad-recreate-rollback": {
+    "cu_before": [
+     92676
+    ],
+    "cu_after": [
+     93393
+    ],
+    "delta": [
+     717
+    ]
+   },
+   "close-empty-frozen-vaults": {
+    "cu_before": [
+     42248
+    ],
+    "cu_after": [
+     42248
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "current-rent-lifecycle-0": {
+    "cu_before": [
+     88816,
+     63311
+    ],
+    "cu_after": [
+     89608,
+     63311
+    ],
+    "delta": [
+     792,
+     0
+    ]
+   },
+   "current-rent-lifecycle-1": {
+    "cu_before": [
+     87099,
+     63311
+    ],
+    "cu_after": [
+     87891,
+     63311
+    ],
+    "delta": [
+     792,
+     0
+    ]
+   }
+  }
+ },
+ "managed-lifecycle/solana-v3": {
+  "elf_before": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+  "elf_after": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+  "cases": {
+   "create-deposit-swap-drain-close-reuse": {
+    "cu_before": [
+     88488,
+     49274,
+     63075,
+     88488,
+     49274,
+     63075
+    ],
+    "cu_after": [
+     89295,
+     49857,
+     63075,
+     89295,
+     49857,
+     63075
+    ],
+    "delta": [
+     807,
+     583,
+     0,
+     807,
+     583,
+     0
+    ]
+   },
+   "create-zero-reserve": {
+    "cu_before": [
+     29286
+    ],
+    "cu_after": [
+     30010
+    ],
+    "delta": [
+     724
+    ]
+   },
+   "create-insufficient-tokens": {
+    "cu_before": [
+     29292
+    ],
+    "cu_after": [
+     30018
+    ],
+    "delta": [
+     726
+    ]
+   },
+   "create-mint-layout": {
+    "cu_before": [
+     31509
+    ],
+    "cu_after": [
+     32312
+    ],
+    "delta": [
+     803
+    ]
+   },
+   "create-mint-uninitialized": {
+    "cu_before": [
+     31511
+    ],
+    "cu_after": [
+     32314
+    ],
+    "delta": [
+     803
+    ]
+   },
+   "create-wallet-owner": {
+    "cu_before": [
+     11240
+    ],
+    "cu_after": [
+     11240
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-pool-unsigned": {
+    "cu_before": [
+     961
+    ],
+    "cu_after": [
+     961
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-payer-unsigned": {
+    "cu_before": [
+     967
+    ],
+    "cu_after": [
+     967
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-target-readonly": {
+    "cu_before": [
+     975
+    ],
+    "cu_after": [
+     975
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-vault-alias": {
+    "cu_before": [
+     2353
+    ],
+    "cu_after": [
+     2353
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-wrong-vault-bump": {
+    "cu_before": [
+     14972
+    ],
+    "cu_after": [
+     14972
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-vault-already-funded": {
+    "cu_before": [
+     32799
+    ],
+    "cu_after": [
+     33602
+    ],
+    "delta": [
+     803
+    ]
+   },
+   "create-pool-already-funded": {
+    "cu_before": [
+     1904
+    ],
+    "cu_after": [
+     1904
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "create-insufficient-lamports-after-pool": {
+    "cu_before": [
+     38104
+    ],
+    "cu_after": [
+     38907
+    ],
+    "delta": [
+     803
+    ]
+   },
+   "create-second-deposit-frozen-rolls-back": {
+    "cu_before": [
+     84686
+    ],
+    "cu_after": [
+     85491
+    ],
+    "delta": [
+     805
+    ]
+   },
+   "create-token-program-substitution": {
+    "cu_before": [
+     1067
+    ],
+    "cu_after": [
+     1067
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-wrong-creator": {
+    "cu_before": [
+     17022
+    ],
+    "cu_after": [
+     17022
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-unsigned-creator": {
+    "cu_before": [
+     723
+    ],
+    "cu_after": [
+     723
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-vault-substitution": {
+    "cu_before": [
+     14967
+    ],
+    "cu_after": [
+     14967
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-refund-token-authority": {
+    "cu_before": [
+     17022
+    ],
+    "cu_after": [
+     17022
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-second-refund-frozen": {
+    "cu_before": [
+     45097
+    ],
+    "cu_after": [
+     45097
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-second-vault-close-authority": {
+    "cu_before": [
+     55832
+    ],
+    "cu_after": [
+     55832
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "close-lamport-overflow": {
+    "cu_before": [
+     53480
+    ],
+    "cu_after": [
+     53480
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "swap-slippage-after-create": {
+    "cu_before": [
+     26776
+    ],
+    "cu_after": [
+     27320
+    ],
+    "delta": [
+     544
+    ]
+   },
+   "atomic-create-bad-swap-rollback": {
+    "cu_before": [
+     115263
+    ],
+    "cu_after": [
+     116614
+    ],
+    "delta": [
+     1351
+    ]
+   },
+   "atomic-close-bad-recreate-rollback": {
+    "cu_before": [
+     92360
+    ],
+    "cu_after": [
+     93084
+    ],
+    "delta": [
+     724
+    ]
+   },
+   "close-empty-frozen-vaults": {
+    "cu_before": [
+     42113
+    ],
+    "cu_after": [
+     42113
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "current-rent-lifecycle-0": {
+    "cu_before": [
+     88434,
+     63075
+    ],
+    "cu_after": [
+     89241,
+     63075
+    ],
+    "delta": [
+     807,
+     0
+    ]
+   },
+   "current-rent-lifecycle-1": {
+    "cu_before": [
+     86708,
+     63075
+    ],
+    "cu_after": [
+     87515,
+     63075
+    ],
+    "delta": [
+     807,
+     0
+    ]
+   }
+  }
+ },
+ "token-swap/fogo-v0": {
+  "elf_before": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+  "elf_after": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf",
+  "cases": {
+   "wide-swap": {
+    "cu_before": [
+     47605
+    ],
+    "cu_after": [
+     48208
+    ],
+    "delta": [
+     603
+    ]
+   },
+   "pool-owner": {
+    "cu_before": [
+     763
+    ],
+    "cu_after": [
+     763
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "no-signer": {
+    "cu_before": [
+     722
+    ],
+    "cu_after": [
+     722
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "alias": {
+    "cu_before": [
+     2072
+    ],
+    "cu_after": [
+     2072
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "vault-substitute": {
+    "cu_before": [
+     14604
+    ],
+    "cu_after": [
+     14604
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "token-owner": {
+    "cu_before": [
+     4260
+    ],
+    "cu_after": [
+     4260
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "mint": {
+    "cu_before": [
+     16295
+    ],
+    "cu_after": [
+     16295
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "pda": {
+    "cu_before": [
+     20936
+    ],
+    "cu_after": [
+     20936
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "bump": {
+    "cu_before": [
+     20598
+    ],
+    "cu_after": [
+     20598
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "input-frozen": {
+    "cu_before": [
+     33602
+    ],
+    "cu_after": [
+     34165
+    ],
+    "delta": [
+     563
+    ]
+   },
+   "output-frozen": {
+    "cu_before": [
+     44963
+    ],
+    "cu_after": [
+     45565
+    ],
+    "delta": [
+     602
+    ]
+   },
+   "input-overflow": {
+    "cu_before": [
+     25871
+    ],
+    "cu_after": [
+     26436
+    ],
+    "delta": [
+     565
+    ]
+   },
+   "stateful-swaps-and-atomic-rollback": {
+    "cu_before": [
+     47605,
+     47602,
+     73471
+    ],
+    "cu_after": [
+     48208,
+     48205,
+     74639
+    ],
+    "delta": [
+     603,
+     603,
+     1168
+    ]
+   }
+  }
+ },
+ "token-swap/solana-v3": {
+  "elf_before": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+  "elf_after": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5",
+  "cases": {
+   "wide-swap": {
+    "cu_before": [
+     38314
+    ],
+    "cu_after": [
+     38913
+    ],
+    "delta": [
+     599
+    ]
+   },
+   "pool-owner": {
+    "cu_before": [
+     763
+    ],
+    "cu_after": [
+     763
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "no-signer": {
+    "cu_before": [
+     722
+    ],
+    "cu_after": [
+     722
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "alias": {
+    "cu_before": [
+     2072
+    ],
+    "cu_after": [
+     2072
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "vault-substitute": {
+    "cu_before": [
+     14604
+    ],
+    "cu_after": [
+     14604
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "token-owner": {
+    "cu_before": [
+     4260
+    ],
+    "cu_after": [
+     4260
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "mint": {
+    "cu_before": [
+     16295
+    ],
+    "cu_after": [
+     16295
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "pda": {
+    "cu_before": [
+     20936
+    ],
+    "cu_after": [
+     20936
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "bump": {
+    "cu_before": [
+     20598
+    ],
+    "cu_after": [
+     20598
+    ],
+    "delta": [
+     0
+    ]
+   },
+   "input-frozen": {
+    "cu_before": [
+     29384
+    ],
+    "cu_after": [
+     29943
+    ],
+    "delta": [
+     559
+    ]
+   },
+   "output-frozen": {
+    "cu_before": [
+     36122
+    ],
+    "cu_after": [
+     36721
+    ],
+    "delta": [
+     599
+    ]
+   },
+   "input-overflow": {
+    "cu_before": [
+     25826
+    ],
+    "cu_after": [
+     26386
+    ],
+    "delta": [
+     560
+    ]
+   },
+   "stateful-swaps-and-atomic-rollback": {
+    "cu_before": [
+     38314,
+     38311,
+     64135
+    ],
+    "cu_after": [
+     38913,
+     38910,
+     65294
+    ],
+    "delta": [
+     599,
+     599,
+     1159
+    ]
+   }
+  }
+ }
+}

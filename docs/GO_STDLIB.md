@@ -218,14 +218,46 @@ caller's variable. Host-compiled C is correct (small structs travel in
 registers), so only SBF executions differ; this was found by
 `TestStdlibSBF`, where `strings.Replace` aborted on chain but not on the host.
 
-In overlay code, every function or literal that writes an aggregate parameter
-receives it under another name and copies it into a local at entry
-(`internal/compiler/byval.go`). **Program code is not changed**: applying the
-copies everywhere changes the emitted C of 64 frozen-corpus programs and the
-full-swap ELFs, so it is left to a project decision
-(`byvalCopiesProgramCode`); until then a user function that writes a string,
-slice or struct parameter and passes it on may misbehave on SBF when LLVM does
-not inline it.
+**Resolution (October 15, user decision: fix it for all code).** Every
+function, method and literal, in the overlay and in program code, receives
+such a parameter under another name and copies it into a local at entry
+(`internal/compiler/byval.go`), so its body never touches the caller's
+memory:
+
+- a parameter the body writes (assigned, also through a field or array
+  element; incremented; ranged into; addressed, also by a pointer-receiver
+  method call; an array parameter sliced) is copied plainly;
+- a parameter the body may read after a write that can change its caller's
+  variable is copied through an opaque pointer, so the copy is taken at
+  entry. This is the second form of the same bug, found while auditing:
+  LLVM treats byval memory as private, so after `gp.a = 1` (or a write
+  through a pointer, or a call that writes) it still reads the parameter, or
+  passes its address on, from the caller's variable `gp`. A write counts
+  unless it provably reaches only the call's own locals (a pointer-receiver
+  method called on a local) or only values of types the variable cannot
+  hold (a byte written through a `[]byte` never changes a string, slice or
+  struct without byte arrays: those headers are not their elements);
+  calls are summarized by what their callees write and through which
+  parameters;
+- copies larger than 128 bytes stay whole in memory (otherwise LLVM rebuilds
+  the struct from scalars at every return of it, which grew the full swap's
+  ELF by 19–29%).
+
+Functions with neither kind of parameter keep their C. append's growth helper
+(`gosvm_grow`) wrote its slice parameter's length in place, so `t :=
+append(s, x)` with spare capacity could lengthen a package-level or heap `s`
+on SBF; it now returns a new header. The other C runtime helpers never write
+their aggregate parameters, and library calls pass only pointers and lengths.
+Paths audited on SBF ([evidence](../results/compiler/2026-10-15-byval-rebuild/README.md)):
+package variables, heap fields, address-taken locals, value receivers,
+interface boxes (a value-receiver method called through an interface wrote
+the box), method and function values, deferred calls, closures, slice, array
+and map elements, a parameter passed on to a writer, results replacing the
+argument's variable (sret: safe, LLVM keeps the result separate), and append.
+The cost is what the copies execute: +599/+603 CU for the full swap's wide
+swap (its `Swap` writes its 700-byte accounts parameter), +717–807 CU for pool
+creation, 0 on the paths that return before the copies; the ELFs shrink by
+152–224 bytes.
 
 ## Cost
 
@@ -307,7 +339,9 @@ be higher than gc's; results never differ.
   `TestStdlibUses` for `gosvm features`.
 - Programs that import none of these packages emit byte-identical C (the
   frozen corpus) and ELFs (full swap fogo-v0 `4697a9f5…`, solana-v3
-  `2b5f21d9…`).
+  `2b5f21d9…`). Since the [aggregate-parameter fix](#aggregate-parameters-on-sbf)
+  the full-swap reference is fogo-v0 `a66c5a97…`, solana-v3 `b419245b…`
+  ([results](../results/compiler/2026-10-15-byval-rebuild/README.md)).
 
 The local runners are not a public network; see
 [target profiles](TARGET_PROFILES.md).

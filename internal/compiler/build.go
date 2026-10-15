@@ -147,6 +147,28 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 	if err = run(steps[0]); err != nil {
 		return err
 	}
+	// helperObject compiles a helper source like program.c and links it.
+	helperObject := func(name string, source []byte) error {
+		helper := filepath.Join(dir, name+".c")
+		object := filepath.Join(dir, name+".o")
+		if err := os.WriteFile(helper, source, 0644); err != nil {
+			return err
+		}
+		args := append([]string(nil), steps[0]...)
+		for i := 0; i < len(args)-1; i++ {
+			if args[i] == "-c" {
+				args[i+1] = helper
+			}
+			if args[i] == "-o" {
+				args[i+1] = object
+			}
+		}
+		if err := run(args); err != nil {
+			return err
+		}
+		steps[1] = append(steps[1], object)
+		return nil
+	}
 	if arch == "v0" || modern {
 		names, inspectErr := undefinedSymbols(filepath.Join(dir, "program.o"), false)
 		for _, object := range linkedObjects {
@@ -164,25 +186,27 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 			if name != "__multi3" {
 				continue
 			}
-			helper := filepath.Join(dir, "builtins.c")
-			object := filepath.Join(dir, "builtins.o")
-			if err = os.WriteFile(helper, compilerBuiltins, 0644); err != nil {
+			if err = helperObject("builtins", compilerBuiltins); err != nil {
 				return err
 			}
-			args := append([]string(nil), steps[0]...)
-			for i := 0; i < len(args)-1; i++ {
-				if args[i] == "-c" {
-					args[i+1] = helper
-				}
-				if args[i] == "-o" {
-					args[i+1] = object
-				}
-			}
-			if err = run(args); err != nil {
-				return err
-			}
-			steps[1] = append(steps[1], object)
 			break
+		}
+	}
+	if len(program.Libraries) == 0 {
+		// LLVM may lower a copy of a parameter taken through an opaque
+		// pointer (byval.go) to memmove; programs with libraries define
+		// it in program.c.
+		names, err := undefinedSymbols(filepath.Join(dir, "program.o"), false)
+		if err != nil {
+			return fmt.Errorf("inspect compiler helpers: %w", err)
+		}
+		for _, name := range names {
+			if name == "memmove" {
+				if err = helperObject("memmove", []byte(memmoveHelper)); err != nil {
+					return err
+				}
+				break
+			}
 		}
 	}
 	if err = run(steps[1]); err != nil {

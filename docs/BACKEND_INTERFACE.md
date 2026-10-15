@@ -560,12 +560,23 @@ reading it yields heap or SDK storage), so `Function.HeapVars` and
 `BorrowSummary.Escapes` already account for references reached through a
 `**T`.
 
-**C struct parameters.** The built-in backend copies, in overlay functions,
-every aggregate parameter (string, slice, interface, struct, array) the body
-writes into a local at entry, because the SBF backend does not copy `byval`
-C parameters ([GO_STDLIB.md](GO_STDLIB.md#aggregate-parameters-on-sbf)). This
-is a C/LLVM matter; a backend that passes aggregates by value correctly needs
-nothing.
+## Aggregate parameters
+
+**Backends must give every callee its own copy of each aggregate parameter**
+(string, slice, interface, struct, array; receivers included), as Go does:
+neither the callee's writes to its parameter may reach the caller's
+variable, nor may the caller's variable changing during the call (through a
+package variable, a pointer, or a call) change the parameter. Clang's SBF
+lowering of C `byval` parameters breaks both: it passes the caller's own
+memory and makes no copy, and LLVM forwards copies into such arguments. The
+built-in backend therefore copies, in every function and literal, each
+aggregate parameter the body writes, and (through an opaque pointer) each one
+it may read after a write that can change the caller's variable, into a
+local at entry ([GO_STDLIB.md](GO_STDLIB.md#aggregate-parameters-on-sbf),
+`internal/compiler/byval.go`). This is a lowering matter, not a field of
+`CheckedProgram`: a backend whose calling convention copies aggregates, or
+that never shares a caller's memory with a callee, needs nothing; one that
+passes aggregates by reference must copy (or prove the copy unobservable).
 
 ## Evaluation order
 
@@ -706,3 +717,8 @@ rejections (71 remain). Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.
+The [aggregate-parameter fix](#aggregate-parameters) (October 15) changed
+them on purpose; the current reference is fogo-v0 `a66c5a97…`, solana-v3
+`b419245b…` and target-less v1.51 `05f52dd2…`
+([results](../results/compiler/2026-10-15-byval-rebuild/README.md)), and the
+corpus lists the 111 entries whose C it changed in `corpusChanges`.
