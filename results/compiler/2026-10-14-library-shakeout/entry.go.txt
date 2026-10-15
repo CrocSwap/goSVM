@@ -1,0 +1,30 @@
+package main
+
+import (
+	"shake/int256"
+	"shake/uint128"
+	"shake/uint256"
+	"shake/utils"
+)
+
+type keep struct {
+	a uint256.Int
+	b uint128.Uint128
+	c int256.Int
+}
+
+func Process(a, b []byte) uint64 {
+	var k keep
+	_ = k
+	_ = utils.ComputeSwapStep
+	_ = utils.GetSqrtRatioAtTickV2
+	_ = utils.GetTickAtSqrtRatioV2
+	_ = utils.GetNextSqrtPriceFromInput
+	_ = utils.GetNextSqrtPriceFromOutput
+	_ = utils.GetAmount0DeltaV2
+	_ = utils.GetAmount1DeltaV2
+	_ = utils.MulDivV2
+	_ = utils.MostSignificantBit
+	_ = utils.AddDeltaInPlace
+	return 0
+}

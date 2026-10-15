@@ -1,0 +1,21 @@
+package errors
+
+type errorString struct{ s string }
+
+func (e *errorString) Error() string { return e.s }
+
+func New(text string) error { return &errorString{text} }
+
+func Is(err, target error) bool {
+	for err != nil {
+		if err == target {
+			return true
+		}
+		u, ok := err.(interface{ Unwrap() error })
+		if !ok {
+			return false
+		}
+		err = u.Unwrap()
+	}
+	return err == target
+}
