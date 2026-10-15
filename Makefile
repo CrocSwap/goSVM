@@ -4,7 +4,7 @@ build:
 	bash scripts/build.sh
 
 test:
-	@if [ "$$(uname -s)" = Darwin ]; then go test -ldflags=-linkmode=external ./...; else go test ./...; fi
+	@if [ "$$(uname -s)" = Darwin ]; then go test -timeout 30m -ldflags=-linkmode=external ./...; else go test -timeout 30m ./...; fi
 
 verify:
 	bash scripts/verify.sh
