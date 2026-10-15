@@ -106,7 +106,9 @@ facilities in its own code, without installing the compiler or SBF tools.
 
 The compiler supports multi-file programs, user packages, signed and unsigned
 [integers](docs/GO_INTEGERS.md) (`int8`…`int64`, `uint8`…`uint64`, `int`, `uint`)
-with Go's exact semantics (compound assignment `x op= y` included), structs, fixed-size scalar arrays, multiple
+with Go's exact semantics (compound assignment `x op= y` included), structs (with
+[`==`, type aliases and `panic`](docs/GO_TYPES.md)), [fixed-size arrays](docs/GO_ARRAYS.md)
+of any element type, multiple
 return values, methods, `range` loops, constrained pointers, borrowed byte slices,
 [generics](docs/GO_GENERICS.md) (monomorphized at compile time), bounded
 [heap allocation](docs/GO_ALLOCATION.md) (`new`, `make`, `append`, `copy`,

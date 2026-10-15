@@ -31,7 +31,7 @@ func ValidateHeapBytes(n int) error {
 // remain the only other supported builtins.
 var allocBuiltins = map[string]bool{"new": true, "make": true, "append": true, "copy": true}
 
-const builtinRule = "only len, cap, new, make, append, copy, delete and clear builtins supported"
+const builtinRule = "only len, cap, new, make, append, copy, delete, clear and panic builtins supported"
 
 // sliceRule admits a slice of any storable element: unsigned scalars, bool,
 // value structs, declared scalar arrays, pointers and slices. Elements must

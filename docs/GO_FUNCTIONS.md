@@ -53,8 +53,11 @@ a function type or a `defer` statement. Named results alone need no runtime.
 
 Rejected, with source-located messages:
 
-- `recover` and `panic` (`only len, cap, new, make, append and copy builtins
-  supported`); `go` statements.
+- `recover` (`recover unsupported: a panic aborts the transaction and rolls
+  back its effects, so there is nothing to recover`) and `defer panic(v)`
+  (`defer panic(...) unsupported; defer a function literal that panics`);
+  `go` statements. `panic` itself is supported in functions, closures and
+  deferred calls ([panic](GO_TYPES.md#panic)): it logs one line and aborts.
 - Method values and method expressions of interface types (`x.M` with `x` an
   interface, `I.M`): `method values of interface types unsupported; use a
   function literal that calls the method`.

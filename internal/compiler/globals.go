@@ -802,3 +802,117 @@ const entryBody = "gosvm_process"
 func (p *CheckedProgram) initializes() bool {
 	return p.GlobalBytes > 0 || len(p.Inits) > 0
 }
+
+// inPlaceTable reports whether every value whose type has underlying array
+// type a is a package-level variable used only in place, so that no copy of
+// it is ever made (docs/GO_GLOBALS.md#large-tables). Such a variable lives in
+// read-only data or the globals block, never in a stack frame, so the
+// per-value array limit (which protects SBF stack frames) does not apply.
+//
+// In the lowered files, no object other than a package-level variable may
+// have the type; every expression of the type (or of a pointer to it) must
+// be a read-only variable's composite-literal initializer, or name such a
+// variable as the operand of an index expression, of len or cap, or of a
+// range statement without an iteration value. A writable variable with an
+// initializer is assigned in its package's initializer, which copies the
+// value, so it is not admitted.
+func (c *checker) inPlaceTable(a *types.Array) bool {
+	if c.globals == nil {
+		return false
+	}
+	isTable := func(t types.Type) bool {
+		if t == nil {
+			return false
+		}
+		if p, ok := t.Underlying().(*types.Pointer); ok {
+			t = p.Elem()
+		}
+		return types.Identical(t.Underlying(), a)
+	}
+	inits := map[ast.Expr]bool{}
+	for _, g := range c.globals.globals {
+		if g.ReadOnly && g.Init != nil {
+			inits[ast.Unparen(g.Init)] = true
+		}
+	}
+	admitted, used := true, false
+	for _, file := range c.files {
+		var stack []ast.Node
+		ast.Inspect(file, func(n ast.Node) bool {
+			if n == nil {
+				stack = stack[:len(stack)-1]
+				return true
+			}
+			if !admitted {
+				return false
+			}
+			stack = append(stack, n)
+			if id, ok := n.(*ast.Ident); ok {
+				if o := c.info.Defs[id]; o != nil {
+					if _, isType := o.(*types.TypeName); !isType && isTable(o.Type()) && !isPackageVar(o) {
+						admitted = false
+					}
+				}
+			}
+			e, ok := n.(ast.Expr)
+			if !ok {
+				return true
+			}
+			tv, ok := c.info.Types[e]
+			if !ok || tv.IsType() || !isTable(tv.Type) {
+				return true
+			}
+			if inits[e] {
+				used = true
+				return true
+			}
+			if _, isParen := e.(*ast.ParenExpr); isParen {
+				return true // its operand is classified
+			}
+			if len(stack) >= 2 {
+				if sel, ok := stack[len(stack)-2].(*ast.SelectorExpr); ok && sel.Sel == e && c.packageVar(sel) != nil {
+					return true // pkg.V is classified as a whole
+				}
+			}
+			if !c.inPlaceUse(stack) {
+				admitted = false
+			}
+			used = true
+			return true
+		})
+	}
+	return admitted && used
+}
+
+// inPlaceUse reports whether the expression ending stack (its ancestors
+// before it) names a package-level variable used in place: indexed, the
+// operand of len or cap, or ranged over without an iteration value.
+func (c *checker) inPlaceUse(stack []ast.Node) bool {
+	e := stack[len(stack)-1].(ast.Expr)
+	if v := c.packageVar(e); v == nil || v.Name() == "_" {
+		return false
+	}
+	if _, isPointer := c.info.Types[e].Type.Underlying().(*types.Pointer); isPointer {
+		return false
+	}
+	var cur ast.Node = e
+	for i := len(stack) - 2; i >= 0; i-- {
+		switch p := stack[i].(type) {
+		case *ast.ParenExpr:
+			cur = p
+			continue
+		case *ast.IndexExpr:
+			return p.X == cur
+		case *ast.RangeStmt:
+			return p.X == cur && p.Value == nil
+		case *ast.CallExpr:
+			if id, ok := ast.Unparen(p.Fun).(*ast.Ident); ok && len(p.Args) == 1 && p.Args[0] == cur {
+				if b, ok := c.info.Uses[id].(*types.Builtin); ok {
+					return b.Name() == "len" || b.Name() == "cap"
+				}
+			}
+		}
+		return false
+	}
+	return false
+}

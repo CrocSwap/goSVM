@@ -39,6 +39,9 @@ type frontend struct {
 	// globals is the program's package-level variables (docs/GO_GLOBALS.md);
 	// nil without them.
 	globals *globalProgram
+	// panics records each panic call's log line (CheckedProgram.Panics);
+	// nil without panics.
+	panics map[*ast.CallExpr]*PanicSite
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {
@@ -156,19 +159,40 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 	f.variableRule(n, t)
 }
 
-// arrayRule bounds an array value type before it is declared.
+// arrayRule bounds an array value type before it is declared. Elements may
+// have any storable type (docs/GO_ARRAYS.md): scalars, strings, value
+// structs, arrays, pointers, slices, maps, interfaces and function values.
 func (f *frontend) arrayRule(node ast.Node, a *types.Array) {
-	// Interface, function, string and map elements are admitted too (the message
-	// predates them).
-	b, ok := a.Elem().Underlying().(*types.Basic)
-	if !isIface(a.Elem()) && !isFuncValue(a.Elem()) && !isMap(a.Elem()) && (!ok || (b.Info()&types.IsInteger == 0 && b.Kind() != types.Bool && b.Kind() != types.String) || b.Info()&types.IsUntyped != 0) {
-		f.fail(node, "array elements must be integer or bool scalars, or named versions of those scalars")
+	f.arrayRuleExcept(node, a, nil)
+}
+
+// arrayRuleExcept is arrayRule, except that an array above the per-value
+// limit is admitted when inPlace (if not nil) reports that no value of its
+// type is ever copied: a package-level table used only in place
+// (docs/GO_GLOBALS.md#large-tables).
+func (f *frontend) arrayRuleExcept(node ast.Node, a *types.Array, inPlace func(*types.Array) bool) {
+	if isContext(a.Elem()) {
+		f.fail(node, "arrays of Context unsupported")
 	}
-	f.variableRule(node, a.Elem())
+	// Array elements (and arrays behind pointer elements) are bounded here
+	// too; they are declared before the array that holds them.
+	f.typeArgRule(node, a.Elem())
 	size := (&types.StdSizes{WordSize: 8, MaxAlign: 8}).Sizeof(a.Elem())
-	if a.Len() > maxArrayBytes/size {
+	if size > 0 && a.Len() > maxArrayBytes/size && (inPlace == nil || !inPlace(a)) {
 		f.fail(node, "array storage exceeds experimental %d-byte per-value limit", maxArrayBytes)
 	}
+}
+
+// compositeElem reports whether an array of elem needs the composite-element
+// lowering (docs/GO_ARRAYS.md): struct, array, pointer or slice elements.
+// Arrays of scalars, strings, interfaces, maps and function values keep the
+// original lowering, so their programs' C is unchanged.
+func compositeElem(elem types.Type) bool {
+	switch elem.Underlying().(type) {
+	case *types.Struct, *types.Array, *types.Pointer, *types.Slice:
+		return true
+	}
+	return false
 }
 
 // constantRule requires integer constants to be representable as uint64,

@@ -81,6 +81,8 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 					g.line("%s=%s_equal(%s,%s);", matched, g.arrayName(s.Tag, a), tag, value)
 				} else if isString(g.info.Types[s.Tag].Type) {
 					g.line("%s=gosvm_str_eq(%s,%s);", matched, tag, value)
+				} else if _, ok := g.info.Types[s.Tag].Type.Underlying().(*types.Struct); ok {
+					g.line("%s=%s;", matched, g.structEqual(test, g.info.Types[s.Tag].Type, tag, value))
 				} else {
 					g.line("%s=(%s==%s);", matched, tag, value)
 				}
@@ -238,6 +240,9 @@ func (g *generator) rangeOperandCalls(e ast.Expr) {
 			g.unchecked(e)
 		}
 		g.expr(e)
+	case *ast.IndexExpr:
+		// An element of an array of arrays without calls: nothing is
+		// evaluated.
 	default:
 		g.unchecked(e)
 	}

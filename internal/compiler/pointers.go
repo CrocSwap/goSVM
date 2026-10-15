@@ -477,7 +477,7 @@ func (a *borrowAnalysis) literal(lit *ast.CompositeLit) {
 		t = p.Elem()
 	}
 	switch t.Underlying().(type) {
-	case *types.Struct, *types.Slice:
+	case *types.Struct, *types.Slice, *types.Array:
 		for _, elt := range lit.Elts {
 			if kv, ok := elt.(*ast.KeyValueExpr); ok {
 				elt = kv.Value

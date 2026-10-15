@@ -116,19 +116,18 @@ func TestArrayDeclarationOrder(t *testing.T) {
 
 func TestArrayRejections(t *testing.T) {
 	for name, source := range map[string]string{
-		"oversize byte":    `type K [1025]byte;func Process(s,i []byte)uint64{return 0}`,
-		"oversize word":    `type K [129]uint64;func Process(s,i []byte)uint64{return 0}`,
-		"huge length":      `type K [9223372036854775807]byte;func Process(s,i []byte)uint64{return 0}`,
-		"float element":    `type K [32]float64;func Process(s,i []byte)uint64{return 0}`,
-		"nested array":     `type K [2][32]byte;func Process(s,i []byte)uint64{return 0}`,
-		"struct element":   `type S struct{ N uint64 };type K [2]S;func Process(s,i []byte)uint64{return 0}`,
+		"oversize byte": `type K [1025]byte;func Process(s,i []byte)uint64{return 0}`,
+		"oversize word": `type K [129]uint64;func Process(s,i []byte)uint64{return 0}`,
+		"huge length":   `type K [9223372036854775807]byte;func Process(s,i []byte)uint64{return 0}`,
+		"float element": `type K [32]float64;func Process(s,i []byte)uint64{return 0}`,
+		// Arrays of structs, arrays, slices and pointers are supported
+		// (docs/GO_ARRAYS.md, valuetypes_test.go); a nested array is bounded too.
+		"nested oversize":  `type K [2][1000]byte;func Process(s,i []byte)uint64{return 0}`,
 		"context element":  `import "gosvm/solana";type K [2]solana.Context;func Process(c solana.Context)uint64{return 0}`,
-		"slice element":    `type K [2][]byte;func Process(s,i []byte)uint64{return 0}`,
 		"slice conversion": `func Process(s,i []byte)uint64{a:=[24]byte(s);return uint64(a[0])}`,
 		// Value ranges over arrays are supported (range_test.go); an index-only
 		// range over a literal is not.
-		"literal range":   `func Process(s,i []byte)uint64{for j:=range [32]byte{} {s[j]=0};return 0}`,
-		"pointer element": `type K [2]*uint64;func Process(s,i []byte)uint64{return 0}`,
+		"literal range": `func Process(s,i []byte)uint64{for j:=range [32]byte{} {s[j]=0};return 0}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Compile("arrays-reject.go", []byte("package p;"+source))

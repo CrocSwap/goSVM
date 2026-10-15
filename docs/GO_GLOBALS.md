@@ -126,6 +126,47 @@ take no storage at all. In the example, `pows64`, `table`
 (`[]powerOf2`), `negatives`, `flags`, `zeroTable`, `config`, `greeting`,
 `BigEndian` and `zeta.Base` are read-only.
 
+Arrays of composite elements ([GO_ARRAYS.md](GO_ARRAYS.md)) and type aliases
+([GO_TYPES.md](GO_TYPES.md)) need nothing special: `[4]Pair`, `[2][2][2]uint16`
+or `[60]Int` with `type Int = wide.Int` are plain data, read-only when never
+written, and an element of a package-level array is addressable storage, so
+`G[i].F = v`, `G[i][j]++` and `pkg.G[i].F -= x` update the variable in place.
+
+### Large tables
+
+The 1,024-byte per-value array limit ([GO_ARRAYS.md](GO_ARRAYS.md)) protects
+SBF stack frames (4 KiB): a value of a larger array type could be copied
+into a frame (a local, a parameter, a temporary for `==`, a range copy, an
+interface conversion or an initializer's composite literal). A
+package-level variable itself is never on the stack: it is read-only data or
+part of the globals block on the heap. So Check admits an array type above
+the limit when **no value of the type is ever copied** — in the lowered
+files (every function, instance, closure, initializer and `init`):
+
+- no object other than a non-blank package-level variable has the type
+  (no local, parameter, result or struct field), and
+- every expression of the type, or of a pointer to it, is either the
+  composite-literal initializer of a read-only variable (emitted as
+  `static const` data, never built at run time) or names a package-level
+  variable (`V` or `pkg.V`) that is the operand of an index expression
+  (`V[i]`, `V[i].F`, `V[i][j]++`, `&V[i]`), of `len` or `cap`, or of a
+  `range` without an iteration value (`for i := range V`).
+
+Anything else — a copy, `==`, `&V`, slicing, a value `range`, an
+interface conversion, a method call, a writable variable with an
+initializer (its package's initializer assigns the literal, building it
+first) or an array of such arrays — keeps the rejection
+`array storage exceeds experimental 1024-byte per-value limit` at the same
+position, so the check order is unchanged. Elements are still bounded by
+their own types' rules, and `v := V[i]` copies only an element. This admits
+holiman/uint256's `var pows = [60]Int{...}` (1,920 bytes) and zero-valued
+writable tables such as `var ledger [160]Int` (5,120 bytes of the globals
+block, counted against the heap budget as usual). Tests:
+`TestLargeTablesAccepted` and `TestLargeTablesRejected`
+([globaltables_test.go](../internal/compiler/globaltables_test.go)) and the
+4,800-byte read-only and 5,120-byte writable tables of
+`examples/global-value-types` on SBF (both above the 4 KiB frame).
+
 ## Cost
 
 Initialization runs on **every invocation**, so its CU is part of every
@@ -178,7 +219,13 @@ No new traps. Initializers and `init` functions use the existing ones
 ...). A trap during initialization aborts the invocation before `Process`
 runs, so the transaction fails and nothing is written, as a Go program that
 panics during initialization never reaches `main`
-(`TestGlobalInitTrap`).
+(`TestGlobalInitTrap`). A `panic` call during initialization — in an
+`init` function, in a variable's initializer or in any function an
+initializer calls, in any package — first logs its contracted line
+(`Program log: panic: …`, [ERROR_CONTRACT](ERROR_CONTRACT.md#panic)), the
+same first line native Go prints before exiting with status 2; a runtime
+error (an index out of range, say) logs nothing, as for any trap
+(`TestGlobalInitPanics`, and on SBF `TestGlobalValueTypesSBF`).
 
 ## Deviations and notes
 
@@ -255,6 +302,19 @@ through CU.
   `TestGlobalHeapAccounting`, `TestGlobalInitTrap`, `TestGlobalOperandOrder`,
   `TestGlobalRuntimeOnlyWhenUsed` and `TestCheckedProgramGlobals`
   ([globals_test.go](../internal/compiler/globals_test.go)).
+- [`examples/global-value-types`](../examples/global-value-types/program.go)
+  combines package-level variables with value types: read-only and writable
+  arrays of structs and arrays (including the large tables above), in-place
+  mutation of this package's and another package's composite arrays,
+  struct and array `==` on globals and through interfaces, alias-typed
+  variables and a panicking function that initializers also call.
+  `TestGlobalValueTypesDifferential` runs 1,402 vectors against one fresh
+  native process each; `TestGlobalInitPanics` runs eight
+  initialization-panic probes (named, string, signed, bool and nil values,
+  an imported package, a runtime error) against native processes; and
+  `TestGlobalValueTypesSBF` runs 151 vectors plus an idle invocation and the
+  eight probes on fogo-v0 and solana-v3
+  ([results](../results/compiler/2026-10-14-globals-value-types/README.md)).
 - The frozen check corpus: the nine recorded package-variable and `init`
   rejections now compile (`corpusChanges`); every other entry is unchanged.
 - The [library shakeout](../results/compiler/2026-10-14-globals/README.md#library-shakeout)'s

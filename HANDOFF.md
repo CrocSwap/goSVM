@@ -34,9 +34,14 @@ stay out (fixed-point integers); escaping locals keep moving to the heap;
 `Add64`/`Sub64` treat any nonzero carry as 1 (compiled Go). Known documented
 deviation: compound-assignment and `=` targets read plain operand variables
 before the right side's calls, where gc reads them after (unspecified order;
-only visible when the right side reassigns its own target's operands). Still
-out: floats, goroutines/channels/select, `recover`/`panic`, map iteration,
-`clear` on slices.
+only visible when the right side reassigns its own target's operands). Then,
+from the [library survey](results/compiler/2026-10-14-library-shakeout/README.md):
+[struct `==`, type aliases and `panic`](docs/GO_TYPES.md) and
+[arrays of composite elements](docs/GO_ARRAYS.md)
+([evidence](results/compiler/2026-10-14-value-types/README.md)). `panic` is a
+trap that logs one contracted line (no custom error code is possible; deferred
+calls do not run; `recover` is rejected). Still out: floats,
+goroutines/channels/select, `recover`, map iteration, `clear` on slices.
 
 **Package-level variables and `init` (October 14, branch
 `worktree-agent-a4d54a33b60ae5969`):** the library shakeout's largest
@@ -57,6 +62,30 @@ before later calls in the same expression. Evidence: a five-package example
 against one fresh native process per vector (2,042 host vectors; 242 SBF cases
 on both targets), [results](results/compiler/2026-10-14-globals/README.md);
 full-swap ELFs unchanged; the nine recorded corpus rejections now compile.
+
+**Both merged (October 14):** package-level variables and the value types
+(struct `==`, aliases, composite arrays, `panic`) were developed in parallel
+and merged together; they compose without special cases: arrays of structs
+and arrays are ordinary (read-only or writable) globals mutated in place
+(`G[i].F = v`, `pkg.G[i][j]++`), alias-typed globals are their aliased
+types, and a `panic` during initialization logs its contracted line and
+aborts before `Process`. The merge added one rule change: an array type above
+the 1,024-byte per-value limit (which protects 4 KiB SBF frames) is admitted
+when its only values are package-level variables used in place — indexed,
+`len`/`cap`, index-only `range`, read-only literal
+([large tables](docs/GO_GLOBALS.md#large-tables)) — which admits uint256's
+`var pows = [60]Int{...}`; every other use keeps the rejection. ERROR_CONTRACT
+also gained a [panic backend-reproduction](docs/ERROR_CONTRACT.md#backend-reproduction)
+subsection for Qushta. Evidence: `examples/global-value-types` (1,402 host
+vectors against fresh native processes; 152 SBF cases on both targets), eight
+initialization-panic probes against native Go and on SBF,
+[results](results/compiler/2026-10-14-globals-value-types/README.md); full-swap
+ELFs unchanged; the corpus has 62 rejections left (guard 60).
+
+**Next (in progress on another branch):** on-chain standard library work
+(`errors`, `math`, `encoding/binary`, `bytes`, `strings`, `strconv`) from the
+[library shakeout](results/compiler/2026-10-14-library-shakeout/README.md),
+branched from `742210e`; it will be merged after this merge.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

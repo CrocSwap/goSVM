@@ -24,6 +24,7 @@ type checker struct {
 
 	gp            *genericProgram // instances, for diagnostics within them
 	typeInstances []*TypeInstance // instantiated generic types, checked after named types
+	files         []*ast.File     // the lowered files (program)
 }
 
 // within runs check for one declaration; a diagnostic inside an instance of
@@ -41,6 +42,7 @@ func (c *checker) within(d ast.Node, check func()) {
 }
 
 func (c *checker) program(files []*ast.File, decls []ast.Decl) {
+	c.files = files
 	// Array value types written anywhere in source are declared first.
 	for _, f := range files {
 		ast.Inspect(f, func(n ast.Node) bool {
@@ -61,7 +63,8 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			for _, sp := range gen.Specs {
 				ts := sp.(*ast.TypeSpec)
 				if ts.Assign.IsValid() {
-					c.fail(ts, "type aliases unsupported")
+					c.alias(ts)
+					continue
 				}
 				c.namedType(ts, c.info.Defs[ts.Name].Type())
 			}
@@ -140,8 +143,38 @@ func (c *checker) declareArray(node ast.Node, a *types.Array) {
 	if c.declaredArray(a) {
 		return
 	}
-	c.arrayRule(node, a)
+	c.arrayRuleExcept(node, a, c.inPlaceTable)
+	// An array element, or the array a pointer element points to, is
+	// declared before the array that holds it (the emitter's order).
+	if inner, ok := elementArray(a.Elem()); ok {
+		c.declareArray(node, inner)
+	}
 	c.arrays = append(c.arrays, arrayType{typ: a})
+}
+
+// arrayElement reports whether e is an addressable struct element of an
+// array (or of an array through a pointer): a[i], whose fields are read in
+// place.
+func arrayElement(info *types.Info, e ast.Expr) bool {
+	ix, ok := ast.Unparen(e).(*ast.IndexExpr)
+	if !ok || !info.Types[e].Addressable() {
+		return false
+	}
+	if _, ok := info.Types[e].Type.Underlying().(*types.Struct); !ok {
+		return false
+	}
+	_, ok = arrayValue(info.Types[ix.X].Type)
+	return ok
+}
+
+// elementArray is the array an array element of type t needs declared
+// first: t's own array type, or the array a pointer element points to.
+func elementArray(t types.Type) (*types.Array, bool) {
+	if p, ok := pointer(t); ok {
+		t = p.Elem()
+	}
+	a, ok := t.Underlying().(*types.Array)
+	return a, ok
 }
 
 func (c *checker) declareResults(node ast.Node, t *types.Tuple) {
@@ -152,6 +185,23 @@ func (c *checker) declareResults(node ast.Node, t *types.Tuple) {
 		c.variableRule(node, t.At(i).Type())
 	}
 	c.results = append(c.results, resultType{typ: t})
+}
+
+// alias admits a type alias declaration, type A = T (docs/GO_TYPES.md). An
+// alias declares no new type: go/types resolves every use of A to T, so T's
+// own rules apply wherever it is used. A named T (including an instantiated
+// generic type) is checked at its declaration or instantiation; any other T
+// must be a storable type. go/types materializes aliases as *types.Alias
+// only under GODEBUG=gotypesalias=1, which the compiler does not support.
+func (c *checker) alias(ts *ast.TypeSpec) {
+	t := c.info.Defs[ts.Name].Type()
+	if _, ok := t.(*types.Alias); ok {
+		c.fail(ts, "type aliases require go/types' default alias resolution (GODEBUG gotypesalias=0)")
+	}
+	if _, ok := t.(*types.Named); ok {
+		return
+	}
+	c.variableRule(ts, t)
 }
 
 // namedType admits named scalars, scalar arrays and value structs whose
@@ -396,9 +446,7 @@ func (c *checker) switchStatement(s *ast.SwitchStmt) {
 		c.stmt(s.Init)
 	}
 	if s.Tag != nil {
-		if _, ok := c.info.Types[s.Tag].Type.Underlying().(*types.Struct); ok {
-			c.fail(s.Tag, "struct switch comparisons unsupported; compare fields explicitly")
-		}
+		// A struct tag compares like == (docs/GO_TYPES.md#struct-equality).
 		c.expr(s.Tag)
 	}
 	var fallback *ast.CaseClause
@@ -507,9 +555,27 @@ func (c *checker) rangeOperandPath(e ast.Expr) {
 		if c.info.Types[e.Fun].IsType() {
 			c.fail(e, "index-only range over an array conversion unsupported; range over the operand")
 		}
+	case *ast.IndexExpr:
+		// An element of an array of arrays: without calls, len is constant
+		// and Go evaluates nothing (no bounds or nil check).
+		if _, ok := arrayValue(c.info.Types[e.X].Type); !ok || containsCall(e) {
+			c.fail(e, "index-only range over an array requires a variable, field, dereference or call")
+		}
 	default:
 		c.fail(e, "index-only range over an array requires a variable, field, dereference or call")
 	}
+}
+
+// containsCall reports whether e contains a call expression.
+func containsCall(e ast.Expr) bool {
+	found := false
+	ast.Inspect(e, func(n ast.Node) bool {
+		if _, ok := n.(*ast.CallExpr); ok {
+			found = true
+		}
+		return !found
+	})
+	return found
 }
 
 // rangeTarget is a range iteration variable, or nil when absent or blank.
@@ -718,6 +784,13 @@ func (c *checker) exprValue(e ast.Expr) {
 		if field, ok := c.info.Uses[e.Sel].(*types.Var); !ok || !field.IsField() {
 			c.fail(e, "only value struct fields supported")
 		}
+		if arrayElement(c.info, e.X) {
+			// A field of an array element is read in place, without
+			// copying the element.
+			c.fieldTarget(e.X)
+			c.typeRule(e, tv.Type)
+			return
+		}
 		c.expr(e.X)
 		if p, ok := pointer(c.info.Types[e.X].Type); ok {
 			c.checkedPointer(e, p)
@@ -809,7 +882,13 @@ func (c *checker) binary(e *ast.BinaryExpr, tv types.TypeAndValue) {
 		return
 	}
 	if _, ok := c.info.Types[e.X].Type.Underlying().(*types.Struct); ok {
-		c.fail(e, "struct comparisons unsupported; compare fields explicitly")
+		// == and != compare the non-blank fields in order, stopping at the
+		// first difference (docs/GO_TYPES.md#struct-equality); go/types has
+		// required a comparable struct type.
+		c.expr(e.X)
+		c.expr(e.Y)
+		c.typeRule(e, tv.Type)
+		return
 	}
 	c.expr(e.X)
 	if e.Op == token.LAND || e.Op == token.LOR {
@@ -926,6 +1005,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 	}
 	if name, ok := c.mapBuiltinCall(e); ok {
 		c.mapBuiltin(e, name, tv)
+		return
+	}
+	if b, ok := o.(*types.Builtin); ok && (b.Name() == "panic" || b.Name() == "recover") {
+		c.panicCall(e, b.Name())
 		return
 	}
 	values := c.callValues(e)
@@ -1102,6 +1185,14 @@ func (c *checker) fieldTarget(e ast.Expr) {
 		}
 		c.fieldTarget(e.X)
 	case *ast.IndexExpr:
+		// An element of addressable array storage (or of an array through a
+		// pointer) keeps its identity, as in a[i].F = v and a[i][j] = v.
+		if a, ok := arrayValue(c.info.Types[e.X].Type); ok {
+			c.arrayPointer(e.X)
+			c.expr(e.Index)
+			c.lookupArray(e, a)
+			return
+		}
 		// An element of a slice is addressable storage, as in s[i].F = v.
 		if _, ok := c.info.Types[e.X].Type.(*types.Slice); !ok {
 			c.fail(e, "field target must be a local value struct")
@@ -1180,6 +1271,6 @@ func (c *checker) arrayLiteral(e *ast.CompositeLit, a *types.Array) {
 			}
 			value = kv.Value
 		}
-		c.expr(value)
+		c.exprAs(value, a.Elem())
 	}
 }

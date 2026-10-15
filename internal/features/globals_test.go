@@ -58,6 +58,18 @@ func Process(s, i []byte) uint64 { return 0 }`,
 		"writable": {`var n uint64
 func Process(s, i []byte) uint64 { n++; return n }`,
 			Uses{Checked: true, Globals: true, Allocation: true, GlobalHeapBytes: 8}},
+		// Package variables combined with value types set both sides' flags;
+		// the [60]Int table above the per-value limit is admitted because it
+		// is only indexed.
+		"globals with value types": {`type Int = [4]uint64
+type P struct{ K, V uint64 }
+var pows = [60]Int{{1}, {10}}
+var recs [4]P
+var origin = P{1, 2}
+func init() { if pows[1][0] != 10 { panic("pows") } }
+func Process(s, i []byte) uint64 { recs[i[0]&3].V++; if recs[0] == origin { return 1 }; return pows[i[1]%60][0] }`,
+			Uses{Checked: true, Globals: true, Allocation: true, GlobalHeapBytes: 64, ReadOnlyGlobals: 2,
+				StructEquality: true, TypeAliases: true, CompositeArrays: true, Panic: true}},
 		"local var is not global": {`func Process(s, i []byte) uint64 { var n uint64; return n }`,
 			Uses{Checked: true}},
 	} {

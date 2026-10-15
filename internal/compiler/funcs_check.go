@@ -91,6 +91,16 @@ func (c *checker) indirectCall(e *ast.CallExpr, tv types.TypeAndValue) {
 // deferStmt checks a defer statement: the deferred call is checked like any
 // call; calls into packages without Go bodies are rejected.
 func (c *checker) deferStmt(s *ast.DeferStmt) {
+	if id, ok := ast.Unparen(s.Call.Fun).(*ast.Ident); ok {
+		if b, ok := c.info.Uses[id].(*types.Builtin); ok {
+			switch b.Name() {
+			case "panic":
+				c.fail(s, "defer panic(...) unsupported; defer a function literal that panics")
+			case "recover":
+				c.fail(s, recoverRule)
+			}
+		}
+	}
 	if sel, ok := c.callFun(s.Call.Fun).(*ast.SelectorExpr); ok {
 		if id, ok := sel.X.(*ast.Ident); ok {
 			if pkg, ok := c.info.Uses[id].(*types.PkgName); ok {

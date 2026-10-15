@@ -1,0 +1,66 @@
+{
+  "network_validation": false,
+  "platform_tools": "v1.57",
+  "runners": {"fogo-v0": "gosvm-svm-runner 0.5.0", "solana-v3": "gosvm-svm-runner 0.6.0"},
+  "host_differential": {
+    "vectors": 10200,
+    "go_panics_by_mode": {"structs": 476, "arrays": 966, "aliases": 0, "panics": 1984, "library": 702},
+    "panics_with_log_line": 2686
+  },
+  "sbf": {
+    "fogo-v0": {
+      "elf_sha256": "c8e7dd33e1c91e13fd7fcd4e8f7877cac388d033dec45711d3be98566518cced",
+      "cu_elf_sha256": "f9d134bb8d55638b714eeefed485f2d88c440e37765fdbaf53d9e9e90b5a1a5a",
+      "cases": 400, "aborts": 251, "panic_log_lines": 218, "max_completed_cu": 8451,
+      "cu_per_iteration_struct_eq": 24.63, "cu_per_iteration_field_eq": 25.63,
+      "cu_per_iteration_struct_array_update": 25.63, "cu_per_iteration_scalar_arrays_update": 29.63,
+      "cu_completed_empty_loop": 822, "cu_panic_constant_after_empty_loop": 1201,
+      "cu_panic_64_byte_string_after_empty_loop": 2611
+    },
+    "solana-v3": {
+      "elf_sha256": "eae9703d2baa74a571191f85833f9fd0d343d3b6bdcc3d8c5ac2732a81c52e9b",
+      "cu_elf_sha256": "9c2016108cd97654aef3603e349af45d3fbea34b7e9cc690f210a476551e0582",
+      "cases": 400, "aborts": 251, "panic_log_lines": 218, "max_completed_cu": 8486,
+      "cu_per_iteration_struct_eq": 24.63, "cu_per_iteration_field_eq": 25.63,
+      "cu_per_iteration_struct_array_update": 25.63, "cu_per_iteration_scalar_arrays_update": 29.63,
+      "cu_completed_empty_loop": 822, "cu_panic_constant_after_empty_loop": 1201,
+      "cu_panic_64_byte_string_after_empty_loop": 2611
+    }
+  },
+  "other_sbf_tests_passed": ["TestAllocationSBF", "TestBitsSBF", "TestCompoundSBF", "TestFuncCombinationsSBF", "TestFuncValuesSBF",
+    "TestInterfaceSBF", "TestIntValuesSBF", "TestMapSBF", "TestMixedSBF", "TestStringSBF", "TestGenericSBF",
+    "TestGenericMatchesHandwrittenSBF", "TestRangeUint16SBF", "TestModernRebuildIsByteIdentical", "TestSBFUnresolvedSymbolGuard"],
+  "reproduced_elfs_prefixes": {
+    "allocation_heap32": ["21ac0e94af7b", "4e6b6ee00d92"], "allocation_heap64": ["f1d481d89484", "91005d64ba33"],
+    "compound": ["bb53b2c0c8bb", "ebcc2f97ba66"], "compound_cu": ["18c9266f03ca", "299d740afcd8"],
+    "func_values": ["e6519f9c176f", "fa1777bfc6af"], "func_calls": ["636d81127e15", "4a0665f2bfc0"],
+    "func_strings": ["e2e63d72735e", "7cf1458222d0"], "func_maps": ["99662e2787c1", "280a454cdc65"],
+    "interfaces": ["c7daf64332c8", "8e88eb9ed179"], "interface_dispatch": ["06da97f1e0eb", "7caa887b4415"],
+    "maps": ["1c9d45e06d78", "4f2108e19548"], "strings": ["998161cc8173", "70174787036a"],
+    "bits_probe": ["49fa267cb775", "1197a582fc5a"], "bits_cu": ["18c8a27869e2", "17e6a8b0a796"]
+  },
+  "fresh_rebuild": {
+    "fogo-v0/full-swap": {"elf_sha256": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0", "identical": true, "matches_reference": true},
+    "fogo-v0/clock2": {"elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804", "identical": true, "matches_reference": true},
+    "solana-v3/full-swap": {"elf_sha256": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e", "identical": true, "matches_reference": true},
+    "solana-v3/clock2": {"elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5", "identical": true, "matches_reference": true}
+  },
+  "corpus_changes": {
+    "16": "type A [2]S compiles", "138": "type K [2]S compiles", "148": "type K [2][32]byte compiles",
+    "224": "type K [2][]byte compiles", "310": "type K [2]*uint64 compiles",
+    "98": "switch on a struct tag compiles", "193": "switch on a struct tag compiles",
+    "151": "struct == compiles", "168": "type V = uint64 compiles",
+    "80": "[2]solana.Context: message is now \"arrays of Context unsupported\" (same position)"
+  },
+  "library_peel_pass2": {
+    "removals_before": 252, "removals_after": 230,
+    "functions_that_check": {
+      "uint256": {"total": 155, "before": 89, "after": 89},
+      "int256": {"total": 71, "before": 51, "after": 51},
+      "uint128": {"total": 50, "before": 29, "after": 42},
+      "uniswapv3_utils": {"total": 40, "before": 13, "after": 14}
+    },
+    "remaining_root_causes": ["package-level variables", "standard library (math/big, fmt, strconv, io, strings, encoding/*)",
+      "uint256 pows [60]Int (1,920 bytes) exceeds the 1,024-byte per-value array limit (behind its package-level var)"]
+  }
+}
