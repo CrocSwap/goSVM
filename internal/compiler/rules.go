@@ -149,8 +149,9 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 		f.fail(n, "pointers to Context unsupported")
 	}
 	switch t.Underlying().(type) {
-	case *types.Pointer, *types.Slice, *types.Signature:
-		// Pointers to interface values are admitted (the message predates them).
+	case *types.Slice, *types.Signature:
+		// Pointers to interface values and to pointers are admitted (the
+		// message predates them).
 		f.fail(n, "pointer elements must be integer/bool scalars, value structs or scalar arrays")
 	}
 	f.variableRule(n, t)

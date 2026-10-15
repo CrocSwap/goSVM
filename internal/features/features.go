@@ -43,7 +43,8 @@ type Usage struct {
 	// LibraryCalls are calls into generated pure-library bindings (Bend/Rust).
 	LibraryCalls []CallSite `json:"library_calls"`
 	// StdlibCalls are calls into standard-library packages the compiler
-	// provides on-chain (math/bits). Added within gosvm-features-v1.
+	// provides on-chain (math/bits and the overlay packages of
+	// docs/GO_STDLIB.md). Added within gosvm-features-v1.
 	StdlibCalls []CallSite `json:"stdlib_calls"`
 	// Generics lists every generic declaration in program code with the
 	// distinct instantiations the program needs, as the compiler would
@@ -92,6 +93,13 @@ type Uses struct {
 	// them before Process; writable ones live in the globals block, the
 	// invocation heap's first allocation (GlobalHeapBytes, from Check).
 	Globals bool `json:"globals"`
+	// Stdlib lists, sorted, the standard-library packages the program
+	// reaches besides math/bits (MathBits): the overlay packages of
+	// docs/GO_STDLIB.md that program code imports, and the overlay packages
+	// those import. Their sources are compiled with the program but are not
+	// program code: they are not counted in Language, Files or the flags
+	// above (added within gosvm-features-v1).
+	Stdlib []string `json:"stdlib"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -163,7 +171,12 @@ func summarize(u *Usage) {
 	u.Uses.Allocation = sum("new_calls")+sum("make_calls")+sum("append_calls")+sum("copy_calls")+sum("slice_literals")+sum("map_literals") > 0
 	u.Uses.Interfaces = sum("interface_values") > 0
 	u.Uses.SignedIntegers = has(types, signed...) || has(conversions, signed...) || sum("signed_operations") > 0
-	u.Uses.MathBits = len(u.StdlibCalls) > 0
+	u.Uses.MathBits = false
+	for _, call := range u.StdlibCalls {
+		if call.Package == "math/bits" {
+			u.Uses.MathBits = true
+		}
+	}
 	u.Uses.Generics = len(u.Generics) > 0 || sum("type_parameters") > 0
 	u.Uses.Uint16 = has(types, "uint16") || has(values, "uint16")
 	u.Uses.Range = sum("for_range") > 0
@@ -350,6 +363,7 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	var inputs []*input
 	libraries := map[string]bool{}
 	sdkPackages := map[string]bool{}
+	stdlibPackages := map[string]bool{}
 	var packages []string
 	for _, f := range tp.Files {
 		scope := tp.Info.Scopes[f]
@@ -365,6 +379,10 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 			continue
 		}
 		name := tp.Fset.Position(f.Package).Filename
+		if compiler.IsStdlibSource(name) {
+			stdlibPackages[pkg] = true
+			continue
+		}
 		in := &input{file: f, pkg: pkg, info: File{Package: pkg, Lines: tp.Fset.File(f.Pos()).LineCount()}}
 		if filepath.Base(name) == "gosvm-library-stub.go" {
 			libraries[pkg] = true
@@ -392,6 +410,8 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	for path := range tp.Packages {
 		if isSDK(path) {
 			sdkPackages[path] = true
+		} else if compiler.IsStdlibPackage(path) {
+			stdlibPackages[path] = true
 		} else {
 			packages = append(packages, path)
 		}
@@ -478,6 +498,7 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	}
 	u.Generics = generics
 	summarize(u)
+	u.Uses.Stdlib = sortedSet(stdlibPackages)
 	return u, nil
 }
 
@@ -555,7 +576,7 @@ func isSDK(path string) bool { return path == "gosvm/solana" || strings.HasPrefi
 // isStdlib reports the standard-library packages the compiler provides to
 // on-chain code. Their calls are listed in stdlib_calls and, as calls into
 // another package, still count as cross_package_calls.
-func isStdlib(path string) bool { return path == "math/bits" }
+func isStdlib(path string) bool { return path == "math/bits" || compiler.IsStdlibPackage(path) }
 
 func isGenerated(data []byte) bool {
 	// Go's convention: the marker must precede the package clause.

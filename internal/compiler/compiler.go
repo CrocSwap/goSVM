@@ -386,6 +386,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			named := namedResults(g.currentResults)
 			if b, ok := externalBinding(g.externals, g.info.Defs[fn.Name]); ok {
 				g.emitLibraryBody(fn, b)
+			} else if function := functions[fn]; function != nil && function.Intrinsic != "" {
+				g.emitIntrinsicBody(fn, function.Intrinsic)
 			} else if len(sites) > 0 || named != nil {
 				g.line("{")
 				g.movedPrologue(fn)

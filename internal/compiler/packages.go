@@ -176,6 +176,9 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 			if seen[im.path] {
 				continue
 			}
+			if standardPackage(im.path) {
+				return fmt.Errorf("%s: %s", im.position, stdlibImportRule(im.path))
+			}
 			dependency, e := resolver.resolve(im.path)
 			if e != nil {
 				return fmt.Errorf("%s: resolve import %q: %w", im.position, im.path, e)
@@ -328,8 +331,11 @@ func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
 }
 
 // compilerImport reports whether the compiler itself provides the package
-// (the SDK boundary and math/bits), so it needs no module resolution.
-func compilerImport(path string) bool { return path == "gosvm/solana" || path == bitsPath }
+// (the SDK boundary, math/bits and the standard-library overlay packages),
+// so it needs no module resolution.
+func compilerImport(path string) bool {
+	return path == "gosvm/solana" || path == bitsPath || stdlibPackage(path)
+}
 
 func internalImportAllowed(from, to string) bool {
 	parts := strings.Split(to, "/")
@@ -388,9 +394,13 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		return nil, fmt.Errorf("import cycle involving %q", path)
 	}
 	unit, ok := p.units[path]
+	if !ok && stdlibPackage(path) {
+		// A standard-library overlay package (stdlib.go).
+		unit, ok = PackageSources{Path: path, Sources: stdlibSources(path)}, true
+	}
 	if !ok {
 		if standardPackage(path) {
-			return nil, fmt.Errorf("unsupported import %q; the only standard-library package on-chain is math/bits", path)
+			return nil, fmt.Errorf("%s", stdlibImportRule(path))
 		}
 		return nil, fmt.Errorf("unsupported import %q; use a module-backed program for user packages", path)
 	}
@@ -399,7 +409,13 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	sort.Slice(sources, func(i, j int) bool { return sources[i].Name < sources[j].Name })
 	var files []*ast.File
 	for _, source := range sources {
-		file, err := parser.ParseFile(p.f.fset, source.Name, source.Data, 0)
+		// Overlay sources keep their comments: //gosvm: directives mark
+		// intrinsics (docs/GO_STDLIB.md#intrinsics).
+		mode := parser.Mode(0)
+		if isStdlibSource(source.Name) {
+			mode = parser.ParseComments
+		}
+		file, err := parser.ParseFile(p.f.fset, source.Name, source.Data, mode)
 		if err != nil {
 			return nil, err
 		}
@@ -408,7 +424,9 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 				p.f.fail(im, "dot and blank imports unsupported")
 			}
 			dependency, _ := strconv.Unquote(im.Path.Value)
-			if !internalImportAllowed(path, dependency) {
+			// Standard-library overlay packages may import the overlay's
+			// internal packages, as in Go (docs/GO_STDLIB.md).
+			if !internalImportAllowed(path, dependency) && !(stdlibPackage(path) && stdlibPackage(dependency)) {
 				p.f.fail(im, "use of internal package %q not allowed", dependency)
 			}
 		}
@@ -417,7 +435,9 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	conf := types.Config{Sizes: &types.StdSizes{WordSize: 8, MaxAlign: 8}, Importer: p, Context: p.ctxt}
 	pkg, err := conf.Check(path, p.f.fset, files, p.f.info)
 	if err != nil {
-		return nil, err
+		// A reference to a standard-library symbol the overlay leaves out
+		// is reported by name (docs/GO_STDLIB.md).
+		return nil, stdlibTypeError(err, files, p.f.fset)
 	}
 	if path != p.entryPath && pkg.Name() == "main" {
 		return nil, fmt.Errorf("%s: package %q is a program, not importable", p.f.fset.Position(files[0].Package), path)

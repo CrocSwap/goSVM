@@ -54,6 +54,23 @@ type MethodSlot struct {
 	Called bool
 	// Site is the first call or assertion that needs the slot.
 	Site token.Pos
+	// Except lists, sorted, the keys of dynamic types a dispatch slot of a
+	// standard-library overlay function never runs (docs/GO_STDLIB.md#intrinsics):
+	// those types do not fill the slot, and its dispatcher aborts for them
+	// as for a nil interface. Empty for every other slot. A slot with Except
+	// is distinct from the unrestricted slot of the same method (its Key
+	// ends with " except " and the keys).
+	Except []string
+}
+
+// excludes reports whether the slot never dispatches to dynamic type key.
+func (slot *MethodSlot) excludes(key string) bool {
+	for _, k := range slot.Except {
+		if k == key {
+			return true
+		}
+	}
+	return false
 }
 
 // DynamicType is a concrete type that an interface value may hold, or that
@@ -534,14 +551,17 @@ func methodSlotKey(m *types.Func) string {
 }
 
 // findSlot returns the slot of an interface method, adding it if new.
-func findSlot(slots *[]*MethodSlot, m *types.Func, site token.Pos) *MethodSlot {
+func findSlot(slots *[]*MethodSlot, m *types.Func, site token.Pos, except []string) *MethodSlot {
 	sig := m.Type().(*types.Signature)
 	for _, slot := range *slots {
-		if slot.Name == m.Name() && (m.Exported() || slot.Pkg == m.Pkg()) && types.Identical(slot.Signature, sig) {
+		if slot.Name == m.Name() && (m.Exported() || slot.Pkg == m.Pkg()) && types.Identical(slot.Signature, sig) && strings.Join(slot.Except, ",") == strings.Join(except, ",") {
 			return slot
 		}
 	}
-	slot := &MethodSlot{Key: methodSlotKey(m), Name: m.Name(), Signature: sig, Site: site}
+	slot := &MethodSlot{Key: methodSlotKey(m), Name: m.Name(), Signature: sig, Site: site, Except: except}
+	if len(except) > 0 {
+		slot.Key += " except " + strings.Join(except, ",")
+	}
 	if !m.Exported() {
 		slot.Pkg = m.Pkg()
 	}
@@ -565,8 +585,10 @@ func methodFunc(m *types.Func, recv types.Type, instances map[string]*Instance) 
 }
 
 // buildInterfaces derives the interface information of lowered files.
-// instances resolves methods of instantiated generic types.
-func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*Instance) *ifaceProgram {
+// instances resolves methods of instantiated generic types; excepts maps the
+// dynamic calls of standard-library dispatch-except functions to the type
+// keys their slots exclude (stdlibExcepts).
+func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*Instance, excepts map[*ast.CallExpr][]string) *ifaceProgram {
 	s := scanInterfaces(info, files)
 	p := &ifaceProgram{byExpr: map[ast.Expr]*Conversion{}, byTuple: map[ast.Expr][]*Conversion{}, byKey: map[string]*DynamicType{},
 		calls: map[*ast.CallExpr]*MethodSlot{}, conversions: s.conversions, asserts: s.asserts, switches: s.switches}
@@ -586,7 +608,7 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 		if !ok {
 			continue
 		}
-		slot := findSlot(&slots, m, call.Pos())
+		slot := findSlot(&slots, m, call.Pos(), excepts[call])
 		slot.Called = true
 		p.calls[call] = slot
 	}
@@ -599,7 +621,7 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 		p.asserted = append(p.asserted, t)
 		it := t.Underlying().(*types.Interface)
 		for i := 0; i < it.NumMethods(); i++ {
-			findSlot(&slots, it.Method(i), site)
+			findSlot(&slots, it.Method(i), site, nil)
 		}
 	}
 	var concrete []typeSite
@@ -664,6 +686,9 @@ func buildInterfaces(info *types.Info, files []*ast.File, instances map[string]*
 		}
 		set := types.NewMethodSet(d.Type)
 		for _, slot := range slots {
+			if slot.excludes(d.Key) {
+				continue
+			}
 			selection := set.Lookup(slot.Pkg, slot.Name)
 			if selection == nil {
 				continue
@@ -806,14 +831,14 @@ func (gp *genericProgram) runInterfaces(files []*ast.File) {
 		var slots []*MethodSlot
 		for _, call := range s.calls {
 			if m, ok := gp.info.Uses[ast.Unparen(call.Fun).(*ast.SelectorExpr).Sel].(*types.Func); ok {
-				findSlot(&slots, m, call.Pos())
+				findSlot(&slots, m, call.Pos(), nil)
 			}
 		}
 		target := func(e ast.Expr) {
 			if t := gp.info.Types[e].Type; isIface(t) {
 				it := t.Underlying().(*types.Interface)
 				for i := 0; i < it.NumMethods(); i++ {
-					findSlot(&slots, it.Method(i), e.Pos())
+					findSlot(&slots, it.Method(i), e.Pos(), nil)
 				}
 			}
 		}

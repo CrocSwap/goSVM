@@ -195,6 +195,12 @@ type borrowAnalysis struct {
 	// heap data and one read from it is heap or SDK storage, like a field.
 	// Literal results are returned to unknown callers: stored likewise.
 	captured   map[types.Object]bool
+	// indirect holds the function's pointer-typed variables whose address
+	// is taken (&p, a **T): a reference stored through that address is
+	// stored into heap data, so the variable is treated like heap storage
+	// too: every reference assigned to it is stored, and reading it yields
+	// heap or SDK storage (docs/GO_POINTERS.md).
+	indirect   map[types.Object]bool
 	litResults map[types.Object]bool
 	litReturns map[*ast.ReturnStmt]bool
 	named      map[types.Object]int // the function's named results
@@ -232,7 +238,7 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		sig := object.Type().(*types.Signature)
 		a := &borrowAnalysis{f: f, fn: fn, summaries: summaries, vars: map[types.Object]borrowSet{}, results: make([]borrowSet, sig.Results().Len()),
 			escapes: map[int]bool{}, moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, sdk: sdk,
-			captured: map[types.Object]bool{}, litResults: map[types.Object]bool{}, litReturns: map[*ast.ReturnStmt]bool{}, named: map[types.Object]int{}}
+			captured: map[types.Object]bool{}, indirect: map[types.Object]bool{}, litResults: map[types.Object]bool{}, litReturns: map[*ast.ReturnStmt]bool{}, named: map[types.Object]int{}}
 		for i := range a.results {
 			a.results[i] = borrowSet{}
 			if r := sig.Results().At(i); r.Name() != "" {
@@ -260,12 +266,24 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 				return true
 			})
 		}
+		// Pointer variables whose address is taken (&p): see indirect.
+		ast.Inspect(fn.Body, func(n ast.Node) bool {
+			if u, ok := n.(*ast.UnaryExpr); ok && u.Op == token.AND {
+				if id, ok := ast.Unparen(u.X).(*ast.Ident); ok {
+					if o, ok := f.info.Uses[id].(*types.Var); ok && !isPackageVar(o) && memoryValue(o.Type()) {
+						a.indirect[o] = true
+						a.vars[o] = a.loaded()
+					}
+				}
+			}
+			return true
+		})
 		slot := 0
 		parameter := func(p *types.Var, slot int) {
 			if !memoryValue(p.Type()) {
 				return
 			}
-			if a.captured[p] {
+			if a.captured[p] || a.indirect[p] {
 				// The incoming reference is copied to the heap.
 				a.escapes[slot] = true
 				a.vars[p] = a.loaded()
@@ -377,7 +395,7 @@ func (f *frontend) checkBorrows(decls []ast.Decl, funcs map[types.Object]*Functi
 		// A captured named result may be set by a closure (a deferred one,
 		// for example): it may hold any heap or SDK reference.
 		for obj, i := range a.named {
-			if a.captured[obj] && memoryValue(obj.Type()) {
+			if (a.captured[obj] || a.indirect[obj]) && memoryValue(obj.Type()) {
 				addBorrows(a.results[i], a.loaded())
 			}
 		}
@@ -560,7 +578,7 @@ func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet
 		a.store(value)
 		return
 	}
-	if a.captured[obj] || a.litResults[obj] {
+	if a.captured[obj] || a.litResults[obj] || a.indirect[obj] {
 		// Heap storage: the reference is stored, and reading it back
 		// yields heap or SDK storage.
 		a.store(value)

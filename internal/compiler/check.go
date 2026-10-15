@@ -189,6 +189,11 @@ type Function struct {
 	// (PackageInit.Vars); its Decl is synthetic and called only at
 	// initialization.
 	PackageInit *types.Package
+	// Intrinsic names the compiler intrinsic a standard-library overlay
+	// function is (docs/GO_STDLIB.md#intrinsics): its Go body type-checks
+	// and passes the subset rules, but a backend replaces it. "" for every
+	// other function.
+	Intrinsic string
 }
 
 // BorrowSummary is the borrow checker's result for one function. Results has
@@ -273,7 +278,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 				f.fail(fn, "bodyless functions are unsupported")
 			}
 			object := f.info.Defs[fn.Name].(*types.Func)
-			function := &Function{Object: object, Decl: fn}
+			function := &Function{Object: object, Decl: fn, Intrinsic: stdlibIntrinsic(f.fset, fn)}
 			if b, ok := externalBinding(externals, object); ok {
 				function.Library = &b
 			}
@@ -329,7 +334,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	checked.Instances = gp.sortedInstances(importer.files)
 	checked.TypeInstances = gp.sortedTypeInstances()
 	checked.Instantiated = gp.instantiated
-	f.ifaces = buildInterfaces(f.info, checked.lowered, gp.instances)
+	f.ifaces = buildInterfaces(f.info, checked.lowered, gp.instances, stdlibExcepts(f.fset, checked.lowered))
 	checked.ifaces = f.ifaces
 	checked.Conversions = f.ifaces.conversions
 	checked.DynamicTypes = f.ifaces.dynamic
