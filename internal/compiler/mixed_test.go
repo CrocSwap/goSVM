@@ -82,7 +82,7 @@ func TestMixedRejections(t *testing.T) {
 			"instantiation Lit[[0]uint8]: alloc.go:15:1: slice elements must not contain zero-length arrays or empty structs"},
 		"generic box of slice": {`b := Box([]int8{1}); _ = b`,
 			"instantiation Box[[]int8]: alloc.go:11:1: pointer elements must be integer/bool scalars, value structs or scalar arrays"},
-		"generic compound append": {`var v Vec[int8]; v.Add(1); v.items[0] += 1`, "compound assignment unsupported"},
+		"generic compound append": {`var v Vec[int8]; v.Add(1); v.items[0] += 1; v.items[0] <<= 9`, ""},
 	} {
 		t.Run(name, func(t *testing.T) {
 			source := mixedPrefix + c.body + "\nreturn 0 }\n"

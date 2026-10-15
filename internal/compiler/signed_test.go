@@ -49,7 +49,7 @@ func TestIntegerChecksReject(t *testing.T) {
 		"constant div0":     {`func Process(s, i []byte) uint64 { x := int32(i[0]); return uint64(x / 0) }`, "invalid operation: division by zero"},
 		"constant overflow": {`func Process(s, i []byte) uint64 { const m int64 = -1 << 63; return uint64(m * -1) }`, "m * -1 (constant 9223372036854775808 of type int64) overflows int64"},
 		"untyped too big":   {`func Process(s, i []byte) uint64 { return uint64(1 << 64) }`, "constant 18446744073709551616 overflows uint64"},
-		"compound":          {`func Process(s, i []byte) uint64 { x := int8(1); x += 2; return uint64(x) }`, "compound assignment unsupported"},
+		"compound":          {`func Process(s, i []byte) uint64 { x := int8(1); x += 2; x /= -1; x >>= 1; return uint64(x) }`, ""},
 		"int slice":         {`func Process(s, i []byte) uint64 { var w []int8; _ = w; return 0 }`, ""},
 		"int view":          {`func Process(s, i []byte) uint64 { var k [4]int8; w := k[:]; return uint64(w[0]) }`, ""},
 		"array limit":       {`type K [129]int;func Process(s, i []byte) uint64 { return 0 }`, "array storage exceeds experimental 1024-byte per-value limit"},

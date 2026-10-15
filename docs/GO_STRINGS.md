@@ -169,8 +169,8 @@ failed `x.(string)` and a nil-interface `Error()` call use the interface aborts
 
 - Strings are valid [map](GO_MAPS.md) keys and elements (`map[string]V`,
   hashed by length and bytes); range over a map is rejected.
-- Compound assignment other than `+=` on strings remains rejected
-  (`compound assignment unsupported`), including `+=` on integers.
+- `+=` is the only compound assignment on strings, as in Go; integers
+  accept every compound operator ([integers](GO_INTEGERS.md#compound-assignment)).
 - Named slice types stay rejected, including byte slices converted from
   strings (`unsupported type program.B` for `type B []byte`).
 - Standard-library packages other than `math/bits` (`strings`, `strconv`,

@@ -919,6 +919,10 @@ func (g *generator) stmt(s ast.Stmt) {
 			g.stringAddAssign(s)
 			return
 		}
+		if _, ok := compoundOps[s.Tok]; ok && len(s.Lhs) == 1 && isInteger(g.info.Types[s.Lhs[0]].Type) {
+			g.compoundAssign(s)
+			return
+		}
 		if s.Tok != token.DEFINE && s.Tok != token.ASSIGN {
 			g.unchecked(s)
 		}

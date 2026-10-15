@@ -171,6 +171,11 @@ var corpusChanges = map[int]corpusEntry{
 	248: {CSHA256: "b67fe362e0be4e216b50547f1d21dc9fc2ffa56cd5ef7c4d386fa94f27a256ff"},                               // s37.go f := s.M: was "method values unsupported; call the method directly"
 	291: {CSHA256: "8d94780bbebf314088d1744dbe48b51229e9ee8c0e2c39cb322695416d752a5c"},                               // imported f:=G: was "unsupported identifier"
 	// Maps became supported (docs/GO_MAPS.md): the unused nil map compiles.
+	// Compound assignment on integers became supported (docs/GO_INTEGERS.md):
+	// both recorded compound assignments compile. Neither is affected by
+	// another merged feature.
+	161: {CSHA256: "877afcf937ed4e30ca8acf824296db0d8c04520c3e9328a0b1bd145eabf41a58"}, // s44.go `x <<= 2` on a uint64 local: was "compound assignment unsupported"
+	232: {CSHA256: "37b80f76ea948cb1e3ebde14eb6e86b6081f6b722394d51775b073884cae2f7c"}, // store.go `b[o+j] += byte(v>>(8*j))` on a byte-slice element in a loop: was "compound assignment unsupported"
 	// No entry is affected by both maps and function values: entry 258 has no
 	// function value, and none of the function-value entries uses a map, so
 	// merging them changed no verdict or C hash recorded by either side.
@@ -224,10 +229,10 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics, allocation, strings, function values and maps each
-	// turned recorded rejections into accepted programs (corpusChanges); the
-	// rest still exercise Check.
-	if rejected < 82 {
+	// Signed integers, generics, allocation, strings, function values, maps
+	// and compound assignment each turned recorded rejections into accepted
+	// programs (corpusChanges); the rest still exercise Check.
+	if rejected < 80 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

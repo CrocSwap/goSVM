@@ -47,7 +47,8 @@ Pointers have nil zero values and support `==`/`!=`, assignment, parameter passi
 and results, including multiple results. Dereferenced values retain existing
 by-value struct/array semantics. Increment/decrement now also accepts supported
 fields, dereferences and indexed elements, evaluating the target operands once.
-Compound assignment remains unsupported.
+Compound assignment works on the same targets
+([integers](GO_INTEGERS.md#compound-assignment)).
 
 ## Borrowed lifetimes
 

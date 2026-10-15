@@ -99,7 +99,7 @@ Each `language` side has:
   composite literals; `map_makes`: `make` of a map, which also counts as
   `make_calls`; `map_lookups`: single-value `m[k]` reads; `map_comma_ok_lookups`:
   `v, ok := m[k]` reads; `map_assignments`: `m[k]` as an assignment, `++`/`--`
-  or `+=` target; `map_deletes`: `delete` calls; `map_clears`: `clear` of a
+  or compound-assignment target; `map_deletes`: `delete` calls; `map_clears`: `clear` of a
   map; `map_types` counts map type expressions as before); all added within
   gosvm-features-v1 on October 14, 2026, schema unchanged. An SDK method call counts as both
   `method_calls` and `sdk_calls`. A call `F[T](x)` counts as a call of `F`,

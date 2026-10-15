@@ -1,0 +1,41 @@
+{
+  "network_validation": false,
+  "full_swap_elf": {
+    "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+    "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e",
+    "rebuild_identical": true
+  },
+  "corpus": {
+    "changed_entries": [161, 232],
+    "min_rejections": 80
+  },
+  "host_differential": {
+    "fixture": "examples/compound-values",
+    "vectors": 12080,
+    "go_panics": 2331
+  },
+  "sbf": {
+    "fogo-v0": {
+      "runner": "gosvm-svm-runner 0.5.0",
+      "cases": 380,
+      "aborts": 78,
+      "compound_elf_sha256": "bb53b2c0c8bb57b29dfaa7160d249722073145b6455d2152874d6783cb05c694",
+      "cu_elf_sha256": "18c9266f03ca834c7dce3fe12edb0b5f7b69ce46a4ee95e2674fcd8b4f9f8f91",
+      "cu_per_iteration_local_compound": 9.0234375,
+      "cu_per_iteration_local_spelled": 10.0234375,
+      "cu_per_iteration_map_compound": 66.21875,
+      "cu_per_iteration_map_spelled": 110.5625
+    },
+    "solana-v3": {
+      "runner": "gosvm-svm-runner 0.6.0",
+      "cases": 380,
+      "aborts": 78,
+      "compound_elf_sha256": "ebcc2f97ba662d3a43869b23d2658c93a8a21a21d4c25461828a46a14d6e4a5f",
+      "cu_elf_sha256": "299d740afcd8a976303cf0b793dd9692fbf3380fa5ba96cd75e156a93be1cf84",
+      "cu_per_iteration_local_compound": 9.0234375,
+      "cu_per_iteration_local_spelled": 10.0234375,
+      "cu_per_iteration_map_compound": 66.21875,
+      "cu_per_iteration_map_spelled": 110.5625
+    }
+  }
+}

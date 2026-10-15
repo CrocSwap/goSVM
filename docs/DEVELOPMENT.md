@@ -460,7 +460,11 @@ byte slices, constants, local zero values, functions with unnamed or named resul
 indexing, `len`, integer arithmetic/conversions, comparisons, `if`,
 conditional/three-clause `for`, Go 1.22 `range` over integer counts, scalar arrays,
 array pointers and byte slices, unlabeled `break`/`continue`, single or multiple
-`=`/`:=`, expression `switch`, and variable `++`/`--`. Arithmetic wraps at the operand
+`=`/`:=`, expression `switch`, variable `++`/`--`, and compound assignment
+(`+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `&^=`, `<<=`, `>>=` on every
+integer type and addressable target, map elements included; the
+[compound fixture](../examples/compound-values/program.go) is checked against
+ordinary Go on the host and on SBF). Arithmetic wraps at the operand
 width (two's complement for signed types); signed division truncates toward zero
 (`MinInt / -1 == MinInt`); shifts take signed or unsigned counts, a negative count
 aborts, and shifts by the width or more give zero (or the sign fill for a signed `>>`).
@@ -585,7 +589,6 @@ ordinary Go on the host and on SBF).
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
 floating-point and complex types, globals, `init`, named slices, map iteration,
 method values of interface types, recursion (including through dynamic calls and function values), variadics,
-compound assignment other than `+=` on strings,
 range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
 uncomparable interface comparison, nil interface call, nil function call, nil-map write and unhashable map key failures abort; there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits

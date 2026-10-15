@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/constant"
+	"go/token"
 	"go/types"
 	"math"
 )
@@ -45,6 +46,9 @@ func usesSignedDivision(files []*ast.File, info *types.Info) bool {
 		ast.Inspect(f, func(n ast.Node) bool {
 			if e, ok := n.(*ast.BinaryExpr); ok && !found && (e.Op.String() == "/" || e.Op.String() == "%") {
 				found = info.Types[e].Value == nil && isSigned(info.Types[e.X].Type)
+			}
+			if s, ok := n.(*ast.AssignStmt); ok && !found && (s.Tok == token.QUO_ASSIGN || s.Tok == token.REM_ASSIGN) && len(s.Lhs) == 1 {
+				found = isSigned(info.Types[s.Lhs[0]].Type) // x /= y and x %= y
 			}
 			return !found
 		})

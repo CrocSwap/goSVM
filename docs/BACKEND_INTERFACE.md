@@ -217,8 +217,8 @@ Strings ([GO_STRINGS.md](GO_STRINGS.md)) add no field to `CheckedProgram`
 (additive section). They are ordinary `types.Basic` values (`types.String`,
 `types.UntypedString` for constants, or a named type with that underlying) in
 the typed program, and the operations are ordinary syntax: `+` and `+=`
-(`*ast.AssignStmt` with `token.ADD_ASSIGN`, the only compound assignment Check
-admits, and only on strings), comparisons, `s[i]` (`*ast.IndexExpr`, a `byte`),
+(`*ast.AssignStmt` with `token.ADD_ASSIGN`, the only compound assignment Go
+allows on strings), comparisons, `s[i]` (`*ast.IndexExpr`, a `byte`),
 `s[lo:hi]` (`*ast.SliceExpr`), `len`, conversions (`*ast.CallExpr` whose `Fun`
 is a type: `string`/named string from a string, a `[]byte`-like or
 `[]rune`-like slice or an integer; `[]byte`/`[]rune`-like from a string),
@@ -312,6 +312,19 @@ parameters and results may be strings or `error` (a `gosvm_string` or an
 interface value in the built-in backend), closures capture string variables by
 reference like any variable (16 bytes moved to the heap), and loop `defer`
 records save string and interface operands at their Go size (16 bytes each).
+## Compound assignment
+
+Compound assignment on integers ([GO_INTEGERS.md](GO_INTEGERS.md#compound-assignment))
+adds no field: it is an `*ast.AssignStmt` with one left and one right
+operand and a `Tok` of `token.ADD_ASSIGN` … `token.AND_NOT_ASSIGN`, whose
+left operand has an integer type (string `+=` is the case above). A backend
+must lower `x op= y` as `x = x op y` with the target's index and pointer
+operands evaluated once, before `y`; the target read after `y`; the binary
+operator's values and traps (division or modulo by zero, negative shift
+count); and the target's traps (bounds, nil pointer, nil-map write) after
+`y`. A map element is looked up once after `y`, inserted with the zero value
+when absent.
+
 ## Maps
 
 Maps ([GO_MAPS.md](GO_MAPS.md)) are ordinary `types.Map` values (or named
@@ -347,7 +360,7 @@ A backend must reproduce what is observable:
   element by element, interfaces by dynamic type and value, pointers by
   address), reference semantics, and evaluation order (the map, then the key,
   then the value, then the store; tuple assignments store left to right after
-  all operands; `m[k] += x` evaluates `x` before reading `m[k]`);
+  all operands; `m[k] op= x` evaluates `x` before reading `m[k]`);
 - the two traps (assignment to an entry in a nil map; hashing an interface
   key whose dynamic type is not comparable, in every operation, even on nil
   and empty maps), and that a `make` hint never traps;
@@ -450,7 +463,10 @@ SDK function used as a value reports that `gosvm/solana` functions cannot be
 values). Maps turned the corpus's one map program (`var m map[uint64]uint64;
 _ = m`) into a compiled program; no entry is affected by both maps and
 function values, so the merged corpus requires 82 rejections (83 with function
-values alone, less the map entry). Separately, the
+values alone, less the map entry). Compound assignment on integers added no
+field and turned the corpus's two compound assignments (`x <<= 2` and a
+byte-slice `+=` in a loop) into compiled programs, so the corpus now requires
+80 rejections. Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

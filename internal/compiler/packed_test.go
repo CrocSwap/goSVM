@@ -66,10 +66,11 @@ func TestPackedStoreRecognition(t *testing.T) {
 			}
 		})
 	}
+	// A compound store reads each byte first: it compiles as an ordinary
+	// compound assignment, never as the packed store.
 	s := `package p;func f(b []byte,o,v uint64){for j:=uint64(0);j<8;j++{b[o+j]+=byte(v>>(8*j))}};func Process(s,i []byte)uint64{f(s,0,1);return 0}`
-	_, err := CompileProgram(&Program{SDK: 2, Entry: "app", Packages: []PackageSources{{Path: "app", Sources: []Source{{Name: "store.go", Data: []byte(s)}}}}})
-	if err == nil || !strings.Contains(err.Error(), "compound assignment unsupported") {
-		t.Fatal("fast path bypassed unsupported syntax diagnostic", err)
+	if bytes.Contains(compilePackedStore(t, 2, s), []byte("__builtin_memcpy(")) {
+		t.Fatal("compound store was optimized as a packed store")
 	}
 }
 

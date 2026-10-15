@@ -274,3 +274,8 @@ Handler results propagate unchanged.
   copies the table; a loop `defer` saving a map saves the 8-byte reference),
   and the nil-map write and unhashable-key traps fire inside closures and
   deferred calls at the points listed above.
+- 2026-10-14: addition (compound assignment on integers), no trap added and
+  no existing behaviour changed: `x op= y` uses the division-by-zero,
+  negative-shift, bounds, nil-pointer and nil-map-write traps of the
+  equivalent `x = x op y`, after the right operand is evaluated
+  ([integers](GO_INTEGERS.md#compound-assignment)).

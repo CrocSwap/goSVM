@@ -56,9 +56,9 @@ These follow the Go specification.
 Still rejected: `uintptr`, floating-point and complex types, and
 builtins other than `len`, `cap` and the [allocation](GO_ALLOCATION.md)
 builtins `new`, `make`, `append` and `copy` (including `min` and `max`).
-Compound assignment (`x += 1`) is still rejected for every integer type
-(`+=` is admitted only on [strings](GO_STRINGS.md)). `string(x)` converts any
-integer type to its UTF-8 rune encoding.
+`string(x)` converts any integer type to its UTF-8 rune encoding.
+[Compound assignment](#compound-assignment) (`x += 1`, `a[i] <<= n`, `m[k] %= d`)
+works on every integer type.
 
 With [allocation](GO_ALLOCATION.md), slices of every integer type (`[]int8`,
 `[]int`, `[]uint`) work like any other slice. `make` lengths and capacities,
@@ -70,6 +70,61 @@ of range`), and a negative index or bound aborts like any out-of-range one.
 Schema 2 wire layouts accept `int8`, `int16`, `int32` and `int64` fields and
 seeds, as little-endian two's complement. `int` and `uint` are rejected in wire
 layouts because their size depends on the platform. See [schema 2](SCHEMA2.md).
+
+## Compound assignment
+
+`x op= y` works for every operator Go defines on integers (`+=`, `-=`, `*=`,
+`/=`, `%=`, `&=`, `|=`, `^=`, `&^=`, `<<=`, `>>=`), on every integer type
+(signed, unsigned, `int`, `uint`, `byte` and named integer types, including
+inside generic code) and on every addressable target: locals (including
+captured and heap-moved ones, named results and loop variables in a `for`
+post statement), struct fields (directly or through pointers, including
+chains such as `p.q.n`), array and slice elements (nested ones such as
+`s[i].a[j]` too), pointer indirections `*p`, and map elements `m[k]`.
+`+=` on [strings](GO_STRINGS.md) is unchanged.
+
+The result is exactly `x = x op y` with `x` evaluated once:
+
+- **Values.** The operator behaves as the binary operator above: wrapping
+  `+`, `-`, `*`, `<<`; truncating signed division with `MinInt / -1 ==
+  MinInt` and `MinInt % -1 == 0`; arithmetic signed `>>`; shifts at or beyond
+  the width give 0 (or -1 for a negative signed `>>`); the shift count may
+  have any integer type.
+- **Traps.** Division or modulo by zero and a negative shift count abort, as
+  Go panics. So do the target's own failures: an index out of range, a nil
+  pointer, and (for `m[k] op= y`) a nil map (`assignment to entry in nil
+  map`).
+- **Order.** The target's index and pointer operands are evaluated first, once
+  (`a[f()] += g()` calls `f` once, before `g`, following the spec's
+  assignment order: left-hand index and pointer operands, then the right-hand
+  side), then the right operand, then the target is read, combined and
+  stored. A right operand that changes the target's value is therefore seen
+  (`x += f()` where `f` sets `x` to 100 adds to 100, as gc does), and the
+  target's traps (bounds, nil pointer, nil map) and the operator's traps come
+  after every side effect of the right operand.
+- **Maps.** `m[k] op= y` evaluates the map and key, then `y`, then looks the
+  key up once, inserting it with the zero value when absent (so the result is
+  `0 op y`), and updates the element in place. A nil map aborts there. Heap
+  accounting is that of an insertion ([maps](GO_MAPS.md#heap-accounting)).
+
+The spec leaves unspecified when plain variables used as the target's
+operands are read relative to calls on the right; gc reads them after the
+right operand's calls, while goSVM reads them first, exactly as it does for
+`=` ([control](GO_CONTROL.md)). The difference is visible only when the right
+operand reassigns the slice, map, pointer or index variable of its own target
+(`b[0] += f()` where `f` sets `b` to a new slice: goSVM updates the old
+slice, gc the new one). `TestCompoundOperandOrder` pins goSVM's choice;
+avoid depending on either.
+
+Programs without compound assignment emit byte-identical C. A compound
+assignment lowers to C like the binary operator: the target is read into a
+typed temporary after the right operand, combined in `u64` (or with the
+signed division and shift helpers), checked as above and stored back; a map
+element is updated through the pointer that one `set` returns. Measured by
+`TestCompoundSBF` on both targets, `acc += k` in a loop costs 9.0 CU per
+iteration against 10.0 for `acc = acc + k`, and `m[k] += v` does one lookup
+instead of the two of `m[k] = m[k] + v` (66.2 against 110.6 CU per
+iteration).
 
 ## C lowering
 
@@ -135,6 +190,26 @@ error code and rolls back.
   `runtime error: negative shift amount`.
 
 ## Evidence
+
+- [`examples/compound-values`](../examples/compound-values/program.go) is an
+  ordinary-Go oracle for compound assignment: all eleven operators on twelve
+  integer types (including named ones) and thirteen target kinds (locals,
+  fields, fields through pointers and pointer chains, local, struct and
+  pointed-to arrays, slices, nested elements, `*p`, present and absent map
+  elements, captured variables), boundary operands (0, 1, -1, MinInt,
+  MaxInt), shift counts of every type at and beyond the width, negative
+  counts, `MinInt / -1`, evaluation order with side effects (operand calls
+  once, the right operand changing the target or growing the map, traps after
+  the right operand), and loops whose post statement is a compound
+  assignment. `TestCompoundDifferential` compares 12,080 vectors (2,331 Go
+  panics, each an abort at the same point) natively and as host-compiled C;
+  `TestCompoundSBF` ([results](../results/compiler/2026-10-14-compound-assignment/README.md))
+  runs 380 of them (78 aborts with rollback) on fogo-v0 and
+  solana-v3 through the pinned runners. `TestCompoundAcceptedForms`,
+  `TestCompoundRejections` (exact messages), `TestCompoundOperandOrder` and
+  `TestCompoundEmission` cover forms, diagnostics, order and emission; the
+  frozen corpus's two compound assignments now compile, every other entry
+  keeps its C.
 
 - Check tables: `TestIntegerChecksAccept` and `TestIntegerChecksReject`
   (exact messages), in `internal/compiler/signed_test.go`, and the updated

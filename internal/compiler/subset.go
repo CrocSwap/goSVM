@@ -253,6 +253,10 @@ func (c *checker) stmt(s ast.Stmt) {
 			c.stringAddAssign(s)
 			return
 		}
+		if _, ok := compoundOps[s.Tok]; ok && len(s.Lhs) == 1 && isInteger(c.info.Types[s.Lhs[0]].Type) {
+			c.compoundAssign(s)
+			return
+		}
 		if s.Tok != token.DEFINE && s.Tok != token.ASSIGN {
 			c.fail(s, "compound assignment unsupported")
 		}

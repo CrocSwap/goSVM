@@ -55,7 +55,7 @@ runtime is emitted only when a program has a map type.
 | `m[k]` | A copy of the element, or `V`'s zero value when `k` is absent. The map is evaluated, then the key |
 | `v, ok := m[k]` | Also `v, ok = m[k]`, `var v, ok = m[k]`, `_, ok := m[k]`, in `if` and `switch` init statements, and `v` of an interface type receiving a concrete element |
 | `m[k] = v` | Inserts or overwrites. The map and key operands are evaluated, then `v`, then the element is stored (Go's order: in `m[k] = f()` where `f` writes `m[k]`, the assignment wins). In tuple assignments (`m[a], m[b] = x, y`, swaps through a map) all operands are evaluated first and stores happen left to right |
-| `m[k]++`, `m[k]--`, `m[k] += s` | `++`/`--` on integer elements (wrapping as Go does) and `+=` on string elements (the only compound assignment the subset admits); an absent key starts from the zero value. The right operand is evaluated before the element is read, as gc does |
+| `m[k]++`, `m[k]--`, `m[k] op= v` | `++`/`--` and every [compound assignment](GO_INTEGERS.md#compound-assignment) (`+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `\|=`, `^=`, `&^=`, `<<=`, `>>=`) on integer elements (wrapping as Go does), and `+=` on string elements; an absent key starts from the zero value. The map and key are evaluated, then the right operand, then the key is looked up once (inserted when absent) and the element updated in place: the element is read after the right operand, as gc does |
 | `delete(m, k)` | Removes `k`; a nil map or an absent key is a no-op |
 | `len(m)` | The number of keys; 0 for a nil map |
 | `clear(m)` | Removes every key (Go 1.21); a no-op on a nil map. `clear` of a slice remains unsupported |
@@ -155,7 +155,7 @@ that holds `n` keys at load factor 3/4 (`4n <= 3 cap`):
 | `make(map[K]V, h)`, `h > 0` | 24, then `cap(h) * S` (allocated at the `make`) |
 | A literal with `n > 0` entries | 24, then `cap(n) * S`, before any entry is evaluated; the insertions never grow it |
 | Inserting a new key when `4 * (len + 1) > 3 * slots` | `2 * slots * S` (8 slots when there are none); the old slot array is not freed |
-| Any other insertion, overwrite, lookup, comma-ok lookup, `delete`, `len`, `clear`, `++`/`--` on an existing key | 0 |
+| Any other insertion, overwrite, lookup, comma-ok lookup, `delete`, `len`, `clear`, `++`/`--` or `op=` on an existing key | 0 |
 | Converting a map to an interface, copying or passing a map | 0 |
 
 Growth depends only on the number of live keys: deletes make room for later
@@ -208,7 +208,7 @@ the 384-key column shows.
 Maps add two aborts to the [failure contract](ERROR_CONTRACT.md):
 
 - **Assignment to an entry in a nil map**: `m[k] = v`, `m[k]++`, `m[k]--` or
-  `m[k] += s` on a nil map, after the operands are evaluated (in a tuple
+  `m[k] op= v` on a nil map, after the operands are evaluated (in a tuple
   assignment, after the stores to its left).
 - **Unhashable map key**: hashing an interface key (or an interface inside a
   struct or array key) whose dynamic type is not comparable, in any operation,
@@ -227,9 +227,6 @@ trap.
   or empty structs` (their Go and C sizes could differ). `struct{}` itself and
   `[0]T` are fine.
 - Maps of `solana.Context`: `maps of Context unsupported`.
-- Compound assignment other than `+=` on strings stays rejected (`m[k] += 1`
-  on an integer element is `compound assignment unsupported`; use `m[k]++` or
-  `m[k] = m[k] + 1`).
 - Go errors stay Go errors: `&m[k]`, `m[k].F = v`, `m1 == m2`, `cap(m)`,
   uncomparable key types.
 - Maps are not part of schema-2 wire layouts: `wire field Name: map[K]V is a
