@@ -158,6 +158,8 @@ func (g *generator) literalSignature(cl *Closure) string {
 		name := g.rawName(p)
 		if g.moved[p] {
 			name = g.movedParameter(p)
+		} else if g.copied[p] {
+			name = g.copiedParameter(p)
 		}
 		args = append(args, g.variable(cl.Lit, sig.Params().At(i).Type())+" "+name)
 	}
@@ -182,6 +184,7 @@ func (g *generator) emitLiteral(cl *Closure) {
 			g.declareMoved(cl.Lit, p, g.movedParameter(p))
 		}
 	}
+	g.copyPrologue(cl.Lit)
 	g.currentResults = sig.Results()
 	g.emitBody(cl.Lit, cl.Lit.Body, sig.Results(), cl.Results, sites)
 	g.line("}")

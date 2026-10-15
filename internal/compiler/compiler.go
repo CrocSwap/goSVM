@@ -61,6 +61,11 @@ type generator struct {
 	movedParams    map[*ast.FuncDecl][]types.Object
 	maps           *mapProgram // map types (CheckedProgram.Maps); nil without maps
 	initializes    bool        // the program has package initialization (globals.go)
+	// copied and copiedParams are the aggregate parameters a function or
+	// literal writes, which it receives under another name and copies into
+	// a local at entry (byval.go).
+	copied       map[types.Object]bool
+	copiedParams map[ast.Node][]types.Object
 }
 
 // Source is a Go file in a single on-chain package.
@@ -96,7 +101,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	defer recoverCompileError(&err)
 	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2,
 		moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, forward: map[any]bool{}, defined: map[any]bool{},
-		movedParams: map[*ast.FuncDecl][]types.Object{}}
+		movedParams: map[*ast.FuncDecl][]types.Object{}, copied: map[types.Object]bool{}, copiedParams: map[ast.Node][]types.Object{}}
 	for _, fn := range program.Functions {
 		sig := fn.Object.Type().(*types.Signature)
 		for _, v := range fn.HeapVars {
@@ -107,6 +112,29 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		}
 		for _, lit := range fn.HeapLiterals {
 			g.movedLits[lit] = true
+		}
+	}
+	// Aggregate parameters a body writes are copied at entry (byval.go),
+	// in standard-library overlay functions.
+	for _, fn := range program.Functions {
+		if fn.Library != nil || fn.Intrinsic != "" || !copiesByvalParams(fn.Object) {
+			continue
+		}
+		sig := fn.Object.Type().(*types.Signature)
+		var params []*types.Var
+		if sig.Recv() != nil {
+			params = append(params, sig.Recv())
+		}
+		for i := 0; i < sig.Params().Len(); i++ {
+			params = append(params, sig.Params().At(i))
+		}
+		g.noteCopiedParams(fn.Decl, fn.Decl.Body, params)
+	}
+	if program.funcs != nil {
+		for _, cl := range program.funcs.closures {
+			if copiesByvalParams(cl.Owner.Object) {
+				g.noteCopiedParams(cl.Lit, cl.Lit.Body, cl.Params)
+			}
 		}
 	}
 	g.entry = program.Process
@@ -391,11 +419,13 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			} else if len(sites) > 0 || named != nil {
 				g.line("{")
 				g.movedPrologue(fn)
+				g.copyPrologue(fn)
 				g.emitBody(fn, fn.Body, g.currentResults, named, sites)
 				g.line("}")
-			} else if len(g.movedParams[fn]) > 0 {
+			} else if len(g.movedParams[fn]) > 0 || len(g.copiedParams[fn]) > 0 {
 				g.line("{")
 				g.movedPrologue(fn)
+				g.copyPrologue(fn)
 				g.block(fn.Body)
 				g.line("}")
 			} else if !g.emitPackedStore(fn) {
@@ -546,6 +576,9 @@ func (g *generator) signature(fn *ast.FuncDecl) string {
 	parameter := func(o types.Object) string {
 		if g.moved[o] {
 			return g.movedParameter(o)
+		}
+		if g.copied[o] {
+			return g.copiedParameter(o)
 		}
 		return g.name(o)
 	}
