@@ -93,6 +93,17 @@ type Uses struct {
 	// them before Process; writable ones live in the globals block, the
 	// invocation heap's first allocation (GlobalHeapBytes, from Check).
 	Globals bool `json:"globals"`
+	// StructEquality: == or != on struct operands, or a switch whose tag is
+	// a struct (docs/GO_TYPES.md#struct-equality). Comparisons of interface
+	// values holding structs are interfaces. TypeAliases: type alias
+	// declarations (type A = T). CompositeArrays: array types written with
+	// struct, array, pointer or slice elements (docs/GO_ARRAYS.md). Panic:
+	// calls of the panic builtin (docs/ERROR_CONTRACT.md#panic). Added
+	// within gosvm-features-v1.
+	StructEquality  bool `json:"struct_equality"`
+	TypeAliases     bool `json:"type_aliases"`
+	CompositeArrays bool `json:"composite_arrays"`
+	Panic           bool `json:"panic"`
 	// Stdlib lists, sorted, the standard-library packages the program
 	// reaches besides math/bits (MathBits): the overlay packages of
 	// docs/GO_STDLIB.md that program code imports, and the overlay packages
@@ -185,6 +196,10 @@ func summarize(u *Usage) {
 	u.Uses.Defer = sum("defer") > 0
 	u.Uses.Maps = sum("map_values")+sum("map_literals")+sum("map_makes") > 0
 	u.Uses.Globals = sum("package_vars")+sum("init_functions") > 0
+	u.Uses.StructEquality = sum("struct_equality")+sum("struct_switch_cases") > 0
+	u.Uses.TypeAliases = sum("type_aliases") > 0
+	u.Uses.CompositeArrays = sum("composite_array_types") > 0
+	u.Uses.Panic = has(func(s *Side) map[string]int { return s.Builtins }, "panic")
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -327,6 +342,10 @@ var ConstructNames = []string{
 	// blank variables declared at package scope (also counted in var_decls)
 	// and init functions.
 	"package_vars", "init_functions",
+	// Value types (added within gosvm-features-v1): case values compared
+	// with a struct switch tag, and array type expressions whose element
+	// type is a struct, array, pointer or slice.
+	"struct_switch_cases", "composite_array_types",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -946,6 +965,10 @@ func (w *walker) file(f *ast.File) {
 				break
 			}
 			if a, ok := w.typeOf(n).(*types.Array); ok {
+				switch a.Elem().Underlying().(type) {
+				case *types.Struct, *types.Array, *types.Pointer, *types.Slice:
+					w.count("composite_array_types")
+				}
 				key := w.typeString(a)
 				use := w.arrays[key]
 				if use == nil {
@@ -1091,6 +1114,12 @@ func (w *walker) file(f *ast.File) {
 			w.count("switch")
 			if n.Tag == nil {
 				w.count("switch_tagless")
+			} else if t := w.typeOf(n.Tag); t != nil {
+				if _, ok := t.Underlying().(*types.Struct); ok {
+					for _, stmt := range n.Body.List {
+						w.side.Constructs["struct_switch_cases"] += len(stmt.(*ast.CaseClause).List)
+					}
+				}
 			}
 		case *ast.TypeSwitchStmt:
 			w.count("type_switch")

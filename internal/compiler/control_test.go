@@ -53,7 +53,6 @@ func TestControlRejections(t *testing.T) {
 	for name, source := range map[string]string{
 		"fallthrough":      `func Process(s,i []byte)uint64{switch i[0]{case 1:fallthrough;default:return 0}}`,
 		"labeled continue": `func Process(s,i []byte)uint64{L:for{continue L};return 0}`,
-		"struct switch":    `type V struct{N uint64};func Process(s,i []byte)uint64{switch (V{}){case V{}:return 0};return 1}`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Compile("control-reject.go", []byte("package p;"+source))

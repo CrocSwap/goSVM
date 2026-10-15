@@ -120,8 +120,9 @@ rehash keys.
 
 The hash is a fixed-seed 64-bit mix over the key's canonical value: integers
 and `bool` by value, pointers by address, strings by length and then bytes (8
-at a time), arrays element by element, structs field by field (padding is never
-hashed), interfaces by dynamic type ID and then the dynamic value (pointers by
+at a time), arrays element by element, structs field by field (padding and
+blank `_` fields are never hashed or compared, as Go ignores blank fields),
+interfaces by dynamic type ID and then the dynamic value (pointers by
 address; zero-size values contribute nothing). Equal keys therefore always hash
 equally, including equal strings in different storage and identical dynamic
 types. There is no per-run random seed: every result except iteration order is

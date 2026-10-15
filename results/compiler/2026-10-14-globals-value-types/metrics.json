@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "date": "2026-10-14",
+  "network_validation": false,
+  "merge": {
+    "base": "742210e (package-level variables and init, 852c980)",
+    "merged": "7837ba2 (struct ==, type aliases, composite arrays, panic)"
+  },
+  "platform_tools": "v1.57",
+  "runners": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0)"
+  },
+  "heap_bytes": 32768,
+  "compute_unit_limit": 1400000,
+  "corpus": {
+    "remaining_rejections": 62,
+    "guard": 60,
+    "corpus_changes": 98,
+    "c_hashes_changed_by_merge": 0
+  },
+  "large_tables": {
+    "rule": "array types above 1,024 bytes admitted only as package-level variables used in place (docs/GO_GLOBALS.md#large-tables)",
+    "accepted_forms": 4,
+    "rejected_forms": 16,
+    "example_tables": {
+      "pows [60]Int (read-only)": 1920,
+      "big [300]Pair (read-only)": 4800,
+      "ledger [160]Int (globals block)": 5120
+    }
+  },
+  "host_differential": {
+    "test": "TestGlobalValueTypesDifferential",
+    "vectors": 1402,
+    "go_panics_by_mode": {"2": 5, "5": 107},
+    "panic_log_lines": 83,
+    "native": "one oracle process per vector"
+  },
+  "init_panic_probes": {
+    "test": "TestGlobalInitPanics",
+    "probes": 8,
+    "native": "a separate Go module per probe; exit status 2 and the first stderr line"
+  },
+  "sbf": {
+    "fogo-v0": {
+      "elf_sha256": "157aed947a08128ff6fac0d5cb7d9dcf192f799f4c4eecb8f0526a6578fd0e11",
+      "cases": 152,
+      "aborts_with_rollback": 11,
+      "panic_log_lines": 8,
+      "max_completed_cu": 11967,
+      "idle_invocation_cu": 632,
+      "init_panic_probes_passed": 8
+    },
+    "solana-v3": {
+      "elf_sha256": "95b85844a9084b7b2d3d353216db8af7c7139267bef55f95303203267541eb70",
+      "cases": 152,
+      "aborts_with_rollback": 11,
+      "panic_log_lines": 8,
+      "max_completed_cu": 11967,
+      "idle_invocation_cu": 632,
+      "init_panic_probes_passed": 8
+    }
+  },
+  "sbf_suites": {
+    "top_level_tests_passed": 18,
+    "subtests_and_tests_passed": 50,
+    "skipped": 0
+  },
+  "earlier_results_rebuilt": {
+    "method": "every SBF test kept its ELFs; each 64-hex ELF hash recorded in results/compiler/2026-10-14-*/metrics.json was looked up",
+    "identical": {
+      "2026-10-14-allocation": 4,
+      "2026-10-14-compound-assignment": 4,
+      "2026-10-14-func-maps": 4,
+      "2026-10-14-func-values": 4,
+      "2026-10-14-globals": 16,
+      "2026-10-14-interfaces": 4,
+      "2026-10-14-maps": 12,
+      "2026-10-14-math-bits": 4,
+      "2026-10-14-strings": 2,
+      "2026-10-14-value-types": 4
+    },
+    "not_rebuilt": "2026-10-14-bend-fogo-v157 (needs the pinned Bend producer manifests and Rust producer tree)"
+  },
+  "fresh_rebuild": {
+    "script": "scripts/verify_rebuild.py --reference results/compiler/2026-10-14-v157-rebuild/metrics.json",
+    "full-swap": {
+      "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+      "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"
+    },
+    "clock2": {
+      "fogo-v0": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "solana-v3": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5"
+    },
+    "identical_to_reference": true
+  }
+}

@@ -4,7 +4,7 @@
 
 // goSVM on-chain overlay of Go 1.22.0 strings/builder.go. Changes (marked
 // "goSVM:"): package unsafe is replaced by the compiler intrinsics
-// noescape and unsafeString (gosvm.go), with the same results; panics trap.
+// noescape and unsafeString (gosvm.go), with the same results.
 
 package strings
 
@@ -30,7 +30,7 @@ func (b *Builder) copyCheck() {
 		// just "b.addr = b".
 		b.addr = noescape(b) // goSVM: (*Builder)(noescape(unsafe.Pointer(b)))
 	} else if b.addr != b {
-		trap("strings: illegal use of non-zero Builder copied by value") // goSVM: panic("strings: illegal use of non-zero Builder copied by value")
+		panic("strings: illegal use of non-zero Builder copied by value")
 	}
 }
 
@@ -67,7 +67,7 @@ func (b *Builder) grow(n int) {
 func (b *Builder) Grow(n int) {
 	b.copyCheck()
 	if n < 0 {
-		trap("strings.Builder.Grow: negative count") // goSVM: panic("strings.Builder.Grow: negative count")
+		panic("strings.Builder.Grow: negative count")
 	}
 	if cap(b.buf)-len(b.buf) < n {
 		b.grow(n)

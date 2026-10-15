@@ -61,6 +61,11 @@ type generator struct {
 	movedParams    map[*ast.FuncDecl][]types.Object
 	maps           *mapProgram // map types (CheckedProgram.Maps); nil without maps
 	initializes    bool        // the program has package initialization (globals.go)
+	// emitted and emittedInstances are the named types whose C definitions
+	// were emitted; identical instances can be distinct *types.Named
+	// (spelled with byte and uint8), so instances are also keyed.
+	emitted          map[types.Type]bool
+	emittedInstances map[string]bool
 	// copied and copiedParams are the aggregate parameters a function or
 	// literal writes, which it receives under another name and copies into
 	// a local at entry (byval.go).
@@ -101,7 +106,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	defer recoverCompileError(&err)
 	g := &generator{frontend: newFrontend(program.Fset, program.Info), names: map[types.Object]string{}, memoryWords: program.SDK == 2,
 		moved: map[types.Object]bool{}, movedLits: map[*ast.CompositeLit]bool{}, forward: map[any]bool{}, defined: map[any]bool{},
-		movedParams: map[*ast.FuncDecl][]types.Object{}, copied: map[types.Object]bool{}, copiedParams: map[ast.Node][]types.Object{}}
+		movedParams: map[*ast.FuncDecl][]types.Object{}, emitted: map[types.Type]bool{}, emittedInstances: map[string]bool{},
+		copied: map[types.Object]bool{}, copiedParams: map[ast.Node][]types.Object{}}
 	for _, fn := range program.Functions {
 		sig := fn.Object.Type().(*types.Signature)
 		for _, v := range fn.HeapVars {
@@ -149,6 +155,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	g.maps = program.maps
 	g.globals = program.globals
 	g.initializes = program.initializes()
+	g.panics = program.Panics
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -246,6 +253,12 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		g.ensureMemory()
 		g.WriteString(libraryMemory)
 	}
+	if len(program.Panics) > 0 {
+		// Only programs that call panic get its runtime, so the C of every
+		// other program is byte-identical to earlier compilers.
+		g.ensureMemory()
+		g.WriteString(panicRuntime)
+	}
 	if usesBits(g.info, files) {
 		g.WriteString(bitsRuntime)
 		if usesUint16(files, g.info) {
@@ -269,73 +282,6 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		}
 	}
 	// Define value structs and array wrappers before function prototypes.
-	emitted := map[types.Type]bool{}
-	emittedInstances := map[string]bool{} // identical instances can be distinct *types.Named (byte, uint8)
-	var emitType func(ast.Node, types.Type)
-	emitType = func(node ast.Node, t types.Type) {
-		named, ok := t.(*types.Named)
-		if !ok {
-			g.unchecked(node)
-		}
-		if emitted[t] {
-			return
-		}
-		emitted[t] = true
-		if named.TypeArgs().Len() > 0 {
-			if emittedInstances[typeKey(named)] {
-				return
-			}
-			emittedInstances[typeKey(named)] = true
-		}
-		if a, ok := t.Underlying().(*types.Array); ok {
-			g.emitArray(node, a)
-			return
-		}
-		st, ok := t.Underlying().(*types.Struct)
-		if !ok {
-			g.variable(node, t)
-			return
-		}
-		for i := 0; i < st.NumFields(); i++ {
-			f := st.Field(i)
-			if a, ok := f.Type().Underlying().(*types.Array); ok {
-				g.emitArray(node, a)
-			} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {
-				emitType(node, f.Type())
-			} else if p, ok := pointer(f.Type()); ok {
-				// A pointer field may refer to a struct defined later, or to
-				// this struct itself: declare its tag first.
-				if pointee, ok := p.Elem().(*types.Named); ok {
-					if _, isStruct := pointee.Underlying().(*types.Struct); isStruct && !g.defined[structID(pointee)] && !g.forward[structID(pointee)] {
-						g.forward[structID(pointee)] = true
-						name := g.structName(pointee)
-						g.line("typedef struct %s %s;", name, name)
-					}
-				}
-			} else {
-				g.variable(node, f.Type())
-			}
-		}
-		if g.forward[structID(named)] {
-			g.line("struct %s {", g.structName(named))
-		} else {
-			g.line("typedef struct {")
-		}
-		// C11 has no empty structs; Go's zero-sized value has no observable layout here.
-		if st.NumFields() == 0 {
-			g.line("u8 unused;")
-		}
-		for i := 0; i < st.NumFields(); i++ {
-			f := st.Field(i)
-			g.line("%s %s;", g.variable(node, f.Type()), g.name(f))
-		}
-		if g.forward[structID(named)] {
-			g.line("};")
-		} else {
-			g.line("} %s;", g.structName(named))
-		}
-		g.defined[structID(named)] = true
-	}
 	// Anonymous arrays in signatures, locals and literals need the same wrapper
 	// as named arrays with identical underlying types. Visit in source order;
 	// iterating types.Info maps would make output/cache hashes nondeterministic.
@@ -358,12 +304,17 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		if gen, ok := d.(*ast.GenDecl); ok && gen.Tok == token.TYPE {
 			for _, sp := range gen.Specs {
 				ts := sp.(*ast.TypeSpec)
-				emitType(ts, g.info.Defs[ts.Name].Type())
+				if ts.Assign.IsValid() {
+					// An alias declares no type: its target is emitted at its
+					// own declaration or instantiation, or needs no definition.
+					continue
+				}
+				g.emitType(ts, g.info.Defs[ts.Name].Type())
 			}
 		}
 	}
 	for _, ti := range program.TypeInstances {
-		emitType(posNode(ti.Site), ti.Type)
+		g.emitType(posNode(ti.Site), ti.Type)
 	}
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
@@ -706,6 +657,10 @@ func (g *generator) exprValue(e ast.Expr) string {
 		if !ok || !field.IsField() {
 			g.unchecked(e)
 		}
+		if arrayElement(g.info, e.X) {
+			// A field of an array element is read in place.
+			return g.temp(e, tv.Type, g.fieldTarget(e.X)+"."+g.name(field))
+		}
 		x := g.expr(e.X)
 		if p, ok := pointer(g.info.Types[e.X].Type); ok {
 			return g.temp(e, tv.Type, g.checkedPointer(e, p, x)+"->"+g.name(field))
@@ -777,7 +732,16 @@ func (g *generator) exprValue(e ast.Expr) string {
 			return g.temp(e, tv.Type, comparison)
 		}
 		if _, ok := g.info.Types[e.X].Type.Underlying().(*types.Struct); ok {
-			g.unchecked(e)
+			// Non-blank fields compare in order, stopping at the first
+			// difference (docs/GO_TYPES.md#struct-equality).
+			x, y := g.expr(e.X), g.expr(e.Y)
+			comparison := g.structEqual(e, g.info.Types[e.X].Type, x, y)
+			if e.Op == token.NEQ {
+				comparison = "!" + comparison
+			} else if e.Op != token.EQL {
+				g.unchecked(e)
+			}
+			return g.temp(e, tv.Type, comparison)
 		}
 		if isString(g.info.Types[e.X].Type) {
 			return g.stringBinary(e, tv)
@@ -903,6 +867,10 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		if name, ok := g.mapBuiltinCall(e); ok {
 			return g.mapBuiltin(e, name)
+		}
+		if b, ok := o.(*types.Builtin); ok && b.Name() == "panic" {
+			g.panicCall(e)
+			return ""
 		}
 		args := g.callValues(e)
 		if _, ok := o.(*types.TypeName); ok {
@@ -1164,6 +1132,12 @@ func (g *generator) fieldTarget(e ast.Expr) string {
 		return g.fieldTarget(e.X) + "." + g.name(f)
 	case *ast.IndexExpr:
 		t := g.info.Types[e.X].Type
+		if a, ok := arrayValue(t); ok {
+			// Array storage (or an array through a pointer): the base is
+			// saved now and the bounds (and nil) check runs at the use.
+			base, index := g.arrayPointer(e.X), g.expr(e.Index)
+			return fmt.Sprintf("(*%s_at(%s,%s))", g.arrayName(e, a), base, index)
+		}
 		if _, ok := t.(*types.Slice); !ok {
 			g.unchecked(e)
 		}

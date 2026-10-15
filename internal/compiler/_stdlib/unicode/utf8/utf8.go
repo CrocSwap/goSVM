@@ -7,10 +7,8 @@
 // See https://en.wikipedia.org/wiki/UTF-8
 //
 // goSVM on-chain overlay of Go 1.22.0 unicode/utf8/utf8.go. Change (marked
-// "goSVM:"): acceptRanges is a 16-element slice instead of a [16]acceptRange
-// array (arrays of structs are not in the on-chain subset); every index is
-// below 16, so lookups give the same values and never trap. EncodeRune and
-// appendRuneNonASCII repeat a case body instead of using fallthrough.
+// "goSVM:"): EncodeRune and appendRuneNonASCII repeat a case body instead of
+// using fallthrough, which is not in the on-chain subset.
 package utf8
 
 // The conditions RuneError==unicode.ReplacementChar and
@@ -97,13 +95,12 @@ type acceptRange struct {
 }
 
 // acceptRanges has size 16 to avoid bounds checks in the code that uses it.
-var acceptRanges = []acceptRange{ // goSVM: [16]acceptRange in Go
-	0:  {locb, hicb},
-	1:  {0xA0, hicb},
-	2:  {locb, 0x9F},
-	3:  {0x90, hicb},
-	4:  {locb, 0x8F},
-	15: {}, // goSVM: length 16, as the array
+var acceptRanges = [16]acceptRange{
+	0: {locb, hicb},
+	1: {0xA0, hicb},
+	2: {locb, 0x9F},
+	3: {0x90, hicb},
+	4: {locb, 0x8F},
 }
 
 // FullRune reports whether the bytes in p begin with a full UTF-8 encoding of a rune.

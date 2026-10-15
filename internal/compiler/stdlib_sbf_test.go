@@ -174,12 +174,22 @@ func TestStdlibSBF(t *testing.T) {
 	}
 	vectors := StdlibVectorsForTest()
 	var cases []allocCase
-	aborts, groups := 0, map[byte]int{}
+	aborts, panics, groups := 0, 0, map[byte]int{}
 	for j, in := range vectors {
 		c := allocCase{name: fmt.Sprintf("stdlib-%03d-g%d-op%d", j, in[0], in[1]), in: in, units: globalUnits, err: abortError, log: abortLog}
 		result := nativeStdlibCall(in)
 		groups[in[0]]++
-		if strings.HasPrefix(result, "P:") {
+		if line, ok := strings.CutPrefix(result, "L:"); ok {
+			// A panic with a log line: the line must be logged once.
+			lineHex, _, _ := strings.Cut(line, " ")
+			text, err := hex.DecodeString(lineHex)
+			if err != nil {
+				t.Fatal(err)
+			}
+			c.log = "Program log: " + string(text)
+			aborts++
+			panics++
+		} else if strings.HasPrefix(result, "P:") {
 			aborts++
 		} else {
 			_, hexOut, _ := strings.Cut(strings.TrimSpace(result), ":")
@@ -208,7 +218,7 @@ func TestStdlibSBF(t *testing.T) {
 				}
 			}
 			sort.Slice(cus, func(i, j int) bool { return cus[i] < cus[j] })
-			summary := map[string]any{"profile": profile, "elf_sha256": result["elf_sha256"], "cases": len(cases), "aborts": aborts,
+			summary := map[string]any{"profile": profile, "elf_sha256": result["elf_sha256"], "cases": len(cases), "aborts": aborts, "panic_lines": panics,
 				"cases_by_group": groups, "max_vector_cu": cus[len(cus)-1], "median_vector_cu": cus[len(cus)/2]}
 			empty := &Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: []byte("package main\n\nimport \"gosvm/solana\"\n\nfunc Process(c solana.Context) uint64 { return 0 }\n")}}}}}
 			idle := allocCase{name: "idle", in: make([]byte, 8), output: make([]byte, 1024)}

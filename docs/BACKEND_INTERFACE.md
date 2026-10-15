@@ -441,6 +441,66 @@ during initialization aborts before `Process`, and the block's heap
 accounting. `gosvm features` reports `uses.globals`, `global_heap_bytes` and
 `readonly_globals`.
 
+A package-level variable may have an array type above the 1,024-byte
+per-value limit when Check proved that no value of that type is ever copied
+([large tables](GO_GLOBALS.md#large-tables)): it is then only indexed, passed
+to `len`/`cap` or ranged over by index, and is either read-only (its literal
+is constant data) or in the globals block without an initializer. A backend
+must address such a variable in place and never materialize it in a stack
+frame.
+
+## Value types
+
+Struct comparison, type aliases, arrays of composite elements and `panic`
+([GO_TYPES.md](GO_TYPES.md), [GO_ARRAYS.md](GO_ARRAYS.md)) are ordinary syntax
+in the typed program. Check adds one field:
+
+- `Panics` maps each call of the `panic` builtin (an `*ast.CallExpr` whose
+  `Fun` names `*types.Builtin` `panic`; inside instances of generic code, the
+  instance `Decl`'s node) to a `PanicSite`: `Value` is `PanicText` (log
+  `Text`: constants, `nil`, and values logged by static type),
+  `PanicString`, `PanicSigned`, `PanicUnsigned` or `PanicBool` (log `Prefix`,
+  the run-time value formatted as Go prints it, then `Suffix`) or
+  `PanicInterface` (log `NilPanicLine` when the value is a nil interface, else
+  `Text`). The argument is evaluated (except constants and `nil`), never
+  converted to an interface: `Conversions` does not list it.
+
+Everything else needs no new field:
+
+- **Struct `==`, `!=` and struct `switch` tags** are `*ast.BinaryExpr` and
+  `*ast.SwitchStmt` whose operands have a `*types.Struct` underlying type
+  (go/types has required comparability). Compare the non-blank fields in
+  declaration order, stopping at the first difference, recursively through
+  arrays (index order) and structs; strings bytewise, pointers by address,
+  interfaces by dynamic type and value (an uncomparable identical dynamic type
+  traps). Map key equality and hashing, and interface comparisons of structs,
+  also skip blank fields.
+- **Type aliases** are `*ast.TypeSpec`s with `Assign` set. go/types (with its
+  default `gotypesalias=0`) records every use of the alias as the aliased type,
+  so an alias has no representation, no code and no `TypeInstances` entry of
+  its own; methods declared through an alias receiver are the aliased type's.
+- **Arrays of composite elements** (structs, arrays, pointers, slices,
+  `struct{}`) are `*types.Array` values like any other. An element of
+  addressable array storage (`a[i]`, `p[i]` through a pointer, nested
+  `a[i][j]`) is addressable: field and element reads, stores, `op=`, `++`,
+  `&`, method receivers and slicing act on it in place; the bounds (and nil)
+  check runs where the element is used, after the operands of the statement
+  are evaluated, as for scalar arrays. An index-only `range` over an element
+  of an array of arrays evaluates nothing when it has no calls. In the borrow
+  analysis an array literal's pointer or slice elements are stored into heap
+  data, like struct literal fields, so a local they refer to moves to the heap
+  (`Function.HeapVars`).
+- **`recover`** never reaches a backend (Check rejects it), and neither does
+  `defer panic(...)`.
+
+A backend must reproduce the panic line (it is
+[contracted](ERROR_CONTRACT.md#panic)), Go's comparison order and the existing
+traps. The built-in backend emits the panic runtime (`gosvm_panic`,
+`sol_log_`) only for programs with `Panics`, so every other program's C is
+unchanged; arrays of composite elements are tagged C structs defined after
+their element types, and arrays of the earlier element kinds keep their
+earlier C.
+
 ## `project.LoadSchema`
 
 `func LoadSchema(dir string) (*ResolvedSchema, error)` in
@@ -520,7 +580,13 @@ function values, so the merged corpus requires 82 rejections (83 with function
 values alone, less the map entry). Compound assignment on integers added no
 field and turned the corpus's two compound assignments (`x <<= 2` and a
 byte-slice `+=` in a loop) into compiled programs, so the corpus now requires
-80 rejections. Separately, the
+80 rejections. Value types (struct comparison, type aliases, arrays of
+composite elements and `panic`) added `Panics` and turned nine recorded
+rejections into compiled programs (five arrays of structs, arrays, slices or
+pointers, two struct `switch` tags, one struct `==` and one unused alias); the
+array of `Context` keeps its position with the message `arrays of Context
+unsupported`, and no other entry's C changed, so the corpus now requires 70
+rejections (71 remain). Separately, the
 full-swap ELFs built with
 `gosvm build -no-cache` were identical before and after the split: fogo-v0
 `4697a9f5…`, solana-v3 `2b5f21d9…`, and target-less v1.51 `4e96d2bb…`.

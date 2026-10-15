@@ -122,7 +122,7 @@ func TestUint16Checks(t *testing.T) {
 		"array limit":     {`type K [513]uint16;func Process(s, i []byte) uint64 { return 0 }`, "array storage exceeds experimental 1024-byte per-value limit"},
 		"slice":           {`func Process(s, i []byte) uint64 { var w []uint16; _ = w; return 0 }`, ""},
 		"view":            {`func Process(s, i []byte) uint64 { var k [4]uint16; w := k[:]; return uint64(w[0]) }`, ""},
-		"element message": {`type K [2]float32;func Process(s, i []byte) uint64 { return 0 }`, "array elements must be integer or bool scalars, or named versions of those scalars"},
+		"element message": {`type K [2]float32;func Process(s, i []byte) uint64 { return 0 }`, "unsupported type float32"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if got := checkMessage(t, c.source); got != c.want {

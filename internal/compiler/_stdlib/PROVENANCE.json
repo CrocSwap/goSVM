@@ -1,11 +1,11 @@
 {
   "go": "go1.22.0",
   "license": "LICENSE (Go's BSD-style license, $GOROOT/LICENSE)",
-  "identity": "bdd288095039789787c74f7a5d3833960c9076be7ce1689ea3f4d26437e97145",
+  "identity": "c791b6de736cf5271b6356fa9b20c13798b54646aa968ffbb5a1cdd265f0890e",
   "files": [
     {
       "overlay": "bytes/bytes.go",
-      "sha256": "261788793789011bd46b8991a229ad789131fa6f53db4dd4768aee828dbdba1e",
+      "sha256": "927c727118bce967a58f0fd20c1dea06c36205a1b40ad0712c6c0bf8bd4abf9e",
       "kind": "modified",
       "origins": [
         {
@@ -16,7 +16,7 @@
     },
     {
       "overlay": "bytes/gosvm.go",
-      "sha256": "1b61398f08e64070976e04d030d46831db994a2196922935c0633e37de699367",
+      "sha256": "f124233561455b4f7773adc9a4e66431d634567cd7b767f64893acb057a5c647",
       "kind": "goSVM helpers; maxInt from the origin",
       "origins": [
         {
@@ -71,7 +71,7 @@
     },
     {
       "overlay": "errors/gosvm.go",
-      "sha256": "539a0acd270a0e70ee8b8c183013279cccb4656df4337cff04a21be0fa52c93a",
+      "sha256": "e7565e328783d070bc09c7ddb6e5569f2813e84a9b9978184ec24653100e0920",
       "kind": "goSVM helpers",
       "origins": []
     },
@@ -88,7 +88,7 @@
     },
     {
       "overlay": "errors/wrap.go",
-      "sha256": "5d424546c69ee96be60bb9f96ee3e10ea72565c316be018dee9f378ef3ba1725",
+      "sha256": "83699bee25db935dd2de46f1994d2b0e44a8e047ba6071e41799c86feb200b7b",
       "kind": "modified",
       "origins": [
         {
@@ -143,8 +143,8 @@
     },
     {
       "overlay": "internal/bytealg/index_generic.go",
-      "sha256": "295911cb6fba2dce7195724617e83529c79864396e08b5b62659a32aa6e0f99b",
-      "kind": "modified",
+      "sha256": "02d1ed20861cf478978e49e63ec74c58c0702f36d54c81b3878edca38473bfce",
+      "kind": "verbatim apart from the build constraint",
       "origins": [
         {
           "path": "internal/bytealg/index_generic.go",
@@ -235,7 +235,7 @@
     },
     {
       "overlay": "strconv/gosvm.go",
-      "sha256": "cec0daa9b07ffa2fada4325833c815a7c0174af3e4163f6bb8b32878f172e2a8",
+      "sha256": "a2af7d5170321133d8ba63178e7180d58db96082eff95cd5dccb181338224982",
       "kind": "goSVM helpers",
       "origins": []
     },
@@ -252,8 +252,8 @@
     },
     {
       "overlay": "strconv/itoa.go",
-      "sha256": "43f86a5f31442e53679c21eaf1e6f77a0cb1188bdd34ceaff128d399bf6832b3",
-      "kind": "modified",
+      "sha256": "c31e2ca2911bcd172e5cbfdcc7b6bdbbec1dddd8f1f591022e2c27eaedee1e3d",
+      "kind": "verbatim",
       "origins": [
         {
           "path": "strconv/itoa.go",
@@ -274,7 +274,7 @@
     },
     {
       "overlay": "strings/builder.go",
-      "sha256": "064cd346136a45ee3d14504a7ee04eff4530e6d8be534bec900025fa75421373",
+      "sha256": "77c1c5474989f643977bb25ddf0863f4cf2cbc5ce7c65b1a13436f3d2d2e2963",
       "kind": "modified",
       "origins": [
         {
@@ -307,7 +307,7 @@
     },
     {
       "overlay": "strings/gosvm.go",
-      "sha256": "20c36ae490031df272014aca5ccdd94196bfea26c85dacb2bed135d4d7779009",
+      "sha256": "bd0be8c641f768f7e2002b68eafcbc701c1bdb1aa37721b4a8c6df59ff3847b8",
       "kind": "goSVM helpers; noescape after the origin's",
       "origins": [
         {
@@ -318,7 +318,7 @@
     },
     {
       "overlay": "strings/strings.go",
-      "sha256": "ad94090bcfd516a36bd84e20ccf6bb3d2597c803b02e546b7fb8644cb208cce8",
+      "sha256": "a4cc8fee753879e36724f493f7fd5ad7ddfdd2bd7966242638452b79aa9f7854",
       "kind": "modified",
       "origins": [
         {
@@ -366,7 +366,7 @@
     },
     {
       "overlay": "unicode/utf8/utf8.go",
-      "sha256": "71df1efc156fb6fa53d7ad72777fe7313cb339b41f5f6373a51d28624f76c300",
+      "sha256": "c8eb14d0326ed281d0b04e37a0e33383f1497dee4758af4bc086f465241c5b1c",
       "kind": "modified",
       "origins": [
         {

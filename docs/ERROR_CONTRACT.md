@@ -53,16 +53,86 @@ fails with no custom error code and the transaction rolls back.
 - Hashing a map key that is, or contains, an interface value whose dynamic type
   is not comparable, in any map operation (including lookups and deletes on
   nil and empty maps), where Go panics `hash of unhashable type`.
+- A call of the `panic` builtin, after its argument is evaluated and one log
+  line is written ([below](#panic)). This is the only trap that logs.
 
 A trap while package-level variables are initialized or an `init` function
 runs aborts the same way, before `Process` runs
-([package-level variables](GO_GLOBALS.md#traps)).
+([package-level variables](GO_GLOBALS.md#traps)); a `panic` call there
+writes its log line first, like any other panic.
 
 A trap aborts without running pending deferred calls (there is no `recover`);
 the instruction's effects roll back, so this is indistinguishable on chain
 from Go's unwinding. This includes a deferred call that would have changed a
 map: its change never happens, and the rollback leaves no trace of the
 function's earlier map writes either.
+
+### Panic
+
+`panic(v)` ([GO_TYPES.md](GO_TYPES.md#panic)) is a trap: after `v` is
+evaluated, it calls the VM `sol_log_` syscall once (static hash `0x207559bd`
+on v3, the legacy `sol_log_` import on v0) and then the `abort` syscall. The
+instruction fails with `ProgramFailedToComplete`, like every trap, and the
+transaction log contains the line `Program log: <line>`. There is no custom
+error code: the SVM cannot unwind a call stack to return one from the
+entrypoint, so the line identifies the panic. Deferred calls do not run and
+`recover` is rejected at compile time (the transaction fails either way).
+
+The line is `panic: ` followed by:
+
+1. for `panic(nil)`, or an interface value that is nil:
+   `panic called with nil argument`;
+2. for an argument of a string, integer or `bool` type with no `Error` or
+   `String` method in its method set: the value as Go 1.22 prints it (the
+   string's bytes, the integer in decimal with a leading `-` when negative,
+   `true` or `false`); for a named type, wrapped as `T(value)`, or `T("value")`
+   for a string type, where `T` is the package name, `.` and the type name
+   (with type arguments for an instance of a generic type), as Go's runtime
+   spells it;
+3. for any other argument: `(` + its static type spelled as in rule 2 + `)`
+   (for example `(error)` or `(pkg.Pair)`); Go would print an error's
+   `Error()`, a `String()` result or an address.
+
+The line is then truncated to its first 512 bytes, and every byte that does not
+start a valid UTF-8 sequence (as Go's `utf8.DecodeRune` decides, with
+`RuneError` of width 1) is replaced by `?`, because `sol_log_` rejects invalid
+UTF-8.
+
+#### Backend reproduction
+
+A backend reproduces the line byte for byte from Check's output.
+`CheckedProgram.Panics` maps each `panic` call (`*ast.CallExpr`) to a
+`PanicSite` (`Call`, `Value`, `Text`, `Prefix`, `Suffix`). The exported Go
+identifiers in `internal/compiler` are `PanicSite`, the `PanicValue`
+constants `PanicText`, `PanicString`, `PanicSigned`, `PanicUnsigned`,
+`PanicBool` and `PanicInterface`, `NilPanicLine` and `PanicLineBytes` (512).
+
+At run time the argument is evaluated first (always, for its effects, except
+`nil` and constants, which have none); then the line is built, truncated to
+its first `PanicLineBytes` bytes, UTF-8-sanitized as above (after the
+truncation, so a sequence the cut splits becomes `?`), logged once with
+`sol_log_`, and `abort` is called. By `Value`:
+
+- `PanicText`: the line is `Text`. This covers constant arguments, `nil`
+  (`Text` is `NilPanicLine`) and values shown by their static type
+  (`panic: (<T>)`, rule 3). `Text` is final apart from the runtime UTF-8
+  sanitization: Check has already truncated it to 512 bytes.
+- `PanicString`: `Prefix` + the string's bytes unmodified (no quoting or
+  escaping) + `Suffix`.
+- `PanicSigned`: `Prefix` + the value sign-extended to 64 bits, in decimal,
+  with `-` when negative (MinInt64 is `-9223372036854775808`), + `Suffix`.
+- `PanicUnsigned`: `Prefix` + the value zero-extended to 64 bits, in decimal,
+  + `Suffix`.
+- `PanicBool`: `Prefix` + `true` or `false` + `Suffix`.
+- `PanicInterface`: `NilPanicLine` (`panic: panic called with nil argument`)
+  when the interface value's type word is 0 (a nil interface), else `Text`
+  (`panic: (<I>)`, the interface's static type).
+
+`Prefix` is `panic: ` for an unnamed type, `panic: <T>(` for a named type and
+`panic: <T>("` for a named string type; `Suffix` is correspondingly empty,
+`)` or `")`. `<T>` is the runtime spelling of rule 2. A constant's `Text`
+applies the same rules to the constant's type (its default type when
+untyped), with integers in exact decimal.
 
 A program built with a heap budget above 32 KiB whose transaction did not
 request a large enough heap frame fails at its first allocation with a VM
@@ -299,3 +369,26 @@ Handler results propagate unchanged.
   (programs without package-level variables allocate exactly as before); a
   block larger than the heap budget is a Check error
   ([package-level variables](GO_GLOBALS.md)).
+- 2026-10-14: addition (value types), no existing trap or code changed: the
+  panic trap (`panic(v)` logs one contracted line with `sol_log_`, then
+  aborts; no custom error code exists because the SVM cannot unwind to the
+  entrypoint; deferred calls do not run; `recover` is a compile-time
+  rejection). Struct `==`/`!=` and `switch` on a struct use the existing
+  uncomparable-interface trap, arrays of composite elements the existing
+  bounds, nil-pointer, nil-map and out-of-memory traps, and type aliases add
+  nothing. Correction: struct map keys and interface comparisons of structs
+  now ignore blank (`_`) fields, as Go does; before, keys differing only in a
+  blank field were distinct.
+- 2026-10-14: clarification (requested by Qushta), no behaviour changed: the
+  [panic](#panic) section's backend-reproduction subsection spells out, per
+  `PanicSite.Value`, how a backend builds the log line byte for byte from
+  `CheckedProgram.Panics`, and lists the exported identifiers.
+- 2026-10-14: merge of package-level variables and value types, no trap
+  added and no existing code changed: a `panic` during package
+  initialization logs its line, then aborts before `Process`. Check
+  relaxation: an array type above the 1,024-byte per-value limit is
+  accepted when its only values are package-level variables used in place
+  (read-only data or the globals block, never a stack frame;
+  [large tables](GO_GLOBALS.md#large-tables)); every other program keeps
+  the same rejection at the same position, and accepted programs' C is
+  unchanged.

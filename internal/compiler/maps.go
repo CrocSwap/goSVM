@@ -319,6 +319,9 @@ func (g *generator) hashCode(n ast.Node, t types.Type, x string, depth int) stri
 		var parts []string
 		for i := 0; i < u.NumFields(); i++ {
 			f := u.Field(i)
+			if f.Name() == "_" {
+				continue // blank fields take no part in equality
+			}
 			if part := g.hashCode(n, f.Type(), x+"."+g.name(f), depth); part != "" {
 				parts = append(parts, part)
 			}

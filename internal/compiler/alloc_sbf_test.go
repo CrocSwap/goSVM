@@ -41,6 +41,9 @@ type allocCase struct {
 	output []byte // expected account data; nil when the transaction fails
 	err    string // expected error JSON when output is nil
 	log    string // a log line the failure must produce exactly once
+	// panicLog is a panic's log line, which the failure must also produce
+	// exactly once ("" for none).
+	panicLog string
 }
 
 // Both the abort trap and a heap access violation fail the instruction with
@@ -105,6 +108,9 @@ func allocFixtures(cases []allocCase) ([]byte, error) {
 			step.Expect.Error = json.RawMessage(fmt.Sprintf(`{"InstructionError":[%d,%s]}`, index, c.err))
 			if c.log != "" {
 				step.Expect.LogCounts = map[string]int{c.log: 1}
+			}
+			if c.panicLog != "" {
+				step.Expect.LogCounts[c.panicLog] = 1
 			}
 		}
 		step.Expect.Accounts[0].State = &expected

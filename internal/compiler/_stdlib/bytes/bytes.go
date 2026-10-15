@@ -8,7 +8,7 @@
 // goSVM on-chain overlay of Go 1.22.0 bytes/bytes.go. Changes (marked
 // "goSVM:"): Equal compares with bytealg.Equal instead of
 // string(a) == string(b), which gc compiles without allocating but goSVM
-// would copy; panics trap; FieldsFunc's local span type is declared at
+// would copy; FieldsFunc's local span type is declared at
 // package level; EqualFold continues in equalFoldUnicode instead of a goto;
 // ToUpperSpecial, ToLowerSpecial, ToTitleSpecial (unicode.SpecialCase) and
 // Title (Unicode letter and digit tables) are left out, and so are Buffer
@@ -530,13 +530,13 @@ func Join(s [][]byte, sep []byte) []byte {
 	var n int
 	if len(sep) > 0 {
 		if len(sep) >= maxInt/(len(s)-1) {
-			trap("bytes: Join output length overflow") // goSVM: panic("bytes: Join output length overflow")
+			panic("bytes: Join output length overflow")
 		}
 		n += len(sep) * (len(s) - 1)
 	}
 	for _, v := range s {
 		if len(v) > maxInt-n {
-			trap("bytes: Join output length overflow") // goSVM: panic("bytes: Join output length overflow")
+			panic("bytes: Join output length overflow")
 		}
 		n += len(v)
 	}
@@ -597,10 +597,10 @@ func Repeat(b []byte, count int) []byte {
 	// we should panic if the repeat will generate an overflow.
 	// See golang.org/issue/16237.
 	if count < 0 {
-		trap("bytes: negative Repeat count") // goSVM: panic("bytes: negative Repeat count")
+		panic("bytes: negative Repeat count")
 	}
 	if len(b) >= maxInt/count {
-		trap("bytes: Repeat output length overflow") // goSVM: panic("bytes: Repeat output length overflow")
+		panic("bytes: Repeat output length overflow")
 	}
 	n := len(b) * count
 

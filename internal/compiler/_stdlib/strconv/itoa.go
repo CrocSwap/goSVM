@@ -2,8 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// goSVM on-chain overlay of Go 1.22.0 strconv/itoa.go. Change (marked
-// "goSVM:"): panics trap.
+// goSVM on-chain overlay: Go 1.22.0 strconv/itoa.go, unchanged.
 
 package strconv
 
@@ -90,7 +89,7 @@ const digits = "0123456789abcdefghijklmnopqrstuvwxyz"
 // as the second result value.
 func formatBits(dst []byte, u uint64, base int, neg, append_ bool) (d []byte, s string) {
 	if base < 2 || base > len(digits) {
-		trap("strconv: illegal AppendInt/FormatInt base") // goSVM: panic("strconv: illegal AppendInt/FormatInt base")
+		panic("strconv: illegal AppendInt/FormatInt base")
 	}
 	// 2 <= base && base <= len(digits)
 

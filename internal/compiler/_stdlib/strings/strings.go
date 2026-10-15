@@ -7,7 +7,7 @@
 // For information about UTF-8 strings in Go, see https://blog.golang.org/strings.
 //
 // goSVM on-chain overlay of Go 1.22.0 strings/strings.go. Changes (marked
-// "goSVM:"): panics trap; EqualFold continues in equalFoldUnicode instead of
+// "goSVM:"): EqualFold continues in equalFoldUnicode instead of
 // a goto; ToUpperSpecial, ToLowerSpecial, ToTitleSpecial (unicode.SpecialCase)
 // and Title (Unicode letter and digit tables) are left out
 // (docs/GO_STDLIB.md).
@@ -449,13 +449,13 @@ func Join(elems []string, sep string) string {
 	var n int
 	if len(sep) > 0 {
 		if len(sep) >= maxInt/(len(elems)-1) {
-			trap("strings: Join output length overflow") // goSVM: panic("strings: Join output length overflow")
+			panic("strings: Join output length overflow")
 		}
 		n += len(sep) * (len(elems) - 1)
 	}
 	for _, elem := range elems {
 		if len(elem) > maxInt-n {
-			trap("strings: Join output length overflow") // goSVM: panic("strings: Join output length overflow")
+			panic("strings: Join output length overflow")
 		}
 		n += len(elem)
 	}
@@ -558,10 +558,10 @@ func Repeat(s string, count int) string {
 	// we should panic if the repeat will generate an overflow.
 	// See golang.org/issue/16237.
 	if count < 0 {
-		trap("strings: negative Repeat count") // goSVM: panic("strings: negative Repeat count")
+		panic("strings: negative Repeat count")
 	}
 	if len(s) >= maxInt/count {
-		trap("strings: Repeat output length overflow") // goSVM: panic("strings: Repeat output length overflow")
+		panic("strings: Repeat output length overflow")
 	}
 	n := len(s) * count
 

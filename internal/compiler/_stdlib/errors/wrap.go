@@ -119,14 +119,14 @@ func As[T any](err error, target *T) bool {
 		return false
 	}
 	if target == nil {
-		trap("errors: target must be a non-nil pointer")
+		panic("errors: target must be a non-nil pointer")
 	}
 	// goSVM: T is an interface type exactly when its zero value converts
 	// to a nil any; otherwise T must implement error.
 	var zero T
 	boxed := any(zero)
 	if _, isError := boxed.(error); boxed != nil && !isError {
-		trap("errors: *target must be interface or implement error")
+		panic("errors: *target must be interface or implement error")
 	}
 	// goSVM: the remaining errors of each Unwrap() []error level (as in is).
 	var pending [][]error

@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"encoding/hex"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -26,14 +27,21 @@ func stdlibProgram(t *testing.T) *Program {
 	return &Program{Entry: "program", Packages: []PackageSources{{"program", sources}}}
 }
 
+// nativeStdlibCall runs Run natively: the result and output, or the
+// panic's log line (hex, as valueTypesDriver prints it; none for runtime
+// errors, which are traps) and the output.
 func nativeStdlibCall(in []byte) (result string) {
 	out := make([]byte, 1024)
 	defer func() {
-		if recover() != nil {
-			result = fmt.Sprintf("P:%x\n", out)
+		if r := recover(); r != nil {
+			prefix := ""
+			if line := ExpectedPanicLine(r, "stdlibvalues"); line != "" {
+				prefix = "L:" + hex.EncodeToString([]byte(line)) + " "
+			}
+			result = fmt.Sprintf("%sP:%x\n", prefix, out)
 		}
 	}()
-	code := stdlibvalues.Run(out, in)
+	code := stdlibvalues.Run(out, append([]byte(nil), in...))
 	return fmt.Sprintf("%d:%x\n", code, out)
 }
 
@@ -206,7 +214,7 @@ func compareHostVectors(t *testing.T, bin string, vectors [][]byte, want []strin
 	for j, in := range vectors {
 		line := fmt.Sprintf("%x\n", in)
 		runs[[2]int{int(in[0]), int(in[1])}]++
-		if strings.HasPrefix(want[j], "P:") {
+		if strings.HasPrefix(want[j], "P:") || strings.HasPrefix(want[j], "L:") {
 			panics[int(in[0])]++
 			flush()
 			got.WriteString(runHost(t, bin, line))
@@ -229,7 +237,7 @@ func compareHostVectors(t *testing.T, bin string, vectors [][]byte, want []strin
 }
 
 func TestStdlibDifferential(t *testing.T) {
-	bin := hostCompile(t, compileStdlib(t), DefaultHeapBytes, allocDriver, false)
+	bin := hostCompile(t, compileStdlib(t), DefaultHeapBytes, valueTypesDriver, false)
 	vectors := append(stdlibVectors(20261014, 600), StdlibVectorsForTest()...)
 	want := make([]string, len(vectors))
 	for j, in := range vectors {
