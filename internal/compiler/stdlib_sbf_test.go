@@ -64,7 +64,10 @@ var stdlibProbes = []struct {
 	{"strconv.FormatUint(20 digits)", `"strconv"`, `r = uint64(len(strconv.FormatUint(^uint64(in[1]), 10)))`,
 		func(in []byte) uint64 { return uint64(len(strconv.FormatUint(^uint64(in[1]), 10))) }},
 	{"strconv.AppendUint(20 digits)", `"strconv"`, `var buf [24]byte; b := strconv.AppendUint(buf[:0], ^uint64(in[1]), 10); r = uint64(len(b)) + uint64(b[0])`,
-		func(in []byte) uint64 { b := strconv.AppendUint(nil, ^uint64(in[1]), 10); return uint64(len(b)) + uint64(b[0]) }},
+		func(in []byte) uint64 {
+			b := strconv.AppendUint(nil, ^uint64(in[1]), 10)
+			return uint64(len(b)) + uint64(b[0])
+		}},
 	{"strconv.Itoa(2 digits)", `"strconv"`, `r = uint64(len(strconv.Itoa(int(in[1]))))`,
 		func(in []byte) uint64 { return uint64(len(strconv.Itoa(int(in[1])))) }},
 	{"strconv.Quote(12 bytes)", `"strconv"`, `r = uint64(len(strconv.Quote(string(in[9:21]))))`,

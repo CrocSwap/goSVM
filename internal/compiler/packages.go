@@ -16,6 +16,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // PackageSources identifies ordinary Go sources by their module import path.
@@ -180,6 +181,9 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 				return fmt.Errorf("%s: %s", im.position, stdlibImportRule(im.path))
 			}
 			dependency, e := resolver.resolve(im.path)
+			if _, ok := e.(standardImportError); ok {
+				return fmt.Errorf("%s: %s", im.position, stdlibImportRule(im.path))
+			}
 			if e != nil {
 				return fmt.Errorf("%s: resolve import %q: %w", im.position, im.path, e)
 			}
@@ -238,6 +242,7 @@ type listedModule struct {
 }
 type listedPackage struct {
 	ImportPath, Dir, Name string
+	Standard              bool
 	Module                *listedModule
 	Error                 *struct{ Err string }
 }
@@ -323,6 +328,9 @@ func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
 	}
 	if pkg.Error != nil {
 		return nil, fmt.Errorf("%s", pkg.Error.Err)
+	}
+	if pkg.Standard {
+		return nil, standardImportError{path}
 	}
 	if pkg.Module == nil || pkg.Dir == "" {
 		return nil, fmt.Errorf("standard library and non-module imports unsupported (%q)", path)
@@ -459,17 +467,37 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	return pkg, nil
 }
 
+// standardImportError is resolve's error for a standard-library package
+// (go list reports it as Standard): one the overlay does not provide.
+type standardImportError struct{ path string }
+
+func (e standardImportError) Error() string { return stdlibImportRule(e.path) }
+
 // standardPackage reports whether path names a package of the Go standard
 // library (errors, fmt, strings, ...), which on-chain programs cannot import
-// apart from math/bits.
+// apart from math/bits and the overlay packages (docs/GO_STDLIB.md).
 func standardPackage(path string) bool {
 	first, _, _ := strings.Cut(path, "/")
 	if strings.Contains(first, ".") {
 		return false
 	}
-	if build.Default.GOROOT == "" {
+	root := goroot()
+	if root == "" {
 		return false
 	}
-	info, err := os.Stat(filepath.Join(build.Default.GOROOT, "src", filepath.FromSlash(path)))
+	info, err := os.Stat(filepath.Join(root, "src", filepath.FromSlash(path)))
 	return err == nil && info.IsDir()
 }
+
+// goroot is the Go installation's root: go/build's default, or, for a
+// compiler built with -trimpath (which leaves it empty), `go env GOROOT`.
+var goroot = sync.OnceValue(func() string {
+	if build.Default.GOROOT != "" {
+		return build.Default.GOROOT
+	}
+	out, err := exec.Command("go", "env", "GOROOT").Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+})
