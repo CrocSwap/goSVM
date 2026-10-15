@@ -1,7 +1,8 @@
 # math/bits on-chain
 
 On-chain programs, and the user packages they import, may `import "math/bits"`.
-It is the only standard-library package available on-chain. Calls compile to
+Unlike the other [standard-library packages on chain](GO_STDLIB.md), which are
+compiled from Go's source, it is a compiler intrinsic. Calls compile to
 small C helpers (`internal/compiler/bits.c.txt`) and produce the same results as
 the Go standard library, including where Go panics. Native tests call the real
 `math/bits`, so the SBF program and the native test agree.
@@ -22,8 +23,8 @@ func mulDiv(a, b, d uint64) uint64 {
 
 A plain or renamed import (`import wide "math/bits"`) works in a single file
 (no `go.mod` needed), in a module program and in shared user packages. Dot and
-blank imports are rejected, as they are for every on-chain import. Other
-standard-library packages are still rejected.
+blank imports are rejected, as they are for every on-chain import. See
+[standard-library packages](GO_STDLIB.md) for the others.
 
 ## Supported
 

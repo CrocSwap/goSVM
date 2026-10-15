@@ -117,13 +117,17 @@ slices of any element type), [interface values](docs/GO_INTERFACES.md)
 [strings and `error`](docs/GO_STRINGS.md) (UTF-8 `range`, concatenation,
 conversions), [function values, closures and `defer`](docs/GO_FUNCTIONS.md),
 [maps](docs/GO_MAPS.md) (every operation except iteration, whose order Go
-randomizes) and [package-level variables and `init`](docs/GO_GLOBALS.md)
+randomizes), [package-level variables and `init`](docs/GO_GLOBALS.md)
 (initialized on every invocation in Go's order; constant tables cost
-nothing). It lowers Go through checked C and Solana Clang/LLD to SBF.
+nothing) and the [standard-library packages](docs/GO_STDLIB.md) `errors`,
+`strings`, `bytes`, `strconv` (integers), `encoding/binary`, `unicode/utf8`,
+`unicode` (case mapping), `math` (integer limits) and
+[`math/bits`](docs/GO_BITS.md), compiled from Go 1.22's own source. It lowers
+Go through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, map
-iteration, goroutines, and on-chain standard-library imports other than
-[`math/bits`](docs/GO_BITS.md) are not supported. This is an experimental
+iteration, goroutines, floats, and other standard-library packages (`fmt`,
+`io`, `math/big`, ...) are not supported. This is an experimental
 toolchain without a production audit.
 [Language details](docs/DEVELOPMENT.md#supported-subset-and-remaining-blockers).
 

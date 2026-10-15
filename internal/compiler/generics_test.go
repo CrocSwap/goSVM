@@ -127,8 +127,6 @@ func TestGenericRejections(t *testing.T) {
 			"g.go:4:39: instantiation Eq[P]: g.go:3:74: " + recoverRule},
 		"instance allocation rule": {"func Mk[T any](n uint64) []T { return make([]T, n) }\nfunc Process(s, i []byte) uint64 { _ = Mk[[0]byte](1); return 0 }",
 			"g.go:3:40: instantiation Mk[[0]uint8]: g.go:2:1: slice elements must not contain zero-length arrays or empty structs"},
-		"instance variadic": {"func V[T any](xs ...T) {}\nfunc Process(s, i []byte) uint64 { V[uint64](); return 0 }",
-			"g.go:3:36: instantiation V[uint64]: g.go:2:1: variadics are unsupported"},
 		"direct recursion": {"func F[T any](x T) T { return F(x) }\nfunc Process(s, i []byte) uint64 { return F(uint64(1)) }",
 			"g.go:2:1: recursion is not supported"},
 		"recursion with other arguments": {unsigned + "func F[T Unsigned](x T) T { if x == 0 { return x }; return T(F[uint8](uint8(x - 1))) }\nfunc Process(s, i []byte) uint64 { return F(uint64(1)) }",

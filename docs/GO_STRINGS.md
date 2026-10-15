@@ -139,11 +139,12 @@ nil `error` or through a nil pointer receiver that dereferences aborts, as Go
 panics. Returning an error from `Process` is not possible (`Process` returns
 the `uint64` custom error code); map errors to codes in the handler.
 
-There are no `errors` or `fmt` packages on-chain: the standard library is
-limited to `math/bits`, and importing another standard package is rejected with
-`could not import fmt (unsupported import "fmt"; the only standard-library
-package on-chain is math/bits)`. Write error types by hand (a struct or a named
-integer with an `Error() string` method). Logging strings through `sol_log` is
+`errors`, `strconv`, `strings`, `bytes`, `unicode/utf8` and parts of
+`unicode` are available on chain ([standard library](GO_STDLIB.md)); `fmt` is
+not, and importing it is rejected with `could not import fmt (unsupported
+import "fmt"; standard-library packages on chain: ...)`. Write error types by
+hand (a struct or a named integer with an `Error() string` method) or use
+`errors.New`. Logging strings through `sol_log` is
 a separate SDK item: the pinned SDK is unchanged and has no string API.
 
 ## With function values
@@ -173,8 +174,8 @@ failed `x.(string)` and a nil-interface `Error()` call use the interface aborts
   accept every compound operator ([integers](GO_INTEGERS.md#compound-assignment)).
 - Named slice types stay rejected, including byte slices converted from
   strings (`unsupported type program.B` for `type B []byte`).
-- Standard-library packages other than `math/bits` (`strings`, `strconv`,
-  `unicode/utf8`, `errors`, `fmt`) are rejected as above.
+- Standard-library packages other than `math/bits` and those of
+  [GO_STDLIB.md](GO_STDLIB.md) (`fmt`, `io`, ...) are rejected as above.
 - Strings are not part of schema-2 wire layouts: they have no fixed length.
   A string field is rejected with `wire field Name: string has a variable
   length; wire layouts are fixed-size, use a [N]byte array`

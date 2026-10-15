@@ -65,9 +65,11 @@ Rejected, with source-located messages:
   `<path> functions cannot be used as values; call them in a function
   literal`, `defer of <path> calls unsupported; defer a function literal that
   makes the call`. They have no Go bodies.
-- Pointers to function values (`&f`), variadic function types and literals,
-  function types with unsupported parameter types, method values whose
-  receiver contains zero-length arrays or empty structs.
+- Pointers to function values (`&f`), variadic function types and literals
+  (variadic declared functions and methods are supported,
+  [below](#variadic-functions)), function types with unsupported parameter
+  types, method values whose receiver contains zero-length arrays or empty
+  structs.
 - Recursion through function values ([below](#recursion)).
 
 There is no `recover`: a trap aborts the transaction without running deferred
@@ -142,6 +144,38 @@ host-compiled C (9,060 vectors, 2,487 Go panics), and
 [`examples/func-strings`](../examples/func-strings/program.go) on fogo-v0
 and solana-v3 through the pinned runners
 ([results](../results/compiler/2026-10-14-func-maps/README.md)).
+
+## Variadic functions
+
+Declared functions and methods may have a final `...T` parameter, which is a
+`[]T` in the body, with Go's semantics (added for `errors.Join`,
+[standard library](GO_STDLIB.md)):
+
+```go
+func sum(base uint64, xs ...uint64) uint64 {
+	for _, x := range xs {
+		base += x
+	}
+	return base
+}
+
+sum(1)          // xs == nil
+sum(1, 2, 3)    // xs is a new []uint64{2, 3}: len == cap == 2
+sum(1, s...)    // xs is s itself: writes to xs[i] change s
+```
+
+Generic variadic functions (`func n[T any](xs ...T) int`), variadic methods,
+deferred variadic calls, interface-typed variadic parameters (`errs
+...error`, each argument converted) and variadic calls in package
+initializers work. Check lowers every call that does not end in `...` into one
+that does: the extra arguments become a slice literal (`[]T{x, y}...`), or
+`nil...` when there are none, evaluated in Go's order. The slice is allocated
+like any slice literal ([allocation](GO_ALLOCATION.md)): `k > 0` extra
+arguments allocate `k * sizeof(T)` rounded up to 8 bytes; no extra argument
+and a spread slice allocate nothing (gc stack-allocates a non-escaping
+argument slice, so it can use less heap). A variadic function cannot be used
+as a function value (`variadic function types are unsupported`), and
+variadic function literals and interface methods stay unsupported.
 
 ## Representation
 

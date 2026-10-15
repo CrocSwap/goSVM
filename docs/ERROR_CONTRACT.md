@@ -175,6 +175,10 @@ because fixtures compare them byte for byte:
   Converting a value to an interface allocates its Go size rounded up to 8
   bytes, except pointers and zero-size values, which allocate nothing
   ([interfaces](GO_INTERFACES.md#boxing-cost)).
+  A call of a variadic function with `k > 0` extra arguments allocates
+  its argument slice like a `k`-element slice literal; with none, or with a
+  spread slice (`f(s...)`), it allocates nothing
+  ([variadic functions](GO_FUNCTIONS.md#variadic-functions)).
   String literals and constant expressions allocate nothing; a concatenation
   allocates its total length rounded up to 8 bytes, or nothing when at most one
   operand is non-empty; `string(b)` allocates `len(b)` rounded up (nothing when
@@ -392,3 +396,17 @@ Handler results propagate unchanged.
   [large tables](GO_GLOBALS.md#large-tables)); every other program keeps
   the same rejection at the same position, and accepted programs' C is
   unchanged.
+- 2026-10-15: addition (standard-library packages, variadic functions,
+  pointers to pointers), no trap added and no existing behaviour changed:
+  the [standard-library packages](GO_STDLIB.md) are Go 1.22.0 code compiled
+  with the program, so they use the existing traps: Go's own `panic` calls
+  (for example `panic: strings: negative Repeat count`,
+  `panic: errors: target must be a non-nil pointer`) log their line and
+  abort as any panic, and runtime errors (an index out of range, a nil
+  pointer, out of memory) are the existing traps. Their allocations follow
+  the existing heap accounting, and `errors.ErrUnsupported`,
+  `strconv.ErrRange` and `strconv.ErrSyntax` are package-level variables of
+  the programs that import them. A call of a variadic function with `k > 0`
+  extra arguments allocates its argument slice as a slice literal of `k`
+  elements (no allocation for none, or for a spread `s...`); recorded under
+  heap accounting. Pointers to pointers use the existing nil-pointer trap.

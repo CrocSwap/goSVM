@@ -60,8 +60,11 @@ functions are supported in every package, with Go's initialization order
 ([package-level variables](GO_GLOBALS.md)); other packages' variables are read,
 written, addressed and called as `pkg.V`. Function values and interfaces are
 supported too ([function values](GO_FUNCTIONS.md),
-[interfaces](GO_INTERFACES.md)). Recursion and standard-library imports other
-than `math/bits` remain unsupported. Direct methods and constrained borrows follow the
+[interfaces](GO_INTERFACES.md)). `math/bits` and the
+[standard-library packages](GO_STDLIB.md) `errors`, `math` (integer limits),
+`encoding/binary`, `unicode/utf8`, `unicode` (case mapping), `strings`,
+`bytes` and `strconv` can be imported; they need no module resolution.
+Recursion and other standard-library imports remain unsupported. Direct methods and constrained borrows follow the
 [pointer](GO_POINTERS.md) and [view](GO_VIEWS.md) rules.
 Other packages in the module are outside that graph: a native service can use
 HTTP, JSON, databases, goroutines and other normal Go features in its own code.

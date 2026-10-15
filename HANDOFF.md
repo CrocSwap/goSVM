@@ -82,10 +82,29 @@ initialization-panic probes against native Go and on SBF,
 [results](results/compiler/2026-10-14-globals-value-types/README.md); full-swap
 ELFs unchanged; the corpus has 62 rejections left (guard 60).
 
-**Next (in progress on another branch):** on-chain standard library work
-(`errors`, `math`, `encoding/binary`, `bytes`, `strings`, `strconv`) from the
-[library shakeout](results/compiler/2026-10-14-library-shakeout/README.md),
-branched from `742210e`; it will be merged after this merge.
+**Standard library (October 15, branch `worktree-agent-a4919db3f7fd1c8b4`,
+merged with the above):** [GO_STDLIB](docs/GO_STDLIB.md): `errors`, `math`
+(integer limits), `encoding/binary` (byte orders, varints), `unicode/utf8`,
+`unicode` (case mapping, `IsSpace`), `strings`, `bytes` and `strconv` (no
+floats) are curated Go 1.22.0 source embedded in the compiler
+(`internal/compiler/_stdlib/`, Go's LICENSE, `PROVENANCE.json` with file
+hashes) and compiled with the program; left-out symbols are reported by name
+with the reason. Changes from Go are marked `goSVM:` in the source: `errors.As`
+is generic over `*T` (no reflection); `Is`/`As` walk `Unwrap() []error` trees
+with explicit stacks; the recursive `Error` methods of `joinError`/`NumError`
+go through `internal/errtext` and a restricted dispatch (`MethodSlot.Except*`);
+three intrinsics (`Function.Intrinsic`: comparable, unsafeString, noescape).
+Added language features: variadic declared functions and methods (Check
+rewrites calls to pass a slice) and pointers to pointers (sound borrow rule
+for `&p`). **Found: a latent SBF miscompilation** — clang passes C struct
+parameters `byval` and the SBF backend does not copy them, so a function that
+writes a string/slice/struct parameter and passes it on can corrupt its
+caller; fixed for overlay code only (copy at entry, `byval.go`); applying it to
+program code changes 64 corpus C hashes and the full-swap ELFs, so it needs a
+user decision (`byvalCopiesProgramCode`). Evidence:
+[results](results/compiler/2026-10-14-stdlib/README.md) (30,906 host vectors,
+306 SBF cases on both targets, CU probes, real-stdlib shakeout rerun);
+full-swap ELFs unchanged.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

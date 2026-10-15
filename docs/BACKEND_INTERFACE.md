@@ -51,7 +51,7 @@ Every field is documented in `check.go`. In summary:
 | `Program` | The input, including `Libraries` and `SDK` |
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
-| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, its `Borrows`, and the locals it moves to the heap (`HeapVars`, `HeapLiterals`); a generic declaration is replaced by its instances (`Instance` set), each with its own `Borrows` and heap moves |
+| `Functions` | Every function and method in declaration order, each with `Decl`, direct program `Callees`, a `Library` binding if the body is native, an `Intrinsic` name for the standard library's intrinsics ([standard library](#standard-library-packages)), its `Borrows`, and the locals it moves to the heap (`HeapVars`, `HeapLiterals`); a generic declaration is replaced by its instances (`Instance` set), each with its own `Borrows` and heap moves |
 | `CallOrder` | The same functions, callees before callers (acyclic); the possible targets of a dynamic call, or of a call through a function value, come before its caller |
 | `Libraries` | Pure native library bindings in the graph |
 | `Instances`, `TypeInstances`, `Instantiated` | Generic instantiations ([generics](#generics)); empty without generics |
@@ -500,6 +500,65 @@ traps. The built-in backend emits the panic runtime (`gosvm_panic`,
 unchanged; arrays of composite elements are tagged C structs defined after
 their element types, and arrays of the earlier element kinds keep their
 earlier C.
+
+## Standard-library packages
+
+The standard-library packages of [GO_STDLIB.md](GO_STDLIB.md) are ordinary
+packages of the typed program: `Packages` has them by their import paths
+(`errors`, `strings`, ..., and the overlay's `internal/bytealg` and
+`internal/errtext`), `Files` has their sources (positions in
+`gosvm-stdlib/go1.22.0/<path>/<file>.go`), and their functions are in
+`Functions` and `CallOrder` like user code. `compiler.ProgramStdlib` lists the
+ones a program reaches and `compiler.StdlibIdentity` hashes them. A backend
+lowers them like user code, plus:
+
+- **Intrinsics.** A function with `Intrinsic` set has a Go body that is
+  checked but replaced: `"comparable"` (`func(x any) bool`: whether x's
+  dynamic type is comparable, `DynamicType.Comparable`; the program's
+  uncomparable dynamic types are false), `"unsafeString"` (`func(b []byte)
+  string`: a string sharing b's bytes, with no allocation) and `"noescape"`
+  (`func(p *T) *T`: returns p; its Go body returns nil so that Check's borrow
+  summary refers to no storage, which is what the overlay relies on: the
+  result is only compared).
+- **Restricted dispatch.** A `MethodSlot` with `ExceptImplementers` set (an
+  interface type) never runs the methods of the dynamic types implementing
+  it; `Except` lists them, and they do not fill the slot. Its dispatcher
+  aborts for them as for a nil interface (they never reach it). `CallOrder`
+  and the recursion check use these restricted target sets, which is what
+  keeps `(*errors.joinError).Error` and `(*strconv.NumError).Error` acyclic.
+- **Directives** (`//gosvm:intrinsic`, `//gosvm:dispatch-except`) are honoured
+  only in overlay files; a backend reads the resulting fields, not comments.
+
+## Variadic functions
+
+Declared variadic functions and methods ([GO_FUNCTIONS.md](GO_FUNCTIONS.md#variadic-functions))
+reach a backend with every call already passing the final parameter as a
+slice: Check rewrites, in place in the checked syntax (`Files` and the lowered
+files), each call that does not end in `...` into one that does, with a
+synthetic `*ast.CompositeLit` of the parameter's slice type (no `Type`
+expression; `Info.Types` has its type) holding the extra arguments, or a
+synthetic `nil` identifier (`Info.Uses` is the universe `nil`) when there are
+none, and `Ellipsis` set. The literal is an ordinary slice literal for
+interface conversions, escape analysis (`HeapLiterals` never lists it: slice
+literals are always heap) and emission. Calls into `gosvm/solana` are not
+rewritten.
+
+## Pointers to pointers
+
+`*types.Pointer` values whose element is a pointer
+([GO_POINTERS.md](GO_POINTERS.md#pointers-to-pointers)) need no new field. In
+the borrow analysis a pointer variable whose address is taken is treated
+like heap storage (references assigned to it are stores into heap data;
+reading it yields heap or SDK storage), so `Function.HeapVars` and
+`BorrowSummary.Escapes` already account for references reached through a
+`**T`.
+
+**C struct parameters.** The built-in backend copies, in overlay functions,
+every aggregate parameter (string, slice, interface, struct, array) the body
+writes into a local at entry, because the SBF backend does not copy `byval`
+C parameters ([GO_STDLIB.md](GO_STDLIB.md#aggregate-parameters-on-sbf)). This
+is a C/LLVM matter; a backend that passes aggregates by value correctly needs
+nothing.
 
 ## `project.LoadSchema`
 

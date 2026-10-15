@@ -251,6 +251,8 @@ func stdlibUnavailable(pkg, name string) string {
 	switch {
 	case floatSymbol(pkg, name):
 		reason = "floats are not supported on chain"
+	case reason == "" && pkg == "unicode":
+		reason = "goSVM's on-chain unicode has only the case mappings, SimpleFold and IsSpace, not the property tables"
 	case reason == "":
 		reason = "goSVM's on-chain " + pkg + " does not include it"
 	}

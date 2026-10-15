@@ -15,9 +15,10 @@ slice elements can be addressed. `&T{...}` creates local storage; its reference
 obeys the same lifetime analysis as a local variable and moves to the heap if it
 escapes. `new(T)` allocates on the heap. Pointer and slice struct fields and
 pointer-element slices are supported and hold only heap or SDK storage
-([allocation](GO_ALLOCATION.md#escape-rules)). Pointer-element arrays,
-pointers-to-pointers, pointers-to-slices, named pointer types and pointers to the
-opaque SDK Context are rejected.
+([allocation](GO_ALLOCATION.md#escape-rules)). Pointers to pointers are
+supported ([below](#pointers-to-pointers)); pointers-to-slices, pointers to
+function values, named pointer types and pointers to the opaque SDK Context are
+rejected.
 
 Direct calls support value receivers, pointer receivers, Go's implicit addressing
 of addressable values, implicit dereferencing for value receivers, and explicit
@@ -49,6 +50,22 @@ by-value struct/array semantics. Increment/decrement now also accepts supported
 fields, dereferences and indexed elements, evaluating the target operands once.
 Compound assignment works on the same targets
 ([integers](GO_INTEGERS.md#compound-assignment)).
+
+## Pointers to pointers
+
+`**T` (and deeper) values work as in Go: `pp := &p`, `**pp = v`, `*pp = &x`,
+`new(*T)`, parameters and results, as fields and elements. They were added
+for the standard library's `errors.As(err, &target)` with a pointer-typed
+`target` ([standard library](GO_STDLIB.md#errors)).
+
+The borrow analysis keeps them sound with one rule: a pointer variable whose
+address is taken (`&p`) is treated like heap storage, because code can
+store into it through the `**T`. Every reference assigned to it is stored
+(a local moves to the heap; a parameter becomes the caller's obligation,
+`BorrowSummary.Escapes`), and reading it yields heap or SDK storage, as
+reading a pointer field does. A reference stored through a `**T` (`*pp =
+&x`) is a store into heap data, as any store through a pointer. Pointers to
+slices stay rejected.
 
 ## Borrowed lifetimes
 

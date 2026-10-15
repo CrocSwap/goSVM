@@ -56,7 +56,7 @@ func TestStdlibRejections(t *testing.T) {
 		"strings title": {"package p\nimport \"strings\"\nfunc Process(s, i []byte) uint64 { return uint64(len(strings.Title(string(s)))) }\n",
 			"p.go:3:62: strings.Title is not available on chain: it needs Unicode letter and digit tables (and is deprecated) (docs/GO_STDLIB.md)"},
 		"unicode table": {"package p\nimport \"unicode\"\nfunc Process(s, i []byte) uint64 { if unicode.IsUpper(rune(s[0])) { return 1 }; return 0 }\n",
-			"p.go:3:47: unicode.IsUpper is not available on chain: goSVM's on-chain unicode does not include it (docs/GO_STDLIB.md)"},
+			"p.go:3:47: unicode.IsUpper is not available on chain: goSVM's on-chain unicode has only the case mappings, SimpleFold and IsSpace, not the property tables (docs/GO_STDLIB.md)"},
 		"errors as any target": {"package p\nimport \"errors\"\nfunc Process(s, i []byte) uint64 { var t any; if errors.As(nil, t) { return 1 }; return 0 }\n",
 			"p.go:3:50: errors.As on chain needs a target of static pointer type, as in errors.As(err, &target): goSVM has no reflection to find the type of an any target (docs/GO_STDLIB.md#errors); cannot infer T (gosvm-stdlib/go1.22.0/errors/wrap.go:117:9)"},
 		"errors join value": {"package p\nimport \"errors\"\nfunc Process(s, i []byte) uint64 { f := errors.Join; _ = f; return 0 }\n",

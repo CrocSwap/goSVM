@@ -524,11 +524,22 @@ The budget is 32 KiB by default and up to 256 KiB with `heap_bytes` (clients the
 send `RequestHeapFrame`); running out aborts. See
 [allocation semantics and SBF evidence](../docs/GO_ALLOCATION.md).
 
-`import "math/bits"` is available on-chain, the one standard-library exception:
+`import "math/bits"` is available on-chain as a compiler intrinsic:
 the 64- and 32-bit and `uint` carry, multiply and divide functions and the 64-,
 32-, 16-, 8-bit and `uint` count, reverse and rotate functions, with Go's exact
 results and its divide panics as aborts. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
+
+`errors`, `strings`, `bytes`, `strconv` (all but floats), `encoding/binary`
+(byte orders and varints), `unicode/utf8`, `unicode` (case mapping, `IsSpace`)
+and `math` (integer limits) are available on-chain too: curated Go 1.22.0
+source embedded in the compiler (`internal/compiler/_stdlib/`, with provenance
+hashes) and compiled with the program; symbols left out (floats, reflection,
+`io`) are reported by name. `errors.As` takes a `*T` target, and the overlay
+needed [variadic functions](../docs/GO_FUNCTIONS.md#variadic-functions) and
+[pointers to pointers](../docs/GO_POINTERS.md#pointers-to-pointers), which
+user code can use too. See
+[standard-library packages, provenance, deviations and costs](../docs/GO_STDLIB.md).
 
 Generics are monomorphized: generic functions, generic structs and named arrays
 with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`),
@@ -604,9 +615,9 @@ constant initializers are read-only data and cost nothing. See
 and the [fixture](../examples/global-values/program.go), checked against a
 fresh native process per vector on the host and on SBF.
 
-Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
+Unsupported: standard-library imports other than those above, dot/blank imports, workspaces, `uintptr`,
 floating-point and complex types, named slices, map iteration,
-method values of interface types, recursion (including through dynamic calls and function values), variadics,
+method values of interface types, recursion (including through dynamic calls and function values), variadic function values and literals,
 range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,
 uncomparable interface comparison, nil interface call, nil function call, nil-map write and unhashable map key failures abort, and so does `panic` (after logging one line); there is no recovery (deferred calls do not run on a trap) or stack growth. LLVM/VM stack limits

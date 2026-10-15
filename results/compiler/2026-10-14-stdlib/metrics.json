@@ -1,0 +1,388 @@
+{
+  "schema": 1,
+  "date": "2026-10-15",
+  "network_validation": false,
+  "branch": "worktree-agent-a4919db3f7fd1c8b4",
+  "merged_main": "48fb51f",
+  "go_stdlib_version": "go1.22.0",
+  "platform_tools": "v1.57",
+  "runners": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0)"
+  },
+  "heap_bytes": 32768,
+  "host_differential": {
+    "test": "TestStdlibDifferential",
+    "vectors": 30906,
+    "go_panics": 4048
+  },
+  "sbf": {
+    "fogo-v0": {
+      "elf_sha256": "d3e556822b66342fb2ba0d25b1fc748b498c6eae1b2d9ff8352fece251167218",
+      "cases": 306,
+      "aborts_with_rollback": 49,
+      "panic_lines_checked": 31,
+      "median_vector_cu": 4555,
+      "max_vector_cu": 45081,
+      "empty_program_cu": 85,
+      "probes": {
+        "binary.BigEndian.Uint64": {
+          "call_cu": 3,
+          "init_cu": 15,
+          "imports": "\"encoding/binary\""
+        },
+        "binary.LittleEndian.PutUint64": {
+          "call_cu": 2,
+          "init_cu": 2,
+          "imports": "\"encoding/binary\""
+        },
+        "binary.Uvarint(3 bytes)": {
+          "call_cu": 25,
+          "init_cu": 5,
+          "imports": "\"encoding/binary\""
+        },
+        "bytes.Equal(32 bytes)": {
+          "call_cu": 2,
+          "init_cu": 1,
+          "imports": "\"bytes\""
+        },
+        "bytes.Index(32 bytes)": {
+          "call_cu": 260,
+          "init_cu": 14,
+          "imports": "\"bytes\""
+        },
+        "errors.As(depth 3)": {
+          "call_cu": 56,
+          "init_cu": 71,
+          "imports": "\"errors\""
+        },
+        "errors.Is(depth 1)": {
+          "call_cu": 22,
+          "init_cu": 70,
+          "imports": "\"errors\""
+        },
+        "errors.Is(depth 3)": {
+          "call_cu": 89,
+          "init_cu": 70,
+          "imports": "\"errors\""
+        },
+        "strconv.AppendUint(20 digits)": {
+          "call_cu": 430,
+          "init_cu": 71,
+          "imports": "\"strconv\""
+        },
+        "strconv.Atoi(syntax error)": {
+          "call_cu": 2843,
+          "init_cu": 83,
+          "imports": "\"strconv\""
+        },
+        "strconv.FormatUint(20 digits)": {
+          "call_cu": 423,
+          "init_cu": 70,
+          "imports": "\"strconv\""
+        },
+        "strconv.Itoa(2 digits)": {
+          "call_cu": 7,
+          "init_cu": 70,
+          "imports": "\"strconv\""
+        },
+        "strconv.ParseUint(20 digits)": {
+          "call_cu": 480,
+          "init_cu": 83,
+          "imports": "\"strconv\""
+        },
+        "strconv.ParseUint(8 digits)": {
+          "call_cu": 123,
+          "init_cu": 75,
+          "imports": "\"strconv\""
+        },
+        "strconv.Quote(12 bytes)": {
+          "call_cu": 993,
+          "init_cu": 84,
+          "imports": "\"strconv\""
+        },
+        "strings.Builder(4 writes)": {
+          "call_cu": 388,
+          "init_cu": 14,
+          "imports": "\"strings\""
+        },
+        "strings.EqualFold(non-ASCII)": {
+          "call_cu": 544,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "strings.Index(32 bytes)": {
+          "call_cu": 511,
+          "init_cu": 14,
+          "imports": "\"strings\""
+        },
+        "strings.Split(4 fields)": {
+          "call_cu": 332,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "strings.ToUpper(12 ASCII bytes)": {
+          "call_cu": 811,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "unicode.ToUpper(non-ASCII)": {
+          "call_cu": 116,
+          "init_cu": 14,
+          "imports": "\"unicode\""
+        },
+        "utf8.DecodeRuneInString": {
+          "call_cu": 56,
+          "init_cu": 4,
+          "imports": "\"unicode/utf8\""
+        },
+        "utf8.RuneCount(64 bytes)": {
+          "call_cu": 742,
+          "init_cu": 19,
+          "imports": "\"unicode/utf8\""
+        }
+      }
+    },
+    "solana-v3": {
+      "elf_sha256": "4f6a4430e461834a508c163b1c5fb9a2e47d1a559d8cc01f05d5a52611df185b",
+      "cases": 306,
+      "aborts_with_rollback": 49,
+      "panic_lines_checked": 31,
+      "median_vector_cu": 4389,
+      "max_vector_cu": 44948,
+      "empty_program_cu": 85,
+      "probes": {
+        "binary.BigEndian.Uint64": {
+          "call_cu": 3,
+          "init_cu": 15,
+          "imports": "\"encoding/binary\""
+        },
+        "binary.LittleEndian.PutUint64": {
+          "call_cu": 2,
+          "init_cu": 2,
+          "imports": "\"encoding/binary\""
+        },
+        "binary.Uvarint(3 bytes)": {
+          "call_cu": 25,
+          "init_cu": 5,
+          "imports": "\"encoding/binary\""
+        },
+        "bytes.Equal(32 bytes)": {
+          "call_cu": 2,
+          "init_cu": 1,
+          "imports": "\"bytes\""
+        },
+        "bytes.Index(32 bytes)": {
+          "call_cu": 260,
+          "init_cu": 14,
+          "imports": "\"bytes\""
+        },
+        "errors.As(depth 3)": {
+          "call_cu": 56,
+          "init_cu": 71,
+          "imports": "\"errors\""
+        },
+        "errors.Is(depth 1)": {
+          "call_cu": 22,
+          "init_cu": 70,
+          "imports": "\"errors\""
+        },
+        "errors.Is(depth 3)": {
+          "call_cu": 89,
+          "init_cu": 70,
+          "imports": "\"errors\""
+        },
+        "strconv.AppendUint(20 digits)": {
+          "call_cu": 414,
+          "init_cu": 71,
+          "imports": "\"strconv\""
+        },
+        "strconv.Atoi(syntax error)": {
+          "call_cu": 2257,
+          "init_cu": 83,
+          "imports": "\"strconv\""
+        },
+        "strconv.FormatUint(20 digits)": {
+          "call_cu": 423,
+          "init_cu": 70,
+          "imports": "\"strconv\""
+        },
+        "strconv.Itoa(2 digits)": {
+          "call_cu": 7,
+          "init_cu": 70,
+          "imports": "\"strconv\""
+        },
+        "strconv.ParseUint(20 digits)": {
+          "call_cu": 480,
+          "init_cu": 83,
+          "imports": "\"strconv\""
+        },
+        "strconv.ParseUint(8 digits)": {
+          "call_cu": 123,
+          "init_cu": 75,
+          "imports": "\"strconv\""
+        },
+        "strconv.Quote(12 bytes)": {
+          "call_cu": 861,
+          "init_cu": 83,
+          "imports": "\"strconv\""
+        },
+        "strings.Builder(4 writes)": {
+          "call_cu": 388,
+          "init_cu": 14,
+          "imports": "\"strings\""
+        },
+        "strings.EqualFold(non-ASCII)": {
+          "call_cu": 543,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "strings.Index(32 bytes)": {
+          "call_cu": 511,
+          "init_cu": 14,
+          "imports": "\"strings\""
+        },
+        "strings.Split(4 fields)": {
+          "call_cu": 332,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "strings.ToUpper(12 ASCII bytes)": {
+          "call_cu": 811,
+          "init_cu": 1,
+          "imports": "\"strings\""
+        },
+        "unicode.ToUpper(non-ASCII)": {
+          "call_cu": 116,
+          "init_cu": 14,
+          "imports": "\"unicode\""
+        },
+        "utf8.DecodeRuneInString": {
+          "call_cu": 56,
+          "init_cu": 4,
+          "imports": "\"unicode/utf8\""
+        },
+        "utf8.RuneCount(64 bytes)": {
+          "call_cu": 742,
+          "init_cu": 19,
+          "imports": "\"unicode/utf8\""
+        }
+      }
+    }
+  },
+  "rebuild": {
+    "full-swap": {
+      "fogo-v0": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0",
+      "solana-v3": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"
+    },
+    "clock2": {
+      "fogo-v0": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804",
+      "solana-v3": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5"
+    },
+    "matches_reference": true
+  },
+  "shakeout_pass1_real_stdlib": {
+    "main_48fb51f": {
+      "removals": 255,
+      "functions": {
+        "uint256": {
+          "before": 155,
+          "after": 83
+        },
+        "int256": {
+          "before": 71,
+          "after": 51
+        },
+        "uint128": {
+          "before": 50,
+          "after": 42
+        },
+        "utils": {
+          "before": 40,
+          "after": 14
+        }
+      },
+      "groups": [
+        {
+          "count": 212,
+          "pattern": "cascade"
+        },
+        {
+          "count": 38,
+          "pattern": "resolve import …: standard library and non-module imports unsupported (…"
+        },
+        {
+          "count": 2,
+          "pattern": "elided &T{...} literals require a struct type; write &T{...}"
+        },
+        {
+          "count": 1,
+          "pattern": "resolve import …: offline go list: cannot find module providing package …/daoleno/uniswap-sdk-core/entities: i"
+        },
+        {
+          "count": 1,
+          "pattern": "resolve import …: offline go list: cannot find module providing package …/ethereum/go-ethereum/common: import "
+        },
+        {
+          "count": 1,
+          "pattern": "array storage exceeds experimental …-byte per-value limit"
+        }
+      ]
+    },
+    "this_branch": {
+      "removals": 96,
+      "functions": {
+        "uint256": {
+          "before": 155,
+          "after": 134
+        },
+        "int256": {
+          "before": 71,
+          "after": 60
+        },
+        "uint128": {
+          "before": 50,
+          "after": 46
+        },
+        "utils": {
+          "before": 40,
+          "after": 31
+        }
+      },
+      "groups": [
+        {
+          "count": 71,
+          "pattern": "cascade"
+        },
+        {
+          "count": 18,
+          "pattern": "unsupported import …; standard-library packages on chain: bytes, encoding/binary, errors, math, strconv, strin"
+        },
+        {
+          "count": 2,
+          "pattern": "elided &T{...} literals require a struct type; write &T{...}"
+        },
+        {
+          "count": 1,
+          "pattern": "resolve import …: offline go list: cannot find module providing package …/daoleno/uniswap-sdk-core/entities: i"
+        },
+        {
+          "count": 1,
+          "pattern": "resolve import …: offline go list: cannot find module providing package …/ethereum/go-ethereum/common: import "
+        },
+        {
+          "count": 1,
+          "pattern": "… is not available on chain: floats are not supported on chain (docs/…"
+        },
+        {
+          "count": 1,
+          "pattern": "…64frombits is not available on chain: floats are not supported on chain (docs/…"
+        },
+        {
+          "count": 1,
+          "pattern": "array storage exceeds experimental …-byte per-value limit"
+        }
+      ]
+    }
+  }
+}
