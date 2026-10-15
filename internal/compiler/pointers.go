@@ -555,6 +555,11 @@ func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet
 	if obj == nil || obj.Name() == "_" || !memoryValue(obj.Type()) {
 		return
 	}
+	if isPackageVar(obj) {
+		// Package-level storage outlives every scope, like heap data.
+		a.store(value)
+		return
+	}
 	if a.captured[obj] || a.litResults[obj] {
 		// Heap storage: the reference is stored, and reading it back
 		// yields heap or SDK storage.
@@ -584,6 +589,11 @@ func (a *borrowAnalysis) assign(node ast.Node, obj types.Object, value borrowSet
 	}
 }
 func (a *borrowAnalysis) address(e ast.Expr) borrowSet {
+	if a.f.packageVar(e) != nil {
+		// The globals block is invocation storage on the heap
+		// (docs/GO_GLOBALS.md).
+		return borrowSet{heapRoot: true}
+	}
 	switch e := e.(type) {
 	case *ast.ParenExpr:
 		return a.address(e.X)
@@ -617,6 +627,12 @@ func (a *borrowAnalysis) expr(e ast.Expr) borrowSet {
 	case *ast.ParenExpr:
 		return a.expr(e.X)
 	case *ast.Ident:
+		if o := a.f.info.Uses[e]; isPackageVar(o) {
+			if memoryValue(o.Type()) {
+				return a.loaded() // stored like heap data: heap or SDK storage
+			}
+			return borrowSet{}
+		}
 		return a.vars[a.f.info.Uses[e]]
 	case *ast.UnaryExpr:
 		if e.Op == token.AND {

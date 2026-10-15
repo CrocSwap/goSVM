@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "date": "2026-10-14",
+  "network_validation": false,
+  "base_commit": "764e4a9",
+  "branch": "worktree-agent-a4d54a33b60ae5969",
+  "platform_tools": "v1.57",
+  "runners": {
+    "fogo-v0": "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2)",
+    "solana-v3": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0)"
+  },
+  "heap_bytes": 32768,
+  "compute_unit_limit": 1400000,
+  "example": {
+    "packages": 5,
+    "named_variables": 63,
+    "readonly_variables": 11,
+    "global_heap_bytes": 616,
+    "init_functions": 7
+  },
+  "host_differential": {
+    "test": "TestGlobalsDifferential",
+    "vectors": 2042,
+    "go_panics": 600,
+    "panics_by_mode": {
+      "2": 203,
+      "3": 228,
+      "4": 105,
+      "5": 64
+    },
+    "native": "one oracle process per vector",
+    "heap_bytes": 32768
+  },
+  "sbf": {
+    "fogo-v0": {
+      "elf_sha256": "f48ad1ebf7c90078c5f2e81e4f9cf243e5a8b95bb222ab15195935bcd9f98106",
+      "cases": 242,
+      "aborts_with_rollback": 65,
+      "idle_invocation_cu": 2264,
+      "global_values_init_cu": 2179,
+      "max_vector_cu": 43429,
+      "probes": {
+        "baseline": {
+          "cu": 85,
+          "init_cu": 0,
+          "elf_sha256": "3b289879dd404979cbbd0276bd12aa25039f60b5edc78120a9b9cfd1b4dc26ba"
+        },
+        "init-table": {
+          "cu": 485,
+          "init_cu": 400,
+          "elf_sha256": "a5f169a7e70796b4d9159f218b724e435f305470a414fc66b70d8ed5c8497b88"
+        },
+        "map-literal": {
+          "cu": 527,
+          "init_cu": 442,
+          "elf_sha256": "711a639d53b2b00ec9bbbe81aa28430d9e01876707c445ddc9649bc7e23ac4f3"
+        },
+        "one-counter": {
+          "cu": 101,
+          "init_cu": 16,
+          "elf_sha256": "207b5be8dcb16c7e8329c403cc57b9bdea14c6cf56b41e496b49487ce0697446"
+        },
+        "readonly-tables": {
+          "cu": 85,
+          "init_cu": 0,
+          "elf_sha256": "98e88978b606d16202e973a6a9aada3848f55211dd62f05a09a51d5596c1de20"
+        },
+        "sentinel-errors": {
+          "cu": 161,
+          "init_cu": 76,
+          "elf_sha256": "9d603d78bff097d5f5db62df6d74f74b0de00c90ae11a3d12e01d8a0bd067d2d"
+        },
+        "zero-block": {
+          "cu": 99,
+          "init_cu": 14,
+          "elf_sha256": "873e757faff4069fbad9011a956fc86c9a29a205fdd507358cd9b65a8b0847f3"
+        }
+      }
+    },
+    "solana-v3": {
+      "elf_sha256": "764a2ec6a6a897c674624bfeece898b5c710b7669940f932debaa0b691d1cd30",
+      "cases": 242,
+      "aborts_with_rollback": 65,
+      "idle_invocation_cu": 2268,
+      "global_values_init_cu": 2183,
+      "max_vector_cu": 43433,
+      "probes": {
+        "baseline": {
+          "cu": 85,
+          "init_cu": 0,
+          "elf_sha256": "6a3ab20175ddc06cde5312e2b78f0330af1197bff7b52bf1f882c00e0561482e"
+        },
+        "init-table": {
+          "cu": 485,
+          "init_cu": 400,
+          "elf_sha256": "6a32caf656088cc426591e436b490a07664bf456f5e0bf33f5a8c269bd4af4c7"
+        },
+        "map-literal": {
+          "cu": 527,
+          "init_cu": 442,
+          "elf_sha256": "7e189d0735f0ad9e7c1e6638005507ceaf7f8b3f42f9d9ba6a9e2a4bd69606e0"
+        },
+        "one-counter": {
+          "cu": 101,
+          "init_cu": 16,
+          "elf_sha256": "ce91378db12ec2a8e2e5ced4a83cf164bb601a611df2c9d07888fda29b29b108"
+        },
+        "readonly-tables": {
+          "cu": 85,
+          "init_cu": 0,
+          "elf_sha256": "39a034f8fba1079141e79192df925b08954ddda147b0843a385f75300167d3ad"
+        },
+        "sentinel-errors": {
+          "cu": 161,
+          "init_cu": 76,
+          "elf_sha256": "0be9aadf2bd2055ca372ae1cfd96513fd7768d295f489203346de3dde72fe619"
+        },
+        "zero-block": {
+          "cu": 99,
+          "init_cu": 14,
+          "elf_sha256": "bc956275941be47b38e901a22790591c2e208a3afe95a954d2faecfbb6299772"
+        }
+      }
+    }
+  },
+  "rebuild": {
+    "script": "scripts/verify_rebuild.py",
+    "reference": "results/compiler/2026-10-14-v157-rebuild/metrics.json",
+    "passed": true,
+    "results": [
+      {
+        "target": "fogo-v0",
+        "workload": "full-swap",
+        "identical": true,
+        "elf_sha256": "4697a9f572a0609da6a2063d6e323e1dfa1f1f77f2fe373abffcf64078cfcfc0"
+      },
+      {
+        "target": "fogo-v0",
+        "workload": "clock2",
+        "identical": true,
+        "elf_sha256": "0f768370b8f8dd080eacee738fbf87c95fcda6ddf8532246b3f36ea8ad9c3804"
+      },
+      {
+        "target": "solana-v3",
+        "workload": "full-swap",
+        "identical": true,
+        "elf_sha256": "2b5f21d964375b2645d6071c53f0b63af6a7dbe2cd8ee32a63f9c5976c6cba9e"
+      },
+      {
+        "target": "solana-v3",
+        "workload": "clock2",
+        "identical": true,
+        "elf_sha256": "54f34b65e934efa720f9755179e03e8b0edc6abeb8039f2788a03dbeedce66e5"
+      }
+    ]
+  },
+  "library_shakeout_pass2": {
+    "removals_before": 252,
+    "removals_after": 185,
+    "package_scope_rejections_before": 9,
+    "package_scope_rejections_after": 0,
+    "declarations_no_longer_removed": 56
+  }
+}

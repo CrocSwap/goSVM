@@ -586,8 +586,19 @@ types take and return maps, and deferred calls change maps
 ([combined fixture](../examples/func-maps/program.go), checked against
 ordinary Go on the host and on SBF).
 
+Package-level variables and `init` functions have Go's semantics in every
+package: zero values, Go's initialization order (go/types dependency order,
+imported packages first in Go 1.21's package order, `init` functions in file
+and source order), on every invocation before `Process` (each SBF invocation
+is a fresh process). Writable variables live in a block that is the
+invocation heap's first allocation; variables that never change and have
+constant initializers are read-only data and cost nothing. See
+[package-level variable semantics, storage, cost and SBF evidence](../docs/GO_GLOBALS.md)
+and the [fixture](../examples/global-values/program.go), checked against a
+fresh native process per vector on the host and on SBF.
+
 Unsupported: on-chain standard-library/dot/blank imports, workspaces, `uintptr`,
-floating-point and complex types, globals, `init`, named slices, map iteration,
+floating-point and complex types, named slices, map iteration,
 method values of interface types, recursion (including through dynamic calls and function values), variadics,
 range over maps/channels/functions, labeled branches, `fallthrough`, `recover`, goroutines and channels. Runtime bounds,
 division, negative-shift, `make` range, out-of-memory, failed type assertion,

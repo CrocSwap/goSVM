@@ -387,8 +387,10 @@ func (b *funcBuilder) call(n *ast.CallExpr) {
 	case *ast.SelectorExpr:
 		if id, ok := e.X.(*ast.Ident); ok {
 			if _, ok := b.info.Uses[id].(*types.PkgName); ok {
-				b.direct[fun], b.direct[e] = true, true
-				return
+				if _, isVar := b.info.Uses[e.Sel].(*types.Var); !isVar { // pkg.V is a function value
+					b.direct[fun], b.direct[e] = true, true
+					return
+				}
 			}
 		}
 	}

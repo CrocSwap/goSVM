@@ -75,8 +75,8 @@ func TestImportedSDKAndEntryIdentity(t *testing.T) {
 }
 func TestImportedPackageRejections(t *testing.T) {
 	for name, source := range map[string]string{
-		"globals":                        `var N uint64=1;func F()uint64{return N}`,
-		"init":                           `func init(){};func F()uint64{return 1}`,
+		"float global":                   `var N float64=1;func F()uint64{return 1}`,
+		"unsupported init":               `func init(){go g()};func g(){};func F()uint64{return 1}`,
 		"unsupported unreachable helper": `func unused(){defer unused()};func F()uint64{return 1}`,
 		"cross-package recursion":        `import "app";func F()uint64{return app.Process(nil,nil)}`,
 		"direct recursion":               `func F()uint64{return F()}`,

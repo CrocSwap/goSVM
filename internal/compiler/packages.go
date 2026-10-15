@@ -348,12 +348,17 @@ func internalImportAllowed(from, to string) bool {
 // programImporter shares one type universe and one Info map across all packages,
 // preserving named-type identity rather than flattening import names into text.
 type programImporter struct {
-	f         *frontend
-	units     map[string]PackageSources
-	checked   map[string]*types.Package
-	active    map[string]bool
-	files     []*ast.File
-	decls     []ast.Decl
+	f       *frontend
+	units   map[string]PackageSources
+	checked map[string]*types.Package
+	active  map[string]bool
+	files   []*ast.File
+	decls   []ast.Decl
+	// filePaths[i] is the import path of files[i]'s package; initOrder is
+	// each user package's go/types variable initialization order
+	// (docs/GO_GLOBALS.md).
+	filePaths []string
+	initOrder map[string][]*types.Initializer
 	sdk       sdkImporter
 	hasSDK    bool
 	bits      *types.Package // math/bits declarations, once imported
@@ -418,9 +423,18 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		return nil, fmt.Errorf("%s: package %q is a program, not importable", p.f.fset.Position(files[0].Package), path)
 	}
 	p.checked[path], p.active[path] = pkg, false
+	// The shared Info's InitOrder is this package's until the next package
+	// finishes checking; keep a copy.
+	if len(p.f.info.InitOrder) > 0 {
+		if p.initOrder == nil {
+			p.initOrder = map[string][]*types.Initializer{}
+		}
+		p.initOrder[path] = append([]*types.Initializer(nil), p.f.info.InitOrder...)
+	}
 	p.files = append(p.files, files...)
 	for _, file := range files {
 		p.decls = append(p.decls, file.Decls...)
+		p.filePaths = append(p.filePaths, path)
 	}
 	return pkg, nil
 }

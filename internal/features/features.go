@@ -87,6 +87,11 @@ type Uses struct {
 	// Maps: any non-nil value of a map type, a map literal or make of a
 	// map. Added within gosvm-features-v1.
 	Maps bool `json:"maps"`
+	// Globals: package-level variables or init functions (added within
+	// gosvm-features-v1; docs/GO_GLOBALS.md). Every invocation initializes
+	// them before Process; writable ones live in the globals block, the
+	// invocation heap's first allocation (GlobalHeapBytes, from Check).
+	Globals bool `json:"globals"`
 	// Checked reports whether compiler.Check accepted the program; CheckError
 	// is its diagnostic otherwise. Both are set by ApplyCheck.
 	Checked    bool   `json:"checked"`
@@ -95,6 +100,12 @@ type Uses struct {
 	// literals Check moves to the heap (across all functions and instances).
 	HeapMovedLocals   int `json:"heap_moved_locals"`
 	HeapMovedLiterals int `json:"heap_moved_literals"`
+	// GlobalHeapBytes is the size of the globals block Check lays out for
+	// writable package-level variables (0 when none), and ReadOnlyGlobals
+	// the number of package-level variables Check placed in read-only data
+	// (added within gosvm-features-v1; docs/GO_GLOBALS.md).
+	GlobalHeapBytes int64 `json:"global_heap_bytes"`
+	ReadOnlyGlobals int   `json:"readonly_globals"`
 	// RecursionCheckInconclusive is set when a call through a function value
 	// has possible targets that Check could not resolve to a set whose call
 	// graph is acyclic, with the reasons in RecursionCheckReasons (added
@@ -119,7 +130,13 @@ func ApplyCheck(u *Usage, cp *compiler.CheckedProgram, err error) {
 		u.Uses.HeapMovedLocals += len(f.HeapVars)
 		u.Uses.HeapMovedLiterals += len(f.HeapLiterals)
 	}
-	if u.Uses.HeapMovedLocals+u.Uses.HeapMovedLiterals > 0 {
+	u.Uses.GlobalHeapBytes, u.Uses.ReadOnlyGlobals = cp.GlobalBytes, 0
+	for _, g := range cp.Globals {
+		if g.ReadOnly {
+			u.Uses.ReadOnlyGlobals++
+		}
+	}
+	if u.Uses.HeapMovedLocals+u.Uses.HeapMovedLiterals > 0 || cp.GlobalBytes > 0 {
 		u.Uses.Allocation = true
 	}
 }
@@ -154,6 +171,7 @@ func summarize(u *Usage) {
 	u.Uses.Closures = sum("function_literals")+sum("function_values")+sum("method_values")+sum("method_expressions")+sum("indirect_calls") > 0
 	u.Uses.Defer = sum("defer") > 0
 	u.Uses.Maps = sum("map_values")+sum("map_literals")+sum("map_makes") > 0
+	u.Uses.Globals = sum("package_vars")+sum("init_functions") > 0
 }
 
 // GenericUse is one generic function, method or type and its instantiations.
@@ -292,6 +310,10 @@ var ConstructNames = []string{
 	// single-value m[k] reads, v, ok := m[k] reads, m[k] as an assignment,
 	// ++/-- or += target, delete calls and clear calls on maps.
 	"map_values", "map_literals", "map_makes", "map_lookups", "map_comma_ok_lookups", "map_assignments", "map_deletes", "map_clears",
+	// Package-level variables (added within gosvm-features-v1): named or
+	// blank variables declared at package scope (also counted in var_decls)
+	// and init functions.
+	"package_vars", "init_functions",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -624,6 +646,19 @@ type walker struct {
 	arrays    map[string]*ArrayUse
 }
 
+// packageLevel reports whether v is declared at package scope, including a
+// blank variable (which go/types does not insert into any scope).
+func packageLevel(v *types.Var) bool {
+	if v.Pkg() == nil {
+		return false
+	}
+	if v.Parent() != nil {
+		return v.Parent() == v.Pkg().Scope()
+	}
+	inner := v.Pkg().Scope().Innermost(v.Pos())
+	return inner != nil && inner.Parent() == v.Pkg().Scope() // a file scope
+}
+
 func (w *walker) count(name string) {
 	if _, ok := w.side.Constructs[name]; !ok {
 		panic("features: unknown construct " + name)
@@ -809,6 +844,9 @@ func (w *walker) file(f *ast.File) {
 			}
 		case *ast.FuncDecl:
 			w.funcDecl(n)
+			if n.Recv == nil && n.Name.Name == "init" {
+				w.count("init_functions")
+			}
 			if n.Type.TypeParams != nil {
 				w.count("generic_functions")
 				w.typeParams(n.Type.TypeParams)
@@ -853,6 +891,9 @@ func (w *walker) file(f *ast.File) {
 					}
 				case *types.Var:
 					w.count("var_decls")
+					if packageLevel(obj) {
+						w.count("package_vars")
+					}
 				}
 			}
 			if len(n.Names) > 1 && len(n.Values) == 1 {

@@ -30,7 +30,7 @@ func TestFastGenerationFailureRemovesPreviousReport(t *testing.T) {
 	if e := os.WriteFile(report, []byte(`{"cases":[]}`), 0644); e != nil {
 		t.Fatal(e)
 	}
-	if e := os.WriteFile(filepath.Join(dir, "bad.go"), []byte("package program\nvar UnsupportedGlobal uint64\n"), 0644); e != nil {
+	if e := os.WriteFile(filepath.Join(dir, "bad.go"), []byte("package program\nvar UnsupportedFloat float64\n"), 0644); e != nil {
 		t.Fatal(e)
 	}
 	if e := projectCommand([]string{"test", "--svm", "-dir", dir}); e == nil {

@@ -126,6 +126,24 @@ type CheckedProgram struct {
 	// sorted by Key; MapType.Index is the position. Empty without maps.
 	Maps []*MapType
 
+	// Package-level variables and init functions (docs/GO_GLOBALS.md); all
+	// empty without them.
+	//
+	// Globals lists every named package-level variable, packages in Inits
+	// order (all packages in Go's package initialization order), then in
+	// declaration order. Writable variables live in the globals block, the
+	// invocation heap's first allocation, of GlobalBytes bytes (a C struct of
+	// the writable variables in Globals order, rounded up to 8; 0 when there
+	// is none). Read-only variables are constants in read-only data.
+	Globals     []*Global
+	GlobalBytes int64
+	// Inits lists, in Go's package initialization order (imports first,
+	// then by import path), each package with variable initialization code
+	// or init functions. Before Process runs, every invocation allocates the
+	// globals block, then runs each package's Vars initializer and then its
+	// init functions.
+	Inits []*PackageInit
+
 	// lowered is Files with generic declarations replaced by their instances.
 	lowered []*ast.File
 	ifaces  *ifaceProgram
@@ -136,6 +154,9 @@ type CheckedProgram struct {
 	maps *mapProgram
 	// usesEmpty reports that some checked value has type struct{}.
 	usesEmpty bool
+	// globals indexes Globals; nil without package-level variables or init
+	// functions.
+	globals *globalProgram
 }
 
 // Function is one checked function or method declaration.
@@ -164,6 +185,10 @@ type Function struct {
 	// literals). See docs/GO_ALLOCATION.md.
 	HeapVars     []*types.Var
 	HeapLiterals []*ast.CompositeLit
+	// PackageInit is set on a package's synthetic variable initializer
+	// (PackageInit.Vars); its Decl is synthetic and called only at
+	// initialization.
+	PackageInit *types.Package
 }
 
 // BorrowSummary is the borrow checker's result for one function. Results has
@@ -293,6 +318,14 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	gp.runInterfaces(importer.files)
 	f.instantiated = gp.instantiated
 	checked.lowered = gp.lowered(importer.files)
+	// Package-level variables: each package's initializers become one
+	// synthetic function in the lowered files, analyzed like any other.
+	checked.lowered = f.buildGlobals(importer, checked.lowered)
+	if f.globals != nil {
+		for _, vars := range f.globals.vars {
+			funcs[vars.Object] = vars
+		}
+	}
 	checked.Instances = gp.sortedInstances(importer.files)
 	checked.TypeInstances = gp.sortedTypeInstances()
 	checked.Instantiated = gp.instantiated
@@ -418,6 +451,14 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	}
 	c := &checker{frontend: f, externals: externals, emitted: map[types.Type]bool{}, gp: gp, typeInstances: checked.TypeInstances}
 	c.program(checked.lowered, lowered)
+	if f.globals != nil {
+		f.globalBudget(program.HeapBytes)
+		f.globals.finishInits(checked.Functions)
+		checked.globals = f.globals
+		checked.Globals = f.globals.globals
+		checked.GlobalBytes = f.globals.bytes
+		checked.Inits = f.globals.inits
+	}
 	checked.usesStrings = f.usesStrings
 	checked.usesEmpty = f.usesEmpty
 	if f.maps != nil {

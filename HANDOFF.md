@@ -38,6 +38,26 @@ only visible when the right side reassigns its own target's operands). Still
 out: floats, goroutines/channels/select, `recover`/`panic`, map iteration,
 `clear` on slices.
 
+**Package-level variables and `init` (October 14, branch
+`worktree-agent-a4d54a33b60ae5969`):** the library shakeout's largest
+blocker. [GO_GLOBALS](docs/GO_GLOBALS.md): Go's initialization order (go/types
+dependency order, imported packages first in Go 1.21's package order, `init`
+functions in file/source order), re-run on every invocation before `Process`
+(a generated `go_Process` wrapper); writable variables live in one block that
+is the invocation heap's first allocation (contracted in
+[ERROR_CONTRACT](docs/ERROR_CONTRACT.md#contracted-runtime-behaviour)); a sound
+syntactic analysis puts never-written variables with constant initializers in
+read-only data at zero CU. Go-exact choice: every initializer of every package
+runs (they can trap), so computed constants such as `MustFromHex(...)` cost CU
+on every invocation. Check lowers each package's initializers into a synthetic
+`init.vars` function (`CheckedProgram.Globals`, `GlobalBytes`, `Inits`), so
+borrow checking, escape analysis, closures and interfaces need no special
+cases. Deviation (spec-unspecified, as for locals): an operand variable is read
+before later calls in the same expression. Evidence: a five-package example
+against one fresh native process per vector (2,042 host vectors; 242 SBF cases
+on both targets), [results](results/compiler/2026-10-14-globals/README.md);
+full-swap ELFs unchanged; the nine recorded corpus rejections now compile.
+
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the
 [reply](docs/coordination/2026-10-14-qushta-reply.md). goSVM landed the agreed

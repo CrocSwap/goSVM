@@ -36,6 +36,9 @@ type frontend struct {
 	// usesEmpty is set when typeRule admits the unnamed empty struct type
 	// struct{}.
 	usesEmpty bool
+	// globals is the program's package-level variables (docs/GO_GLOBALS.md);
+	// nil without them.
+	globals *globalProgram
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {

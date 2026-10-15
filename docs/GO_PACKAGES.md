@@ -38,7 +38,8 @@ becomes the ABI entrypoint; a dependency can have its own `Process` function.
 
 The resolver asks installed Go for package/module metadata with `go list -find`.
 It does not compile or execute user code, run generators or execute package
-initialization. It supports same-module imports, local replacements and module
+initialization at build time; package initialization runs on chain, at the
+start of every invocation. It supports same-module imports, local replacements and module
 sources already available in the Go cache. Resolution is offline, using
 `GOPROXY=off`, `GOTOOLCHAIN=local` and read-only module mode. A private alternate
 mod/sum pair also prevents checksum bookkeeping from modifying the entry module.
@@ -53,8 +54,14 @@ rejected. `gosvm/solana` remains a reserved, pinned compiler intrinsic, includin
 when imported by helpers; user module replacements do not change SBF intrinsics.
 
 Every file/function in a reachable on-chain package must satisfy the compiler
-subset, including unused helpers. Globals, `init`, method/function values, recursion, interfaces and standard-library
-imports remain unsupported. Direct methods and constrained borrows follow the
+subset, including unused helpers. Package-level variables and `init`
+functions are supported in every package, with Go's initialization order
+(imported packages first, in Go 1.21's package order) on every invocation
+([package-level variables](GO_GLOBALS.md)); other packages' variables are read,
+written, addressed and called as `pkg.V`. Function values and interfaces are
+supported too ([function values](GO_FUNCTIONS.md),
+[interfaces](GO_INTERFACES.md)). Recursion and standard-library imports other
+than `math/bits` remain unsupported. Direct methods and constrained borrows follow the
 [pointer](GO_POINTERS.md) and [view](GO_VIEWS.md) rules.
 Other packages in the module are outside that graph: a native service can use
 HTTP, JSON, databases, goroutines and other normal Go features in its own code.

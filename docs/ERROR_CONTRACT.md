@@ -54,6 +54,10 @@ fails with no custom error code and the transaction rolls back.
   is not comparable, in any map operation (including lookups and deletes on
   nil and empty maps), where Go panics `hash of unhashable type`.
 
+A trap while package-level variables are initialized or an `init` function
+runs aborts the same way, before `Process` runs
+([package-level variables](GO_GLOBALS.md#traps)).
+
 A trap aborts without running pending deferred calls (there is no `recover`);
 the instruction's effects roll back, so this is indistinguishable on chain
 from Go's unwinding. This includes a deferred call that would have changed a
@@ -129,6 +133,14 @@ because fixtures compare them byte for byte:
   nothing and never shrinks the table. Converting a map to an interface
   allocates nothing. The full table is in
   [GO_MAPS.md](GO_MAPS.md#heap-accounting).
+  Package-level variables that are not read-only live in the globals block:
+  a C struct of those variables in `CheckedProgram.Globals` order (each at
+  its Go alignment), rounded up to 8 bytes (`GlobalBytes`). Every invocation
+  allocates it first, before any initializer runs, so it is always at the
+  heap start plus 8 and leaves `32,760 - GlobalBytes` bytes of the default
+  budget; read-only variables (`Global.ReadOnly`, decided by Check) take no
+  heap. Initializers and `init` functions then allocate like any other code
+  ([package-level variables](GO_GLOBALS.md#heap-accounting)).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
 
 ## Error codes
@@ -279,3 +291,11 @@ Handler results propagate unchanged.
   negative-shift, bounds, nil-pointer and nil-map-write traps of the
   equivalent `x = x op y`, after the right operand is evaluated
   ([integers](GO_INTEGERS.md#compound-assignment)).
+- 2026-10-14: addition (package-level variables and `init` functions), no
+  trap added and no existing behaviour changed: initializers and `init`
+  functions run on every invocation before `Process` and use the existing
+  traps (a trap there aborts before `Process`); the globals block is the
+  invocation heap's first allocation and is recorded under heap accounting
+  (programs without package-level variables allocate exactly as before); a
+  block larger than the heap budget is a Check error
+  ([package-level variables](GO_GLOBALS.md)).

@@ -96,6 +96,13 @@ func (c *checker) program(files []*ast.File, decls []ast.Decl) {
 			if d.Tok == token.IMPORT || d.Tok == token.TYPE {
 				continue
 			}
+			if d.Tok == token.VAR {
+				// Package-level variables (docs/GO_GLOBALS.md).
+				for _, spec := range d.Specs {
+					c.globalSpec(spec.(*ast.ValueSpec))
+				}
+				continue
+			}
 			if d.Tok != token.CONST {
 				c.fail(d, "only functions and constants are supported at package scope")
 			}
@@ -199,9 +206,6 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 }
 
 func (c *checker) signature(fn *ast.FuncDecl) {
-	if fn.Name.Name == "init" {
-		c.fail(fn, "init functions are unsupported")
-	}
 	if fn.Type.TypeParams != nil || fn.Body == nil {
 		c.fail(fn, "generics and bodyless functions are unsupported")
 	}
@@ -695,6 +699,10 @@ func (c *checker) exprValue(e ast.Expr) {
 			c.expr(elt)
 		}
 	case *ast.SelectorExpr:
+		if c.packageVar(e) != nil {
+			c.typeRule(e, tv.Type) // pkg.V
+			return
+		}
 		if sel := c.info.Selections[e]; sel != nil && sel.Kind() != types.FieldVal {
 			if isIface(c.info.Types[e.X].Type) || isIface(sel.Recv()) {
 				c.fail(e, ifaceMethodValueRule)
@@ -897,6 +905,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			return
 		}
 		o = c.callee(callee.Sel)
+		if _, ok := o.(*types.Var); ok {
+			c.indirectCall(e, tv) // a function-valued package-level variable
+			return
+		}
 	case *ast.Ident:
 		o = c.callee(callee)
 		builtinName = callee.Name
@@ -1074,6 +1086,9 @@ func (c *checker) fieldTarget(e ast.Expr) {
 		c.expr(e.X)
 		c.checkedPointer(e, c.info.Types[e.X].Type)
 	case *ast.SelectorExpr:
+		if c.packageVar(e) != nil {
+			return // pkg.V
+		}
 		if isContext(c.info.Types[e.X].Type) {
 			c.fail(e, "Context fields are opaque")
 		}

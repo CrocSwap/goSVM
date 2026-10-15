@@ -60,6 +60,7 @@ type generator struct {
 	defined        map[any]bool               // structs (by structID) whose definition was emitted
 	movedParams    map[*ast.FuncDecl][]types.Object
 	maps           *mapProgram // map types (CheckedProgram.Maps); nil without maps
+	initializes    bool        // the program has package initialization (globals.go)
 }
 
 // Source is a Go file in a single on-chain package.
@@ -118,6 +119,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 		g.funcs = program.funcs
 	}
 	g.maps = program.maps
+	g.globals = program.globals
+	g.initializes = program.initializes()
 	for _, inst := range program.Instances {
 		g.names[inst.Object] = inst.Symbol
 	}
@@ -157,7 +160,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	// So do string concatenations and conversions (docs/GO_STRINGS.md).
 	// Function values and defer records live there as well, and so do maps
 	// (docs/GO_MAPS.md).
-	hasHeap := usesAllocation(program) || g.ifaces.used || g.funcs.used || program.usesStrings && stringAllocates(g.info, files) || g.maps != nil
+	hasHeap := usesAllocation(program) || g.ifaces.used || g.funcs.used || program.usesStrings && stringAllocates(g.info, files) || g.maps != nil || program.GlobalBytes > 0
 	if hasHeap {
 		hasViews, hasPointers = true, true
 	}
@@ -353,6 +356,8 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 	for _, class := range g.funcs.classes {
 		g.emitResults(posNode(class.Site), class.Signature.Results())
 	}
+	// Package-level variables (docs/GO_GLOBALS.md); nothing without them.
+	g.emitGlobals(program)
 	for _, d := range decls {
 		if fn, ok := d.(*ast.FuncDecl); ok {
 			g.WriteString(g.signature(fn) + ";\n")
@@ -399,6 +404,7 @@ func emitC(program *CheckedProgram) (out []byte, err error) {
 			}
 		}
 	}
+	g.emitInit(program)
 	if program.EntryKind == EntryContext {
 		g.WriteString("\n#define GOSVM_CONTEXT_ENTRY 1\n")
 		g.WriteString(accountsABI)
@@ -425,6 +431,9 @@ func (g *generator) name(o types.Object) string {
 // rawName is the object's C identifier.
 func (g *generator) rawName(o types.Object) string {
 	if o == g.entry {
+		if g.initializes {
+			return entryBody // go_Process initializes first (globals.go)
+		}
 		return "go_Process"
 	}
 	if field, ok := o.(*types.Var); ok && field.IsField() {
@@ -655,6 +664,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		}
 		return r
 	case *ast.SelectorExpr:
+		if v := g.packageVar(e); v != nil {
+			return g.temp(e, tv.Type, g.name(v)) // pkg.V
+		}
 		field, ok := g.info.Uses[e.Sel].(*types.Var)
 		if !ok || !field.IsField() {
 			g.unchecked(e)
@@ -839,6 +851,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 				return g.bitsCall(e)
 			}
 			o = g.callee(callee.Sel)
+			if _, ok := o.(*types.Var); ok {
+				return g.indirectCall(e) // a function-valued package-level variable
+			}
 		case *ast.Ident:
 			o = g.callee(callee)
 			builtinName = callee.Name
@@ -1101,6 +1116,9 @@ func (g *generator) fieldTarget(e ast.Expr) string {
 	case *ast.StarExpr:
 		return "(*" + g.checkedPointer(e, g.info.Types[e.X].Type, g.expr(e.X)) + ")"
 	case *ast.SelectorExpr:
+		if v := g.packageVar(e); v != nil {
+			return g.name(v) // pkg.V
+		}
 		f, ok := g.info.Uses[e.Sel].(*types.Var)
 		if !ok || !f.IsField() {
 			g.unchecked(e)

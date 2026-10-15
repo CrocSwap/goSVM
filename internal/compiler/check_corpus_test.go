@@ -87,8 +87,8 @@ var corpusChanges = map[int]corpusEntry{
 	276: {CSHA256: "d3edf0da3b809525b77d572db6685e8222d4b30ea92eae8bdd6db7f2ac30b93a"}, // s70.go: `func f() int` was "int variables are unsupported"
 	292: {CSHA256: "c6449caba1bc423adea522b98a3a63141789c9afb7db67de907930acd77dd52a"}, // bad.go: `type Bad int; var b Bad` was "int variables are unsupported"
 	305: {CSHA256: "a8fb60e2c3adc9557a164b313192efd5bdf764bde00532b39e3c5e22c9040e3c"}, // s25.go: `struct{ x int64 }`, `uint64(-len(a))` was "unsupported type int64"
-	// The int parameter is accepted now; the next rejection is the package var.
-	54: {Error: "s22.go:3:1: only functions and constants are supported at package scope"}, // was "int variables are unsupported"
+	// Entry 54 (s22.go): the int parameter became accepted, then the package
+	// var; it is listed with package-level variables below.
 	// Rule messages now say "integer" where they said "unsigned"; positions
 	// and rejections are unchanged.
 	3:   {Error: "s51.go:2:1: " + pointerElementRule},
@@ -180,6 +180,19 @@ var corpusChanges = map[int]corpusEntry{
 	// function value, and none of the function-value entries uses a map, so
 	// merging them changed no verdict or C hash recorded by either side.
 	258: {CSHA256: "442b6bf53e5b5481667f9c4a8e6acd0d7cbb288f10b84ef789cf57ec03917ad7"}, // s34.go `var m map[uint64]uint64; _ = m`: was "unsupported type map[uint64]uint64"
+	// Package-level variables and init functions became supported
+	// (docs/GO_GLOBALS.md): every recorded package-level var and init
+	// function now compiles. Variables never written are read-only data
+	// (zero cost); entry 54 was listed above with its earlier change.
+	54:  {CSHA256: "4eabe761928394e3e9621d26e72c3f41718db099c544148366a078100dab2f1b"}, // s22.go `var G uint64`: was "only functions and constants are supported at package scope"
+	155: {CSHA256: "ab2dd66c3ec98d4a07e30fb136d3886823c84dd04e3b504f85282717567ddda9"}, // reject.go `var x uint64; return x`: likewise
+	177: {CSHA256: "a645437863b63515b86d3ca14de938f134d2c4735fc08715a4cad9e913facf66"}, // dep/program.go `var N uint64=1` read from another package: likewise
+	178: {CSHA256: "abe2bef8566cb6c04e310fec04cdc44011119dc8723956fed488e93b99e0a0fb"}, // swap/bad.go `var UnsupportedGlobal uint64` (the CLI test now uses a float64): likewise
+	186: {CSHA256: "911bdb1c38a75e0456c217bc36963ece47eb21f616c73326ff403d66e696f42a"}, // multi-state/bad.go `var Global uint64` (the schema-2 test now uses a float64): likewise
+	240: {CSHA256: "b5d064c9094f53c4caf315677ce265070d6822ed82b1cc74301b03050af8b778"}, // reject.go `func init()`: was "init functions are unsupported"
+	245: {CSHA256: "4eabe761928394e3e9621d26e72c3f41718db099c544148366a078100dab2f1b"}, // s23.go `var G uint64` (same C as entry 54): was "only functions and constants are supported at package scope"
+	259: {CSHA256: "18dc882b49fc9e9ffe5ee80a1095e92310d8e1b21565f05830d01d3a1b7dd1b3"}, // dep/program.go `func init()`: was "init functions are unsupported"
+	273: {CSHA256: "fb9a7312d4f614e48dccc2d2a4a407c4f867d4852338c4f119b39d7f834039c0"}, // swap/bad.go `var Mutable uint64` (the generation test now uses a float64): was "only functions ... at package scope"
 }
 
 const (
@@ -229,10 +242,11 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			}
 		}
 	}
-	// Signed integers, generics, allocation, strings, function values, maps
-	// and compound assignment each turned recorded rejections into accepted
-	// programs (corpusChanges); the rest still exercise Check.
-	if rejected < 80 {
+	// Signed integers, generics, allocation, strings, function values, maps,
+	// compound assignment and package-level variables each turned recorded
+	// rejections into accepted programs (corpusChanges); the rest still
+	// exercise Check.
+	if rejected < 70 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}
 	if changed != len(corpusChanges) {

@@ -114,8 +114,10 @@ slices of any element type), [interface values](docs/GO_INTERFACES.md)
 (dynamic dispatch, type assertions and switches),
 [strings and `error`](docs/GO_STRINGS.md) (UTF-8 `range`, concatenation,
 conversions), [function values, closures and `defer`](docs/GO_FUNCTIONS.md),
-and [maps](docs/GO_MAPS.md) (every operation except iteration, whose order Go
-randomizes). It lowers Go through checked C and Solana Clang/LLD to SBF.
+[maps](docs/GO_MAPS.md) (every operation except iteration, whose order Go
+randomizes) and [package-level variables and `init`](docs/GO_GLOBALS.md)
+(initialized on every invocation in Go's order; constant tables cost
+nothing). It lowers Go through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, map
 iteration, goroutines, and on-chain standard-library imports other than

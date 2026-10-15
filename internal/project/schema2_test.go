@@ -226,7 +226,7 @@ func TestSchema2InvalidDeclarations(t *testing.T) {
 
 func TestSchema2SourceDiagnosticsBeforePublication(t *testing.T) {
 	for _, tc := range []struct{ name, source, want string }{
-		{"global", "package program\nvar Global uint64\n", "package scope"},
+		{"float global", "package program\nvar Global float64\n", "unsupported type float64"},
 		{"reserved error", "package program\nconst ErrReserved uint64 = 6000\n", "1..5999"},
 		{"evaluated error", "package program\nconst ErrReserved = 5999 + 1\n", "1..5999"},
 	} {

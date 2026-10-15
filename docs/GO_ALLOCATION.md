@@ -106,6 +106,15 @@ interface-to-interface conversions allocate nothing. With the default budget,
 ([boxing cost](GO_INTERFACES.md#boxing-cost)). Programs with interface values
 always carry the heap runtime.
 
+### Package-level variables
+
+[Package-level variables](GO_GLOBALS.md#storage) that are not read-only live
+in the globals block, the invocation's first allocation (`GlobalBytes`
+bytes, at the heap start plus 8), allocated at entry before any initializer
+runs. With the default budget, `32,760 - GlobalBytes` bytes remain. Read-only
+variables live in the ELF's read-only data and take no heap. Programs with a
+globals block always carry the heap runtime.
+
 ### Function values and closures
 
 [Function values](GO_FUNCTIONS.md#heap-cost) allocate like any other value:
@@ -190,6 +199,9 @@ variable or an `&T{...}` literal) **escapes** when it may be:
   written into a struct or slice literal, or appended;
 - converted to an interface (an interface value can be copied anywhere), or
   passed to a dynamic method call, which may run any implementation;
+- stored in a package-level variable (its storage outlives every scope,
+  like heap data; taking the address of a package-level variable yields
+  heap storage, the globals block);
 - captured by a function literal (always moved: a closure can be called
   anywhere), bound by a pointer-receiver method value, passed to a call
   through a function value (which may run any target), or returned by a

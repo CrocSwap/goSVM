@@ -58,6 +58,7 @@ Every field is documented in `check.go`. In summary:
 | `Conversions`, `DynamicTypes`, `MethodSlots`, `DynamicCalls`, `TypeAssertions`, `TypeSwitches` | Interface values ([interfaces](#interfaces)); empty without them |
 | `FuncTargets`, `FuncValues`, `FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` | Function values, closures and `defer` ([function values](#function-values)); empty without them |
 | `Maps` | Map types ([maps](#maps)); empty without them |
+| `Globals`, `GlobalBytes`, `Inits` | Package-level variables, the globals block size and each package's initialization in Go's order ([package-level variables](#package-level-variables)); empty (0) without them |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
 may alias. Slot 0 is the receiver for methods. `SDK` is true if the result may
@@ -386,6 +387,59 @@ reference (the 8-byte reference moves to the heap, never the table), loop
 `defer` records save a map operand as its 8-byte reference, and method values
 of named map types bind the reference (a value receiver copies the
 reference, so the bound value still sees later writes, as in Go).
+
+## Package-level variables
+
+Package-level variables and `init` functions ([GO_GLOBALS.md](GO_GLOBALS.md))
+are lowered by Check into ordinary checked code. All fields are additive and
+empty for programs without them:
+
+- `Globals` lists every named package-level variable: packages in `Inits`
+  order (all of the program's packages in Go's initialization order), then
+  declaration order. `Var` and `Spec` are the variable and its declaration;
+  `Init` its own initializer (nil for none, or when a multiple-value call
+  initializes several variables). `ReadOnly` means the variable never
+  changes: its value is the zero value or `Init` (a constant expression or a
+  composite literal of constants of a plain-data type, a constant string, or a
+  non-empty slice literal of plain-data constants), and Check proved that no
+  code writes it, takes its address or lets a slice value escape. A
+  read-only variable has no storage in the block and no initialization code;
+  the built-in backend makes it a constant in read-only data.
+- `GlobalBytes` is the size of the globals block: a C struct of the
+  variables that are not read-only, in `Globals` order, each at its Go
+  alignment and `Offset`, rounded up to 8. It must be the invocation heap's
+  first allocation (so it is at the heap start plus 8), made before anything
+  else runs; out-of-memory boundaries depend on it.
+- `Inits` lists, in Go's package initialization order, each package with
+  initialization work. `Vars` is a synthetic `Function` (also in `Functions`
+  and `CallOrder`, with `PackageInit` set and `Object.Name()` `init.vars`)
+  whose body is one `*ast.AssignStmt` (`token.ASSIGN`) per go/types
+  initializer that is not read-only, in go/types' dependency order:
+  `a = e`, `a, b = f()` or `_ = e`. The left-hand identifiers are synthetic
+  (their `Uses` and `Types` entries are the variable; a blank one has a nil
+  `Defs` entry) and the right-hand sides are the declared initializer
+  expressions, with their own `Types`, conversions, closures and heap moves.
+  Its function scope (`Info.Scopes[Decl.Type]`) is the package scope. `Funcs`
+  are the package's `init` functions in file and source order.
+- At entry, before `Process`: allocate the block when `GlobalBytes > 0`,
+  then for each `Inits` entry call `Vars` (if any), then each of `Funcs`.
+
+The lowered files keep every `var` declaration, with its initializers only
+when all of the specification's variables are read-only; otherwise the
+initializers appear once, in `Vars`. A package-level variable is named by an
+`*ast.Ident` or, from another package, an `*ast.SelectorExpr` whose `X` is a
+`*types.PkgName` identifier (`pkg.V`; a call `pkg.F(x)` of a function-valued
+variable is an indirect call in `IndirectCalls`). In the borrow analysis,
+storing a reference into a package-level variable stores it into heap data
+(the referenced local moves to the heap), its address is heap storage, and
+reading a pointer or slice from it yields heap or SDK storage. A closure
+never captures a package-level variable: it uses the variable itself.
+
+A backend must reproduce the initialization order (packages, variables,
+`init` functions), that every invocation initializes afresh, that a trap
+during initialization aborts before `Process`, and the block's heap
+accounting. `gosvm features` reports `uses.globals`, `global_heap_bytes` and
+`readonly_globals`.
 
 ## `project.LoadSchema`
 

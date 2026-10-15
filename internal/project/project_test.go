@@ -63,10 +63,10 @@ func TestGenerationChecksBeforeWriting(t *testing.T) {
 	dir := starter(t)
 	path := filepath.Join(dir, "zz_gosvm.go")
 	before, _ := os.ReadFile(path)
-	if e := os.WriteFile(filepath.Join(dir, "bad.go"), []byte("package program\nvar Mutable uint64\n"), 0600); e != nil {
+	if e := os.WriteFile(filepath.Join(dir, "bad.go"), []byte("package program\nvar Mutable float64\n"), 0600); e != nil {
 		t.Fatal(e)
 	}
-	if e := Generate(dir); e == nil || !strings.Contains(e.Error(), "package scope") {
+	if e := Generate(dir); e == nil || !strings.Contains(e.Error(), "unsupported type float64") {
 		t.Fatalf("bad source accepted: %v", e)
 	}
 	after, _ := os.ReadFile(path)
