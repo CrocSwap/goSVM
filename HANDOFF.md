@@ -1,6 +1,6 @@
 # goSVM session handoff
 
-Updated October 15, 2026 (America/New_York).
+Updated October 16, 2026 (America/New_York).
 **Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
@@ -171,6 +171,39 @@ legacy v1.51 `-mcpu=v3` profile prints nothing for the same program. No test
 program, example or the full swap hits it. An earlier, discarded variant of
 the byval fix did (`go_Process` 4,480 bytes in the full swap), which is how
 it was noticed.
+
+**Real third-party libraries (October 16, branch
+`worktree-agent-a2fb31a20d9d41f9d`):** `examples/real-libraries` (its own
+module) requires holiman/uint256 v1.3.1, KyberNetwork/int256 v0.1.4,
+KyberNetwork/uniswapv3-sdk-uint256 v0.5.5 and lukechampine.com/uint128 v1.3.0
+in `go.mod`; the offline resolver finds them in the module cache unchanged
+(the SDK's go-ethereum requirements are not needed by what is reached). **No
+package compiles unmodified as a whole** (each has files importing
+`math/big`/`fmt`/`database/sql`/go-ethereum or using floats; every file of a
+reachable package must satisfy the subset), so goSVM compiles the example
+against trimmed copies generated from the module cache by
+`examples/real-libraries/trim` (`go.mod` `replace`; every kept declaration
+byte-identical; `trim.json` lists each removal with its check error and every
+file's hashes). Fixed in-scope gaps: package `io` in the overlay (for
+`io.EOF`), elided `&T{...}` elements of array type (Check rewrites them to
+`&T{...}`), read-only pointer parameters (an address passed only to
+parameters that read through it keeps a table read-only: uint256's
+`z.Lt(&pows[t-20])`), and pointer conversions `(*T)(p)`. 22,126 host vectors
+and 1,188 SBF cases on each target match the unmodified libraries natively;
+the only difference found is a gc optimization (Go 1.22's zero-copy
+`[]byte(s)` gives capacity `len(s)` depending on inlining), documented in
+[GO_STRINGS](docs/GO_STRINGS.md#allocation). CU: `ComputeSwapStep`
+10.5k–17.8k, `GetTickAtSqrtRatioV2` 8k–14k, `GetSqrtRatioAtTickV2` 2.4k–5.3k,
+plus **25.4k CU of package initialization per invocation** for `utils`
+(25 `MustFromHex`, `MustFromDecimal`, 3 `MustFromDec`, `Exp`). No corpus C or
+full-swap ELF changed (corpus entry 249's message now lists `io`;
+announce the Check relaxations and `io` to Qushta). **Open user decisions:**
+per-function reachability (would remove the trimming; tradeoffs in the
+results) and compile-time evaluation of initializers (the largest CU win).
+[Results](results/compiler/2026-10-16-real-libraries/README.md). Tests
+(`TestRealLibraries*`, `TestRealLibraryForms*`) need the modules in the Go
+module cache (`go mod download` in the example) and skip, saying so, without
+them.
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

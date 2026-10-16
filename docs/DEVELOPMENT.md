@@ -531,15 +531,21 @@ results and its divide panics as aborts. See
 [math/bits semantics and SBF evidence](../docs/GO_BITS.md).
 
 `errors`, `strings`, `bytes`, `strconv` (all but floats), `encoding/binary`
-(byte orders and varints), `unicode/utf8`, `unicode` (case mapping, `IsSpace`)
-and `math` (integer limits) are available on-chain too: curated Go 1.22.0
+(byte orders and varints), `unicode/utf8`, `unicode` (case mapping, `IsSpace`),
+`math` (integer limits) and `io` (errors, interfaces, `ReadFull`,
+`ReadAtLeast`, `WriteString`) are available on-chain too: curated Go 1.22.0
 source embedded in the compiler (`internal/compiler/_stdlib/`, with provenance
 hashes) and compiled with the program; symbols left out (floats, reflection,
-`io`) are reported by name. `errors.As` takes a `*T` target, and the overlay
+the other packages' `io` parts) are reported by name. `errors.As` takes a `*T` target, and the overlay
 needed [variadic functions](../docs/GO_FUNCTIONS.md#variadic-functions) and
 [pointers to pointers](../docs/GO_POINTERS.md#pointers-to-pointers), which
 user code can use too. See
 [standard-library packages, provenance, deviations and costs](../docs/GO_STDLIB.md).
+Published third-party modules (holiman/uint256, KyberNetwork/int256, the
+uniswapv3-sdk-uint256 math, lukechampine.com/uint128) run on chain from
+trimmed copies; see [real libraries](../results/compiler/2026-10-16-real-libraries/README.md),
+which also added elided `&T{...}` array elements, pointer conversions and
+read-only pointer parameters for package-level tables.
 
 Generics are monomorphized: generic functions, generic structs and named arrays
 with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`),

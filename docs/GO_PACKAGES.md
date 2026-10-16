@@ -77,6 +77,32 @@ build compiles the same loaded source snapshot used to compute its receipt.
 Resolution still happens before a cache hit, so removed/missing dependencies and
 invalid platform selections cannot be hidden behind an old ELF.
 
+## Third-party modules
+
+Published modules work the same way: a program's `go.mod` requires them, the
+module cache holds them (`go mod download`), and the resolver reads them
+offline. [examples/real-libraries](../examples/real-libraries/README.md)
+requires holiman/uint256 v1.3.1, KyberNetwork/int256 v0.1.4,
+KyberNetwork/uniswapv3-sdk-uint256 v0.5.5 and lukechampine.com/uint128
+v1.3.0. The Uniswap SDK module requires go-ethereum and other heavy modules
+for packages and files the on-chain program does not use; with Go's pruned
+module graphs (go 1.17+) the resolver's `go list -find` resolved the
+libraries from a module cache holding only the four modules (go-ethereum
+absent): a requirement's sources are needed only when a reached package
+imports it. (A native build of the same program needs them, because the
+unmodified `utils` package imports go-ethereum.)
+
+No package of the four compiles **unmodified** on chain, because every file
+of a reachable package must satisfy the subset and each package has files
+that import `math/big`, `fmt`, `database/sql` or other packages that are not
+available, or use floats ([results](../results/compiler/2026-10-16-real-libraries/README.md#whole-package-compilation)).
+The example therefore resolves each module, through an ordinary `replace`, to
+a trimmed copy generated from the module cache: the upstream files minus the
+declarations goSVM rejects, every kept declaration byte-identical
+(`examples/real-libraries/trim`). Checking only the functions a program
+reaches instead would let the unmodified modules compile; that is a product
+decision recorded as open in the results.
+
 ## Validation and remaining work
 
 [Current evidence](../results/compiler/2026-10-05-shared-imports-final/README.md)

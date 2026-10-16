@@ -121,13 +121,17 @@ randomizes), [package-level variables and `init`](docs/GO_GLOBALS.md)
 (initialized on every invocation in Go's order; constant tables cost
 nothing) and the [standard-library packages](docs/GO_STDLIB.md) `errors`,
 `strings`, `bytes`, `strconv` (integers), `encoding/binary`, `unicode/utf8`,
-`unicode` (case mapping), `math` (integer limits) and
-[`math/bits`](docs/GO_BITS.md), compiled from Go 1.22's own source. It lowers
+`unicode` (case mapping), `math` (integer limits), `io` (errors and
+interfaces) and [`math/bits`](docs/GO_BITS.md), compiled from Go 1.22's own
+source. Published modules work as ordinary `go.mod` dependencies; holiman/uint256,
+KyberNetwork/int256 and the Uniswap v3 math of uniswapv3-sdk-uint256 run on
+chain with Go's results ([real libraries](results/compiler/2026-10-16-real-libraries/README.md)),
+from copies that leave out their `math/big`/`fmt` conversions. It lowers
 Go through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, map
 iteration, goroutines, floats, and other standard-library packages (`fmt`,
-`io`, `math/big`, ...) are not supported. This is an experimental
+`math/big`, ...) are not supported. This is an experimental
 toolchain without a production audit.
 [Language details](docs/DEVELOPMENT.md#supported-subset-and-remaining-blockers).
 
