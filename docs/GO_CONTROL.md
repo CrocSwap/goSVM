@@ -112,7 +112,8 @@ platform-tools v1.57 or the managed runners are not installed).
 The explicit error representation is an unsigned status code: zero means success,
 and a nonzero handler status is returned unchanged by the adapter. The SDK's
 encoded runtime/CPI statuses remain unchanged; an ordinary small handler code is
-a Solana custom error. Variadics remain unsupported; compound assignments
+a Solana custom error. Variadic functions are supported
+([functions](GO_FUNCTIONS.md#variadic-functions)); compound assignments
 work on integers ([integers](GO_INTEGERS.md#compound-assignment)) and `+=` on
 strings. Named results and bare `return` are supported
 ([below](#defer-and-named-results)). The built-in `error` interface is
