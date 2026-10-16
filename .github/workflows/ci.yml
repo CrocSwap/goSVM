@@ -1,0 +1,128 @@
+# Build, vet and test on every push to main and every pull request.
+# Downloads: Go modules, Anza's official platform-tools v1.57 archive (cached
+# under a key derived from its pins) and, once they are published, goSVM's
+# pinned runner releases. Nothing is published; no keys, clusters or secrets.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-amd64
+          - os: macos-14
+            platform: darwin-arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.0'
+          cache: true
+
+      - name: Isolated gosvm cache
+        run: echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
+
+      - name: Build CLI
+        run: bash scripts/build-cli.sh build/gosvm
+
+      - name: Vet
+        run: go vet ./...
+
+      # The official archive is 430-530 MB; only the extracted Clang/LLD are
+      # cached, keyed by the files that pin them.
+      - name: Cache platform-tools backend
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/gosvm-cache/toolchains
+          key: platform-tools-v1.57-${{ matrix.platform }}-${{ hashFiles('internal/toolchain/archives.go', 'internal/targets/profile.go') }}
+
+      - name: Install backend
+        run: build/gosvm toolchain install -runners=false
+
+      # Runner releases exist only after the maintainer publishes them (and
+      # Linux pins only after the first runner release); until then the SBF
+      # executions in the tests skip, saying so.
+      - name: Install SVM runners
+        run: |
+          if ! build/gosvm runner install; then
+            echo "::warning::SVM runners not installed for ${{ matrix.platform }}; SBF executions will be skipped"
+          fi
+
+      - name: Doctor
+        run: build/gosvm doctor
+
+      - name: Root tests
+        run: make test
+
+      - name: Example and benchmark module tests
+        run: |
+          flags=""
+          if [ "$(uname -s)" = Darwin ]; then flags="-ldflags=-linkmode=external"; fi
+          for dir in examples/typed-swap examples/full-swap examples/escrow examples/multi-state \
+                     examples/shared-packages examples/shared-packages/service examples/full-swap-service \
+                     benchmarks/svm-transport; do
+            echo "::group::$dir"
+            (cd "$dir" && GOWORK=off go test $flags ./...)
+            echo "::endgroup::"
+          done
+
+      - name: Starter walkthrough (new, check, test, build, test --svm)
+        run: |
+          cli="$GITHUB_WORKSPACE/build/gosvm"
+          mkdir -p "$RUNNER_TEMP/walkthrough"
+          cd "$RUNNER_TEMP/walkthrough"
+          "$cli" new my-swap
+          cd my-swap
+          "$cli" check
+          "$cli" test
+          "$cli" build
+          if "$cli" runner status; then "$cli" test --svm; fi
+
+      # Cross-host qualification of the backend content pins: fresh builds of
+      # the reference workloads must reproduce the reference ELFs byte for byte.
+      - name: Reference ELF rebuild
+        run: |
+          python3 scripts/verify_rebuild.py --output "$RUNNER_TEMP/rebuild" --cli build/gosvm
+          python3 scripts/check_rebuild_reference.py "$RUNNER_TEMP/rebuild/metrics.json"
+
+      - name: Keep rebuild report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rebuild-${{ matrix.platform }}
+          path: ${{ runner.temp }}/rebuild
+          if-no-files-found: ignore
+
+  scripts:
+    name: release scripts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax
+        run: |
+          bash -n scripts/install.sh scripts/build-cli.sh scripts/build_runner_linux.sh
+          sh -n scripts/install-release.sh
+      - name: Python syntax
+        run: python3 -m py_compile scripts/package_runner_release.py scripts/update_runner_pins.py scripts/package_cli_release.py scripts/check_rebuild_reference.py
+      - name: Committed release pins are well formed
+        run: python3 -c "import json,glob; [json.load(open(p)) for p in glob.glob('internal/runner/pins/**/*.json', recursive=True)]"

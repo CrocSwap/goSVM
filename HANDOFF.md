@@ -5,6 +5,39 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Public-alpha installation prepared, not published (October 16, branch
+`worktree-agent-a92fd8a88da7b542d`):** nothing was pushed, tagged or released;
+publishing is the maintainer procedure in
+[DEVELOPMENT § Cut a release](docs/DEVELOPMENT.md#cut-a-release), pending user
+approval. `gosvm runner install` (no `-archive`) now downloads the pinned runner
+archives from GitHub releases `runner-v0.5.0`/`runner-v0.6.0`
+(`GOSVM_RELEASE_BASE_URL` overrides the base; https/http/file) and verifies them
+exactly like local archives; `gosvm toolchain install` also installs the runners
+(`-runners=false` skips). Release pins live in `internal/runner/pins/release/`;
+the macOS release archives **repackage the qualified binaries unchanged** (binary
+SHA-256s `886ea293…`/`550bac10…`) adding LICENSE/NOTICE/crate-license inventory,
+so their archive pins are new while the historical archive pins stay accepted.
+**Linux runner pins are a TODO**: the Docker daemon was unresponsive, so
+`release.yml` (component=runners) builds them in a digest-pinned
+`rust:1.98.1-bookworm` container and `scripts/update_runner_pins.py` commits them.
+**Found:** the pinned 0.5.0 binary was built from an older
+`benchmarks/svm-runner/src/lib.rs` than the committed one (which adds `returnData`
+to simulation results), and both macOS binaries embed local paths, so neither is
+reproducible from the repo; a Linux 0.5.0 built from source would differ in
+behaviour under the same version — a user decision before publishing it
+([details](docs/SVM_RUNNER_PACKAGING.md#building-runner-archives-maintainers)).
+Toolchain: platform-tools v1.51/v1.57 archives and v1.57 Clang/LLD content pins
+for linux-amd64 and linux-arm64 (all four Linux archives downloaded and checked
+against GitHub's digests); the darwin gates are gone; Rust libraries stay macOS
+only with an explicit message. `gosvm doctor` outside a project now checks fogo
+and solana instead of failing on the legacy backend (walkthrough friction).
+CLI release: `scripts/package_cli_release.py`, `scripts/install-release.sh`
+(checksum-verified binary install), `gosvm version` stamps the release.
+CI: `.github/workflows/ci.yml` (linux-amd64 + macOS arm64: vet, `make test`,
+module tests, starter walkthrough, reference-ELF rebuild that qualifies the Linux
+backend pins) and manual draft-only `release.yml`. Linux was not run locally.
+[Evidence](results/svm/2026-10-16-public-install/README.md).
+
 **Core language (October 14):** the user chose to start with features existing
 programs work around. Landed: `range` loops (Go 1.22 semantics; `int` keys are
 the one admitted `int` variable, restricted like `len` results —

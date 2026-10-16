@@ -58,7 +58,7 @@ cd goSVM
 bash scripts/install.sh "$HOME/.local/bin"
 export PATH="$HOME/.local/bin:$PATH"
 
-gosvm toolchain install   # Download the pinned backend for Fogo and Solana
+gosvm toolchain install   # Download the pinned backend and SVM test runners
 gosvm doctor
 gosvm new my-swap         # Targets fogo and solana
 cd my-swap
@@ -66,6 +66,7 @@ cd my-swap
 gosvm check               # Check the supported Go subset
 gosvm test                # Run native Go tests
 gosvm build               # build/fogo/program.so and build/solana/program.so
+gosvm test --svm          # Run the compiled program in a local SVM runtime
 gosvm deploy -network solana-devnet -check   # Confirm the cluster accepts it
 ```
 
@@ -75,8 +76,8 @@ Edit `program.go` and rebuild. For multi-account applications, explore the
 or scaffold with `gosvm new -schema 2 -sdk 2 my-program`.
 
 `gosvm test --svm` runs the compiled program for every target in a local SVM
-runtime, choosing the matching managed runner; runners are installed from
-pinned local packages for now (`gosvm runner install -archive ...`); add
+runtime, choosing the matching managed runner, which `gosvm toolchain install`
+downloads and verifies against pins built into the CLI; add
 `-target solana -elf other.so` to test an ELF from another backend. `gosvm deploy`
 reads the cluster's live feature gates before deploying with a dedicated
 per-network payer, and `gosvm call` simulates or sends an instruction.
@@ -84,7 +85,7 @@ Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with
 `gosvm library add`, from published manifests or built from a `.bend` source
 (`-bend-source PROOF.bend -root ns.fn`); [Rust crates](docs/RUST_LIBRARIES.md)
 with `-rust`. [Targets, deployment and migration](docs/TARGET_PROFILES.md)
-cover the details. Public signed CLI and runner downloads are still planned; see
+cover the details. Release binaries, Linux hosts and the release procedure are in
 [installation details](docs/DEVELOPMENT.md#start-a-go-project).
 
 ## Share code with your backend

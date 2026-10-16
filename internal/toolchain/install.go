@@ -20,12 +20,8 @@ import (
 
 const Version = "v1.51"
 
-// Pinned from the official release's GitHub asset digest, not a checksum fetched
-// beside an arbitrary user-supplied download. Add platforms after validating the
-// two-binary package and its dynamic dependencies on that platform.
-const archiveSHA = "a1e32b3137fe8199fa76da81c43ec0122bdbd27acf1279f38d8d265f7a6e6cb3"
-const archiveSize int64 = 448012397
-const archiveURL = "https://github.com/anza-xyz/platform-tools/releases/download/v1.51/platform-tools-osx-aarch64.tar.bz2"
+// The v1.51 archive per host is pinned in archives.go from the official
+// release's GitHub asset digest, not a checksum fetched beside a download.
 
 type Receipt struct {
 	Version    string            `json:"version"`
@@ -76,7 +72,11 @@ func Verify(root string) (Receipt, error) {
 	if e = json.Unmarshal(b, &r); e != nil {
 		return r, e
 	}
-	if r.Version != Version || r.Platform != runtime.GOOS+"-"+runtime.GOARCH || r.ArchiveSHA != archiveSHA || r.Source != archiveURL || len(r.Files) != 2 {
+	a, e := hostArchive(Version)
+	if e != nil {
+		return r, e
+	}
+	if r.Version != Version || r.Platform != runtime.GOOS+"-"+runtime.GOARCH || r.ArchiveSHA != a.SHA || r.Source != officialURL(Version, a) || len(r.Files) != 2 {
 		return r, fmt.Errorf("managed toolchain receipt mismatch")
 	}
 	for _, p := range []string{"llvm/bin/clang", "llvm/bin/ld.lld"} {
@@ -97,8 +97,9 @@ func Verify(root string) (Receipt, error) {
 type Download func(context.Context, string, io.Writer) error
 
 func Install(ctx context.Context, root, archive string, out io.Writer, download Download) error {
-	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-		return fmt.Errorf("managed installation is currently verified on macOS arm64 only; set SBF_LLVM to your existing v1.51 backend")
+	pinned, e := hostArchive(Version)
+	if e != nil {
+		return e
 	}
 	if root == "" {
 		return fmt.Errorf("cannot resolve user cache directory; set GOSVM_CACHE")
@@ -128,38 +129,11 @@ func Install(ctx context.Context, root, archive string, out io.Writer, download 
 		return e
 	}
 	defer os.RemoveAll(tmp)
-	downloaded := archive
-	if downloaded == "" {
-		downloaded = filepath.Join(tmp, "platform-tools.tar.bz2")
-		fmt.Fprintf(out, "Downloading official platform-tools %s (448 MB); only Clang and LLD will be retained.\n", Version)
-		if download == nil {
-			return fmt.Errorf("no downloader configured")
-		}
-		f, e := os.OpenFile(downloaded, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
-		if e != nil {
-			return e
-		}
-		w := &archiveWriter{w: f, out: out, size: archiveSize, last: time.Now()}
-		copyErr := download(ctx, archiveURL, w)
-		closeErr := f.Close()
-		if copyErr != nil {
-			return copyErr
-		}
-		if closeErr != nil {
-			return closeErr
-		}
-		if w.n != archiveSize {
-			return fmt.Errorf("backend archive size %d; expected %d", w.n, archiveSize)
-		}
-
-	}
-	fmt.Fprintln(out, "Verifying SHA-256 and extracting the minimal backend...")
-	digest, e := hashFile(downloaded)
+	downloaded, e := obtainArchive(ctx, tmp, archive, out, download, downloadURL(Version, pinned), pinned.SHA, pinned.Size,
+		fmt.Sprintf("Downloading official platform-tools %s (%.0f MB); only Clang and LLD will be retained.", Version, float64(pinned.Size)/1e6),
+		"Verifying SHA-256 and extracting the minimal backend...")
 	if e != nil {
 		return e
-	}
-	if digest != archiveSHA {
-		return fmt.Errorf("backend archive SHA-256 mismatch: got %s", digest)
 	}
 	f, e := os.Open(downloaded)
 	if e != nil {
@@ -177,7 +151,7 @@ func Install(ctx context.Context, root, archive string, out io.Writer, download 
 	if e = smoke(ctx, stage); e != nil {
 		return e
 	}
-	receipt := Receipt{Version: Version, Platform: runtime.GOOS + "-" + runtime.GOARCH, Source: archiveURL, ArchiveSHA: archiveSHA, Files: files}
+	receipt := Receipt{Version: Version, Platform: runtime.GOOS + "-" + runtime.GOARCH, Source: officialURL(Version, pinned), ArchiveSHA: pinned.SHA, Files: files}
 	b, e := json.MarshalIndent(receipt, "", "  ")
 	if e != nil {
 		return e

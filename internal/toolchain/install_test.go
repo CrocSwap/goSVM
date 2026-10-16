@@ -88,7 +88,7 @@ func TestBadArchiveDoesNotPublish(t *testing.T) {
 	if e == nil {
 		t.Fatal("accepted invalid checksum")
 	}
-	if !strings.Contains(e.Error(), "SHA-256 mismatch") && !strings.Contains(e.Error(), "macOS arm64 only") {
+	if !strings.Contains(e.Error(), "SHA-256 mismatch") && !strings.Contains(e.Error(), "archive size") && !strings.Contains(e.Error(), "supported hosts") {
 		t.Fatal(e)
 	}
 	if _, e := os.Stat(root); !os.IsNotExist(e) {

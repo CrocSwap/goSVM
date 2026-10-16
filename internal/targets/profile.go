@@ -56,15 +56,38 @@ func Resolve(name string) (Profile, error) {
 	}
 }
 
-// These identify the candidate backend qualified by the local acceptance corpus.
-// Other host packages require their own qualification and pins.
-var ModernBackendHashes = map[string]string{
-	"clang":  "67ebfa7313086cf01ddb42d6cdf3b4bba741dc2341a1e70796d018fe7b9ee697",
-	"ld.lld": "91db7cf05b55facfdb7178eb24d6e5eba1da369672f2b52ab1657165a6441630",
+// Host is the GOOS-GOARCH name used for host-specific pins and cache slots.
+func Host() string { return runtime.GOOS + "-" + runtime.GOARCH }
+
+// ModernBackendPins are the platform-tools v1.57 Clang/LLD content pins per
+// host: the SHA-256 of the clang-22 and lld executables extracted from Anza's
+// official archive for that host. darwin-arm64 was qualified by the local
+// acceptance corpus. The Linux pins were read from the official archives
+// (October 16, 2026); CI qualifies linux-amd64 by rebuilding the reference
+// ELFs byte for byte (.github/workflows/ci.yml).
+var ModernBackendPins = map[string]map[string]string{
+	"darwin-arm64": {
+		"clang":  "67ebfa7313086cf01ddb42d6cdf3b4bba741dc2341a1e70796d018fe7b9ee697",
+		"ld.lld": "91db7cf05b55facfdb7178eb24d6e5eba1da369672f2b52ab1657165a6441630",
+	},
+	"linux-amd64": {
+		"clang":  "6672ea42140527104c230c995992edf7147308a370ae3e52163821896d9b8c1a",
+		"ld.lld": "e54c88f3021702b13527e4b255e0e299420ebe11d17ece99a338a5d789ef18ed",
+	},
+	"linux-arm64": {
+		"clang":  "eba6e975225cfd44291bdcace57f1e9a6e3c4942be98475468a74f5b4789ac78",
+		"ld.lld": "bc01c50986b5c38501df0fc1d57d7f702850c05e01ec4dd39376998bd3a5cdfb",
+	},
 }
 
+// ModernBackendHashes are this host's content pins (nil on an unsupported host).
+var ModernBackendHashes = ModernBackendPins[Host()]
+
+// ModernHosts lists the hosts with platform-tools v1.57 content pins.
+const ModernHosts = "darwin-arm64, linux-amd64, linux-arm64"
+
 // RustToolHashes pins the platform-tools v1.57 Rust library producer tools
-// (macOS arm64), keyed by logical name. Version text alone is insufficient;
+// (macOS arm64 only; other hosts are rejected), keyed by logical name. Version text alone is insufficient;
 // the producer and the managed full-tree installer refuse other bytes.
 var RustToolHashes = map[string]string{
 	"rustc":           "a6bab6b6060c911f3f3e601532e6064500a7f7d53645bc62692c633a0541797a",
@@ -89,8 +112,8 @@ func (p Profile) CheckBackend(llvm string) error {
 			return fmt.Errorf("%s requires platform-tools %s / LLVM %s, got %s", p.Name, p.Tools, p.LLVM, b)
 		}
 		if p.Tools == ModernTools {
-			if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-				return fmt.Errorf("platform-tools %s is currently qualified on macOS arm64 only", p.Tools)
+			if ModernBackendHashes == nil {
+				return fmt.Errorf("platform-tools %s has no content pin for host %s (supported hosts: %s)", p.Tools, Host(), ModernHosts)
 			}
 			data, err := os.ReadFile(path)
 			if err != nil {

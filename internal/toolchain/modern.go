@@ -14,21 +14,18 @@ import (
 	"time"
 )
 
-// Official platform-tools v1.57 macOS arm64 release asset. Size and SHA-256 are
-// pinned from GitHub's release asset digest. The extracted Clang/LLD bytes must
-// additionally equal target.ModernBackendHashes, the locally qualified content.
+// The official platform-tools v1.57 release asset of each host is pinned
+// (size and SHA-256) in archives.go. The extracted Clang/LLD bytes must
+// additionally equal target.ModernBackendHashes, the host's content pins.
 const (
-	ModernArchiveURL            = "https://github.com/anza-xyz/platform-tools/releases/download/v1.57/platform-tools-osx-aarch64.tar.bz2"
-	modernArchiveSHA            = "48c32c2ec3ac3729b5caf1fdd6c4145496125edf043b2662b0586bfbc932b34a"
-	modernArchiveSize     int64 = 430747800
-	SourceOfficialArchive       = "official-archive"
-	SourceQualifiedLocal        = "qualified-local-backend"
+	SourceOfficialArchive = "official-archive"
+	SourceQualifiedLocal  = "qualified-local-backend"
 )
 
 // modernPackage describes what a modern backend install must contain. Tests
 // substitute a fake package; production uses officialModern.
 type modernPackage struct {
-	URL     string
+	URL     string // download location (a mirror when configured)
 	SHA     string
 	Size    int64
 	Members map[string]string // archive member -> installed path
@@ -41,8 +38,9 @@ func officialModern() modernPackage {
 	for name, hash := range target.ModernBackendHashes {
 		files["llvm/bin/"+name] = hash
 	}
+	a, _ := hostArchive(target.ModernTools)
 	return modernPackage{
-		URL: ModernArchiveURL, SHA: modernArchiveSHA, Size: modernArchiveSize,
+		URL: downloadURL(target.ModernTools, a), SHA: a.SHA, Size: a.Size,
 		// clang is a symlink to clang-22 and ld.lld a symlink to lld; both
 		// executables depend only on macOS system libraries (otool -L).
 		Members: map[string]string{"llvm/bin/clang-22": "llvm/bin/clang", "llvm/bin/lld": "llvm/bin/ld.lld"},
@@ -86,6 +84,9 @@ func ReadModern(root string) (Receipt, error) {
 
 func verifyModern(root string, pkg modernPackage) (Receipt, error) {
 	var r Receipt
+	if len(pkg.Files) == 0 {
+		return r, fmt.Errorf("platform-tools %s has no content pin for host %s (supported hosts: %s)", target.ModernTools, target.Host(), target.ModernHosts)
+	}
 	b, err := os.ReadFile(filepath.Join(root, "receipt.json"))
 	if err != nil {
 		return r, err
@@ -153,8 +154,11 @@ func InstallModern(ctx context.Context, root, llvm string, out io.Writer) error 
 // official v1.57 archive, verifies its size and SHA-256 before decompression,
 // extracts only Clang and LLD, and requires their exact qualified content.
 func InstallModernArchive(ctx context.Context, root, archive string, out io.Writer, download Download) error {
-	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-		return fmt.Errorf("platform-tools %s is currently qualified on macOS arm64 only", target.ModernTools)
+	if _, err := hostArchive(target.ModernTools); err != nil {
+		return err
+	}
+	if target.ModernBackendHashes == nil {
+		return fmt.Errorf("platform-tools %s has no content pin for host %s (supported hosts: %s)", target.ModernTools, target.Host(), target.ModernHosts)
 	}
 	return installModernArchive(ctx, root, archive, out, download, officialModern())
 }

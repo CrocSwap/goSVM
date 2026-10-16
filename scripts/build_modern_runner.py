@@ -21,7 +21,8 @@ def main():
     ap.add_argument('--offline',action='store_true')
     args=ap.parse_args()
     vendor=ROOT/'build/modern-runtime-vendor/litesvm-0.13.0'
-    archives=list((pathlib.Path.home()/'.cargo/registry/cache').glob('*/litesvm-0.13.0.crate'))
+    cargo_home=pathlib.Path(os.environ.get('CARGO_HOME') or pathlib.Path.home()/'.cargo')
+    archives=list((cargo_home/'registry/cache').glob('*/litesvm-0.13.0.crate'))
     archive=args.archive or (archives[0] if archives else None)
     if archive: data=archive.read_bytes()
     elif args.offline: raise SystemExit('Pinned LiteSVM archive unavailable; supply --archive')

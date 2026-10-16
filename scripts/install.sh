@@ -2,7 +2,7 @@
 # Local source bootstrap. The installed executable includes its SDK and templates.
 set -euo pipefail
 if [[ "${1:-}" == --help || "${1:-}" == -h ]]; then
-  printf 'Usage: bash scripts/install.sh [destination-directory]\nDefault: $HOME/.local/bin\nThen run gosvm toolchain install (macOS arm64) and gosvm doctor.\n'
+  printf 'Usage: bash scripts/install.sh [destination-directory]\nDefault: $HOME/.local/bin\nThen run gosvm toolchain install and gosvm doctor (macOS arm64, Linux x86_64/arm64).\nFor a released binary without Go/Clang: sh scripts/install-release.sh --version vX.Y.Z\n'
   exit 0
 fi
 if [[ $# -gt 1 ]]; then printf 'Expected at most one destination directory\n' >&2; exit 2; fi

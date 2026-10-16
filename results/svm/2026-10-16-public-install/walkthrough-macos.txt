@@ -1,0 +1,104 @@
+
+$ sh -c curl -fsSL http://127.0.0.1:8765/v0.1.0-alpha.1/install-release.sh | sh
+Downloading http://127.0.0.1:8765/v0.1.0-alpha.1/gosvm-v0.1.0-alpha.1-darwin-arm64.tar.gz
+Installed $HOME/.local/bin/gosvm (gosvm v0.1.0-alpha.1 experimental darwin-arm64 (fogo = fogo-v0, solana = solana-v3; legacy-v1.51-v3 retained))
+Add $HOME/.local/bin to PATH, e.g. export PATH="$HOME/.local/bin:$PATH"
+Next: gosvm toolchain install && gosvm doctor
+[0s]
+
+$ gosvm version
+gosvm v0.1.0-alpha.1 experimental darwin-arm64 (fogo = fogo-v0, solana = solana-v3; legacy-v1.51-v3 retained)
+[0s]
+
+$ gosvm toolchain install
+Downloading official platform-tools v1.57 (431 MB); only Clang and LLD will be retained.
+Downloaded 178 / 431 MB
+Downloaded 367 / 431 MB
+Verifying SHA-256 and extracting Clang and LLD...
+Installed content-pinned platform-tools v1.57 backend (official-archive): $HOME/Library/Caches/gosvm/toolchains/v1.57/darwin-arm64
+Downloading runner 0.5.0 for darwin-arm64 (3.2 MB): http://127.0.0.1:8765/runner-v0.5.0/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+Installed verified experimental runner 0.5.0: $HOME/Library/Caches/gosvm/runners/0.5.0/darwin-arm64
+Downloading runner 0.6.0 for darwin-arm64 (3.4 MB): http://127.0.0.1:8765/runner-v0.6.0/gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
+Installed verified experimental runner 0.6.0: $HOME/Library/Caches/gosvm/runners/0.6.0/darwin-arm64
+SVM runners ready for gosvm test --svm (0.5.0, 0.6.0).
+[57s]
+
+$ gosvm doctor
+go version go1.22.0 darwin/arm64
+MISSING solana-test-validator (only needed for test --sbf)
+OK fogo-v0 backend (selected) / platform-tools v1.57 / LLVM 22.1.2: $HOME/Library/Caches/gosvm/toolchains/v1.57/darwin-arm64/llvm
+OK fogo-v0 SVM runner: $HOME/Library/Caches/gosvm/runners/0.5.0/darwin-arm64/bin/gosvm-svm-runner (gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch))
+OK solana-v3 backend / platform-tools v1.57 / LLVM 22.1.2: $HOME/Library/Caches/gosvm/toolchains/v1.57/darwin-arm64/llvm
+OK solana-v3 SVM runner: $HOME/Library/Caches/gosvm/runners/0.6.0/darwin-arm64/bin/gosvm-svm-runner (gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles))
+OK managed platform-tools v1.57 content pins (official-archive)
+MISSING Rust library producer toolchain (optional; only needed for Rust libraries)
+  fix: gosvm toolchain install -rust
+[0s]
+
+$ gosvm new my-swap
+Created my-swap
+Next: cd "my-swap" && gosvm check && go test ./... && gosvm build
+[0s]
+
+$ gosvm check
+check OK (2ms)
+[0s]
+
+$ gosvm test
+?   	example.com/my-swap/client	[no test files]
+ok  	example.com/my-swap	0.008s
+[3s]
+
+$ gosvm build
+Built $HOME/my-swap/build/fogo-v0/v1.57/f731d72ca2cb5616/deps-88e52173cac16661/program.so (4064 bytes, 466ms)
+fogo program: $HOME/my-swap/build/fogo/program.so
+Built $HOME/my-swap/build/solana-v3/v1.57/f731d72ca2cb5616/deps-88e52173cac16661/program.so (3216 bytes, 883ms)
+solana program: $HOME/my-swap/build/solana/program.so
+[1s]
+
+$ gosvm test --svm
+?   	example.com/my-swap/client	[no test files]
+ok  	example.com/my-swap	(cached)
+Built $HOME/my-swap/build/fogo-v0/v1.57/f731d72ca2cb5616/deps-88e52173cac16661/program.so (4064 bytes, 319ms)
+fogo program: $HOME/my-swap/build/fogo/program.so
+Testing 14 compiled SBF fixtures with LiteSVM...
+PASS swap                         508 CU
+PASS zero amount                  290 CU
+PASS slippage                     304 CU
+PASS invalid reserves             283 CU
+PASS counter overflow             297 CU
+PASS owner                        106 CU
+PASS readonly                     99 CU
+PASS missing account              42 CU
+PASS short state                  118 CU
+PASS state discriminator          146 CU
+PASS instruction discriminator    172 CU
+PASS long instruction             148 CU
+PASS two swaps                    1016 CU
+PASS atomic rollback              812 CU
+Built $HOME/my-swap/build/solana-v3/v1.57/f731d72ca2cb5616/deps-88e52173cac16661/program.so (3216 bytes, 581ms)
+solana program: $HOME/my-swap/build/solana/program.so
+Testing 14 compiled SBF fixtures with LiteSVM...
+PASS swap                         508 CU
+PASS zero amount                  290 CU
+PASS slippage                     304 CU
+PASS invalid reserves             283 CU
+PASS counter overflow             297 CU
+PASS owner                        106 CU
+PASS readonly                     99 CU
+PASS missing account              42 CU
+PASS short state                  118 CU
+PASS state discriminator          146 CU
+PASS instruction discriminator    172 CU
+PASS long instruction             148 CU
+PASS two swaps                    1016 CU
+PASS atomic rollback              812 CU
+[1s]
+
+$ gosvm runner status
+Verified gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch) (darwin-arm64; fogo-v0, legacy-v1.51-v3): $HOME/Library/Caches/gosvm/runners/0.5.0/darwin-arm64
+Verified gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles) (darwin-arm64; solana-v3): $HOME/Library/Caches/gosvm/runners/0.6.0/darwin-arm64
+[0s]
+ 19M	$HOME/Library/Caches/gosvm/runners
+193M	$HOME/Library/Caches/gosvm/toolchains
+exit=0

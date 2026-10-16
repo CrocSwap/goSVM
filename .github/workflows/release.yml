@@ -1,0 +1,144 @@
+# Manually triggered release builds. Produces DRAFT GitHub releases only; a
+# maintainer reviews and publishes them (docs/DEVELOPMENT.md#cut-a-release).
+#
+#   component=runners  Build the Linux runner archives (both versions, amd64 and
+#                      arm64) in the pinned container and attach them to draft
+#                      releases runner-v0.5.0 / runner-v0.6.0. The macOS
+#                      archives are uploaded by the maintainer (they repackage
+#                      the qualified local binaries). Pins are then committed
+#                      with scripts/update_runner_pins.py.
+#   component=cli      Check that the committed runner pins equal the runner
+#                      release assets, build the CLI for darwin-arm64,
+#                      linux-amd64 and linux-arm64 and attach the archives,
+#                      SHA256SUMS and install-release.sh to draft release <version>.
+name: Release (draft)
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        description: What to build
+        type: choice
+        options: [runners, cli]
+        required: true
+      version:
+        description: CLI version for component=cli (e.g. v0.1.0-alpha.1)
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  runners-linux:
+    if: inputs.component == 'runners'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            arch: amd64
+          - os: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build runner archives in the pinned container
+        run: bash scripts/build_runner_linux.sh build/runner-release ${{ matrix.arch }} 0.5.0 0.6.0
+      - name: Compare with committed pins (informational before the first pin update)
+        run: python3 scripts/update_runner_pins.py --check build/runner-release/*/gosvm-svm-runner-*.tar.gz || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runners-linux-${{ matrix.arch }}
+          path: build/runner-release/
+          if-no-files-found: error
+
+  runners-draft:
+    if: inputs.component == 'runners'
+    needs: runners-linux
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Attach to draft runner releases
+        run: |
+          for version in 0.5.0 0.6.0; do
+            tag="runner-v$version"
+            if ! gh release view "$tag" >/dev/null 2>&1; then
+              gh release create "$tag" --draft --target "$GITHUB_SHA" --title "SVM runner $version" \
+                --notes "Pinned gosvm-svm-runner $version archives for \`gosvm runner install\`. Each archive's SHA-256 and member digests are embedded in the gosvm CLI; see docs/SVM_RUNNER_PACKAGING.md. Built from $GITHUB_SHA."
+            fi
+            gh release upload "$tag" --clobber artifacts/runners-linux-*/"$version"-linux-*/gosvm-svm-runner-"$version"-linux-*.tar.gz
+          done
+      - name: Pin summary
+        run: |
+          for f in artifacts/runners-linux-*/*/gosvm-svm-runner-*.tar.gz; do sha256sum "$f"; done | tee -a "$GITHUB_STEP_SUMMARY"
+
+  cli-build:
+    if: inputs.component == 'cli'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            platforms: darwin-arm64
+          - os: ubuntu-24.04
+            platforms: linux-amd64 linux-arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.0'
+      - name: Committed runner pins must equal the runner release assets
+        run: |
+          mkdir -p runner-assets
+          for version in 0.5.0 0.6.0; do
+            gh release download "runner-v$version" --pattern 'gosvm-svm-runner-*.tar.gz' --dir runner-assets
+          done
+          python3 scripts/update_runner_pins.py --check runner-assets/*.tar.gz
+      - name: Build and package
+        run: |
+          # shellcheck disable=SC2043 # a single platform on macOS
+          for platform in ${{ matrix.platforms }}; do
+            python3 scripts/package_cli_release.py --version "${{ inputs.version }}" --platform "$platform" --output dist
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cli-${{ matrix.os }}
+          path: dist/
+          if-no-files-found: error
+
+  cli-draft:
+    if: inputs.component == 'cli'
+    needs: cli-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Assemble release files
+        run: |
+          mkdir dist
+          cp artifacts/cli-*/gosvm-*.tar.gz dist/
+          sed 's/__GOSVM_RELEASE_VERSION__/${{ inputs.version }}/' scripts/install-release.sh > dist/install-release.sh
+          python3 scripts/package_cli_release.py --checksums dist | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Create draft release
+        run: |
+          gh release create "${{ inputs.version }}" --draft --prerelease --target "$GITHUB_SHA" \
+            --title "gosvm ${{ inputs.version }}" \
+            --notes "Experimental public alpha. Install: curl -fsSL https://github.com/${{ github.repository }}/releases/download/${{ inputs.version }}/install-release.sh | sh — then gosvm toolchain install && gosvm doctor. Built from $GITHUB_SHA." \
+            dist/*

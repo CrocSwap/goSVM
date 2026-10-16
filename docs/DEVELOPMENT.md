@@ -13,6 +13,7 @@ historical links point to generated artifacts that are now local-only; see the
 for retention and recovery details.
 
 - [Project setup and SDK/framework details](#start-a-go-project)
+- [Cut a release (maintainers)](#cut-a-release)
 - [Anchor comparison](#anchor-comparison)
 - [Maintainer validation and reproduction](#reproduce)
 - [Compiler architecture and manual token workload](#implementation-and-workload)
@@ -89,20 +90,34 @@ starter, generated account validation/codecs, a Go client, an experimental IDL,
 and native plus actual-SBF tests.
 
 ```sh
+# Released binary (after the first public release; no Go/Clang needed to install):
+curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.1/install-release.sh | sh
+# ...or from a checkout (needs Go; macOS also host Clang for external linking):
 bash scripts/install.sh "$HOME/.local/bin"
+
 export PATH="$HOME/.local/bin:$PATH"
-gosvm toolchain install   # macOS arm64; verified download, no Cargo
+gosvm toolchain install   # official platform-tools + pinned SVM runners, verified; no Cargo
 gosvm doctor
 gosvm new my-swap
 cd my-swap
 gosvm check
-go test ./...
+gosvm test                # native Go tests (needs Go 1.22+)
 gosvm build
-gosvm test --sbf
+gosvm test --svm          # compiled program on the local SVM runner, both targets
 ```
 
-This is a **source installation**, tested on macOS arm64. Go and host Clang
-bootstrap the CLI. `gosvm toolchain install` now downloads the official
+Supported hosts: **macOS arm64**, **Linux x86_64** and **Linux arm64** (glibc;
+the backend needs libstdc++ and zlib). The macOS path is validated end to end; the
+Linux backend pins come from Anza's official archives and are qualified in CI by
+reproducing the reference ELFs, and Linux runners are released after their pins
+are committed ([runner packaging](SVM_RUNNER_PACKAGING.md)). `install-release.sh`
+downloads `gosvm-<version>-<platform>.tar.gz` and `SHA256SUMS` from the release
+(`--version`, `--dir`; `GOSVM_RELEASE_BASE_URL` selects a mirror) and installs
+after checking the SHA-256. Rust libraries (`toolchain install -rust`) remain
+macOS arm64 only. `gosvm test --sbf` additionally needs the Solana validator.
+
+The source installation has been tested on macOS arm64; Linux builds the CLI
+statically (`CGO_ENABLED=0`). `gosvm toolchain install` now downloads the official
 platform-tools **v1.57** archive for `fogo-v0`/`solana-v3` and requires the
 extracted Clang/LLD to match their content pins ([target profiles](TARGET_PROFILES.md)).
 The historical description below applies to `gosvm toolchain install -target
@@ -111,8 +126,10 @@ SHA-256 digest before extraction, smoke-tests SBF compilation/linking, and retai
 only Clang and LLD. It does not invoke Cargo
 or install Rust. The initial upstream archive is still **448 MB**; the installed
 backend is about **168 MiB**. Downloads and extraction use a temporary directory,
-and the archive is removed after installation. Signed CLI releases and a smaller
-upstream download remain unfinished. Other hosts can still supply `SBF_LLVM`.
+and the archive is removed after installation. Signed (Developer ID/notarized)
+CLI releases and a smaller upstream download remain unfinished. Other hosts can
+still supply `SBF_LLVM`. Archive pins for every supported host are in
+`internal/toolchain/archives.go`; `GOSVM_PLATFORM_TOOLS_BASE_URL` selects a mirror.
 
 `gosvm toolchain status` and `doctor` verify managed backend content hashes.
 The default cache is the OS user cache under `gosvm/toolchains`; `GOSVM_CACHE`
@@ -197,6 +214,65 @@ All 14 validator cases passed. These are measurements of this generated account
 adapter, not the full token-CPI program discussed below. See
 [ergonomics results](../results/ergonomics/README.md) for the original timing snapshot,
 and [polish validation](../results/polish/README.md) for managed installation and current workflow checks.
+
+## Cut a release
+
+Maintainer-only; nothing here runs automatically. CI (`.github/workflows/ci.yml`)
+builds, vets and tests on linux-amd64 and macOS arm64 for pushes and pull requests,
+installs the backend (cached) and, once published, the runners, runs a starter
+walkthrough and rebuilds the reference ELFs. `.github/workflows/release.yml` is
+manual and only creates **draft** releases. Tags: `runner-v0.5.0`, `runner-v0.6.0`
+(runner archives, immutable once published) and `v<semver>` for the CLI, e.g.
+`v0.1.0-alpha.1`. The CLI embeds the runner pins, so runners are released first.
+
+1. **Runner drafts.** `gh workflow run release.yml -f component=runners`. It builds
+   the Linux archives of both versions for amd64 and arm64 in the pinned container
+   (`scripts/build_runner_linux.sh`) and attaches them to draft releases
+   `runner-v0.5.0`/`runner-v0.6.0`. Resolve the 0.5.0 source decision in
+   [runner packaging](SVM_RUNNER_PACKAGING.md#building-runner-archives-maintainers) first.
+2. **macOS runner archives.** Rebuild them from the historical packages (identical
+   bytes, offline) and attach them:
+   ```sh
+   python3 scripts/package_runner_release.py --version 0.5.0 --offline --output build/rr/0.5.0 \
+     --from-archive results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+   python3 scripts/package_runner_release.py --version 0.6.0 --offline --output build/rr/0.6.0 \
+     --from-archive results/svm/2026-10-09-runner-0.6.0-package/gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
+   python3 scripts/update_runner_pins.py --check build/rr/*/gosvm-svm-runner-*.tar.gz   # must be up to date
+   gh release upload runner-v0.5.0 build/rr/0.5.0/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+   gh release upload runner-v0.6.0 build/rr/0.6.0/gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
+   ```
+3. **Pin the Linux archives.** Download the drafts' Linux assets, optionally rebuild
+   them locally with Docker and compare, then commit the pins:
+   ```sh
+   mkdir -p build/rr/linux
+   gh release download runner-v0.5.0 -p '*linux*' -D build/rr/linux
+   gh release download runner-v0.6.0 -p '*linux*' -D build/rr/linux
+   bash scripts/build_runner_linux.sh build/rr/local amd64      # optional reproduction
+   cmp build/rr/linux/gosvm-svm-runner-0.6.0-linux-amd64.tar.gz build/rr/local/0.6.0-linux-amd64/gosvm-svm-runner-0.6.0-linux-amd64.tar.gz
+   python3 scripts/update_runner_pins.py build/rr/linux/*.tar.gz
+   make test && go vet ./...
+   git add internal/runner/pins/release && git commit -m "Pin Linux runner release archives"
+   git push            # CI on main then installs and runs the Linux runners
+   ```
+4. **Publish runners:** `gh release edit runner-v0.5.0 --draft=false` and the same
+   for `runner-v0.6.0`, after CI on the pinned commit is green.
+5. **CLI draft:** `gh workflow run release.yml -f component=cli -f version=v0.1.0-alpha.1`.
+   It refuses to build unless the committed pins equal the runner release assets
+   (`update_runner_pins.py --check`), then attaches the three CLI archives,
+   `SHA256SUMS` and the version-stamped `install-release.sh` to a draft prerelease.
+6. **Smoke and publish:** on a clean machine,
+   `curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.1/install-release.sh | sh`
+   (draft assets need `gh release download` instead), `gosvm toolchain install`,
+   `gosvm new demo && cd demo && gosvm test --svm`; then
+   `gh release edit v0.1.0-alpha.1 --draft=false`.
+
+Local dry runs need no GitHub: `scripts/package_cli_release.py --version V --platform P
+--output DIR` (and `--checksums DIR`) and the runner commands above produce the same
+files; serve a directory laid out as `<tag>/<asset>` and set
+`GOSVM_RELEASE_BASE_URL` (http:// or file://) to install from it. Release archives
+contain LICENSE, NOTICE and THIRD_PARTY_NOTICES; runner archives add LiteSVM's
+license and patch notes and the crate license inventory. Platform-tools are never
+redistributed: users download them from Anza's release.
 
 ## Anchor comparison
 
