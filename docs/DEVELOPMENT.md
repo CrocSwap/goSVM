@@ -616,7 +616,12 @@ imported packages first in Go 1.21's package order, `init` functions in file
 and source order), on every invocation before `Process` (each SBF invocation
 is a fresh process). Writable variables live in a block that is the
 invocation heap's first allocation; variables that never change and have
-constant initializers are read-only data and cost nothing. See
+constant initializers are read-only data and cost nothing. Initialization
+whose result is fully determined (computed constants, tables, maps, errors)
+is evaluated at compile time, and each invocation installs the resulting
+heap image instead of running it, with the same state and heap accounting
+([compile-time evaluation](GO_GLOBALS.md#compile-time-evaluation); fixture
+[examples/const-init](../examples/const-init/program.go)). See
 [package-level variable semantics, storage, cost and SBF evidence](../docs/GO_GLOBALS.md)
 and the [fixture](../examples/global-values/program.go), checked against a
 fresh native process per vector on the host and on SBF.

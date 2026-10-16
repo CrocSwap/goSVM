@@ -184,9 +184,14 @@ var corpusChanges = map[int]corpusEntry{
 	177: {CSHA256: "a645437863b63515b86d3ca14de938f134d2c4735fc08715a4cad9e913facf66"}, // dep/program.go `var N uint64=1` read from another package: likewise
 	178: {CSHA256: "abe2bef8566cb6c04e310fec04cdc44011119dc8723956fed488e93b99e0a0fb"}, // swap/bad.go `var UnsupportedGlobal uint64` (the CLI test now uses a float64): likewise
 	186: {CSHA256: "f891973d3fb7766cb0399984d671bd8ca5669a669b6e35f28589200bd33523ec"}, // multi-state/bad.go `var Global uint64` (the schema-2 test now uses a float64): likewise
-	240: {CSHA256: "b5d064c9094f53c4caf315677ce265070d6822ed82b1cc74301b03050af8b778"}, // reject.go `func init()`: was "init functions are unsupported"
+	240: {CSHA256: "af2eefe98753ad6c2e738b6365d621a62f5a710ea7c2e11338c146ff39be8f77"}, // reject.go `func init(){}`: was "init functions are unsupported" (then b5d064c9..., see compile-time evaluation below)
 	245: {CSHA256: "4eabe761928394e3e9621d26e72c3f41718db099c544148366a078100dab2f1b"}, // s23.go `var G uint64` (same C as entry 54): was "only functions and constants are supported at package scope"
-	259: {CSHA256: "18dc882b49fc9e9ffe5ee80a1095e92310d8e1b21565f05830d01d3a1b7dd1b3"}, // dep/program.go `func init()`: was "init functions are unsupported"
+	259: {CSHA256: "32b02994941902507eb277dea22a917549fa3714e14f50f5fd027d991072f9ab"}, // dep/program.go `func init(){}`: was "init functions are unsupported" (then 18dc882b..., see compile-time evaluation below)
+	// Compile-time evaluation of package initialization
+	// (docs/GO_GLOBALS.md#compile-time-evaluation): the two empty init
+	// functions above are evaluated at compile time, so gosvm_init no
+	// longer calls them (their C changed); no verdict changed and no other
+	// recorded program has an initialization step.
 	273: {CSHA256: "fb9a7312d4f614e48dccc2d2a4a407c4f867d4852338c4f119b39d7f834039c0"}, // swap/bad.go `var Mutable uint64` (the generation test now uses a float64): was "only functions ... at package scope"
 	// Struct comparison, type aliases and arrays of composite elements became
 	// supported (docs/GO_TYPES.md, docs/GO_ARRAYS.md): each was a rejection

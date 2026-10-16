@@ -1,0 +1,20 @@
+{
+  "aborts": 55,
+  "baseline_cu": 85,
+  "cases": 122,
+  "image": {
+    "elf_bytes": 44424,
+    "elf_sha256": "efa3e29df29fea8f856a94b528a0d6f5759706dc07b420d0be7eae383078808e",
+    "idle_cu": 861,
+    "init_cu": 776,
+    "max_vector_cu": 42787
+  },
+  "profile": "solana-v3",
+  "runtime-init": {
+    "elf_bytes": 55888,
+    "elf_sha256": "19ad21867d225f696aa6e1e901972782620a964cd8c0c332fcf7f3b2e37707cc",
+    "idle_cu": 9500,
+    "init_cu": 9415,
+    "max_vector_cu": 52358
+  }
+}

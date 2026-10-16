@@ -1,0 +1,225 @@
+{
+  "modes": {
+    "image": {
+      "example": {
+        "bench": [
+          {
+            "cu": 1240,
+            "operation": "none (decode and write only)"
+          },
+          {
+            "cu": 3687,
+            "operation": "GetSqrtRatioAtTickV2 (tick 1)"
+          },
+          {
+            "cu": 6492,
+            "operation": "GetSqrtRatioAtTickV2 (tick 500000)"
+          },
+          {
+            "cu": 5977,
+            "operation": "GetSqrtRatioAtTickV2 (tick -887272, MinTick)"
+          },
+          {
+            "cu": 9254,
+            "operation": "GetTickAtSqrtRatioV2 (price 1)"
+          },
+          {
+            "cu": 13768,
+            "operation": "GetTickAtSqrtRatioV2 (tick ~ 500000)"
+          },
+          {
+            "cu": 15191,
+            "operation": "GetTickAtSqrtRatioV2 (MaxSqrtRatio - 1)"
+          },
+          {
+            "cu": 18439,
+            "operation": "ComputeSwapStep (exact in, within the range)"
+          },
+          {
+            "cu": 11705,
+            "operation": "ComputeSwapStep (exact in, reaches the target)"
+          },
+          {
+            "cu": 19084,
+            "operation": "ComputeSwapStep (exact out)"
+          },
+          {
+            "cu": 373,
+            "operation": "idle"
+          }
+        ],
+        "elf_bytes": 279760,
+        "elf_sha256": "3a2d4599df4e1181dee90f4effee684b01e674bab5b6163d37a6dc64c9322e02"
+      },
+      "probes": [
+        {
+          "cu": 97,
+          "elf_bytes": 2384,
+          "elf_sha256": "d6dd3cf8be4b85a841552c478a0da126d24bdcb3a7c432ef4238282f6703ec28",
+          "init_cu": 0,
+          "probe": "none"
+        },
+        {
+          "cu": 164,
+          "elf_bytes": 5040,
+          "elf_sha256": "fd18913bb8ca07b1d0fa6d16b7f6423558dd29ead105fe3933cc8d3336f73258",
+          "init_cu": 67,
+          "probe": "uint256"
+        },
+        {
+          "cu": 149,
+          "elf_bytes": 4544,
+          "elf_sha256": "23a6811eaa17ad0f21d5e0af5cfc5ba2925f1319d978d1c1126708e899843bff",
+          "init_cu": 52,
+          "probe": "int256"
+        },
+        {
+          "cu": 104,
+          "elf_bytes": 2632,
+          "elf_sha256": "8cbf64173cc050cca0ed89fee04df4a1733a8333be07538bb1beb099ffe5cf40",
+          "init_cu": 7,
+          "probe": "uint128"
+        },
+        {
+          "cu": 164,
+          "elf_bytes": 5240,
+          "elf_sha256": "57b780f3bf06b0f8ea3748468038da1ebce634a4aa407180e94e501637475fc0",
+          "init_cu": 67,
+          "probe": "constants (and uint256)"
+        },
+        {
+          "cu": 211,
+          "elf_bytes": 8992,
+          "elf_sha256": "9e6ba6e26ef3c1b4e149897a83909314b4100ca4c6592a995737142974d95173",
+          "init_cu": 114,
+          "probe": "utils (all four packages)"
+        },
+        {
+          "cu": 211,
+          "elf_bytes": 46872,
+          "elf_sha256": "7e0a0606c30991db112289f95e52b5ac12669c1d409ab344986995aa4d29eb86",
+          "init_cu": 114,
+          "probe": "app: ComputeSwapStep only"
+        },
+        {
+          "cu": 211,
+          "elf_bytes": 28688,
+          "elf_sha256": "81a93997adaeb55d4ee73c3a229c3230904e95ee695aa3ed73fd67b0caaa56f1",
+          "init_cu": 114,
+          "probe": "app: tick math only"
+        }
+      ]
+    },
+    "runtime-init": {
+      "example": {
+        "bench": [
+          {
+            "cu": 27864,
+            "operation": "none (decode and write only)"
+          },
+          {
+            "cu": 30311,
+            "operation": "GetSqrtRatioAtTickV2 (tick 1)"
+          },
+          {
+            "cu": 33116,
+            "operation": "GetSqrtRatioAtTickV2 (tick 500000)"
+          },
+          {
+            "cu": 32601,
+            "operation": "GetSqrtRatioAtTickV2 (tick -887272, MinTick)"
+          },
+          {
+            "cu": 35878,
+            "operation": "GetTickAtSqrtRatioV2 (price 1)"
+          },
+          {
+            "cu": 40392,
+            "operation": "GetTickAtSqrtRatioV2 (tick ~ 500000)"
+          },
+          {
+            "cu": 41815,
+            "operation": "GetTickAtSqrtRatioV2 (MaxSqrtRatio - 1)"
+          },
+          {
+            "cu": 45063,
+            "operation": "ComputeSwapStep (exact in, within the range)"
+          },
+          {
+            "cu": 38329,
+            "operation": "ComputeSwapStep (exact in, reaches the target)"
+          },
+          {
+            "cu": 45708,
+            "operation": "ComputeSwapStep (exact out)"
+          },
+          {
+            "cu": 26997,
+            "operation": "idle"
+          }
+        ],
+        "elf_bytes": 296480,
+        "elf_sha256": "e31170215da0e5020a909f3b9f557b2108b29a12049eb80f4697081a08d246e2"
+      },
+      "probes": [
+        {
+          "cu": 97,
+          "elf_bytes": 2384,
+          "elf_sha256": "d6dd3cf8be4b85a841552c478a0da126d24bdcb3a7c432ef4238282f6703ec28",
+          "init_cu": 0,
+          "probe": "none"
+        },
+        {
+          "cu": 581,
+          "elf_bytes": 8184,
+          "elf_sha256": "9fe6fa526fea108151bfbb3a4721a266d52e763b904e0dd844a52e02cf16f3dc",
+          "init_cu": 484,
+          "probe": "uint256"
+        },
+        {
+          "cu": 531,
+          "elf_bytes": 7496,
+          "elf_sha256": "6fa569444a8153eb579bc772119468cdb9b511074edfb5eb3417ce810516dec1",
+          "init_cu": 434,
+          "probe": "int256"
+        },
+        {
+          "cu": 112,
+          "elf_bytes": 2712,
+          "elf_sha256": "9d45fb3abb95a9fb47d0f648f66d7e8c1ab5f0e067401a4acc6cf745500cb119",
+          "init_cu": 15,
+          "probe": "uint128"
+        },
+        {
+          "cu": 3803,
+          "elf_bytes": 13104,
+          "elf_sha256": "52a375e5958180eeb96443915d00d930088c895edccc473527fb7bd37aeb8afa",
+          "init_cu": 3706,
+          "probe": "constants (and uint256)"
+        },
+        {
+          "cu": 25539,
+          "elf_bytes": 34632,
+          "elf_sha256": "7c07d45968fae7165d55f9545ab193f461f331ab13caf4e0f1304ab3753d32ce",
+          "init_cu": 25442,
+          "probe": "utils (all four packages)"
+        },
+        {
+          "cu": 25539,
+          "elf_bytes": 70920,
+          "elf_sha256": "1bd5eb9ef5a0b59723cdfaf88391e6ed160355738fe4fe6b13a26eaa1eaecefd",
+          "init_cu": 25442,
+          "probe": "app: ComputeSwapStep only"
+        },
+        {
+          "cu": 26373,
+          "elf_bytes": 53040,
+          "elf_sha256": "52ef955f1c674fa29fae58ce99fafedf6813996ad097085b57ab897ecdff4332",
+          "init_cu": 26276,
+          "probe": "app: tick math only"
+        }
+      ]
+    }
+  },
+  "profile": "fogo-v0"
+}

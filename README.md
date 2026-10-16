@@ -118,8 +118,10 @@ slices of any element type), [interface values](docs/GO_INTERFACES.md)
 conversions), [function values, closures and `defer`](docs/GO_FUNCTIONS.md),
 [maps](docs/GO_MAPS.md) (every operation except iteration, whose order Go
 randomizes), [package-level variables and `init`](docs/GO_GLOBALS.md)
-(initialized on every invocation in Go's order; constant tables cost
-nothing) and the [standard-library packages](docs/GO_STDLIB.md) `errors`,
+(Go's initialization order on every invocation; initialization that is
+fully determined, such as computed constants, is
+[evaluated at compile time](docs/GO_GLOBALS.md#compile-time-evaluation) and
+installed for a few CU; constant tables cost nothing) and the [standard-library packages](docs/GO_STDLIB.md) `errors`,
 `strings`, `bytes`, `strconv` (integers), `encoding/binary`, `unicode/utf8`,
 `unicode` (case mapping), `math` (integer limits), `io` (errors and
 interfaces) and [`math/bits`](docs/GO_BITS.md), compiled from Go 1.22's own

@@ -61,6 +61,10 @@ type PackageInit struct {
 	Vars *Function
 	// Funcs are the package's init functions in file and source order.
 	Funcs []*Function
+	// EvaluatedVars and EvaluatedFuncs are the leading statements of Vars'
+	// body and the leading Funcs that were evaluated at compile time
+	// (CheckedProgram.InitImage); the rest run at every invocation.
+	EvaluatedVars, EvaluatedFuncs int
 }
 
 // globalProgram is the package-level variable information of a program.
@@ -792,15 +796,24 @@ func (g *generator) emitInit(program *CheckedProgram) {
 	if !program.initializes() {
 		return
 	}
+	var install []string
+	if program.InitImage != nil {
+		// The compile-time evaluated prefix (initeval_emit.go).
+		install = g.emitImage(program)
+	}
 	g.line("static void gosvm_init(void) {")
-	if program.GlobalBytes > 0 {
+	if install != nil {
+		for _, s := range install {
+			g.line("%s", s)
+		}
+	} else if program.GlobalBytes > 0 {
 		g.line("(void)gosvm_alloc(%dULL); /* the globals block: the first allocation, at GOSVM_HEAP_BASE + 8 */", program.GlobalBytes)
 	}
 	for _, pi := range program.Inits {
-		if pi.Vars != nil {
+		if pi.Vars != nil && pi.EvaluatedVars < len(pi.Vars.Decl.Body.List) {
 			g.line("%s();", g.name(pi.Vars.Object))
 		}
-		for _, fn := range pi.Funcs {
+		for _, fn := range pi.Funcs[pi.EvaluatedFuncs:] {
 			g.line("%s();", g.name(fn.Object))
 		}
 	}

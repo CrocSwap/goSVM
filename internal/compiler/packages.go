@@ -36,6 +36,11 @@ type Program struct {
 	// HeapBytes is the invocation heap budget for allocation; 0 selects the
 	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
 	HeapBytes int `json:",omitempty"`
+	// RuntimeInit disables compile-time evaluation of package
+	// initialization (docs/GO_GLOBALS.md#compile-time-evaluation): every
+	// initializer runs at run time on every invocation. A diagnostic and
+	// comparison switch; the observable behaviour is the same either way.
+	RuntimeInit bool `json:",omitempty"`
 }
 
 // ReadProgram retains the file/directory input convention. Only user imports

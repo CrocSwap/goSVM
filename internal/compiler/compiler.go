@@ -78,6 +78,9 @@ type generator struct {
 	// order holds hoisted operands (CheckedProgram.Hoisted) while their owner
 	// is emitted.
 	order *hoisting
+	// evaluatedStmts are the leading statements of package variable
+	// initializers evaluated at compile time (PackageInit.EvaluatedVars).
+	evaluatedStmts map[*ast.FuncDecl]int
 }
 
 // Source is a Go file in a single on-chain package.
@@ -375,6 +378,12 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		g.emitMaps()
 	}
 	g.emitFuncDispatchers()
+	g.evaluatedStmts = map[*ast.FuncDecl]int{}
+	for _, pi := range program.Inits {
+		if pi.Vars != nil && pi.EvaluatedVars > 0 {
+			g.evaluatedStmts[pi.Vars.Decl] = pi.EvaluatedVars
+		}
+	}
 	functions := map[*ast.FuncDecl]*Function{}
 	for _, function := range program.Functions {
 		functions[function.Decl] = function
@@ -402,6 +411,10 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 				g.copyPrologue(fn)
 				g.block(fn.Body)
 				g.line("}")
+			} else if k := g.evaluatedStmts[fn]; k > 0 {
+				// The statements evaluated at compile time are in the
+				// initialization image (initeval_emit.go).
+				g.block(&ast.BlockStmt{List: fn.Body.List[k:]})
 			} else if !g.emitPackedStore(fn) {
 				g.block(fn.Body)
 			}

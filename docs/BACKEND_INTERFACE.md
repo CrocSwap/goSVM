@@ -59,6 +59,7 @@ Every field is documented in `check.go`. In summary:
 | `FuncTargets`, `FuncValues`, `FuncClasses`, `IndirectCalls`, `Closures`, `DeferSites` | Function values, closures and `defer` ([function values](#function-values)); empty without them |
 | `Maps` | Map types ([maps](#maps)); empty without them |
 | `Globals`, `GlobalBytes`, `Inits` | Package-level variables, the globals block size and each package's initialization in Go's order ([package-level variables](#package-level-variables)); empty (0) without them |
+| `InitImage`; `InitSteps()` | The compile-time evaluated prefix of initialization and the heap image it leaves ([compile-time evaluated initialization](#compile-time-evaluated-initialization)); nil when no step is evaluated |
 | `Hoisted`, `HoistedConversions`, `MapLiteralOrder`, `SharedOperands`; `Sequenced(e)` | gc's evaluation order where left to right would observably differ, and the sequenced operations ([evaluation order](#evaluation-order)); empty where it would not |
 
 `BorrowSummary.Results[i]` gives the argument slots a returned pointer or slice
@@ -460,6 +461,66 @@ is constant data) or in the globals block without an initializer. A backend
 must address such a variable in place and never materialize it in a stack
 frame.
 
+## Compile-time evaluated initialization
+
+Check evaluates package initialization at compile time where it is fully
+determined ([GO_GLOBALS.md](GO_GLOBALS.md#compile-time-evaluation)) and
+records the result, so a backend can install it without an interpreter of
+its own. **Using it is optional**: running every step at entry, as without
+it, is observably identical (values, aliasing, heap accounting, traps and
+panic lines); only CU differs.
+
+- `InitSteps()` lists the initialization steps in order: for each `Inits`
+  entry, each statement of `Vars`' body (`Stmt`), then each of `Funcs`
+  (`Func`).
+- `InitImage` (nil when no step was evaluated): `Steps` of `Total` steps were
+  evaluated (always a prefix); `Stop` gives the first remaining step's index,
+  the construct that stopped evaluation and why. Each `PackageInit` also has
+  `EvaluatedVars` (leading statements of `Vars`' body) and `EvaluatedFuncs`
+  (leading `Funcs`) covered by the image. `Program.RuntimeInit` turns
+  evaluation off.
+- The image is the heap after those steps. `HeapUsed` is the allocator's
+  in-use word (the offset of the next allocation from the heap start; the
+  globals block, when `GlobalBytes > 0`, is at 8 as always). `Values[i]` is
+  the value of `Globals[i]` when it is writable (nil for read-only
+  variables). `Objects` are the heap allocations the writable variables
+  reach, by `Offset` (from the heap start) with the `Size` they consumed:
+  `InitObjectValue` (one `Type` value: `new`, a box, a moved local, an
+  escaping `&T{...}`), `InitObjectArray` (a slice backing array of `Type`
+  elements), `InitObjectBytes` (string bytes), `InitObjectMap` (a map
+  header; `Map` lists its live entries in insertion order, its slot count
+  `Cap` and its `Slots` array object), `InitObjectMapSlots` (that array; its
+  layout is the backend's: lay out the entries with the backend's own hash
+  table), `InitObjectFunc` (a closure environment: the target and the
+  captured variables' storage; or a method value: the target and the bound
+  receiver). Allocations nothing reaches keep their bytes in `HeapUsed` and
+  are not listed.
+- An `InitValue` is typed (`Type`) and tagged (`Kind`): integers and bools
+  (`Bits`, zero-extended two's complement), strings (`Bytes`, and `Ref`/`Low`
+  when the bytes are a heap object, nil when they may live in read-only
+  data), pointers and slices (`Ref` to the storage, `Low`/`Len`/`Cap` for
+  slices; nil for nil), interfaces (`Dynamic` and the pointer or map value
+  `Elem` of a `Direct` type, or the box `Ref`), function values (`Target`,
+  and `Ref` to their environment object if any), maps (`Ref` to the header),
+  structs and arrays (`Elems`).
+- An `InitRef` names storage: a heap `Object`, a package-level variable
+  (`Global`: a writable one in the globals block, or a read-only one in
+  read-only data, whose address the backend knows only when it links), or
+  the heap start itself (`HeapBase`: the data word the built-in backend
+  gives zero-size interface values and the pointer of `[]byte("")`), then a
+  `Path` of field and element indices into it.
+
+A backend installs the image so that the heap's first `HeapUsed` bytes hold
+the globals block and every listed object at its offset, in the backend's
+own layout (the offsets and sizes are contracted heap accounting; field and
+table layouts are not), then runs the steps after the image. With a heap
+budget above 32 KiB it must touch the budget's last byte first, as the first
+allocation does. The built-in backend copies a precomputed byte image with
+`sol_memcpy_` (stores for up to four words), then stores the pointers to
+read-only data (`internal/compiler/initeval_emit.go`); its map slots hold
+each entry at the first free slot from its hash, a valid table for its
+lookup and delete code. `gosvm features` reports `uses.init`.
+
 ## Value types
 
 Struct comparison, type aliases, arrays of composite elements and `panic`
@@ -746,3 +807,8 @@ them on purpose; the current reference is fogo-v0 `a66c5a97…`, solana-v3
 `b419245b…` and target-less v1.51 `05f52dd2…`
 ([results](../results/compiler/2026-10-15-byval-rebuild/README.md)), and the
 corpus lists the 111 entries whose C it changed in `corpusChanges`.
+[Compile-time evaluated initialization](#compile-time-evaluated-initialization)
+(October 16) added `InitImage`, `InitSteps()` and the `PackageInit`
+`Evaluated*` fields; it changed the C of the corpus's two programs with an
+(empty) `init` function, which is no longer called, and left the full-swap
+ELFs byte-identical (the full swap has no package-level variables).

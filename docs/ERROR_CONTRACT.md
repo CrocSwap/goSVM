@@ -216,6 +216,22 @@ because fixtures compare them byte for byte:
   heap. Initializers and `init` functions then allocate like any other code
   ([package-level variables](GO_GLOBALS.md#heap-accounting)).
   See [GO_ALLOCATION.md](GO_ALLOCATION.md#allocator).
+- **Compile-time evaluated initialization** (October 16;
+  [GO_GLOBALS.md](GO_GLOBALS.md#compile-time-evaluation)). Check evaluates
+  the longest prefix of the initialization steps that completes without
+  trapping, panicking, calling the SDK or a native library, making a map
+  keyed by pointers or interfaces, or exceeding 1,048,576 interpreter steps
+  (`CheckedProgram.InitImage`, `PackageInit.EvaluatedVars`/`EvaluatedFuncs`).
+  Every invocation then starts from that prefix's state and runs the
+  remaining steps. This is not observable apart from CU and the ELF: the
+  variables' values, aliasing and pointer identities, the heap accounting
+  (the allocator's in-use count after the prefix is `InitImage.HeapUsed`,
+  exactly what running the evaluated steps leaves, so every out-of-memory
+  boundary is unchanged), the heap-frame fault at entry for budgets above
+  32 KiB, and every trap and panic line of initialization (the step that
+  would trap and every later step run at run time) are the same as running
+  every step on every invocation. A backend may install the image or run
+  every step.
 
 ## Evaluation order
 
@@ -604,3 +620,15 @@ Handler results propagate unchanged.
   exceeds experimental 1024-byte per-value limit`). The new forms use the
   existing traps (a nil converted pointer traps when dereferenced). No
   recorded corpus program's C changed; announce to Qushta.
+- 2026-10-16: addition (compile-time evaluation of package initialization;
+  announce to Qushta), no trap, code, panic line or heap accounting changed:
+  Check evaluates the longest evaluable prefix of initialization and the
+  built-in backend installs its heap image at entry (copied with the
+  `sol_memcpy_` syscall, which joins the admitted fogo-v0 imports, then
+  pointers to read-only data stored) instead of running those steps; only CU
+  and ELF bytes change (`utils` initialization 25,442 → 114 CU). New
+  `CheckedProgram.InitImage` (with `InitObject`, `InitValue`, `InitRef`,
+  `InitMap`, `InitFunc`, `InitStop`, `InitSteps()`), `PackageInit.EvaluatedVars`
+  and `EvaluatedFuncs`, and `Program.RuntimeInit` (off: evaluate). Recorded
+  under contracted runtime behaviour above; the corpus's two empty `init`
+  functions are no longer called (their C changed).

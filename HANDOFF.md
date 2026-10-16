@@ -199,11 +199,45 @@ plus **25.4k CU of package initialization per invocation** for `utils`
 full-swap ELF changed (corpus entry 249's message now lists `io`;
 announce the Check relaxations and `io` to Qushta). **Open user decisions:**
 per-function reachability (would remove the trimming; tradeoffs in the
-results) and compile-time evaluation of initializers (the largest CU win).
+results) and compile-time evaluation of initializers (the largest CU win; landed the same day, below).
 [Results](results/compiler/2026-10-16-real-libraries/README.md). Tests
 (`TestRealLibraries*`, `TestRealLibraryForms*`) need the modules in the Go
 module cache (`go mod download` in the example) and skip, saying so, without
 them.
+
+**Compile-time evaluation of package initialization (October 16, branch
+`worktree-agent-afda29cce628856d5`; user-approved):** Check interprets
+initialization (`internal/compiler/initeval*.go`) and evaluates the longest
+prefix of its steps (each statement of a package's synthetic `init.vars`,
+then its `init` functions, in Go's order) that completes without a trap or
+panic, an SDK or native-library call, a map keyed by pointers or
+interfaces, or exceeding 1,048,576 interpreter steps; that step and every
+later one still run on each invocation, so traps, panic lines and later
+`init` functions changing evaluated variables behave as before. The
+backend installs the resulting heap image at entry (`sol_memcpy_`, then
+stores of pointers to read-only data, about 3 CU each). **Design decision:**
+the image keeps every object on the heap at the offset the run-time
+allocation would have had, so heap accounting is exactly unchanged (moving
+never-written objects to read-only data would change heap budgets to save
+a few CU); the change is observable only in CU and ELF bytes, and the image
+is optional for a backend. Exposed as `CheckedProgram.InitImage` (typed,
+backend-neutral objects and values), `PackageInit.EvaluatedVars`/
+`EvaluatedFuncs`, `InitSteps()`; `Program.RuntimeInit` turns it off (tests
+only); `gosvm features` reports `uses.init` (cost class `image`,
+`image+runtime` or `runtime`, the variables each way, the stop reason).
+CU (fogo-v0/solana-v3): `utils` initialization 25,442/25,445 → 114/114;
+`ComputeSwapStep` transactions 45,063/45,036 → 18,439/18,391 (within the
+range), 38,329 → 11,705, 45,708 → 19,084; `global-values` 2,179 → 244.
+Evidence: `examples/const-init` (aliasing, maps grown at init, closures,
+method values, sentinel errors through `errors.Join`, a pointer-keyed map
+ending the prefix at 39 of 42 steps) against fresh native processes, both
+ways, on the host (1,022 vectors) and SBF (122 per target); the live heap
+after initialization is word-for-word the run-time one (map tables aside)
+for five programs; stop-reason, partial-package and SBF edge tests (panic
+line after a prefix, 64 KiB heap frame fault). Corpus: only the two empty
+`init` programs' C changed. Full-swap ELFs unchanged. Announced in the
+ERROR_CONTRACT changelog for Qushta.
+[Results](results/compiler/2026-10-16-const-init/README.md).
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

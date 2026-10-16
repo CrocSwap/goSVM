@@ -147,6 +147,12 @@ type CheckedProgram struct {
 	// globals block, then runs each package's Vars initializer and then its
 	// init functions.
 	Inits []*PackageInit
+	// InitImage is the compile-time evaluated prefix of initialization and
+	// the state it leaves (docs/GO_GLOBALS.md#compile-time-evaluation): a
+	// backend installs it instead of running those steps. Nil when no step
+	// is evaluated at compile time; PackageInit.EvaluatedVars and
+	// EvaluatedFuncs say which steps of each package it covers.
+	InitImage *InitImage
 
 	// Evaluation order (docs/ERROR_CONTRACT.md#evaluation-order and
 	// docs/BACKEND_INTERFACE.md#evaluation-order); all empty when evaluating
@@ -526,6 +532,11 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	checked.HoistedConversions = checked.order.converted
 	checked.MapLiteralOrder = checked.order.mapOrder
 	checked.SharedOperands = checked.order.shared
+	// Package initialization that is fully determined at compile time is
+	// evaluated now (initeval.go); the backend installs its result.
+	if checked.InitImage = evaluateInit(checked); checked.InitImage != nil {
+		checked.markEvaluated()
+	}
 	return checked, nil
 }
 

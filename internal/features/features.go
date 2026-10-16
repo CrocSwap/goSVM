@@ -128,6 +128,10 @@ type Uses struct {
 	// (added within gosvm-features-v1; docs/GO_GLOBALS.md).
 	GlobalHeapBytes int64 `json:"global_heap_bytes"`
 	ReadOnlyGlobals int   `json:"readonly_globals"`
+	// Init describes package initialization after compile-time evaluation
+	// (added within gosvm-features-v1; docs/GO_GLOBALS.md#compile-time-evaluation),
+	// from Check: nil when the program has no initialization steps.
+	Init *InitUse `json:"init,omitempty"`
 	// RecursionCheckInconclusive is set when a call through a function value
 	// has possible targets that Check could not resolve to a set whose call
 	// graph is acyclic, with the reasons in RecursionCheckReasons (added
@@ -138,6 +142,84 @@ type Uses struct {
 	// can rely on that proof. See docs/GO_FUNCTIONS.md#recursion.
 	RecursionCheckInconclusive bool     `json:"recursion_check_inconclusive"`
 	RecursionCheckReasons      []string `json:"recursion_check_reasons,omitempty"`
+}
+
+// InitUse is a program's package initialization after compile-time
+// evaluation (docs/GO_GLOBALS.md#compile-time-evaluation).
+type InitUse struct {
+	// Cost is the per-invocation cost class: "image" (every step was
+	// evaluated at compile time; each invocation only installs the image,
+	// a cost independent of what the initializers compute), "image+runtime"
+	// (the image, then the remaining steps run) or "runtime" (no step was
+	// evaluated; every step runs on every invocation).
+	Cost string `json:"cost"`
+	// Steps counts the initialization steps (a statement of a package's
+	// variable initializer, or an init function) and EvaluatedSteps the
+	// leading ones evaluated at compile time.
+	Steps          int `json:"steps"`
+	EvaluatedSteps int `json:"evaluated_steps"`
+	// ImageBytes is the heap in use after the evaluated steps (the image).
+	ImageBytes int64 `json:"image_bytes"`
+	// Stop is why the first remaining step runs at run time:
+	// "<package path>/<file>:<line>: <reason>".
+	Stop string `json:"stop,omitempty"`
+	// CompileTime and Runtime list the package-level variables (pkg/path.V)
+	// whose initializer was evaluated at compile time, or runs on every
+	// invocation; InitFuncs counts the init functions each way.
+	CompileTime          []string `json:"compile_time"`
+	Runtime              []string `json:"runtime"`
+	CompileTimeInitFuncs int      `json:"compile_time_init_funcs"`
+	RuntimeInitFuncs     int      `json:"runtime_init_funcs"`
+}
+
+// initUse summarizes cp's initialization, or nil without steps.
+func initUse(cp *compiler.CheckedProgram) *InitUse {
+	steps := cp.InitSteps()
+	if len(steps) == 0 {
+		return nil
+	}
+	use := &InitUse{Steps: len(steps), Cost: "runtime", CompileTime: []string{}, Runtime: []string{}}
+	if img := cp.InitImage; img != nil {
+		use.EvaluatedSteps, use.ImageBytes = img.Steps, img.HeapUsed
+		use.Cost = "image+runtime"
+		if img.Steps == img.Total {
+			use.Cost = "image"
+		}
+		if img.Stop != nil {
+			pos := cp.Fset.Position(img.Stop.Pos)
+			use.Stop = fmt.Sprintf("%s/%s:%d: %s", steps[img.Stop.Step].Init.Package.Path(), filepath.Base(pos.Filename), pos.Line, img.Stop.Reason)
+		}
+	}
+	for i, s := range steps {
+		evaluated := i < use.EvaluatedSteps
+		if s.Stmt == nil {
+			if evaluated {
+				use.CompileTimeInitFuncs++
+			} else {
+				use.RuntimeInitFuncs++
+			}
+			continue
+		}
+		assign, ok := s.Stmt.(*ast.AssignStmt)
+		if !ok {
+			continue
+		}
+		for _, lhs := range assign.Lhs {
+			id, ok := lhs.(*ast.Ident)
+			if !ok || id.Name == "_" {
+				continue
+			}
+			name := s.Init.Package.Path() + "." + id.Name
+			if evaluated {
+				use.CompileTime = append(use.CompileTime, name)
+			} else {
+				use.Runtime = append(use.Runtime, name)
+			}
+		}
+	}
+	sort.Strings(use.CompileTime)
+	sort.Strings(use.Runtime)
+	return use
 }
 
 // ApplyCheck records Check's verdict and heap moves in u.Uses.
@@ -161,6 +243,7 @@ func ApplyCheck(u *Usage, cp *compiler.CheckedProgram, err error) {
 	if u.Uses.HeapMovedLocals+u.Uses.HeapMovedLiterals > 0 || cp.GlobalBytes > 0 {
 		u.Uses.Allocation = true
 	}
+	u.Uses.Init = initUse(cp)
 }
 
 // summarize derives the Uses flags from the collected counters.

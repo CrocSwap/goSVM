@@ -27,11 +27,22 @@ func init() { calls = 1 }
 ```
 
 **Every SBF invocation is a fresh process.** Before `Process` runs, every
-invocation (including each CPI level) allocates the variables' storage and
-runs every package's initialization, exactly as a Go program starting anew
-would. Changes made during an invocation last until it ends and are never seen
-by later transactions or other instructions; persistent state still belongs in
-account data.
+invocation (including each CPI level) starts from freshly initialized
+variables, exactly as a Go program starting anew would. Changes made during
+an invocation last until it ends and are never seen by later transactions or
+other instructions; persistent state still belongs in account data.
+
+**Initialization that is fully determined is evaluated by the compiler**
+(October 16, [below](#compile-time-evaluation)): `var sqrtConst1 =
+uint256.MustFromHex("0x...")`, map literals, sentinel errors and `init`
+functions that compute tables run once, at compile time, and each invocation
+installs their result, a copy of the heap as initialization leaves it. The
+state `Process` sees, aliasing and heap accounting included, is the one
+running every initializer produces; only CU changes (importing
+uniswapv3-sdk-uint256's `utils` costs 114 CU per invocation instead of
+25,442). Initialization that cannot be evaluated (it would trap or panic,
+calls the SDK, ...) still runs on every invocation, from the first such
+step on.
 
 Programs without package-level variables or `init` functions compile to
 byte-identical C and ELFs: none of the code below is emitted for them (the
@@ -193,10 +204,12 @@ block, counted against the heap budget as usual). Tests:
 
 ## Cost
 
-Initialization runs on **every invocation**, so its CU is part of every
-transaction's cost. Measured on the pinned runners (identical on fogo-v0 and
-solana-v3; a program whose `Process` returns at once, against the same
-program without variables, 85 CU):
+Initialization that is not [evaluated at compile time](#compile-time-evaluation)
+runs on **every invocation**, so its CU is part of every transaction's cost.
+Measured on the pinned runners before compile-time evaluation existed (as
+with `RuntimeInit` now; identical on fogo-v0 and solana-v3; a program whose
+`Process` returns at once, against the same program without variables,
+85 CU):
 
 | Declarations | CU per invocation |
 | --- | --- |
@@ -208,25 +221,108 @@ program without variables, 85 CU):
 | An `init` filling `[64]uint64` in a loop | 400 |
 | All of `examples/global-values` (5 packages, 63 named variables of which 11 read-only, a 616-byte block, 7 `init` functions, maps, closures, strings, appends) | 2,179 (fogo-v0) / 2,183 (solana-v3) |
 
-Real libraries make this cost visible. Importing
+Real libraries made this cost visible. Importing
 KyberNetwork/uniswapv3-sdk-uint256's `utils` (with holiman/uint256,
-KyberNetwork/int256 and its `constants`) costs **25,442 CU per invocation**
-(fogo-v0; 25,445 on solana-v3) before `Process` runs, nearly all of it
+KyberNetwork/int256 and its `constants`) cost **25,442 CU per invocation**
+(fogo-v0; 25,445 on solana-v3) before `Process` ran, nearly all of it
 computed constants: 25 `uint256.MustFromHex`, one `MustFromDecimal`, three
 `int256.MustFromDec`, an `Exp` and a map literal
 ([breakdown](../results/compiler/2026-10-16-real-libraries/README.md#initialization)).
+With compile-time evaluation it costs **114 CU** on both targets
+([results](../results/compiler/2026-10-16-const-init/README.md)), and
+`examples/global-values`' 2,179 CU become 244.
 
-**Go-exact: every initializer of every package in the program runs.**
-Initializers and `init` functions in imported packages run even when
-`Process` never uses their results, because they can trap (an index out of
-range in a table builder aborts the transaction in Go too, before `main`),
-change other variables, and consume heap. Pruning them would make those
-programs behave differently. The only initialization goSVM skips is that of
-read-only variables, whose initialization has no effects at all; an unused
-read-only variable is not emitted. Computed constants are therefore the
-cost to watch: `var sqrtConst1 = uint256.MustFromHex("0x...")` parses its
-string on every invocation. Where a table can be written as a constant
-composite literal, it is free.
+**Go-exact: every initializer of every package in the program runs**, at
+compile time or on every invocation. Initializers and `init` functions in
+imported packages run even when `Process` never uses their results, because
+they can trap (an index out of range in a table builder aborts the
+transaction in Go too, before `main`), change other variables, and consume
+heap. Pruning them would make those programs behave differently. The only
+initialization goSVM skips is that of read-only variables, whose
+initialization has no effects at all; an unused read-only variable is not
+emitted. Where a table can be written as a constant composite literal, it is
+read-only data and free; a computed table is evaluated at compile time when
+its computation is fully determined, and then costs only its share of
+installing the image (below).
+
+## Compile-time evaluation
+
+Check interprets package initialization (`internal/compiler/initeval*.go`)
+and the backend installs the result instead of running it.
+
+**Steps.** Initialization is a sequence of *steps* in Go's order
+(`CheckedProgram.InitSteps`): for each package in `Inits` order, each
+statement of its synthetic variable initializer (`a = e`, `a, b = f()`,
+`_ = e`, in go/types' dependency order), then each of its `init` functions.
+
+**The evaluated prefix.** Check evaluates the steps in order, as the
+generated code would run them (the same evaluation order, `Hoisted`
+included, the same allocations of the same contracted sizes, the same
+values), until the first step that
+
+- would trap or panic (a bounds, nil, division, assertion, shift or map
+  trap, a `panic` call, exhausting the heap budget),
+- calls a `gosvm/solana` function or a native (Bend or Rust) library
+  function,
+- makes a map whose key type holds pointers or interfaces (`map[*T]V`,
+  `map[any]V`: their tables depend on addresses or type IDs), or
+- exceeds the evaluation budget: 1,048,576 interpreter steps for the whole
+  prefix (`InitEvalStepLimit`; a statement executed, a call made or a loop
+  iteration each count one).
+
+That step and **every later step** run on every invocation, unchanged, even
+steps that do not depend on it: the evaluated part is always a prefix of
+Go's order, so any effect a later step has on an earlier result (an `init`
+function that changes a computed table) happens at run time on top of the
+installed state, as in Go. A step that would trap or panic therefore still
+traps or panics on every invocation, with the same log line, and the
+transaction fails as before. Which steps are evaluated is decided by Check
+and recorded in `CheckedProgram.InitImage` (`Steps`, `Stop`) and on each
+`PackageInit` (`EvaluatedVars`, `EvaluatedFuncs`), and reported by
+`gosvm features` (`uses.init`), so a backend never needs its own
+interpreter.
+
+**The image.** The state after the prefix is a heap image: the allocator's
+in-use count, the globals block and every heap object the writable
+variables reach, at the offsets the run-time allocations would have had
+(`InitImage`: `HeapUsed`, `Values`, `Objects`). Objects stay on the heap
+rather than moving to read-only data even when nothing writes them later:
+the heap accounting is then exactly that of running every initializer (the
+same `HeapUsed`, so the same out-of-memory boundaries), and installing the
+image costs little (below), whereas moving never-written objects to
+read-only data would change those programs' heap budgets to save a few CU.
+Variables that were already read-only data (constant initializers) stay so.
+
+**Installation.** At entry, before the remaining steps and `Process`, the
+built-in backend copies the image to the heap start with the VM's
+`sol_memcpy_` syscall (10 CU, or one per 250 bytes beyond 2,500; images of
+up to four words are stored directly), then stores each pointer to
+read-only data (a string literal, a read-only table) into the image (about
+3 CU each), since those addresses are only known when the ELF is linked.
+Heap addresses are fixed (`0x300000000`), so pointers between heap objects
+are part of the copied bytes. With a heap budget above 32 KiB the first
+allocation touches the budget's last byte ([heap budget](GO_ALLOCATION.md#heap-budget));
+installing an image touches it first too, so a transaction without a large
+enough `RequestHeapFrame` still fails at entry. Map tables are laid out at
+compile time with the runtime's hash; dead allocations (temporary buffers,
+abandoned map tables) keep their place in `HeapUsed` and are not copied.
+
+**What it changes.** Only CU and the ELF. `Process` sees the same values,
+aliasing (two variables holding one object, a slice of a package array, map
+elements that are other variables' objects), pointer identity (sentinel
+errors compared with `==` or `errors.Is`), closures and their captured
+variables, and the same remaining heap. `Program.RuntimeInit` (a
+diagnostic switch for comparisons; no CLI flag) turns evaluation off.
+
+| Program | runtime initialization (fogo-v0 / solana-v3) | compile-time evaluated |
+| --- | ---: | ---: |
+| uniswapv3-sdk-uint256 `utils` (with uint256, int256, constants), idle invocation | 25,442 / 25,445 CU | 114 / 114 |
+| `ComputeSwapStep` (exact in, within the range), whole transaction | 45,063 / 45,036 | 18,439 / 18,391 |
+| `examples/global-values` initialization | 2,179 / 2,183 | 244 / 244 |
+| `examples/const-init` initialization (39 of 42 steps evaluated) | 9,986 / 9,415 | 773 / 776 |
+
+Method and the rest of the measurements:
+[results/compiler/2026-10-16-const-init](../results/compiler/2026-10-16-const-init/README.md).
 
 ## Heap accounting
 
@@ -238,6 +334,9 @@ leaves 32,712: `make([]byte, 32712)` fits and `32713` aborts,
 `TestGlobalHeapAccounting`). Initializers then allocate like any other code
 (boxing, map literals, slice literals, closures, string concatenations) and
 that memory also lives for the invocation. Read-only variables take no heap.
+[Compile-time evaluation](#compile-time-evaluation) changes none of this:
+the image holds the same allocations, and the allocator's in-use count
+after it is the one running the evaluated steps leaves.
 A block larger than the budget is rejected by Check (`package-level variables
 need N heap bytes; the B-byte heap budget leaves B-8`). With a budget above
 32 KiB, the block's allocation is the invocation's first allocation, so a
@@ -305,6 +404,14 @@ read-only placement's absence of cost only where it is observable: the block
 size moves out-of-memory boundaries; read-only data is not observable except
 through CU.
 
+`CheckedProgram.InitImage` is the [compile-time evaluated](#compile-time-evaluation)
+prefix: a backend installs it (the heap's first `HeapUsed` bytes holding the
+`Values` of the writable variables and the `Objects`, in its own layout) and
+then runs only the steps after each package's `EvaluatedVars` and
+`EvaluatedFuncs`. Installing it is optional: running every step instead is
+observably identical, only dearer
+([backend interface](BACKEND_INTERFACE.md#compile-time-evaluated-initialization)).
+
 ## Evidence
 
 - [`examples/global-values`](../examples/global-values/program.go): five
@@ -345,6 +452,30 @@ through CU.
   ([results](../results/compiler/2026-10-14-globals-value-types/README.md)).
 - The frozen check corpus: the nine recorded package-variable and `init`
   rejections now compile (`corpusChanges`); every other entry is unchanged.
+  With compile-time evaluation, the two recorded empty `init` functions are
+  evaluated, so `gosvm_init` no longer calls them (their C changed).
+- [`examples/const-init`](../examples/const-init/program.go) (three
+  packages) for compile-time evaluation: computed constants parsed from
+  text, aliasing between variables (one object in two variables, in a map
+  and in a slice; a slice of and a pointer into a package array), maps
+  built and grown at initialization, closures and method values over heap
+  state, sentinel errors and `errors.Is`/`errors.As` through `errors.Join`,
+  interface values of every representation, strings built at
+  initialization, and a pointer-keyed map that ends the evaluated prefix
+  (39 of 42 steps), after which an `init` function changes evaluated
+  variables at run time. `TestConstInitDifferential` runs 1,022 vectors
+  (mutation scripts and faults, 551 Go panics) against one fresh native
+  process each, with the image and with `RuntimeInit`;
+  `TestInitImageHeapAccounting` checks that the allocator's in-use count
+  after initialization is the same both ways for this example,
+  `global-values`, `global-value-types`, `stdlib-values` and the real
+  libraries; `TestInitEvalStops`, `TestInitImageCheckedProgram`,
+  `TestInitEvalPartialPackage` and `TestInitEvalRuntimeInit` cover each stop
+  reason, the image's description and partly evaluated packages;
+  `TestConstInitSBF`, `TestRealLibrariesInitSBF` and `TestInitEvalEdgesSBF`
+  run on fogo-v0 and solana-v3 both ways (a panic after an evaluated prefix
+  keeps its log line; a 64 KiB heap budget still faults at entry without a
+  heap frame) ([results](../results/compiler/2026-10-16-const-init/README.md)).
 - The [library shakeout](../results/compiler/2026-10-14-globals/README.md#library-shakeout)'s
   pass 2 rerun: no package-variable rejection remains.
 

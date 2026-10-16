@@ -1,0 +1,13 @@
+{
+  "image": {
+    "frame_64k_cu": 270,
+    "init_panic_cu": 352,
+    "no_frame_cu": 200000
+  },
+  "profile": "solana-v3",
+  "runtime-init": {
+    "frame_64k_cu": 276,
+    "init_panic_cu": 364,
+    "no_frame_cu": 200000
+  }
+}

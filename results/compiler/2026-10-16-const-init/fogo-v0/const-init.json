@@ -1,0 +1,20 @@
+{
+  "aborts": 55,
+  "baseline_cu": 85,
+  "cases": 122,
+  "image": {
+    "elf_bytes": 45320,
+    "elf_sha256": "c8ce33771091bd4ee67737bf903c5345d47ca96418d88592694472e45d54b52c",
+    "idle_cu": 858,
+    "init_cu": 773,
+    "max_vector_cu": 46379
+  },
+  "profile": "fogo-v0",
+  "runtime-init": {
+    "elf_bytes": 55224,
+    "elf_sha256": "32eaea94674de4762149a77b065f03aad01cc84f413817bc4456477e1597ed9c",
+    "idle_cu": 10071,
+    "init_cu": 9986,
+    "max_vector_cu": 56720
+  }
+}

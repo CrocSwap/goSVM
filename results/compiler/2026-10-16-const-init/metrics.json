@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "experiment": "compile-time evaluation of package initialization",
+  "date": "2026-10-16",
+  "parent_commit": "7bee8b0",
+  "toolchain": {"go": "go1.22.0", "platform_tools": "v1.57", "runners": {"fogo-v0": "0.5.0", "solana-v3": "0.6.0"}},
+  "workloads": {
+    "real_libraries": "examples/real-libraries against the trimmed module copies (trim/trim.json), holiman/uint256 v1.3.1, KyberNetwork/int256 v0.1.4, KyberNetwork/uniswapv3-sdk-uint256 v0.5.5, lukechampine.com/uint128 v1.3.0",
+    "const_init": "examples/const-init (3 packages, 42 initialization steps, 39 evaluated)",
+    "global_values": "examples/global-values (5 packages, 42 steps, all evaluated)"
+  },
+  "modes": {"image": "compile-time evaluation (default)", "runtime-init": "Program.RuntimeInit: every initializer at run time (the previous behaviour)"},
+  "init_cu": {
+    "utils (uint256, int256, constants, utils)": {"fogo-v0": {"runtime-init": 25442, "image": 114}, "solana-v3": {"runtime-init": 25445, "image": 114}},
+    "constants (and uint256)": {"fogo-v0": {"runtime-init": 3706, "image": 67}, "solana-v3": {"runtime-init": 3706, "image": 67}},
+    "uint256": {"fogo-v0": {"runtime-init": 484, "image": 67}, "solana-v3": {"runtime-init": 484, "image": 67}},
+    "int256": {"fogo-v0": {"runtime-init": 434, "image": 52}, "solana-v3": {"runtime-init": 434, "image": 52}},
+    "uint128": {"fogo-v0": {"runtime-init": 15, "image": 7}, "solana-v3": {"runtime-init": 15, "image": 7}},
+    "app: tick math only": {"fogo-v0": {"runtime-init": 26276, "image": 114}, "solana-v3": {"runtime-init": 26281, "image": 114}},
+    "examples/global-values": {"fogo-v0": {"runtime-init": 2179, "image": 244}, "solana-v3": {"runtime-init": 2183, "image": 244}},
+    "examples/const-init": {"fogo-v0": {"runtime-init": 9986, "image": 773}, "solana-v3": {"runtime-init": 9415, "image": 776}}
+  },
+  "transaction_cu_real_libraries_example": {
+    "ComputeSwapStep (exact in, within the range)": {"fogo-v0": {"runtime-init": 45063, "image": 18439}, "solana-v3": {"runtime-init": 45036, "image": 18391}},
+    "ComputeSwapStep (exact in, reaches the target)": {"fogo-v0": {"runtime-init": 38329, "image": 11705}, "solana-v3": {"runtime-init": 38317, "image": 11672}},
+    "ComputeSwapStep (exact out)": {"fogo-v0": {"runtime-init": 45708, "image": 19084}, "solana-v3": {"runtime-init": 45676, "image": 19031}},
+    "GetSqrtRatioAtTickV2 (tick 1)": {"fogo-v0": {"runtime-init": 30311, "image": 3687}, "solana-v3": {"runtime-init": 30312, "image": 3667}},
+    "GetTickAtSqrtRatioV2 (price 1)": {"fogo-v0": {"runtime-init": 35878, "image": 9254}, "solana-v3": {"runtime-init": 35741, "image": 9096}},
+    "idle": {"fogo-v0": {"runtime-init": 26997, "image": 373}, "solana-v3": {"runtime-init": 27019, "image": 374}}
+  },
+  "elf_bytes": {
+    "real-libraries example": {"fogo-v0": {"runtime-init": 296480, "image": 279760}, "solana-v3": {"runtime-init": 302152, "image": 285840}},
+    "app: ComputeSwapStep only": {"fogo-v0": {"runtime-init": 70920, "image": 46872}, "solana-v3": {"runtime-init": 70040, "image": 46640}},
+    "utils, calls nothing": {"fogo-v0": {"runtime-init": 34632, "image": 8992}, "solana-v3": {"runtime-init": 32592, "image": 7616}}
+  },
+  "correctness": {
+    "host_const_init_vectors": 1022, "host_const_init_panics": 551,
+    "sbf_const_init_cases_per_target_per_mode": 122, "sbf_const_init_aborts": 55,
+    "heap_in_use_equal_programs": ["const-init", "global-values", "global-value-types", "stdlib-values", "real-libraries"],
+    "sbf_suites_passed": 25, "sbf_suites_skipped": 0
+  },
+  "full_swap_rebuild": {"fogo-v0": "a66c5a97b1dea963d17a9438a0da3bd5f9ccd55627e0a4386b23da53b8aa6bbf", "solana-v3": "b419245ba541da5338f88dbb354c493af06d56fe560dd84555b8420f610282f5", "identical_to_reference": true},
+  "corpus_c_changes": [240, 259]
+}
