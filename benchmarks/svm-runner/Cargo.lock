@@ -880,7 +880,7 @@ dependencies = [
 
 [[package]]
 name = "gosvm-svm-runner"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "agave-feature-set",
  "base64 0.22.1",

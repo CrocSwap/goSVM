@@ -22,9 +22,17 @@ import (
 	"time"
 )
 
-// Historical runner: LiteSVM 0.8.2, legacy and fogo-v0 qualification.
+// Historical runner: LiteSVM 0.8.2, legacy and fogo-v0 qualification until
+// 0.5.1 superseded it. Its pinned packages stay accepted (existing
+// installations, -archive) and selectable, but are no longer downloaded.
 const Version = "0.5.0"
 const Identity = "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)"
+
+// Current LiteSVM 0.8.2 runner for fogo-v0 and legacy: 0.5.0's engine, patch
+// and protocol, built from the committed source on every platform (which adds
+// returnData to simulation results).
+const FogoVersion = "0.5.1"
+const FogoIdentity = "gosvm-svm-runner 0.5.1 (LiteSVM 0.8.2 + rent-error patch)"
 
 // Modern runner: LiteSVM 0.13.0 / Agave 4.0, required by solana-v3.
 const ModernVersion = "0.6.0"
@@ -32,14 +40,16 @@ const ModernIdentity = "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patc
 
 // Pins are part of the frontend, never supplied by an archive or its sender.
 // pins/release/<version>-<platform>.json are the published release packages
-// that `gosvm runner install` downloads. The two historical local packages
-// (pins/darwin-arm64.json for 0.5.0, pins/0.6.0-darwin-arm64.json) contain the
-// same runner binaries and stay accepted for -archive and existing installs.
+// that `gosvm runner install` downloads. Pins directly under pins/ are earlier
+// packages that stay accepted for -archive and existing installations: the two
+// historical local packages (pins/darwin-arm64.json for 0.5.0,
+// pins/0.6.0-darwin-arm64.json) and the unpublished October 16, 2026 release
+// candidates (*-repackage-2026-10-16.json), which hold the same binaries.
 //
 //go:embed pins
 var pinFiles embed.FS
 
-var identities = map[string]string{Version: Identity, ModernVersion: ModernIdentity}
+var identities = map[string]string{Version: Identity, FogoVersion: FogoIdentity, ModernVersion: ModernIdentity}
 
 // DefaultReleaseBase is where runner release assets are published:
 // <base>/runner-v<version>/<archive name>.
@@ -53,8 +63,22 @@ const ReleaseBaseEnv = "GOSVM_RELEASE_BASE_URL"
 // Download copies the asset at a URL into a writer.
 type Download func(context.Context, string, io.Writer) error
 
-// Versions lists the pinned runner packages this frontend can install.
-func Versions() []string { return []string{Version, ModernVersion} }
+// Versions lists the runner versions this frontend downloads and manages.
+func Versions() []string { return []string{FogoVersion, ModernVersion} }
+
+// Known lists every runner version with accepted pins, including the
+// superseded 0.5.0 (installable only from a local pinned archive).
+func Known() []string { return []string{Version, FogoVersion, ModernVersion} }
+
+// downloadable reports whether a version's release packages are published.
+func downloadable(version string) bool {
+	for _, v := range Versions() {
+		if v == version {
+			return true
+		}
+	}
+	return false
+}
 
 // Host is the GOOS-GOARCH platform name of pins and cache slots.
 func Host() string { return runtime.GOOS + "-" + runtime.GOARCH }
@@ -116,7 +140,7 @@ var otherPins = allEmbedded
 func allEmbedded() []Pin {
 	var all []Pin
 	for _, platform := range []string{"darwin-arm64", "linux-amd64", "linux-arm64"} {
-		for _, v := range Versions() {
+		for _, v := range Known() {
 			pins, _, _ := embeddedPins(v, platform)
 			all = append(all, pins...)
 		}
@@ -155,7 +179,7 @@ type Pin struct {
 	Files        map[string]File `json:"files"`
 }
 
-// Package returns the historical 0.5.0 pin.
+// Package returns the preferred pin of the historical 0.5.0 runner.
 func Package() (Pin, error) { return PackageFor(Version) }
 
 // PackageFor returns the frontend's preferred embedded pin for a runner
@@ -172,6 +196,9 @@ func PackageFor(version string) (Pin, error) {
 func ReleaseFor(version string) (Pin, error) {
 	if _, ok := identities[version]; !ok {
 		return Pin{}, fmt.Errorf("no pinned runner package %q", version)
+	}
+	if !downloadable(version) {
+		return Pin{}, fmt.Errorf("runner %s is superseded by %s and is not downloaded; install %s (gosvm runner install -version %s) or a pinned %s archive with -archive", version, FogoVersion, FogoVersion, FogoVersion, version)
 	}
 	pins, release, err := embeddedPins(version, Host())
 	if err != nil {
@@ -190,6 +217,9 @@ func InstallHint(version string) string {
 	p, err := PackageFor(version)
 	if err != nil {
 		return "-svm-runner <runner binary> (no pinned runner " + version + " for " + Host() + ")"
+	}
+	if !downloadable(version) {
+		return "gosvm runner install -archive " + p.ArchiveName + " (superseded; or install " + FogoVersion + ": gosvm runner install -version " + FogoVersion + ")"
 	}
 	return "gosvm runner install -version " + version + " (offline: gosvm runner install -archive " + p.ArchiveName + ")"
 }
@@ -331,7 +361,7 @@ func Install(ctx context.Context, archive string, versions []string, out io.Writ
 		return nil
 	}
 	var known []Pin
-	for _, v := range Versions() {
+	for _, v := range Known() {
 		pins, err := Accepted(v)
 		if err != nil {
 			continue

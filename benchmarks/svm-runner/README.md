@@ -107,6 +107,9 @@ Runner 0.4.0 added atomic reset overrides and
 public checked downloads/signing, and a supported host matrix remain open.
 Runner 0.5.0 uses a provenance-bound
 [rent-error precedence patch](../../third_party/litesvm-0.8.2/GOSVM_PATCH.md).
+This source is runner 0.5.1: the same engine and patch, plus `returnData` in
+simulation results and stored transaction metadata; it is the released runner for
+fogo-v0 and legacy ([packaging](../../docs/SVM_RUNNER_PACKAGING.md)).
 [Lifecycle validation](../../results/svm/2026-10-05-lifecycle-verified/README.md)
 covers transaction-created mints/token accounts, a Go swap, close/recreate, rent
 rejection and rollback. New-account `rent_epoch` metadata remains explicitly

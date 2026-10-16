@@ -14,13 +14,13 @@ import (
 
 func runnerCommand(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: gosvm runner install [-version 0.5.0|0.6.0] [-archive pinned-package.tar.gz] | status")
+		return fmt.Errorf("usage: gosvm runner install [-version 0.5.1|0.6.0] [-archive pinned-package.tar.gz] | status")
 	}
 	fs := flag.NewFlagSet("gosvm runner "+args[0], flag.ContinueOnError)
 	archive, version := "", ""
 	if args[0] == "install" {
 		fs.StringVar(&archive, "archive", "", "install a local runner package matching one of the frontend's pinned SHA-256s (offline)")
-		fs.StringVar(&version, "version", "", "download only this runner version (0.5.0 fogo-v0/legacy, 0.6.0 solana-v3; default both)")
+		fs.StringVar(&version, "version", "", "download only this runner version (0.5.1 fogo-v0/legacy, 0.6.0 solana-v3; default both)")
 	}
 	if err := fs.Parse(args[1:]); err != nil {
 		if err == flag.ErrHelp {
@@ -45,15 +45,22 @@ func runnerCommand(args []string) error {
 		return runner.Install(ctx, archive, versions, os.Stdout, fetch.Get)
 	case "status":
 		missing := 0
-		for _, version := range runner.Versions() {
+		for _, version := range runner.Known() {
 			root := runner.RootFor(version)
 			if _, err := os.Lstat(root); os.IsNotExist(err) {
+				if version == runner.Version {
+					continue // Superseded by 0.5.1; reported only when installed.
+				}
 				missing++
 				fmt.Printf("MISSING runner %s (%s): not installed\n  fix: %s\n", version, runnerUse(version), runner.InstallHint(version))
 				continue
 			}
 			pin, err := runner.VerifyVersion(version, root)
 			if err != nil {
+				if version == runner.Version {
+					fmt.Printf("DAMAGED superseded runner %s (%s): %v\n  fix: move %s aside\n", version, runnerUse(version), err, root)
+					continue
+				}
 				missing++
 				fmt.Printf("MISSING runner %s (%s): %v\n  fix: %s\n", version, runnerUse(version), err, runner.InstallHint(version))
 				continue
@@ -70,8 +77,11 @@ func runnerCommand(args []string) error {
 }
 
 func runnerUse(version string) string {
-	if version == runner.ModernVersion {
+	switch version {
+	case runner.ModernVersion:
 		return "solana-v3"
+	case runner.Version:
+		return "fogo-v0, legacy-v1.51-v3; superseded by " + runner.FogoVersion
 	}
 	return "fogo-v0, legacy-v1.51-v3"
 }

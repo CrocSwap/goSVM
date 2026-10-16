@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Build reproducible Linux runner release archives in a pinned container.
 #
-#   bash scripts/build_runner_linux.sh OUTPUT_DIR [amd64|arm64] [0.5.0 0.6.0]
+#   bash scripts/build_runner_linux.sh OUTPUT_DIR [amd64|arm64] [0.5.1 0.6.0]
 #
-# The checkout is mounted at /gosvm and Cargo's home at /cargo, so embedded
-# source paths do not depend on the host; rustc/cargo come from the pinned
+# package_runner_release.py stages the sources at a fixed path and remaps
+# embedded paths, so the binary does not depend on the host checkout; the
+# checkout is mounted at /gosvm and Cargo's home at /cargo; rustc/cargo come from the pinned
 # image (Rust 1.98.1, the toolchain recorded for the macOS packages); crates
 # come from Cargo.lock (checksummed) and LiteSVM from the vendored/pinned
 # sources. Writes OUTPUT_DIR/<version>-linux-<arch>/ with the archive and its
@@ -16,7 +17,7 @@ output="${1:?usage: build_runner_linux.sh OUTPUT_DIR [amd64|arm64] [versions...]
 arch="${2:-amd64}"
 shift $(( $# >= 2 ? 2 : 1 ))
 versions=("$@")
-if [[ ${#versions[@]} -eq 0 ]]; then versions=(0.5.0 0.6.0); fi
+if [[ ${#versions[@]} -eq 0 ]]; then versions=(0.5.1 0.6.0); fi
 case "$arch" in amd64|arm64) ;; *) echo "arch must be amd64 or arm64" >&2; exit 2 ;; esac
 root="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$output"

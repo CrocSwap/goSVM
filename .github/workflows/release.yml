@@ -3,10 +3,12 @@
 #
 #   component=runners  Build the Linux runner archives (both versions, amd64 and
 #                      arm64) in the pinned container and attach them to draft
-#                      releases runner-v0.5.0 / runner-v0.6.0. The macOS
-#                      archives are uploaded by the maintainer (they repackage
-#                      the qualified local binaries). Pins are then committed
-#                      with scripts/update_runner_pins.py.
+#                      releases runner-v0.5.1 / runner-v0.6.0. The macOS
+#                      archives are uploaded by the maintainer (0.5.1 built
+#                      from source, 0.6.0 repackaging its qualified binary; both
+#                      pinned in the frontend). Pins are then committed with
+#                      scripts/update_runner_pins.py. 0.5.0 is superseded and
+#                      not released.
 #   component=cli      Check that the committed runner pins equal the runner
 #                      release assets, build the CLI for darwin-arm64,
 #                      linux-amd64 and linux-arm64 and attach the archives,
@@ -45,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build runner archives in the pinned container
-        run: bash scripts/build_runner_linux.sh build/runner-release ${{ matrix.arch }} 0.5.0 0.6.0
+        run: bash scripts/build_runner_linux.sh build/runner-release ${{ matrix.arch }} 0.5.1 0.6.0
       - name: Compare with committed pins (informational before the first pin update)
         run: python3 scripts/update_runner_pins.py --check build/runner-release/*/gosvm-svm-runner-*.tar.gz || true
       - uses: actions/upload-artifact@v4
@@ -68,7 +70,7 @@ jobs:
           path: artifacts
       - name: Attach to draft runner releases
         run: |
-          for version in 0.5.0 0.6.0; do
+          for version in 0.5.1 0.6.0; do
             tag="runner-v$version"
             if ! gh release view "$tag" >/dev/null 2>&1; then
               gh release create "$tag" --draft --target "$GITHUB_SHA" --title "SVM runner $version" \
@@ -102,7 +104,7 @@ jobs:
       - name: Committed runner pins must equal the runner release assets
         run: |
           mkdir -p runner-assets
-          for version in 0.5.0 0.6.0; do
+          for version in 0.5.1 0.6.0; do
             gh release download "runner-v$version" --pattern 'gosvm-svm-runner-*.tar.gz' --dir runner-assets
           done
           python3 scripts/update_runner_pins.py --check runner-assets/*.tar.gz

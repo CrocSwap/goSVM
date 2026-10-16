@@ -11,7 +11,10 @@ import (
 	"time"
 )
 
-const RunnerVersion = runner.Identity
+// RunnerVersion is the current LiteSVM 0.8.2 runner (fogo-v0, legacy);
+// HistoricalRunnerVersion is the 0.5.0 runner it superseded, still accepted.
+const RunnerVersion = runner.FogoIdentity
+const HistoricalRunnerVersion = runner.Identity
 
 func IsRunner() bool { return os.Getenv("GOSVM_TEST_RUNNER") != "" }
 
@@ -40,8 +43,8 @@ func Engine() string {
 func CheckVersion(version string) error {
 	v := strings.TrimSpace(version)
 	if IsRunner() {
-		if v != RunnerVersion {
-			return fmt.Errorf("require compatibility-spike runner %q; found %q", RunnerVersion, v)
+		if v != RunnerVersion && v != HistoricalRunnerVersion {
+			return fmt.Errorf("require compatibility-spike runner %q (or %q); found %q", RunnerVersion, HistoricalRunnerVersion, v)
 		}
 	} else if !strings.Contains(v, " 3.0.15 ") && !strings.HasSuffix(v, " 3.0.15") {
 		return fmt.Errorf("require validator 3.0.15; found %s", v)

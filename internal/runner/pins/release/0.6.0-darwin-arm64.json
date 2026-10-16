@@ -1,11 +1,11 @@
 {
-  "archive_bytes": 3435809,
+  "archive_bytes": 3436424,
   "archive_name": "gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz",
-  "archive_sha256": "25a8d37f94332e01a0fc9cadc464571ce6b7cff97ab8626c427cdfe868913060",
+  "archive_sha256": "cf6e844438e69aa9041bb4d294fbea5932f9d9a34eb8d426ea3afa4bd3a70c23",
   "files": {
     "CRATE_LICENSES.txt": {
-      "bytes": 35739,
-      "sha256": "eaea74061da31b18197023c5275cf0381ff1fbfde81d638fd0fa3fe26f3ab61e"
+      "bytes": 35985,
+      "sha256": "102b498e02163b043667ac1293aab903746af107e090c3d780715b03bc33f0f4"
     },
     "Cargo.lock": {
       "bytes": 94928,
@@ -32,8 +32,8 @@
       "sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30"
     },
     "dependencies.json": {
-      "bytes": 95864,
-      "sha256": "510ca4de178f1ad1a04a80f739cd0a920e507fe97be0c2f7778a62bdf48935ce"
+      "bytes": 96310,
+      "sha256": "b17a052c3b375a80f7a527dc818452a755e1068b549726373eb2ceaea83b1c8e"
     },
     "licenses/Apache-2.0.txt": {
       "bytes": 10847,
@@ -723,6 +723,18 @@
       "bytes": 1057,
       "sha256": "378f5840b258e2779c39418f3f2d7b2ba96f1c7917dd6be0713f88305dbda397"
     },
+    "licenses/five8-1.0.0/LICENSE": {
+      "bytes": 1069,
+      "sha256": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9"
+    },
+    "licenses/five8_const-1.0.0/LICENSE": {
+      "bytes": 1069,
+      "sha256": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9"
+    },
+    "licenses/five8_core-1.0.0/LICENSE": {
+      "bytes": 1069,
+      "sha256": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9"
+    },
     "licenses/fnv-1.0.7/LICENSE-APACHE": {
       "bytes": 10847,
       "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
@@ -1110,6 +1122,10 @@
     "licenses/proc-macro2-1.0.107/LICENSE-MIT": {
       "bytes": 1023,
       "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3"
+    },
+    "licenses/qstring-0.7.2/LICENSE": {
+      "bytes": 1068,
+      "sha256": "4daa18cffa942e6900093bbfec95de0055fefbe11647aae1113d18cf2c349b77"
     },
     "licenses/qualifier_attr-0.2.2/LICENSE-APACHE": {
       "bytes": 11048,
@@ -1543,6 +1559,10 @@
       "bytes": 1085,
       "sha256": "b7e650f3fce5c53249d1cdc608b54df156a97edd636cf9d23498d0cfe7aec63e"
     },
+    "licenses/void-1.0.2/LICENSE-MIT": {
+      "bytes": 1068,
+      "sha256": "cdc52ff9219a75ecc314567c862e31a369afe276ee75884f4211cf8cbacd2667"
+    },
     "licenses/winnow-1.0.4/LICENSE-MIT": {
       "bytes": 1023,
       "sha256": "cb5aedb296c5246d1f22e9099f925a65146f9f0d6b4eebba97fd27a6cdbbab2d"
@@ -1600,8 +1620,8 @@
       "sha256": "b9cf3f55de4711f3569186599888bac93ad3c8fd05cb1e85ef04ef3da14f6b34"
     },
     "provenance.json": {
-      "bytes": 2200,
-      "sha256": "f5aca567616fc38c084d179ef4d41275f2017682bbc3c96d64fb475949380101"
+      "bytes": 3317,
+      "sha256": "11cb99ee981e94983cfae934a541009c321a70eb38777844e315a125849eba89"
     }
   },
   "identity": "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)",

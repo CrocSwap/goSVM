@@ -21,7 +21,7 @@ func TestSelectionAndVersion(t *testing.T) {
 	if Command("--version").Args[0] != "/tmp/explicit-runner" || Engine() != "litesvm" {
 		t.Fatal("explicit runner not selected")
 	}
-	if CheckVersion(RunnerVersion) != nil || CheckVersion("solana-test-validator 3.0.15") == nil {
+	if CheckVersion(RunnerVersion) != nil || CheckVersion(HistoricalRunnerVersion) != nil || CheckVersion(ModernRunnerVersion) == nil || CheckVersion("solana-test-validator 3.0.15") == nil {
 		t.Fatal("runner identity not enforced")
 	}
 }
@@ -67,7 +67,7 @@ func TestRunnerSelectionPerProfile(t *testing.T) {
 	t.Setenv("GOSVM_TEST_FEATURES", "")
 	t.Setenv("PATH", t.TempDir())
 	qualifiedHost := runtime.GOOS == "darwin" && runtime.GOARCH == "arm64"
-	for profile, want := range map[string]string{"solana-v3": "gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz", "fogo-v0": "gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz", "": "gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz"} {
+	for profile, want := range map[string]string{"solana-v3": "gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz", "fogo-v0": "gosvm-svm-runner-0.5.1-darwin-arm64.tar.gz", "": "gosvm-svm-runner-0.5.1-darwin-arm64.tar.gz"} {
 		_, err := RunnerFor("", profile)
 		if err == nil || (qualifiedHost && !strings.Contains(err.Error(), "gosvm runner install -archive "+want)) {
 			t.Fatalf("%s: missing runner hint: %v", profile, err)
@@ -90,7 +90,10 @@ func TestRunnerSelectionPerProfile(t *testing.T) {
 	if _, err := RunnerFor("", "fogo-v0"); err == nil || !strings.Contains(err.Error(), "integrity") {
 		t.Fatalf("fogo-v0 with explicit features ignored the modern slot: %v", err)
 	}
-	if v := ManagedRunnerVersions("legacy-v1.51-v3"); len(v) != 1 || v[0] != runner.Version {
+	if v := ManagedRunnerVersions("legacy-v1.51-v3"); len(v) != 2 || v[0] != runner.FogoVersion || v[1] != runner.Version {
+		t.Fatal(v)
+	}
+	if v := ManagedRunnerVersions("fogo-v0"); len(v) != 3 || v[0] != runner.FogoVersion || v[1] != runner.Version || v[2] != runner.ModernVersion {
 		t.Fatal(v)
 	}
 }

@@ -32,20 +32,22 @@ func Features() (json.RawMessage, error) {
 func RunnerPath(explicit string) (string, error) { return RunnerFor(explicit, "") }
 
 // ManagedRunnerVersions lists, in preference order, the managed runner packages
-// that may be selected automatically for a profile. fogo-v0 is qualified on the
-// historical engine; the modern engine is eligible only with an explicit
-// GOSVM_TEST_FEATURES file, because the default v0 feature list targets 0.5.0.
+// that may be selected automatically for a profile. fogo-v0 and legacy are
+// qualified on the LiteSVM 0.8.2 engine: 0.5.1, or an existing 0.5.0
+// installation (same engine, without returnData in simulation results). The
+// modern engine is eligible for fogo-v0 only with an explicit
+// GOSVM_TEST_FEATURES file, because the default v0 feature list targets 0.8.2.
 func ManagedRunnerVersions(profileName string) []string {
 	switch profileName {
 	case "solana-v3":
 		return []string{runner.ModernVersion}
 	case "fogo-v0":
 		if os.Getenv("GOSVM_TEST_FEATURES") != "" {
-			return []string{runner.Version, runner.ModernVersion}
+			return []string{runner.FogoVersion, runner.Version, runner.ModernVersion}
 		}
-		return []string{runner.Version}
+		return []string{runner.FogoVersion, runner.Version}
 	default:
-		return []string{runner.Version}
+		return []string{runner.FogoVersion, runner.Version}
 	}
 }
 
@@ -107,9 +109,9 @@ func RunnerCompatible(version, profileName string) bool {
 	case "solana-v3":
 		return version == ModernRunnerVersion
 	case "fogo-v0":
-		return version == RunnerVersion || version == ModernRunnerVersion
+		return version == RunnerVersion || version == HistoricalRunnerVersion || version == ModernRunnerVersion
 	default:
-		return version == RunnerVersion
+		return version == RunnerVersion || version == HistoricalRunnerVersion
 	}
 }
 

@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PINS = ROOT / 'internal/runner/pins/release'
 IDENTITIES = {
     '0.5.0': 'gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)',
+    '0.5.1': 'gosvm-svm-runner 0.5.1 (LiteSVM 0.8.2 + rent-error patch)',
     '0.6.0': 'gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)',
 }
 PLATFORMS = {'darwin-arm64', 'linux-amd64', 'linux-arm64'}

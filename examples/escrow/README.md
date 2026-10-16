@@ -18,7 +18,7 @@ is no expiry or fair-exchange guarantee. Claim pays the entire balance, includin
 rent and donations, to the beneficiary; cancellation pays it to the creator.
 This is an experimental SOL example, not a token exchange or audited application.
 
-From this directory with the CLI, v1.51 LLVM and runner 0.5.0 installed:
+From this directory with the CLI, v1.51 LLVM and runner 0.5.1 (or 0.5.0) installed:
 
 ```sh
 gosvm check

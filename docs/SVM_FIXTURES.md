@@ -27,7 +27,7 @@ gosvm svm-test -elf build/program.so -fixtures testdata/svm.json \
 `svm-test` executes the supplied artifact; build it and run native tests separately.
 Selection is explicit runner flag, `GOSVM_TEST_RUNNER`, verified managed cache,
 then PATH. See [local installation](SVM_RUNNER_PACKAGING.md). Current pin:
-runner 0.5.0, LiteSVM 0.8.2 with the documented rent-error patch. No command downloads dependencies. File arguments are
+runner 0.5.1 (0.5.0 still accepted), LiteSVM 0.8.2 with the documented rent-error patch. No command downloads dependencies. File arguments are
 relative to the command's working directory; additional ELF paths inside a
 fixture are relative to that fixture's directory.
 

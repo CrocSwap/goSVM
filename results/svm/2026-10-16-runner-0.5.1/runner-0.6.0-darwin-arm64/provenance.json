@@ -1,0 +1,50 @@
+{
+  "binary_sha256": "550bac10c7f127d6ca6fb73df6e54942ec7347f3b9a68208e592ae085e9dff30",
+  "build": {
+    "from_archive_pin": "internal/runner/pins/0.6.0-darwin-arm64.json",
+    "from_archive_sha256": "4292f9b0de5a09205cfc5ba69768843276e8111f15f430671943f43103b3fb40",
+    "kind": "repackaged",
+    "note": "Runner binary unchanged from the earlier pinned package; its original build provenance is original/provenance.json"
+  },
+  "dynamic_dependencies": [
+    "\t/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)",
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.0.0)"
+  ],
+  "macho_build_version": [
+    "Load command 10",
+    "      cmd LC_BUILD_VERSION",
+    "  cmdsize 32",
+    " platform MACOS",
+    "    minos 11.0",
+    "      sdk 27.0",
+    "   ntools 1",
+    "     tool LD",
+    "  version 27037.1"
+  ],
+  "platform": "darwin-arm64",
+  "rust_target": "aarch64-apple-darwin",
+  "schema": 2,
+  "scope": "Experimental release package; the crate license inventory is not a legal review; no notarization or publisher signature",
+  "source_sha256": {
+    "LICENSE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+    "NOTICE": "dd0f25cff0d05d8b01520d1841e58a933228961b433ad7a530ac3ae4aa6acffe",
+    "THIRD_PARTY_NOTICES": "0d9ac04d76aede9f377acd475df084109561e20d7be4afc26e1411b8d0fc2335",
+    "benchmarks/svm-runner-modern/Cargo.lock": "25f7962a4388aad933fa28281e0b7d822509570f0805de655a1f080aba8826bd",
+    "benchmarks/svm-runner-modern/Cargo.toml": "c3727a99ecf6a4badb561bdac2d3cda898f860772bf8a9b65df7858bb909c611",
+    "benchmarks/svm-runner-modern/src/lib.rs": "746cccfa664d9a9abdab87d1a552e936e3a556e9214adf7b62d9db1497043a0a",
+    "benchmarks/svm-runner-modern/src/main.rs": "37b0a4e5d212b244952799986a7d14f92077c2974a1d4bc0cf864f779215ecff",
+    "scripts/build_modern_runner.py": "2754f9ee32ab1967ed3fd3f8cd465c40de280d73b7c4ad93ff2527aa8938b5c4",
+    "scripts/package_runner_release.py": "affce943ec86803b1ba685d72ec340cf6ebfb706d28ee55c86ba96cf7efd8682",
+    "third_party/crate-licenses/README.md": "f48e8f77f4ccd2d73dce90d741d8125a7fbe8b7d4f889c1eef80444c19925831",
+    "third_party/crate-licenses/enum-iterator-1.5.0/LICENSE": "39f8e9a777a6070574cc722c8a4bdb8316a04a510998070de6f539e346a043fd",
+    "third_party/crate-licenses/five8-0.2.1/LICENSE": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9",
+    "third_party/crate-licenses/five8-1.0.0/LICENSE": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9",
+    "third_party/crate-licenses/five8_const-1.0.0/LICENSE": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9",
+    "third_party/crate-licenses/five8_core-0.1.2/LICENSE": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9",
+    "third_party/crate-licenses/five8_core-1.0.0/LICENSE": "51848502689f5c8354358b1277cb3ad48a88701c011092aea903856798cd7bd9",
+    "third_party/crate-licenses/qstring-0.7.2/LICENSE": "4daa18cffa942e6900093bbfec95de0055fefbe11647aae1113d18cf2c349b77",
+    "third_party/crate-licenses/void-1.0.2/LICENSE-MIT": "cdc52ff9219a75ecc314567c862e31a369afe276ee75884f4211cf8cbacd2667",
+    "third_party/litesvm-0.8.2/LICENSE-APACHE": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+  },
+  "version": "0.6.0"
+}

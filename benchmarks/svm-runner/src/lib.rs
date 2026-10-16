@@ -11,7 +11,7 @@ use solana_rent::Rent;
 use solana_transaction::versioned::VersionedTransaction;
 use std::{collections::HashMap, fs, path::PathBuf, str::FromStr, time::Instant};
 
-const VERSION: &str = "gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)";
+const VERSION: &str = "gosvm-svm-runner 0.5.1 (LiteSVM 0.8.2 + rent-error patch)";
 const HISTORY_CAPACITY: usize = 4096;
 
 fn clone_vm(svm: &LiteSVM) -> LiteSVM {

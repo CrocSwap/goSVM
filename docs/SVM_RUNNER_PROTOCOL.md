@@ -41,7 +41,11 @@ runner pin. Each UTF-8 JSON envelope is terminated by one newline, with schema
 1 and an unsigned request ID. Stdout contains protocol frames; stderr contains
 process diagnostics. Maximum request/response size in the Go client is 16 MiB.
 
-The current runner pin is 0.5.0 (LiteSVM 0.8.2 + rent-error patch). The
+The current runner pin for fogo-v0 and legacy is 0.5.1 (LiteSVM 0.8.2 + rent-error
+patch); the superseded 0.5.0 is still accepted. 0.5.1 adds `returnData`
+(`{"data":[base64,"base64"],"programId":…}`, or `null` when empty) to
+`simulateTransaction` results and stores `logMessages`, `computeUnitsConsumed` and
+`returnData` for `getTransaction`, which 0.5.0 rejects. The
 [local source patch](../third_party/litesvm-0.8.2/GOSVM_PATCH.md) preserves an
 instruction failure before post-execution rent validation. Atomic account
 overrides from 0.4.0 remain supported. Earlier runners are rejected by this CLI. The schema-1

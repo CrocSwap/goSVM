@@ -6,7 +6,8 @@ subset below. Broader Solana coverage, public distribution and wider host suppor
 are separate work; they are not an unlimited list of milestone 1 requirements.
 
 This matrix records executed experiments, not a production support promise.
-LiteSVM is 0.8.2 with the documented rent-error patch; the sidecar is 0.5.0 and
+LiteSVM is 0.8.2 with the documented rent-error patch; the sidecar was 0.5.0
+(now superseded by 0.5.1, the same engine plus `returnData`) and
 the validator oracle is Agave 3.0.15. The runner uses Agave runtime 3.0.10 and
 an observed local-validator feature profile. It does not claim mainnet parity.
 

@@ -5,6 +5,24 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Runner 0.5.1 replaces 0.5.0 for fogo-v0/legacy (October 16, user-approved;
+not published):** resolves the 0.5.0 source decision below. 0.5.1 is the committed
+`benchmarks/svm-runner` source (LiteSVM 0.8.2 + rent-error patch, plus `returnData`
+in simulation results and `getTransaction` metadata), built from source on every
+platform; the macOS binary `ca1f9f71…` is reproducible (staged sources at a fixed
+path + `--remap-path-prefix`; identical from two checkouts, Cargo homes and cold
+target dirs with Rust 1.98.1 and the recorded Apple linker). `gosvm runner install`
+and `toolchain install` now download `runner-v0.5.1` and `runner-v0.6.0`; there is
+no `runner-v0.5.0` release, but every 0.5.0 pin stays accepted (`-archive`, existing
+installs, which `fogo-v0`/legacy still select when 0.5.1 is absent). MIT crates
+shipping no license text get the upstream text from `third_party/crate-licenses/`
+(none "review required" now; the packager refuses otherwise), so the 0.6.0 release
+archive was re-pinned (`cf6e8444…`, binary unchanged; the earlier unpublished
+candidates stay accepted). `make test` passes with the downloaded runners.
+Linux runner pins remain the release-workflow TODO.
+[Evidence](results/svm/2026-10-16-runner-0.5.1/README.md),
+[packaging](docs/SVM_RUNNER_PACKAGING.md).
+
 **Public-alpha installation prepared, not published (October 16, branch
 `worktree-agent-a92fd8a88da7b542d`):** nothing was pushed, tagged or released;
 publishing is the maintainer procedure in

@@ -200,7 +200,7 @@ func TestGzipTrailerAndInstalledFileType(t *testing.T) {
 
 func TestEmbeddedPinsAndPackageDetection(t *testing.T) {
 	for _, platform := range []string{"darwin-arm64", "linux-amd64", "linux-arm64"} {
-		for _, v := range Versions() {
+		for _, v := range Known() {
 			pins, release, err := embeddedPins(v, platform)
 			if err != nil {
 				t.Fatal(err)
@@ -234,15 +234,31 @@ func TestEmbeddedPinsAndPackageDetection(t *testing.T) {
 			}
 		}
 	}
-	// The released macOS packages repackage the qualified historical binaries.
-	for _, v := range Versions() {
+	// macOS: the 0.6.0 release repackages its qualified binary, as did the
+	// unpublished 0.5.0/0.6.0 candidates, which stay accepted with the
+	// historical local packages; 0.5.1 is a new source build (release only).
+	for v, want := range map[string]int{Version: 2, FogoVersion: 1, ModernVersion: 3} {
 		pins, release, _ := embeddedPins(v, "darwin-arm64")
-		if len(pins) != 2 || !release[0] || release[1] || pins[0].Files["bin/gosvm-svm-runner"] != pins[1].Files["bin/gosvm-svm-runner"] {
-			t.Fatalf("%s: darwin-arm64 release and historical pins must share the runner binary", v)
+		if len(pins) != want {
+			t.Fatalf("%s: %d darwin-arm64 pins, want %d", v, len(pins), want)
+		}
+		for i, p := range pins {
+			if release[i] != (i == 0 && v != Version) || p.Files["bin/gosvm-svm-runner"] != pins[0].Files["bin/gosvm-svm-runner"] {
+				t.Fatalf("%s: darwin-arm64 pins must share the runner binary, release first: %d %v", v, i, release)
+			}
 		}
 	}
+	if _, err := ReleaseFor(Version); err == nil || !strings.Contains(err.Error(), "superseded by "+FogoVersion) {
+		t.Fatalf("0.5.0 must not be downloaded: %v", err)
+	}
+	if len(Versions()) != 2 || Versions()[0] != FogoVersion || Versions()[1] != ModernVersion {
+		t.Fatal(Versions())
+	}
+	if Host() == "darwin-arm64" && !strings.Contains(InstallHint(Version), "gosvm runner install -archive gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz (superseded") {
+		t.Fatal(InstallHint(Version))
+	}
 	t.Setenv("GOSVM_CACHE", t.TempDir())
-	if RootFor(Version) == RootFor(ModernVersion) || Root() != RootFor(Version) {
+	if RootFor(Version) == RootFor(ModernVersion) || RootFor(Version) == RootFor(FogoVersion) || Root() != RootFor(Version) {
 		t.Fatal("runner versions must use separate cache slots")
 	}
 	t.Setenv(ReleaseBaseEnv, "")
@@ -291,13 +307,13 @@ func fakeDownload(t *testing.T, want string, data []byte) Download {
 }
 
 func TestDownloadRejectsWrongBytesBeforeExecution(t *testing.T) {
-	p, err := ReleaseFor(Version)
+	p, err := ReleaseFor(FogoVersion)
 	if err != nil {
 		t.Skipf("no release pin for this host: %v", err)
 	}
 	t.Setenv("GOSVM_CACHE", t.TempDir())
 	t.Setenv(ReleaseBaseEnv, "https://mirror.invalid/base")
-	url := "https://mirror.invalid/base/runner-v0.5.0/" + p.ArchiveName
+	url := "https://mirror.invalid/base/runner-v0.5.1/" + p.ArchiveName
 	for name, c := range map[string]struct {
 		data []byte
 		want string
@@ -307,22 +323,25 @@ func TestDownloadRejectsWrongBytesBeforeExecution(t *testing.T) {
 		"wrong-hash": {make([]byte, p.ArchiveBytes), "SHA-256 mismatch"},
 	} {
 		t.Run(name, func(t *testing.T) {
-			err := Install(context.Background(), "", []string{Version}, io.Discard, fakeDownload(t, url, c.data))
+			err := Install(context.Background(), "", []string{FogoVersion}, io.Discard, fakeDownload(t, url, c.data))
 			if err == nil || !strings.Contains(err.Error(), c.want) {
 				t.Fatalf("%s: %v", name, err)
 			}
-			if _, err := os.Stat(RootFor(Version)); !os.IsNotExist(err) {
+			if _, err := os.Stat(RootFor(FogoVersion)); !os.IsNotExist(err) {
 				t.Fatal("rejected download published a runner")
 			}
-			entries, _ := os.ReadDir(filepath.Dir(RootFor(Version)))
+			entries, _ := os.ReadDir(filepath.Dir(RootFor(FogoVersion)))
 			if len(entries) != 0 {
 				t.Fatalf("left temporary state: %v", entries)
 			}
 		})
 	}
 	failing := func(context.Context, string, io.Writer) error { return fmt.Errorf("HTTP 404 Not Found") }
-	if err := Install(context.Background(), "", []string{Version}, io.Discard, failing); err == nil || !strings.Contains(err.Error(), "404") {
+	if err := Install(context.Background(), "", []string{FogoVersion}, io.Discard, failing); err == nil || !strings.Contains(err.Error(), "404") {
 		t.Fatal(err)
+	}
+	if err := Install(context.Background(), "", []string{Version}, io.Discard, failing); err == nil || !strings.Contains(err.Error(), "superseded") {
+		t.Fatalf("downloaded superseded 0.5.0: %v", err)
 	}
 	if err := Install(context.Background(), "", []string{"9.9.9"}, io.Discard, failing); err == nil {
 		t.Fatal("accepted an unknown version")

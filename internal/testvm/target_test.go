@@ -15,6 +15,8 @@ func TestTargetRuntimeContract(t *testing.T) {
 		{RunnerVersion, "legacy-v1.51-v3", true}, {ModernRunnerVersion, "legacy-v1.51-v3", false},
 		{RunnerVersion, "solana-v3", false}, {ModernRunnerVersion, "solana-v3", true},
 		{RunnerVersion, "fogo-v0", true}, {"unqualified", "fogo-v0", false},
+		{HistoricalRunnerVersion, "fogo-v0", true}, {HistoricalRunnerVersion, "legacy-v1.51-v3", true},
+		{HistoricalRunnerVersion, "solana-v3", false}, {ModernRunnerVersion, "fogo-v0", true},
 	} {
 		if got := RunnerCompatible(tc.version, tc.profile); got != tc.want {
 			t.Fatalf("%s / %s: %v", tc.version, tc.profile, got)

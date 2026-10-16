@@ -6,20 +6,27 @@ pin.json (copy it into the frontend with scripts/update_runner_pins.py, which
 re-derives the pin from the archive bytes), dependencies.json and provenance.json.
 
 Binary sources:
-  default            build from this checkout with Cargo (--locked). For a
-                     reproducible Linux build run it through
-                     scripts/build_runner_linux.sh (pinned container, fixed paths).
+  default            build from this checkout with Cargo (--locked): the crate
+                     and its path dependencies are copied to
+                     GOSVM_RUNNER_BUILD_ROOT/src (default /tmp/gosvm-runner-build)
+                     and embedded paths are remapped, so the binary does not
+                     depend on the checkout, target directory or Cargo home
+                     (macOS: same rustc/cargo and Apple linker needed for the
+                     same bytes). Linux release builds run this inside
+                     scripts/build_runner_linux.sh (pinned container).
   --from-archive A   repackage the runner binary of an earlier pinned package A
                      (its archive must match a pin embedded in the frontend);
-                     the released macOS packages reuse the qualified binaries
-                     this way.
+                     the macOS 0.6.0 package reuses its qualified binary this
+                     way. 0.5.1 is always built from source.
   --binary B         repackage an existing runner build (provenance records it).
 
 Archive layout: bin/gosvm-svm-runner, LICENSE, NOTICE, THIRD_PARTY_NOTICES,
 README, Cargo.lock, litesvm/ (patch provenance and LiteSVM's Apache-2.0 text),
-licenses/<crate>-<version>/ (license files shipped by each crate),
+licenses/<crate>-<version>/ (license files shipped by each crate, or the
+upstream text from third_party/crate-licenses/ for a crate that ships none),
 licenses/Apache-2.0.txt, CRATE_LICENSES.txt (every crate in the target's
-dependency graph with its declared license), dependencies.json,
+dependency graph with its declared license; a crate with neither its own
+text nor an Apache-2.0 license fails the build), dependencies.json,
 provenance.json, manifest.json. Tar metadata, ordering and gzip header are
 fixed, so identical inputs reproduce identical bytes.
 """
@@ -41,20 +48,44 @@ VERSIONS = {
     '0.5.0': {
         'identity': 'gosvm-svm-runner 0.5.0 (LiteSVM 0.8.2 + rent-error patch)',
         'crate': 'benchmarks/svm-runner',
+        'path_dependencies': ['third_party/litesvm-0.8.2'],
         'litesvm': {'litesvm/GOSVM_PATCH.md': 'third_party/litesvm-0.8.2/GOSVM_PATCH.md',
                     'litesvm/GOSVM_PROVENANCE.json': 'third_party/litesvm-0.8.2/GOSVM_PROVENANCE.json',
                     'litesvm/LICENSE-APACHE': 'third_party/litesvm-0.8.2/LICENSE-APACHE'},
         'historical_pin': 'internal/runner/pins/darwin-arm64.json',
     },
+    # Superseded 0.5.0 for fogo-v0 and legacy: built from the committed source on
+    # every platform (0.5.0's macOS binary predates it; see SVM_RUNNER_PACKAGING).
+    '0.5.1': {
+        'identity': 'gosvm-svm-runner 0.5.1 (LiteSVM 0.8.2 + rent-error patch)',
+        'crate': 'benchmarks/svm-runner',
+        'path_dependencies': ['third_party/litesvm-0.8.2'],
+        'litesvm': {'litesvm/GOSVM_PATCH.md': 'third_party/litesvm-0.8.2/GOSVM_PATCH.md',
+                    'litesvm/GOSVM_PROVENANCE.json': 'third_party/litesvm-0.8.2/GOSVM_PROVENANCE.json',
+                    'litesvm/LICENSE-APACHE': 'third_party/litesvm-0.8.2/LICENSE-APACHE'},
+    },
     '0.6.0': {
         'identity': 'gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)',
         'crate': 'benchmarks/svm-runner-modern',
+        'path_dependencies': ['build/modern-runtime-vendor/litesvm-0.13.0'],
         # The 0.13.0 crate ships no license file; upstream LiteSVM is Apache-2.0.
         'litesvm': {'litesvm/build_modern_runner.py': 'scripts/build_modern_runner.py',
                     'litesvm/LICENSE-APACHE': 'third_party/litesvm-0.8.2/LICENSE-APACHE'},
         'historical_pin': 'internal/runner/pins/0.6.0-darwin-arm64.json',
     },
 }
+# License texts for crates that declare a license but ship no license file
+# (third_party/crate-licenses/<crate>-<version>/, sources in its README.md).
+# Keyed by version: a crate's license can change between releases.
+SUPPLEMENTARY = ROOT / 'third_party/crate-licenses'
+# Source builds compile a copy of the runner crate and its path dependencies
+# at this fixed location: Cargo hashes the absolute path of a path dependency
+# outside the crate's workspace (LiteSVM) into symbol names, so building from
+# the checkout would make the binary depend on where the checkout lives.
+BUILD_ROOT = Path(os.environ.get('GOSVM_RUNNER_BUILD_ROOT', '/tmp/gosvm-runner-build')).resolve()
+# Embedded paths are rewritten to fixed prefixes, so the binary does not
+# depend on the target directory or Cargo's home either.
+SOURCE_PREFIX, TARGET_PREFIX, CARGO_HOME_PREFIX = '/gosvm', '/gosvm-target', '/cargo'
 PLATFORMS = {('Darwin', 'arm64'): ('darwin-arm64', 'aarch64-apple-darwin'),
              ('Linux', 'x86_64'): ('linux-amd64', 'x86_64-unknown-linux-gnu'),
              ('Linux', 'aarch64'): ('linux-arm64', 'aarch64-unknown-linux-gnu')}
@@ -107,15 +138,31 @@ def historical_binary(archive, pin_path):
     return binary, json.loads(original), pin
 
 
+def cargo_home():
+    return Path(os.environ.get('CARGO_HOME') or Path.home() / '.cargo').resolve()
+
+
 def build(spec, version, toolchain, target_dir, offline):
     env = dict(os.environ)
-    flags = ['--release', '--locked'] + (['--offline'] if offline else [])
+    if env.get('RUSTFLAGS', '').strip() or env.get('CARGO_ENCODED_RUSTFLAGS') or env.get('CARGO_BUILD_RUSTFLAGS'):
+        sys.exit('unset RUSTFLAGS/CARGO_ENCODED_RUSTFLAGS/CARGO_BUILD_RUSTFLAGS: release builds use only the fixed path remapping')
     if version == '0.6.0':
         prepare = [sys.executable, str(ROOT / 'scripts/build_modern_runner.py'), '--prepare-only']
         subprocess.run(prepare + (['--offline'] if offline else []), cwd=ROOT, check=True)
+    source = BUILD_ROOT / 'src'
+    if source.exists():
+        shutil.rmtree(source)
+    for directory in [spec['crate']] + spec['path_dependencies']:
+        shutil.copytree(ROOT / directory, source / directory, ignore=shutil.ignore_patterns('target'))
+    if target_dir == source or source in target_dir.parents:
+        sys.exit('--target-dir must be outside the staged sources')
+    env['RUSTFLAGS'] = ' '.join([f'--remap-path-prefix={source}={SOURCE_PREFIX}',
+                                 f'--remap-path-prefix={target_dir}={TARGET_PREFIX}',
+                                 f'--remap-path-prefix={cargo_home()}={CARGO_HOME_PREFIX}'])
+    flags = ['--release', '--locked'] + (['--offline'] if offline else [])
     subprocess.run(cargo(toolchain) + ['build', *flags, '--bin', 'gosvm-svm-runner',
-                                       '--manifest-path', str(ROOT / spec['crate'] / 'Cargo.toml'),
-                                       '--target-dir', str(target_dir)], cwd=ROOT, env=env, check=True)
+                                       '--manifest-path', str(source / spec['crate'] / 'Cargo.toml'),
+                                       '--target-dir', str(target_dir)], cwd=source, env=env, check=True)
     return target_dir / 'release/gosvm-svm-runner'
 
 
@@ -155,6 +202,11 @@ def license_inventory(spec, rust_target, toolchain, offline, files):
         if package['license_file']:
             candidates.add(directory / package['license_file'])
         members = []
+        supplement = SUPPLEMENTARY / f"{package['name']}-{package['version']}"
+        if not candidates and package['source'] and supplement.is_dir():
+            # Upstream text goSVM supplies for a crate that ships none (provenance in the README).
+            candidates = {p for p in supplement.iterdir() if p.is_file()}
+            directory = supplement
         for source in sorted(candidates):
             member = f"licenses/{package['name']}-{package['version']}/{source.relative_to(directory).as_posix()}"
             content = source.read_bytes()
@@ -167,10 +219,12 @@ def license_inventory(spec, rust_target, toolchain, offline, files):
             license_name, members = 'Apache-2.0 (goSVM)', ['LICENSE', 'NOTICE']
         elif package['source'] is None and package['name'] == 'litesvm':
             members = members or ['litesvm/LICENSE-APACHE']
+        supplied = directory.parent == SUPPLEMENTARY
         dependencies.append({'name': package['name'], 'version': package['version'],
                              'source': package['source'], 'license': license_name,
-                             'features': sorted(nodes[package['id']]['features']), 'license_members': members})
-        texts = ', '.join(members) if members else (
+                             'features': sorted(nodes[package['id']]['features']), 'license_members': members,
+                             **({'license_text_supplied_by_gosvm': True} if supplied else {})})
+        texts = ', '.join(members) + (' (crate ships no license file; upstream text supplied by goSVM)' if supplied else '') if members else (
             'no license file in the crate; see licenses/Apache-2.0.txt' if 'Apache-2.0' in (license_name or '')
             else 'no license file in the crate; review required')
         origin = 'crates.io' if (package['source'] or '').startswith('registry+') else (package['source'] or 'local')
@@ -201,7 +255,8 @@ def main():
     source.add_argument('--from-archive', type=Path, help='earlier pinned package whose binary is repackaged')
     source.add_argument('--binary', type=Path, help='existing runner build to package')
     parser.add_argument('--toolchain', default='', help='rustup toolchain for source builds (e.g. 1.98.1)')
-    parser.add_argument('--target-dir', type=Path, default=ROOT / 'build/runner-release-target')
+    parser.add_argument('--target-dir', type=Path, default=BUILD_ROOT / 'target',
+                        help='Cargo target directory (default: GOSVM_RUNNER_BUILD_ROOT/target)')
     parser.add_argument('--offline', action='store_true', help='use only cached crates (cargo --offline)')
     args = parser.parse_args()
     key = (platform.system(), platform.machine())
@@ -213,7 +268,7 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     files = {}
     if args.from_archive:
-        if plat != 'darwin-arm64':
+        if plat != 'darwin-arm64' or 'historical_pin' not in spec:
             parser.error('--from-archive repackages the historical macOS arm64 packages only')
         binary_bytes, original, pin = historical_binary(args.from_archive.resolve(), spec['historical_pin'])
         files['original/provenance.json'] = encoded(original)
@@ -236,9 +291,14 @@ def main():
                            + (['--offline'] if args.offline else []), cwd=ROOT, check=True)
     else:
         binary = build(spec, args.version, args.toolchain, args.target_dir.resolve(), args.offline)
+        # Local paths are not recorded: they are remapped in the binary, and
+        # recording them would make the archive depend on the build machine.
         build_info = {'kind': 'built', 'rustc': command('rustc', *([f'+{args.toolchain}'] if args.toolchain else []), '--version'),
-                      'cargo': command(*cargo(args.toolchain), '--version'), 'checkout': str(ROOT),
-                      'cargo_home': os.environ.get('CARGO_HOME', str(Path.home() / '.cargo')),
+                      'cargo': command(*cargo(args.toolchain), '--version'),
+                      'cargo_flags': ['--release', '--locked'] + (['--offline'] if args.offline else []),
+                      'staged_sources': [spec['crate']] + spec['path_dependencies'],
+                      'path_remapping': {'staged_sources': SOURCE_PREFIX, 'target_dir': TARGET_PREFIX,
+                                         'cargo_home': CARGO_HOME_PREFIX},
                       'container_image': os.environ.get('GOSVM_RUNNER_BUILD_IMAGE', '')}
     identity = command(binary, '--version')
     if identity != spec['identity']:
@@ -255,10 +315,15 @@ def main():
         files[member] = (ROOT / path).read_bytes()
     files['README'] = README.format(version=args.version, platform=plat, identity=spec['identity']).encode()
     dependencies = license_inventory(spec, rust_target, args.toolchain, args.offline, files)
+    unresolved = [l.split('\t')[0] for l in files['CRATE_LICENSES.txt'].decode().splitlines() if l.endswith('review required')]
+    if unresolved:
+        sys.exit('crates without license text (add the upstream text under third_party/crate-licenses/<crate>-<version>/): '
+                 + ', '.join(unresolved))
     sources = [ROOT / 'scripts/package_runner_release.py', ROOT / 'LICENSE', ROOT / 'NOTICE', ROOT / 'THIRD_PARTY_NOTICES']
+    sources += [p for p in SUPPLEMENTARY.rglob('*') if p.is_file()]
     sources += [ROOT / p for p in spec['litesvm'].values()]
     sources += [p for p in (ROOT / spec['crate']).rglob('*') if p.is_file() and p.suffix != '.md']
-    if args.version == '0.5.0':
+    if args.version in ('0.5.0', '0.5.1'):
         sources += [p for p in (ROOT / 'third_party/litesvm-0.8.2').rglob('*') if p.is_file() and p.suffix != '.md']
     files['provenance.json'] = encoded({
         'schema': 2, 'version': args.version, 'platform': plat, 'rust_target': rust_target, 'build': build_info,
@@ -282,7 +347,8 @@ def main():
     (output / 'provenance.json').write_bytes(files['provenance.json'])
     print(json.dumps({'archive': str(archive), 'bytes': len(data), 'sha256': pin['archive_sha256'],
                       'binary_sha256': sha(files['bin/gosvm-svm-runner']), 'packages': len(dependencies),
-                      'packages_without_license_files': sum(not p['license_members'] for p in dependencies)}, indent=2))
+                      'packages_without_license_files': sum(not p['license_members'] for p in dependencies),
+                      'license_texts_supplied': sum(bool(p.get('license_text_supplied_by_gosvm')) for p in dependencies)}, indent=2))
 
 
 if __name__ == '__main__':

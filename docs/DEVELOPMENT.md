@@ -48,7 +48,9 @@ Runner 0.4.0 adds [general multi-account fixtures](../docs/SVM_FIXTURES.md),
 available through `gosvm svm-test` for a compiled ELF or `test --svm -svm-fixtures`
 for projects. [Full-token validation](../results/svm/2026-10-05-general-complete/README.md)
 covers shared-state scenarios, overrides, exact CU/errors, and rollback.
-Runner 0.5.0 adds a documented LiteSVM rent-error precedence patch. The
+Runner 0.5.0 adds a documented LiteSVM rent-error precedence patch (0.5.1, the
+same engine built from the committed source with `returnData`, supersedes it for
+public installs; see [runner packaging](SVM_RUNNER_PACKAGING.md)). The
 [lifecycle checks](../results/svm/2026-10-05-lifecycle-verified/README.md) create and
 initialize token accounts, execute a Go swap, close/recreate accounts, and verify
 rollback; new-account `rent_epoch` metadata differs explicitly between engines.
@@ -221,31 +223,35 @@ Maintainer-only; nothing here runs automatically. CI (`.github/workflows/ci.yml`
 builds, vets and tests on linux-amd64 and macOS arm64 for pushes and pull requests,
 installs the backend (cached) and, once published, the runners, runs a starter
 walkthrough and rebuilds the reference ELFs. `.github/workflows/release.yml` is
-manual and only creates **draft** releases. Tags: `runner-v0.5.0`, `runner-v0.6.0`
+manual and only creates **draft** releases. Tags: `runner-v0.5.1`, `runner-v0.6.0`
 (runner archives, immutable once published) and `v<semver>` for the CLI, e.g.
 `v0.1.0-alpha.1`. The CLI embeds the runner pins, so runners are released first.
+0.5.1 supersedes 0.5.0, which is not released
+([runner packaging](SVM_RUNNER_PACKAGING.md)).
 
 1. **Runner drafts.** `gh workflow run release.yml -f component=runners`. It builds
    the Linux archives of both versions for amd64 and arm64 in the pinned container
    (`scripts/build_runner_linux.sh`) and attaches them to draft releases
-   `runner-v0.5.0`/`runner-v0.6.0`. Resolve the 0.5.0 source decision in
-   [runner packaging](SVM_RUNNER_PACKAGING.md#building-runner-archives-maintainers) first.
-2. **macOS runner archives.** Rebuild them from the historical packages (identical
-   bytes, offline) and attach them:
+   `runner-v0.5.1`/`runner-v0.6.0`.
+2. **macOS runner archives.** Rebuild them (offline; 0.5.1 from source with Rust
+   1.98.1 and the Apple linker recorded in its provenance, 0.6.0 by repackaging the
+   historical package) and attach them only if they equal the committed pins:
    ```sh
-   python3 scripts/package_runner_release.py --version 0.5.0 --offline --output build/rr/0.5.0 \
-     --from-archive results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+   python3 scripts/package_runner_release.py --version 0.5.1 --offline --output build/rr/0.5.1
    python3 scripts/package_runner_release.py --version 0.6.0 --offline --output build/rr/0.6.0 \
      --from-archive results/svm/2026-10-09-runner-0.6.0-package/gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
    python3 scripts/update_runner_pins.py --check build/rr/*/gosvm-svm-runner-*.tar.gz   # must be up to date
-   gh release upload runner-v0.5.0 build/rr/0.5.0/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+   gh release upload runner-v0.5.1 build/rr/0.5.1/gosvm-svm-runner-0.5.1-darwin-arm64.tar.gz
    gh release upload runner-v0.6.0 build/rr/0.6.0/gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
    ```
+   If the 0.5.1 rebuild differs (another Rust or Xcode release), upload the
+   qualified archive kept with the [0.5.1 evidence](../results/svm/2026-10-16-runner-0.5.1/README.md)
+   after the same `--check`, or re-pin and requalify a new build.
 3. **Pin the Linux archives.** Download the drafts' Linux assets, optionally rebuild
    them locally with Docker and compare, then commit the pins:
    ```sh
    mkdir -p build/rr/linux
-   gh release download runner-v0.5.0 -p '*linux*' -D build/rr/linux
+   gh release download runner-v0.5.1 -p '*linux*' -D build/rr/linux
    gh release download runner-v0.6.0 -p '*linux*' -D build/rr/linux
    bash scripts/build_runner_linux.sh build/rr/local amd64      # optional reproduction
    cmp build/rr/linux/gosvm-svm-runner-0.6.0-linux-amd64.tar.gz build/rr/local/0.6.0-linux-amd64/gosvm-svm-runner-0.6.0-linux-amd64.tar.gz
@@ -254,7 +260,7 @@ manual and only creates **draft** releases. Tags: `runner-v0.5.0`, `runner-v0.6.
    git add internal/runner/pins/release && git commit -m "Pin Linux runner release archives"
    git push            # CI on main then installs and runs the Linux runners
    ```
-4. **Publish runners:** `gh release edit runner-v0.5.0 --draft=false` and the same
+4. **Publish runners:** `gh release edit runner-v0.5.1 --draft=false` and the same
    for `runner-v0.6.0`, after CI on the pinned commit is green.
 5. **CLI draft:** `gh workflow run release.yml -f component=cli -f version=v0.1.0-alpha.1`.
    It refuses to build unless the committed pins equal the runner release assets

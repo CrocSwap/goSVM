@@ -161,7 +161,7 @@ become modern-v3 or Fogo measurements.
 ## Local runtime qualification
 
 Both runners are frontend-pinned packages with separate managed cache slots.
-`gosvm runner install` downloads both from the GitHub releases `runner-v0.5.0` and
+`gosvm runner install` downloads both from the GitHub releases `runner-v0.5.1` and
 `runner-v0.6.0` (once published) and verifies them against the embedded pins;
 `-version` selects one, `-archive <package>` installs a local copy offline and
 recognizes which one it is; `gosvm runner status` reports both. Release packaging
@@ -173,7 +173,7 @@ accepted.
 gosvm runner install                     # both, verified download
 gosvm runner install -archive gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz   # offline
 gosvm test -target solana-v3 --svm     # selects managed 0.6.0
-gosvm test -target fogo-v0 --svm       # selects managed 0.5.0
+gosvm test -target fogo-v0 --svm       # selects managed 0.5.1 (else an installed 0.5.0)
 # General fixture paths are relative to the caller's working directory.
 gosvm test -dir examples/full-swap -target solana-v3 --svm \
   -svm-fixtures examples/full-swap/testdata/lifecycle.json
@@ -181,7 +181,9 @@ gosvm test -dir examples/full-swap -target solana-v3 --svm \
 
 Selection order: `-svm-runner`, `GOSVM_TEST_RUNNER`, the verified managed runner
 for the target, then `gosvm-svm-runner` on `PATH`. `solana-v3` uses 0.6.0;
-`fogo-v0` and legacy use 0.5.0. `fogo-v0` falls back to managed 0.6.0 only when
+`fogo-v0` and legacy use 0.5.1, or an existing 0.5.0 installation (the same
+LiteSVM 0.8.2 engine without `returnData` in simulation results; 0.5.0 is no longer
+downloaded). `fogo-v0` falls back to managed 0.6.0 only when
 `GOSVM_TEST_FEATURES` is set. A damaged managed runner fails closed.
 
 The historical runner uses LiteSVM 0.8.2 and the observed local validator 3.0.15

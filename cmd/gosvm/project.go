@@ -36,9 +36,9 @@ const help = `gosvm experimental project tools
                           (-archive local copy, -llvm import, -target legacy-v1.51-v3,
                           -rust also the full tree for Rust/Bend-source libraries, macOS arm64)
   gosvm toolchain status  Verify the managed backend and the optional Rust toolchain
-  gosvm runner install    Download and verify the pinned SVM runners (-version 0.5.0|0.6.0),
+  gosvm runner install    Download and verify the pinned SVM runners (-version 0.5.1|0.6.0),
                           or install a local package offline: -archive <package.tar.gz>
-  gosvm runner status     Verify the managed runners (0.6.0 solana-v3; 0.5.0 fogo-v0/legacy)
+  gosvm runner status     Verify the managed runners (0.6.0 solana-v3; 0.5.1 fogo-v0/legacy)
   gosvm doctor            Check Go, backends and runners for fogo-v0/solana-v3, with fixes
   gosvm generate          Generate account checks, codecs, client, and IDL
   gosvm check             Generate and check the on-chain Go subset (no LLVM)
@@ -69,7 +69,7 @@ linux-amd64, linux-arm64 (runners where this CLI pins them; Rust libraries macOS
 Build/test accept -timings to print JSON phase durations for workflow diagnostics.
 Fast tests accept -svm-run <fixture regex> and -svm-runner <binary path>.
 Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed runner for
-the target (solana-v3 0.6.0; fogo-v0/legacy 0.5.0), PATH.
+the target (solana-v3 0.6.0; fogo-v0/legacy 0.5.1, else an installed 0.5.0), PATH.
 Use -svm-sysvars <JSON file> for explicit Clock/Rent values in fast tests.
 Use -svm-fixtures <JSON file> for general multi-account project fixtures.
 test --svm -elf <program.so> tests an externally built ELF instead of compiling
@@ -597,7 +597,7 @@ func toolchainCommand(args []string) error {
 	if args[0] == "install" {
 		fs.StringVar(&archive, "archive", "", "use a local copy of the official archive (same size/SHA-256/content verification)")
 		fs.BoolVar(&rust, "rust", false, "also install the full platform-tools v1.57 tree for Rust libraries (one download; macOS arm64 only)")
-		fs.BoolVar(&runners, "runners", true, "also download the pinned SVM runners for gosvm test --svm (0.5.0 fogo-v0, 0.6.0 solana-v3; about 7 MB)")
+		fs.BoolVar(&runners, "runners", true, "also download the pinned SVM runners for gosvm test --svm (0.5.1 fogo-v0, 0.6.0 solana-v3; about 7 MB)")
 	}
 	if e := fs.Parse(args[1:]); e != nil {
 		if e == flag.ErrHelp {
@@ -664,7 +664,7 @@ func toolchainCommand(args []string) error {
 		if err := toolchain.Install(ctx, toolchain.Root(), archive, os.Stdout, downloadBackend); err != nil || !runners {
 			return err
 		}
-		return installRunnersAfterToolchain(ctx, []string{runner.Version}, os.Stdout)
+		return installRunnersAfterToolchain(ctx, []string{runner.FogoVersion}, os.Stdout)
 	default:
 		return fmt.Errorf("unknown toolchain command %q", args[0])
 	}
