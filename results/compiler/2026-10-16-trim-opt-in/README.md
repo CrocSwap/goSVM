@@ -121,6 +121,19 @@ every initializer to run do not opt in. ELF sizes shrink with it
 - `scripts/verify_rebuild.py`: fogo-v0 `a66c5a97…`, solana-v3 `b419245b…`
   and `clock2` identical to the reference ([rebuild](rebuild/metrics.json)).
 
+## Combined with compile-time evaluation
+
+These measurements were taken on the trimming commit alone. Rebased onto
+[compile-time evaluation](../2026-10-16-const-init/README.md) (same day),
+the same suites pass on both targets with both forms, and the two forms
+then cost the same per transaction: idle 373 CU (fogo-v0) / 374
+(solana-v3), `ComputeSwapStep` within the range 18,439 / 18,391, for both
+the opt-in and the trimmed copies (the dropped `int256.MaxI256` initializer
+no longer costs anything either way). Initialization probes under the
+opt-in: `utils` 19 CU, an app using only `ComputeSwapStep` 79, only the tick
+math 73 (trimmed copies: 114 each). Summaries:
+[../2026-10-16-const-init/with-trim](../2026-10-16-const-init/with-trim).
+
 ## Reproduction
 
 ```sh

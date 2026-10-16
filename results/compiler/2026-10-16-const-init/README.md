@@ -127,6 +127,15 @@ Build time: Check on the real-libraries example took 200–270 ms with and
 without evaluation on a loaded machine; interpreting `utils`' 71 steps
 takes 13,578 interpreter steps, within that noise.
 
+## With opt-in trimming
+
+Rebased together with [opt-in trimming](../2026-10-16-trim-opt-in/README.md),
+`TestRealLibrariesSBF` runs the example both from the trimmed copies and
+from the unmodified modules under the opt-in: both forms cost idle 373 /
+374 CU and `ComputeSwapStep` 18,439 / 18,391 on fogo-v0 / solana-v3; the
+opt-in's `utils` initialization probe is 19 CU (it drops unreferenced
+initializers). Summaries: [with-trim](with-trim).
+
 ## Reproduction
 
 ```sh
