@@ -51,6 +51,19 @@ fields, dereferences and indexed elements, evaluating the target operands once.
 Compound assignment works on the same targets
 ([integers](GO_INTEGERS.md#compound-assignment)).
 
+## Conversions
+
+`(*T)(p)` converts a pointer to another pointer type whose base type has the
+same underlying type (Go's rule, ignoring struct tags; go/types checks it):
+the result is the same address, and `(*T)(nil)` or a nil `p` gives nil.
+uniswapv3-sdk-uint256 uses it to reinterpret a `uint256.Int` as an
+`int256.Int` without copying (`(*int256.Int)(&tmp)`, both `[4]uint64`).
+Writes through either pointer are seen through the other; the borrow
+analysis treats the result as borrowing what `p` borrows (a converted
+pointer to a local that escapes moves the local to the heap). Named pointer
+types themselves (`type P *T`) stay unsupported. Tests:
+`TestRealLibraryForms*` ([reallibs_forms_test.go](../internal/compiler/reallibs_forms_test.go)).
+
 ## Pointers to pointers
 
 `**T` (and deeper) values work as in Go: `pp := &p`, `**pp = v`, `*pp = &x`,

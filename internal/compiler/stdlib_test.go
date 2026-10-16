@@ -29,12 +29,14 @@ func stdlibCheck(t *testing.T, source string) string {
 // packages that are not available on chain: by name, at the use, with the
 // reason.
 func TestStdlibRejections(t *testing.T) {
-	importable := "bytes, encoding/binary, errors, math, strconv, strings, unicode, unicode/utf8"
+	importable := "bytes, encoding/binary, errors, io, math, strconv, strings, unicode, unicode/utf8"
 	for name, c := range map[string]struct{ source, want string }{
 		"fmt": {"package p\nimport \"fmt\"\nfunc Process(s, i []byte) uint64 { fmt.Println(); return 0 }\n",
 			`p.go:2:8: could not import fmt (unsupported import "fmt"; standard-library packages on chain: ` + importable + ` and math/bits (docs/GO_STDLIB.md))`},
-		"io": {"package p\nimport \"io\"\nvar _ io.Reader\nfunc Process(s, i []byte) uint64 { return 0 }\n",
-			`p.go:2:8: could not import io (unsupported import "io"; standard-library packages on chain: ` + importable + ` and math/bits (docs/GO_STDLIB.md))`},
+		"bufio": {"package p\nimport \"bufio\"\nvar _ bufio.Reader\nfunc Process(s, i []byte) uint64 { return 0 }\n",
+			`p.go:2:8: could not import bufio (unsupported import "bufio"; standard-library packages on chain: ` + importable + ` and math/bits (docs/GO_STDLIB.md))`},
+		"io left out": {"package p\nimport \"io\"\nfunc Process(s, i []byte) uint64 { _, _ = io.ReadAll(nil); return 0 }\n",
+			"p.go:3:46: io.ReadAll is not available on chain: goSVM's on-chain io does not include it (docs/GO_STDLIB.md)"},
 		"internal": {"package p\nimport \"internal/bytealg\"\nfunc Process(s, i []byte) uint64 { return uint64(bytealg.Count(s, 0)) }\n",
 			`p.go:2:8: use of internal package "internal/bytealg" not allowed`},
 		"math float function": {"package p\nimport \"math\"\nfunc Process(s, i []byte) uint64 { return uint64(math.Sqrt(4)) }\n",
@@ -48,11 +50,11 @@ func TestStdlibRejections(t *testing.T) {
 		"binary reflection": {"package p\nimport \"encoding/binary\"\nfunc Process(s, i []byte) uint64 { return uint64(binary.Size(s)) }\n",
 			"p.go:3:57: encoding/binary.Size is not available on chain: it uses reflection (docs/GO_STDLIB.md)"},
 		"binary io": {"package p\nimport \"encoding/binary\"\nfunc Process(s, i []byte) uint64 { v, _ := binary.ReadUvarint(nil); return v }\n",
-			"p.go:3:51: encoding/binary.ReadUvarint is not available on chain: it reads from an io.ByteReader; package io is not available on chain (docs/GO_STDLIB.md)"},
+			"p.go:3:51: encoding/binary.ReadUvarint is not available on chain: it reads from an io.ByteReader; goSVM's on-chain encoding/binary leaves out its io parts (docs/GO_STDLIB.md)"},
 		"bytes buffer": {"package p\nimport \"bytes\"\nfunc Process(s, i []byte) uint64 { var b bytes.Buffer; b.Write(s); return 0 }\n",
-			"p.go:3:48: bytes.Buffer is not available on chain: it implements io interfaces; package io is not available on chain (docs/GO_STDLIB.md)"},
+			"p.go:3:48: bytes.Buffer is not available on chain: it implements io interfaces; goSVM's on-chain bytes leaves out its io parts (docs/GO_STDLIB.md)"},
 		"strings reader": {"package p\nimport \"strings\"\nfunc Process(s, i []byte) uint64 { r := strings.NewReader(\"x\"); _ = r; return 0 }\n",
-			"p.go:3:49: strings.NewReader is not available on chain: it implements io interfaces; package io is not available on chain (docs/GO_STDLIB.md)"},
+			"p.go:3:49: strings.NewReader is not available on chain: it implements io interfaces; goSVM's on-chain strings leaves out its io parts (docs/GO_STDLIB.md)"},
 		"strings title": {"package p\nimport \"strings\"\nfunc Process(s, i []byte) uint64 { return uint64(len(strings.Title(string(s)))) }\n",
 			"p.go:3:62: strings.Title is not available on chain: it needs Unicode letter and digit tables (and is deprecated) (docs/GO_STDLIB.md)"},
 		"unicode table": {"package p\nimport \"unicode\"\nfunc Process(s, i []byte) uint64 { if unicode.IsUpper(rune(s[0])) { return 1 }; return 0 }\n",
@@ -256,6 +258,7 @@ var stdlibOrigins = map[string]struct {
 	"internal/bytealg/indexbyte_generic.go":     {[]string{"internal/bytealg/indexbyte_generic.go"}, "verbatim apart from the build constraint"},
 	"internal/bytealg/lastindexbyte_generic.go": {[]string{"internal/bytealg/lastindexbyte_generic.go"}, "verbatim"},
 	"internal/errtext/errtext.go":               {[]string{"errors/join.go", "strconv/atoi.go"}, "goSVM; replaces the recursive Error methods of the origins"},
+	"io/io.go":                                  {[]string{"io/io.go"}, "extract"},
 	"math/const.go":                             {[]string{"math/const.go"}, "extract"},
 	"strconv/atob.go":                           {[]string{"strconv/atob.go"}, "verbatim"},
 	"strconv/atoi.go":                           {[]string{"strconv/atoi.go"}, "modified"},
@@ -381,7 +384,7 @@ func TestStdlibProvenance(t *testing.T) {
 // TestStdlibPackagesList pins the overlay packages and keeps their sources
 // gofmt-formatted, like Go's.
 func TestStdlibPackagesList(t *testing.T) {
-	want := "bytes encoding/binary errors internal/bytealg internal/errtext math strconv strings unicode unicode/utf8"
+	want := "bytes encoding/binary errors internal/bytealg internal/errtext io math strconv strings unicode unicode/utf8"
 	if got := strings.Join(StdlibPackages, " "); got != want {
 		t.Fatalf("StdlibPackages %q", got)
 	}

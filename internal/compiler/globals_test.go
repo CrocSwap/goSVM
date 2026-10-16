@@ -194,6 +194,14 @@ func TestGlobalReadOnly(t *testing.T) {
 type S struct{ a uint64; b [2]uint8 }
 func (s *S) Ptr() uint64 { return s.a }
 func (s S) Val() uint64 { return s.a }
+func (s *S) Set() { s.a = 1 }
+func rd(p *uint64) uint64 { return *p }
+func rd2(p *S) uint64 { return rd(&p.a) + p.Val() + p.Ptr() + uint64(p.b[1]) }
+func keep(p *uint64) *uint64 { return p }
+func later(p *uint64) func() uint64 { return func() uint64 { return *p } }
+func move(p *uint64) uint64 { q := p; return *q }
+func bump(p *[2]uint8) { p[1]++ }
+func viaBump(p *S) { bump(&p.b) }
 var r1 = 5
 var r2 = [3]uint8{1, 2, 3}
 var r3 = S{a: 1}
@@ -209,7 +217,9 @@ var w3 = S{a: 1}
 var w4 = []uint32{1, 2}
 var w5 = []uint32{1, 2}
 var w6 = []uint32{1, 2}
-var w7 S
+var r10 S
+var r11 = [2]uint64{4, 5}
+var r12 = S{a: 2}
 var w8 = [2]uint64{}
 var w9 = S{}
 var w10 = [2]uint64{}
@@ -219,6 +229,12 @@ var w13 = 1
 var w14 = 2
 var w15 = []uint32{3}
 var w16 uint64
+var w7 S
+var w17 = [2]uint64{1}
+var w18 = [2]uint64{1}
+var w19 uint64 = 1
+var w20 = S{a: 1}
+var w21 = S{a: 1}
 var x1 = uint64(r1) + 1  // not constant
 var x2 = []uint32{}      // empty slice literal: a non-nil, empty slice
 var x3 []string          // strings are not plain data
@@ -244,7 +260,14 @@ func Process(o, in []byte) uint64 {
 	_ = sum(w4)
 	w5 = append(w5, 1)
 	s := w6[:1]; s[0] = 7
-	_ = w7.Ptr()
+	_ = r10.Ptr()
+	n += rd(&r11[1]) + rd2(&r12)
+	w7.Set()
+	_ = keep(&w17[0])
+	_ = later(&w18[1])
+	n += move(&w19)
+	viaBump(&w20)
+	n += rd2(&w21) + *keep(&w21.a)
 	f := w9.Ptr; _ = f()
 	p := &w8[1]; *p = 2
 	q := w10[:]; q[0] = 1

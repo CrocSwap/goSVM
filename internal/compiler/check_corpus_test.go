@@ -220,10 +220,10 @@ var corpusChanges = map[int]corpusEntry{
 	// pointers to pointers (errors.As(err, &p) for a pointer-typed p needs
 	// a **T) and variadic functions (errors.Join) became supported. No
 	// other entry is affected.
-	120: {CSHA256: "ab554322d245840ef1e11f3e7a52210520fcfe53075ed9cf1abc4ed3c44f2750"},                                                                                                                                                   // s02.go `func f(xs ...uint64)` called as f(): was "variadics are unsupported"
-	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; standard-library packages on chain: bytes, encoding/binary, errors, math, strconv, strings, unicode, unicode/utf8 and math/bits (docs/GO_STDLIB.md))`}, // was "...; use a module-backed program for user packages", then "...; the only standard-library package on-chain is math/bits"
-	3:   {CSHA256: "35e30e3a3b6c5b64a7bf16ab58665fc2616eeb85e7362cc64e837a805105a3b6"},                                                                                                                                                   // s51.go `func f(p **uint64)`: was pointerElementRule
-	190: {CSHA256: "877ada41476ba1837ae0f9276ed3222dcd48d27e644e436dfdcc06deb8acceeb"},                                                                                                                                                   // pointer-reject.go `pp:=&p;return **pp`: was pointerElementRule (it now compiles; the nil dereference traps at run time)
+	120: {CSHA256: "ab554322d245840ef1e11f3e7a52210520fcfe53075ed9cf1abc4ed3c44f2750"}, // s02.go `func f(xs ...uint64)` called as f(): was "variadics are unsupported"
+	// (Entry 249's list gained io with the io overlay; see below.)
+	3:   {CSHA256: "35e30e3a3b6c5b64a7bf16ab58665fc2616eeb85e7362cc64e837a805105a3b6"}, // s51.go `func f(p **uint64)`: was pointerElementRule
+	190: {CSHA256: "877ada41476ba1837ae0f9276ed3222dcd48d27e644e436dfdcc06deb8acceeb"}, // pointer-reject.go `pp:=&p;return **pp`: was pointerElementRule (it now compiles; the nil dereference traps at run time)
 	// The standard library and value types were developed in parallel: no
 	// entry is affected by both, so merging them changed no verdict or C
 	// hash recorded by either side.
@@ -234,64 +234,71 @@ var corpusChanges = map[int]corpusEntry{
 	// helper no longer writes its slice parameter, which changes the C of
 	// every program that appends. Entries above whose C changed for either
 	// reason carry their new hashes in place (53 entries).
-	6:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	8:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	10:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // program.go
-	11:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"}, // entry.go
-	20:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"}, // model.go
-	22:  {CSHA256: "dd4b8fe6acdc35feb26a086c9e48389a06d93e779aa48b64eb71d1b92691ebe6"}, // pda.go
-	40:  {CSHA256: "8ea5fabbd6de885686956be6f6e294059b5115153b3866006e3d8a1deb7373ca"}, // program.go
-	43:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"}, // model.go
-	48:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	51:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"}, // types.go
-	57:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	58:  {CSHA256: "7e0975a8e457446af4c53308487b583a1fd28d90c586064e235a2c578bb9c6e7"}, // model.go
-	59:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	68:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"}, // model.go
-	77:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	83:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	85:  {CSHA256: "4b3199a3e995310ad3c61320415f382481451b2510de256382b9aad8fff44f52"}, // model.go
-	86:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"}, // model.go
-	92:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	93:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // test.go
-	99:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	105: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	108: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	112: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"}, // model.go
-	114: {CSHA256: "57baa962535ac47f6fcde53076bbb9138f6cfc467cc7e9d729ce4f903421712f"}, // pda.go
-	115: {CSHA256: "ff9d74d9cd831d0c92b087ea98d60ea3d16b969ddd582013014146d070930048"}, // model.go
-	117: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	118: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	121: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	123: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	142: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	143: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	147: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	160: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	167: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"}, // model.go
-	169: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	172: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	176: {CSHA256: "c4320970229098e1a01bca4f4d73f17242472cc2d8ca081d13fab5479e5d078b"}, // model.go
-	181: {CSHA256: "f3ec7d095818e1b1d8339cad5a0a05a40a47c8d14991736b41c7eb6094046e77"}, // model.go
-	192: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	206: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	207: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	208: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	210: {CSHA256: "2157f52add09a2752cf5657c42aad883a793183c0df593203edee727232c7933"}, // pda.go
-	211: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	217: {CSHA256: "81cbd346e56642a8063bd09788313c7714ee4e12bf95a201fdab93b8bed98ec1"}, // model.go
-	219: {CSHA256: "03a66c44f073b48586edb8f45ff3f74cf3d91eceee4f3cf3480ed5e3e17e0950"}, // arrays.go
-	225: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // arrays.go
-	227: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	242: {CSHA256: "54eb5126883501afd5be891aeb609c4f5d55f5ffdd9a540163a889b16c6bac8f"}, // model.go
-	247: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	270: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	278: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"}, // arrays.go
-	281: {CSHA256: "b50201ffc29dbc8dfa9be0bc6a07f2d3eb16488b5d40009303b6b5bddfdad53b"}, // pda.go
-	283: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	300: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
-	302: {CSHA256: "25b08138fe9dd864e7dbeb13f53c1167b5697621e9311b66363f2bea5d3c65ba"}, // model.go
-	309: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"}, // model.go
+	// Real libraries (docs/GO_STDLIB.md#io, results/compiler/2026-10-16-real-libraries):
+	// package io joined the overlay, so the list of available packages in
+	// the unsupported-import message names it. No other entry changed:
+	// no recorded program has an elided &T{...} of array type, and the
+	// read-only pointer parameters of package-level variables change no
+	// recorded program's placement.
+	249: {Error: `reject.go:1:18: could not import fmt (unsupported import "fmt"; standard-library packages on chain: bytes, encoding/binary, errors, io, math, strconv, strings, unicode, unicode/utf8 and math/bits (docs/GO_STDLIB.md))`}, // was "...; use a module-backed program for user packages", then "...; the only standard-library package on-chain is math/bits", then without io
+	6:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	8:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	10:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // program.go
+	11:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"},                                                                                                                                                       // entry.go
+	20:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"},                                                                                                                                                       // model.go
+	22:  {CSHA256: "dd4b8fe6acdc35feb26a086c9e48389a06d93e779aa48b64eb71d1b92691ebe6"},                                                                                                                                                       // pda.go
+	40:  {CSHA256: "8ea5fabbd6de885686956be6f6e294059b5115153b3866006e3d8a1deb7373ca"},                                                                                                                                                       // program.go
+	43:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"},                                                                                                                                                       // model.go
+	48:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	51:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"},                                                                                                                                                       // types.go
+	57:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	58:  {CSHA256: "7e0975a8e457446af4c53308487b583a1fd28d90c586064e235a2c578bb9c6e7"},                                                                                                                                                       // model.go
+	59:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	68:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"},                                                                                                                                                       // model.go
+	77:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	83:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	85:  {CSHA256: "4b3199a3e995310ad3c61320415f382481451b2510de256382b9aad8fff44f52"},                                                                                                                                                       // model.go
+	86:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"},                                                                                                                                                       // model.go
+	92:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	93:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // test.go
+	99:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	105: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	108: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	112: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"},                                                                                                                                                       // model.go
+	114: {CSHA256: "57baa962535ac47f6fcde53076bbb9138f6cfc467cc7e9d729ce4f903421712f"},                                                                                                                                                       // pda.go
+	115: {CSHA256: "ff9d74d9cd831d0c92b087ea98d60ea3d16b969ddd582013014146d070930048"},                                                                                                                                                       // model.go
+	117: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	118: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	121: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	123: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	142: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	143: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	147: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	160: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	167: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"},                                                                                                                                                       // model.go
+	169: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	172: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	176: {CSHA256: "c4320970229098e1a01bca4f4d73f17242472cc2d8ca081d13fab5479e5d078b"},                                                                                                                                                       // model.go
+	181: {CSHA256: "f3ec7d095818e1b1d8339cad5a0a05a40a47c8d14991736b41c7eb6094046e77"},                                                                                                                                                       // model.go
+	192: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	206: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	207: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	208: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	210: {CSHA256: "2157f52add09a2752cf5657c42aad883a793183c0df593203edee727232c7933"},                                                                                                                                                       // pda.go
+	211: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	217: {CSHA256: "81cbd346e56642a8063bd09788313c7714ee4e12bf95a201fdab93b8bed98ec1"},                                                                                                                                                       // model.go
+	219: {CSHA256: "03a66c44f073b48586edb8f45ff3f74cf3d91eceee4f3cf3480ed5e3e17e0950"},                                                                                                                                                       // arrays.go
+	225: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // arrays.go
+	227: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	242: {CSHA256: "54eb5126883501afd5be891aeb609c4f5d55f5ffdd9a540163a889b16c6bac8f"},                                                                                                                                                       // model.go
+	247: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	270: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	278: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // arrays.go
+	281: {CSHA256: "b50201ffc29dbc8dfa9be0bc6a07f2d3eb16488b5d40009303b6b5bddfdad53b"},                                                                                                                                                       // pda.go
+	283: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	300: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+	302: {CSHA256: "25b08138fe9dd864e7dbeb13f53c1167b5697621e9311b66363f2bea5d3c65ba"},                                                                                                                                                       // model.go
+	309: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 }
 
 const (

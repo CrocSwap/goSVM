@@ -41,6 +41,20 @@ func Process(o, in []byte) uint64 {
 	p[0] += 2
 	return acc[199][3]*10000 + acc[5][0]*100 + acc[7][3] + acc[6][2]
 }`, "2000913"},
+		// Element addresses passed to read-only pointer parameters keep the
+		// table read-only (readonlyptr.go), as uint256's Log10 does with
+		// z.Lt(&pows[t-20]).
+		"read-only through pointer parameters": {`var pows = [60]Int{{1}, {10}, 59: {0, 0, 0, 7}}
+func (z *Int) Lt(x *Int) bool { return z[3] < x[3] || z[3] == x[3] && z[0] < x[0] }
+func top(x *Int) uint64 { return x[3] }
+func Process(o, in []byte) uint64 {
+	var z Int
+	z[0] = uint64(in[0])
+	n := uint64(0)
+	if z.Lt(&pows[1]) { n++ }
+	if pows[59].Lt(&z) { n += 10 }
+	return n*100 + top(&pows[59])
+}`, "107"},
 		"named table type and qualified uses": {`type Table [128]Pair
 var tab Table
 func Process(o, in []byte) uint64 {
@@ -61,22 +75,24 @@ func Process(o, in []byte) uint64 {
 func TestLargeTablesRejected(t *testing.T) {
 	const limit = "array storage exceeds experimental 1024-byte per-value limit"
 	for name, src := range map[string]string{
-		"local":                    `var pows [60]Int; func Process(o, in []byte) uint64 { var l [60]Int; return l[0][0] + pows[0][0] }`,
-		"copy to a local":          `var pows [60]Int; func Process(o, in []byte) uint64 { l := pows; return l[0][0] }`,
-		"assignment":               `var pows, b [60]Int; func Process(o, in []byte) uint64 { b = pows; return b[0][0] }`,
-		"parameter":                `var pows [60]Int; func f(t [60]Int) uint64 { return t[0][0] }; func Process(o, in []byte) uint64 { return f(pows) }`,
-		"pointer parameter":        `var pows [60]Int; func f(t *[60]Int) uint64 { return t[0][0] }; func Process(o, in []byte) uint64 { return f(&pows) }`,
-		"comparison":               `var pows, b [60]Int; func Process(o, in []byte) uint64 { if pows == b { return 1 }; return 0 }`,
-		"interface":                `var pows [60]Int; func Process(o, in []byte) uint64 { var x any = pows; _ = x; return 0 }`,
-		"range with value":         `var pows [60]Int; func Process(o, in []byte) uint64 { n := uint64(0); for _, v := range pows { n += v[0] }; return n }`,
-		"slicing":                  `var pows [60]Int; func Process(o, in []byte) uint64 { s := pows[:]; return s[0][0] }`,
-		"writable initializer":     `var pows = [60]Int{{1}}; func Process(o, in []byte) uint64 { pows[0][0]++; return pows[0][0] }`,
-		"computed initializer":     `var pows = mk(); func mk() (t [60]Int) { return }; func Process(o, in []byte) uint64 { return pows[0][0] }`,
-		"struct field":             `type S struct{ t [60]Int }; var s S; func Process(o, in []byte) uint64 { return s.t[0][0] }`,
-		"type only":                `type T [60]Int; func Process(o, in []byte) uint64 { return 0 }`,
-		"pointer receiver method":  `type T [60]Int; func (t *T) At(i int) uint64 { return t[i][0] }; var tab T; func Process(o, in []byte) uint64 { return tab.At(1) }`,
-		"nested large elements":    `var big [2][60]Int; func Process(o, in []byte) uint64 { return big[1][2][3] }`,
-		"literal outside a global": `var pows [60]Int; func Process(o, in []byte) uint64 { return [60]Int{}[0][0] + pows[0][0] }`,
+		"local":                     `var pows [60]Int; func Process(o, in []byte) uint64 { var l [60]Int; return l[0][0] + pows[0][0] }`,
+		"copy to a local":           `var pows [60]Int; func Process(o, in []byte) uint64 { l := pows; return l[0][0] }`,
+		"assignment":                `var pows, b [60]Int; func Process(o, in []byte) uint64 { b = pows; return b[0][0] }`,
+		"parameter":                 `var pows [60]Int; func f(t [60]Int) uint64 { return t[0][0] }; func Process(o, in []byte) uint64 { return f(pows) }`,
+		"pointer parameter":         `var pows [60]Int; func f(t *[60]Int) uint64 { return t[0][0] }; func Process(o, in []byte) uint64 { return f(&pows) }`,
+		"comparison":                `var pows, b [60]Int; func Process(o, in []byte) uint64 { if pows == b { return 1 }; return 0 }`,
+		"interface":                 `var pows [60]Int; func Process(o, in []byte) uint64 { var x any = pows; _ = x; return 0 }`,
+		"range with value":          `var pows [60]Int; func Process(o, in []byte) uint64 { n := uint64(0); for _, v := range pows { n += v[0] }; return n }`,
+		"slicing":                   `var pows [60]Int; func Process(o, in []byte) uint64 { s := pows[:]; return s[0][0] }`,
+		"writable initializer":      `var pows = [60]Int{{1}}; func Process(o, in []byte) uint64 { pows[0][0]++; return pows[0][0] }`,
+		"written through a pointer": `var pows = [60]Int{{1}}; func set(p *Int) { p[0] = 2 }; func Process(o, in []byte) uint64 { set(&pows[3]); return pows[3][0] }`,
+		"pointer kept":              `var pows = [60]Int{{1}}; var keep *Int; func hold(p *Int) { keep = p }; func Process(o, in []byte) uint64 { hold(&pows[3]); return keep[0] }`,
+		"computed initializer":      `var pows = mk(); func mk() (t [60]Int) { return }; func Process(o, in []byte) uint64 { return pows[0][0] }`,
+		"struct field":              `type S struct{ t [60]Int }; var s S; func Process(o, in []byte) uint64 { return s.t[0][0] }`,
+		"type only":                 `type T [60]Int; func Process(o, in []byte) uint64 { return 0 }`,
+		"pointer receiver method":   `type T [60]Int; func (t *T) At(i int) uint64 { return t[i][0] }; var tab T; func Process(o, in []byte) uint64 { return tab.At(1) }`,
+		"nested large elements":     `var big [2][60]Int; func Process(o, in []byte) uint64 { return big[1][2][3] }`,
+		"literal outside a global":  `var pows [60]Int; func Process(o, in []byte) uint64 { return [60]Int{}[0][0] + pows[0][0] }`,
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := Check(globalsProgram(unitFiles("p", largeTablePrefix+src)))

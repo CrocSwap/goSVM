@@ -132,7 +132,8 @@ func TestAllocationRejections(t *testing.T) {
 		"clear":               {`clear(s)`, "clear supports only maps"},
 		"min":                 {`x := min(s[0], 1); _ = x`, builtinRule},
 		"panic":               {`panic(1)`, ""},
-		"elided array":        {`ps := []*K{{1}}; _ = ps`, "elided &T{...} literals require a struct type; write &T{...}"},
+		"elided array":        {`ps := []*K{{1}}; _ = ps`, ""}, // lowered to &K{1} (elided.go)
+		"elided map pointer":  {`ps := []*map[uint8]uint8{{1: 2}}; _ = ps`, "elided &T{...} literals require a struct type; write &T{...}"},
 		"pointer to slice":    {`p := new([]byte); _ = p`, "pointer elements must be integer/bool scalars, value structs or scalar arrays"},
 		"pointer to pointer":  {`p := new(*V); _ = p`, ""},
 		"array of pointers":   {`var a [2]*V; _ = a`, ""},

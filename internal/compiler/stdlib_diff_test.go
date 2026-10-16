@@ -49,7 +49,7 @@ func nativeStdlibCall(in []byte) (result string) {
 var stdlibGroupOps = [stdlibvalues.Groups]int{
 	stdlibvalues.StringsOps, stdlibvalues.BytesOps, stdlibvalues.StrconvOps, stdlibvalues.BinaryOps,
 	stdlibvalues.ErrorsOps, stdlibvalues.UnicodeOps, stdlibvalues.MathOps, stdlibvalues.BuilderOps,
-	stdlibvalues.QuoteOps, stdlibvalues.LangOps,
+	stdlibvalues.QuoteOps, stdlibvalues.LangOps, stdlibvalues.IOOps,
 }
 
 // textPieces are fragments strings are built from: ASCII letters of both

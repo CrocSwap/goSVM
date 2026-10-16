@@ -371,6 +371,8 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 	// Package-level variables: each package's initializers become one
 	// synthetic function in the lowered files, analyzed like any other.
 	checked.lowered = f.buildGlobals(importer, checked.lowered)
+	// Elided &T{...} elements of array type become explicit (elided.go).
+	lowerElidedArrayPointers(f.info, checked.lowered)
 	// Calls of variadic functions pass their final parameter as a slice
 	// (variadic.go).
 	lowerVariadicCalls(f.info, checked.lowered)

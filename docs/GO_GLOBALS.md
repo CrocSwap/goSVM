@@ -112,11 +112,31 @@ read-only when all of the following hold:
   compound-assigned, incremented or used as a range target; neither it nor
   any field or element of it has its address taken (`&`, slicing an array,
   calling a pointer-receiver method or making a pointer-receiver method
-  value); and a slice variable's value is only indexed for reading, ranged
-  over, compared with nil, passed to `len` or `cap`, or used as the source
-  of `copy` or the spread source of `append`. Every other use of a slice
-  value (an assignment, an argument, a conversion, slicing) could write the
-  shared elements through a copy, so it keeps the slice in the block.
+  value), except where the address goes only to a *read-only pointer
+  parameter* (below); and a slice variable's value is only indexed for
+  reading, ranged over, compared with nil, passed to `len` or `cap`, or used
+  as the source of `copy` or the spread source of `append`. Every other use
+  of a slice value (an assignment, an argument, a conversion, slicing) could
+  write the shared elements through a copy, so it keeps the slice in the
+  block.
+
+<a id="read-only-pointer-parameters"></a>**Read-only pointer parameters**
+(October 16, for holiman/uint256's `Log10`, which compares with
+`z.Lt(&pows[t-20])`). Taking the address of a variable or of a field or
+element of it does not keep it in the block when the address is passed
+directly as an argument (or as the receiver of a pointer-receiver method
+call) to a pointer parameter that only reads: in the declared function's
+body, the parameter is never assigned, addressed or captured by a closure,
+and each of its uses reads the storage it points to (`*p`, `p[i]`, `p.f` and
+the paths below them, classified with the same rules as a variable's own
+uses), compares it with `==`/`!=`, or passes it on to `len`, `cap` or
+another read-only pointer parameter of a static call. Returning, storing or
+converting the pointer, a dynamic call, a generic or variadic callee, a
+function without a Go body and an intrinsic all count as writes
+(`internal/compiler/readonlyptr.go`). Every pointer to the variable's storage
+is then created at an analyzed address operation and never outlives the
+call, so nothing can write the read-only data. No recorded corpus program,
+example or full-swap ELF changed placement.
 
 Read-only plain data is a `static const` C object (`.rodata`); a read-only
 slice is a `static const` backing array whose header is built where the
@@ -152,10 +172,14 @@ files (every function, instance, closure, initializer and `init`):
   (`V[i]`, `V[i].F`, `V[i][j]++`, `&V[i]`), of `len` or `cap`, or of a
   `range` without an iteration value (`for i := range V`).
 
+`&V[i]` keeps a read-only table read-only when the address only reaches
+[read-only pointer parameters](#read-only-pointer-parameters), as in
+holiman/uint256's `Log10` (`z.Lt(&pows[t-20])`).
 Anything else — a copy, `==`, `&V`, slicing, a value `range`, an
 interface conversion, a method call, a writable variable with an
 initializer (its package's initializer assigns the literal, building it
-first) or an array of such arrays — keeps the rejection
+first; for example a table whose element address goes to a function that
+writes through it) or an array of such arrays — keeps the rejection
 `array storage exceeds experimental 1024-byte per-value limit` at the same
 position, so the check order is unchanged. Elements are still bounded by
 their own types' rules, and `v := V[i]` copies only an element. This admits
@@ -183,6 +207,14 @@ program without variables, 85 CU):
 | `var registry = map[string]uint64{...}` with 4 entries | 442 |
 | An `init` filling `[64]uint64` in a loop | 400 |
 | All of `examples/global-values` (5 packages, 63 named variables of which 11 read-only, a 616-byte block, 7 `init` functions, maps, closures, strings, appends) | 2,179 (fogo-v0) / 2,183 (solana-v3) |
+
+Real libraries make this cost visible. Importing
+KyberNetwork/uniswapv3-sdk-uint256's `utils` (with holiman/uint256,
+KyberNetwork/int256 and its `constants`) costs **25,442 CU per invocation**
+(fogo-v0; 25,445 on solana-v3) before `Process` runs, nearly all of it
+computed constants: 25 `uint256.MustFromHex`, one `MustFromDecimal`, three
+`int256.MustFromDec`, an `Exp` and a map literal
+([breakdown](../results/compiler/2026-10-16-real-libraries/README.md#initialization)).
 
 **Go-exact: every initializer of every package in the program runs.**
 Initializers and `init` functions in imported packages run even when

@@ -42,6 +42,10 @@ type frontend struct {
 	// panics records each panic call's log line (CheckedProgram.Panics);
 	// nil without panics.
 	panics map[*ast.CallExpr]*PanicSite
+	// roPointers is the read-only pointer parameter analysis of the
+	// package-level variables' placement (readonlyptr.go); nil without
+	// package-level variables.
+	roPointers *readOnlyPointers
 }
 
 func newFrontend(fset *token.FileSet, info *types.Info) *frontend {

@@ -104,6 +104,9 @@ type Uses struct {
 	TypeAliases     bool `json:"type_aliases"`
 	CompositeArrays bool `json:"composite_arrays"`
 	Panic           bool `json:"panic"`
+	// PointerConversions: conversions (*T)(p) between pointer types
+	// (docs/GO_POINTERS.md#conversions). Added within gosvm-features-v1.
+	PointerConversions bool `json:"pointer_conversions"`
 	// Stdlib lists, sorted, the standard-library packages the program
 	// reaches besides math/bits (MathBits): the overlay packages of
 	// docs/GO_STDLIB.md that program code imports, and the overlay packages
@@ -199,6 +202,7 @@ func summarize(u *Usage) {
 	u.Uses.StructEquality = sum("struct_equality")+sum("struct_switch_cases") > 0
 	u.Uses.TypeAliases = sum("type_aliases") > 0
 	u.Uses.CompositeArrays = sum("composite_array_types") > 0
+	u.Uses.PointerConversions = sum("pointer_conversions") > 0
 	u.Uses.Panic = has(func(s *Side) map[string]int { return s.Builtins }, "panic")
 }
 
@@ -346,6 +350,9 @@ var ConstructNames = []string{
 	// with a struct switch tag, and array type expressions whose element
 	// type is a struct, array, pointer or slice.
 	"struct_switch_cases", "composite_array_types",
+	// Pointer conversions (added within gosvm-features-v1): conversions
+	// (*T)(p) to a pointer type (docs/GO_POINTERS.md#conversions).
+	"pointer_conversions",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -1266,6 +1273,9 @@ func (w *walker) call(n *ast.CallExpr) {
 	if tv, ok := w.tp.Info.Types[fun]; ok && tv.IsType() {
 		w.count("conversions")
 		w.side.Conversions[w.typeString(tv.Type)]++
+		if _, ok := tv.Type.Underlying().(*types.Pointer); ok {
+			w.count("pointer_conversions")
+		}
 		if len(n.Args) == 1 && w.tp.Info.Types[n].Value == nil {
 			from := w.typeOf(n.Args[0])
 			_, toSlice := tv.Type.Underlying().(*types.Slice)

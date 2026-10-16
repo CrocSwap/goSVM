@@ -957,6 +957,17 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			c.typeRule(e, tv.Type)
 			return
 		}
+		if _, ok := tv.Type.Underlying().(*types.Pointer); ok {
+			// (*T)(p) and (*T)(nil): Go requires identical underlying base
+			// types (ignoring struct tags); the address is unchanged
+			// (docs/GO_POINTERS.md#conversions).
+			if len(e.Args) != 1 {
+				c.fail(e, "invalid conversion")
+			}
+			c.expr(e.Args[0])
+			c.typeRule(e, tv.Type)
+			return
+		}
 	}
 	var o types.Object
 	builtinName := ""

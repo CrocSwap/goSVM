@@ -71,3 +71,42 @@ func Process(s, i []byte) uint64 {
 		t.Errorf("plain program uses: %+v", u)
 	}
 }
+
+// Pointer conversions (*T)(p) have their own counter and uses flag; other
+// conversions do not set it.
+func TestPointerConversionCounter(t *testing.T) {
+	dir := t.TempDir()
+	source := `package program
+
+type A [4]uint64
+type B [4]uint64
+
+func Process(s, i []byte) uint64 {
+	var a A
+	b := (*B)(&a)
+	b[0] = uint64(i[0])
+	var n *A
+	if (*B)(n) == nil {
+		s[0] = 1
+	}
+	return B(a)[0] + uint64(uint8(a[0]))
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(source), 0644); err != nil {
+		t.Fatal(err)
+	}
+	u := checkedReport(t, dir)
+	if got := u.Language.Handwritten.Constructs["pointer_conversions"]; got != 2 {
+		t.Errorf("pointer_conversions = %d, want 2", got)
+	}
+	if !u.Uses.Checked || !u.Uses.PointerConversions {
+		t.Errorf("uses: %+v", u.Uses)
+	}
+	plain := t.TempDir()
+	if err := os.WriteFile(filepath.Join(plain, "program.go"), []byte("package program\ntype A [2]uint64\ntype B [2]uint64\nfunc Process(s, i []byte) uint64 { var a A; return B(a)[0] + uint64(i[0]) }\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if u := checkedReport(t, plain).Uses; u.PointerConversions {
+		t.Errorf("array conversion set pointer_conversions: %+v", u)
+	}
+}

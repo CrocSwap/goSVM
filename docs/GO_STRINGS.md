@@ -129,6 +129,19 @@ example when it is returned or stored). Programs that do not depend on the
 capacity of a non-escaping conversion behave identically; the differential
 tests observe capacities only through escaping conversions.
 
+A second gc optimization changes the capacity too (found with real
+libraries, October 16; [results](../results/compiler/2026-10-16-real-libraries/README.md)):
+Go 1.22's escape analysis turns `[]byte(s)` into a **zero-copy** conversion
+when it proves the bytes are never written, and the result then shares the
+string's bytes with capacity `len(s)`. Whether it applies depends on gc's
+inlining: holiman/uint256's `MarshalText` (`return []byte(z.Dec()), nil`)
+returns capacity 51 for a 51-digit number when the call is inlined into a
+caller that only reads the result, and 64 (the size class) otherwise. goSVM
+always copies and gives the size-class capacity. As with the 32-byte stack
+buffer, only programs that observe such a slice's capacity (or rely on
+appending to it in place) can tell; the real-library differential writes
+these slices' lengths and bytes, not their capacities.
+
 ## `error`
 
 `error` is the predeclared interface `interface{ Error() string }` and follows

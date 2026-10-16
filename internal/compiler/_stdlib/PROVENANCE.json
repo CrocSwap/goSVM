@@ -1,7 +1,7 @@
 {
   "go": "go1.22.0",
   "license": "LICENSE (Go's BSD-style license, $GOROOT/LICENSE)",
-  "identity": "c791b6de736cf5271b6356fa9b20c13798b54646aa968ffbb5a1cdd265f0890e",
+  "identity": "99ba1e576737137a085ec715ebff71480df2b4e50d25d0ba8510812ba6c07b6c",
   "files": [
     {
       "overlay": "bytes/bytes.go",
@@ -186,6 +186,17 @@
         {
           "path": "strconv/atoi.go",
           "sha256": "fc1ac2c9602d7e7b8036a0de6e2c7ab03c87dec5465ffbf32eb64bd5435cef81"
+        }
+      ]
+    },
+    {
+      "overlay": "io/io.go",
+      "sha256": "a4ca007ae59f3c1670659a4b1b82885a4658febe437740530454470db1595cda",
+      "kind": "extract",
+      "origins": [
+        {
+          "path": "io/io.go",
+          "sha256": "2c4401f57a3cf71077dd3cdd4d714612bf892e25011d4ff7965140c01dd1feb8"
         }
       ]
     },

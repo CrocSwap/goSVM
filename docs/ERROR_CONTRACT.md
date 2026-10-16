@@ -589,3 +589,18 @@ Handler results propagate unchanged.
   these as `Error:` lines but exited successfully, so such programs used to
   build and then read or write outside their frame at run time. `Check` and
   `CheckedProgram` are unaffected; no recorded program or example hits it.
+- 2026-10-16: addition (real libraries), no trap added and no existing
+  behaviour changed: package `io` joined the standard-library overlay (its
+  error values, interfaces, `ReadAtLeast`, `ReadFull`, `WriteString`), so the
+  unsupported-import message lists it
+  (`... bytes, encoding/binary, errors, io, math, ...`), and `io.ReadAll` and
+  the other left-out symbols are reported by name. Check relaxations: elided
+  `&T{...}` elements of array type compile (they were `elided &T{...}
+  literals require a struct type; write &T{...}`; other non-struct element
+  types keep it), pointer conversions `(*T)(p)` compile (they were
+  `dereference requires a supported pointer`), and a package-level variable
+  whose address only reaches read-only pointer parameters stays read-only
+  data (a 1,920-byte table used so is now admitted instead of `array storage
+  exceeds experimental 1024-byte per-value limit`). The new forms use the
+  existing traps (a nil converted pointer traps when dereferenced). No
+  recorded corpus program's C changed; announce to Qushta.

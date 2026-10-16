@@ -12,6 +12,7 @@ standard-library packages, with Go 1.22.0's semantics:
 | `unicode` | the case mappings (`To`, `ToUpper`, `ToLower`, `ToTitle`, `CaseRanges`, `CaseRange`, `UpperCase`, `LowerCase`, `TitleCase`, `MaxCase`, `UpperLower`), `SimpleFold`, `IsSpace`, the `Range16`/`Range32`/`RangeTable` types, `MaxRune`, `ReplacementChar`, `MaxASCII`, `MaxLatin1`, `Version` |
 | `strings` | everything but `Reader`/`NewReader`, `Replacer`/`NewReplacer`, `Title` and `To*Special`: `Builder` (all methods), `Clone`, `Compare`, `Contains`, `ContainsAny`, `ContainsFunc`, `ContainsRune`, `Count`, `Cut`, `CutPrefix`, `CutSuffix`, `EqualFold`, `Fields`, `FieldsFunc`, `HasPrefix`, `HasSuffix`, `Index`, `IndexAny`, `IndexByte`, `IndexFunc`, `IndexRune`, `Join`, `LastIndex`, `LastIndexAny`, `LastIndexByte`, `LastIndexFunc`, `Map`, `Repeat`, `Replace`, `ReplaceAll`, `Split`, `SplitAfter`, `SplitAfterN`, `SplitN`, `ToLower`, `ToTitle`, `ToUpper`, `ToValidUTF8`, `Trim`, `TrimFunc`, `TrimLeft`, `TrimLeftFunc`, `TrimPrefix`, `TrimRight`, `TrimRightFunc`, `TrimSpace`, `TrimSuffix` |
 | `bytes` | the same functions for `[]byte`, with `Equal` and `Runes`; not `Buffer`, `Reader` (and their constructors, `MinRead`, `ErrTooLarge`), `Title` or `To*Special` |
+| `io` | the error values (`EOF`, `ErrUnexpectedEOF`, `ErrShortBuffer`, `ErrShortWrite`, `ErrNoProgress`), `SeekStart`, `SeekCurrent`, `SeekEnd`, every interface (`Reader`, `Writer`, `Closer`, `Seeker`, their combinations, `ReaderFrom`, `WriterTo`, `ReaderAt`, `WriterAt`, `ByteReader`, `ByteScanner`, `ByteWriter`, `RuneReader`, `RuneScanner`, `StringWriter`), `ReadAtLeast`, `ReadFull`, `WriteString`; not the copying, limiting, section, offset, tee, discard and closer helpers, `ReadAll`, `MultiReader`/`MultiWriter` or `Pipe` |
 | `strconv` | everything but floats and complex numbers: `Atoi`, `Itoa`, `ParseInt`, `ParseUint`, `ParseBool`, `FormatInt`, `FormatUint`, `FormatBool`, `AppendInt`, `AppendUint`, `AppendBool`, `NumError`, `ErrRange`, `ErrSyntax`, `IntSize` (64), `Quote`, `QuoteToASCII`, `QuoteToGraphic`, `QuoteRune`, `QuoteRuneToASCII`, `QuoteRuneToGraphic`, the `Append*` forms of each, `CanBackquote`, `Unquote`, `UnquoteChar`, `QuotedPrefix`, `IsPrint`, `IsGraphic` |
 | `math/bits` | as before, a compiler intrinsic ([math/bits](GO_BITS.md)) |
 
@@ -58,11 +59,17 @@ Imports work in a single file (no `go.mod` needed), in module programs and in
 shared packages, plain or renamed. Native tests and clients compile the same
 source against Go's own standard library.
 
-Any other standard-library package (`fmt`, `io`, `math/big`, `sort`,
-`slices`, `reflect`, `encoding/json`, …) is still rejected at the import:
+Any other standard-library package (`fmt`, `math/big`, `sort`, `slices`,
+`reflect`, `encoding/json`, …) is still rejected at the import:
 `could not import fmt (unsupported import "fmt"; standard-library packages on
-chain: bytes, encoding/binary, errors, math, strconv, strings, unicode,
+chain: bytes, encoding/binary, errors, io, math, strconv, strings, unicode,
 unicode/utf8 and math/bits (docs/GO_STDLIB.md))`.
+
+`io` joined the overlay (October 16) because real libraries return `io.EOF`
+from their parsers (holiman/uint256's `SetFromDecimal`, KyberNetwork/int256's
+`SetFromDec`, which the Uniswap v3 math's computed constants call;
+[real libraries](../results/compiler/2026-10-16-real-libraries/README.md)).
+`encoding/binary`, `bytes` and `strings` still leave out their `io` parts.
 
 ## Symbols that are not available
 
@@ -72,8 +79,8 @@ reported by name, at the use, with the reason, instead of `undefined`:
 ```text
 p.go:3:55: math.Sqrt is not available on chain: floats are not supported on chain (docs/GO_STDLIB.md)
 p.go:3:57: encoding/binary.Size is not available on chain: it uses reflection (docs/GO_STDLIB.md)
-p.go:3:51: encoding/binary.ReadUvarint is not available on chain: it reads from an io.ByteReader; package io is not available on chain (docs/GO_STDLIB.md)
-p.go:3:48: bytes.Buffer is not available on chain: it implements io interfaces; package io is not available on chain (docs/GO_STDLIB.md)
+p.go:3:51: encoding/binary.ReadUvarint is not available on chain: it reads from an io.ByteReader; goSVM's on-chain encoding/binary leaves out its io parts (docs/GO_STDLIB.md)
+p.go:3:48: bytes.Buffer is not available on chain: it implements io interfaces; goSVM's on-chain bytes leaves out its io parts (docs/GO_STDLIB.md)
 p.go:3:47: unicode.IsUpper is not available on chain: goSVM's on-chain unicode has only the case mappings, SimpleFold and IsSpace, not the property tables (docs/GO_STDLIB.md)
 ```
 
@@ -81,7 +88,9 @@ p.go:3:47: unicode.IsUpper is not available on chain: goSVM's on-chain unicode h
 | --- | --- |
 | every `math` float constant and function, `strconv.ParseFloat`, `FormatFloat`, `AppendFloat`, `ParseComplex`, `FormatComplex` | floats are not supported on chain (a project decision) |
 | `encoding/binary.Read`, `Write`, `Size` | reflection |
-| `encoding/binary.ReadUvarint`, `ReadVarint`; `bytes.Buffer`, `bytes.Reader`, `strings.Reader`, `strings.Replacer` and their constructors | `io` |
+| `encoding/binary.ReadUvarint`, `ReadVarint`; `bytes.Buffer`, `bytes.Reader`, `strings.Reader`, `strings.Replacer` and their constructors | their `io` parts are not in these overlays yet |
+| `io.Copy`, `CopyN`, `CopyBuffer`, `LimitReader`, `SectionReader`, `OffsetWriter`, `TeeReader`, `NopCloser`, `ReadAll`, `MultiReader`, `MultiWriter` | not added yet |
+| `io.Discard`, `Pipe`, `PipeReader`, `PipeWriter`, `ErrClosedPipe` | they use package `sync` |
 | `strings.Title`, `bytes.Title`; `unicode`'s property tables and predicates (`IsUpper`, `IsLetter`, `In`, `Is`, …) | Unicode tables beyond case mapping and white space; they would be read-only data, but are not written yet |
 | `To{Upper,Lower,Title}Special`, `unicode.SpecialCase`, `TurkishCase`, `AzeriCase` | named slice types (`SpecialCase`) are not in the subset |
 
@@ -122,6 +131,7 @@ with a `goSVM:` comment, and each file starts with a summary. The changes:
 | `unicode/tables.go` | the case, fold and white-space tables, extracted verbatim from Go's `tables.go` by `TestStdlibUnicodeTables` |
 | `encoding/binary/native_endian_little.go` | `nativeEndian` writes out `littleEndian`'s promoted methods (struct embedding is not in the subset) |
 | `encoding/binary/binary.go`, `varint.go`, `math/const.go` | extracts: the reflection, `io` and float parts are left out |
+| `io/io.go` | extract, unchanged: the constants, errors, interfaces, `WriteString`, `ReadAtLeast` and `ReadFull` (the rest of `io.go`, `multi.go` and `pipe.go` are left out) |
 
 Go's own `panic` calls are kept ([panic](ERROR_CONTRACT.md#panic)): where Go
 panics, the transaction fails and logs `panic: <Go's message>` (for example
@@ -272,6 +282,7 @@ same ELF with the call skipped; [results](../results/compiler/2026-10-14-stdlib/
 | Call | CU |
 | --- | --- |
 | Importing `errors` or `strconv` (initialization, per invocation) | 70–84 |
+| Importing `io` (five boxed error values, and `errors`) | 202 |
 | Importing `strings`, `bytes`, `unicode`, `unicode/utf8`, `encoding/binary` | 1–19 |
 | `binary.BigEndian.Uint64`, `LittleEndian.PutUint64` | 2–3 |
 | `binary.Uvarint` (3 bytes) | 25 |
@@ -327,8 +338,12 @@ be higher than gc's; results never differ.
   result, slice length and capacity, error text and `errors.Is`/`As` answer.
   `TestStdlibDifferential` runs 30,906 vectors (4,048 Go panics, each an abort
   at the same point with the same log line) natively against Go 1.22.0's
-  standard library and as host-compiled C with the default 32 KiB heap.
-- `TestStdlibSBF` runs 306 of them on fogo-v0 and solana-v3 through the pinned
+  standard library and as host-compiled C with the default 32 KiB heap; with
+  the `io` group (October 16: `ReadFull`, `ReadAtLeast` and `WriteString`
+  over readers and writers that split, short-write, fail with wrapped or
+  custom errors or return data and an error together; the error values and
+  the interfaces' assertions) it runs 34,542.
+- `TestStdlibSBF` runs 306 of them (342 with the `io` group) on fogo-v0 and solana-v3 through the pinned
   runners (aborts roll back; panics log their line) and measures the probes
   above.
 - `TestStdlibRejections`, `TestStdlibImportForms`, `TestStdlibIntrinsics`,

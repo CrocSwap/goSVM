@@ -409,9 +409,13 @@ empty for programs without them:
   changes: its value is the zero value or `Init` (a constant expression or a
   composite literal of constants of a plain-data type, a constant string, or a
   non-empty slice literal of plain-data constants), and Check proved that no
-  code writes it, takes its address or lets a slice value escape. A
+  code writes it, takes its address (other than to pass it to a
+  [read-only pointer parameter](GO_GLOBALS.md#read-only-pointer-parameters),
+  which only reads through it) or lets a slice value escape. A
   read-only variable has no storage in the block and no initialization code;
-  the built-in backend makes it a constant in read-only data.
+  the built-in backend makes it a constant in read-only data. Such a pointer
+  may point into that read-only data (holiman/uint256's `z.Lt(&pows[t-20])`),
+  so a backend must make the data addressable for reads; nothing writes it.
 - `GlobalBytes` is the size of the globals block: a C struct of the
   variables that are not read-only, in `Globals` order, each at its Go
   alignment and `Offset`, rounded up to 8. It must be the invocation heap's
@@ -549,6 +553,26 @@ none, and `Ellipsis` set. The literal is an ordinary slice literal for
 interface conversions, escape analysis (`HeapLiterals` never lists it: slice
 literals are always heap) and emission. Calls into `gosvm/solana` are not
 rewritten.
+
+## Real-library forms
+
+Three forms added for real third-party libraries
+([results](../results/compiler/2026-10-16-real-libraries/README.md)) need no
+new field:
+
+- **Elided `&T{...}` of array type.** In a composite literal whose element
+  or key type is `*T` with an array `T`, Check rewrites each elided `{...}`
+  element in place into an `*ast.UnaryExpr` (`token.AND`) whose operand is
+  the literal (`Info.Types`: the `UnaryExpr` has type `*T`, the literal type
+  `T`), so a backend sees the explicit `&T{...}`
+  ([GO_ARRAYS.md](GO_ARRAYS.md#pointer-literals)). Elided struct elements are
+  unchanged (an `*ast.CompositeLit` of pointer type, boxed on the heap).
+- **Pointer conversions** `(*T)(p)` are conversion calls (`Info.Types[Fun]`
+  is a type) whose result has a pointer underlying type: the same address,
+  nil for nil ([GO_POINTERS.md](GO_POINTERS.md#conversions)). The borrow
+  analysis gives the result `p`'s origins, as for other pointer and slice
+  conversions. `gosvm features` reports `uses.pointer_conversions`.
+- **Read-only pointer parameters** only change `Global.ReadOnly` (above).
 
 ## Pointers to pointers
 

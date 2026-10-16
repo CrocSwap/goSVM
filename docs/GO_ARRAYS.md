@@ -54,6 +54,20 @@ rejects `==` on them). `len` and `cap` retain Go's operand-evaluation rules.
 Conversion between arrays with identical underlying types is supported,
 including named/unnamed array conversions.
 
+<a id="pointer-literals"></a>**Pointer literals.** `&T{...}` with an array
+`T` (named or not) is an addressable composite literal, like a struct
+literal: it moves to the heap only when it escapes. In a slice, array or map
+literal whose element (or key) type is `*T` with an array `T`, an element may
+be written `{...}` for `&T{...}`, as Go allows: holiman/uint256 and
+KyberNetwork/int256 declare `var multipliers = [5]*Int{nil, {10000000000000000000, 0, 0, 0}, ...}`
+with `type Int [4]uint64`. Check rewrites each such elided element into the
+explicit `&T{...}` (`internal/compiler/elided.go`), so evaluation order,
+escape analysis and the backend view are those of the explicit form; elided
+struct elements keep their own lowering (always on the heap), and programs
+without elided array elements are unchanged. Elided elements of other
+pointer types (`[]*map[K]V{{...}}`) keep the rejection `elided &T{...}
+literals require a struct type; write &T{...}`.
+
 Composite elements are addressable storage: `a[i].F = v`, `a[i].F++`,
 `a[i].F += v`, `a[i][j] = v`, `&a[i]`, `&a[i].F`, pointer-receiver method
 calls `a[i].M()`, slicing `a[i][:]` and `a[lo:hi]`, and the same through a

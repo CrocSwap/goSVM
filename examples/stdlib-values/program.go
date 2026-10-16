@@ -1,6 +1,6 @@
 // Package stdlibvalues is an ordinary-Go oracle for the standard-library
 // packages available on chain (docs/GO_STDLIB.md): errors, math,
-// encoding/binary, unicode/utf8, unicode, strings, bytes and strconv, and
+// encoding/binary, unicode/utf8, unicode, strings, bytes, strconv and io, and
 // for the two language features they needed, variadic functions and
 // pointers to pointers. Every
 // supported function is called on inputs taken from the vector, and every
@@ -111,7 +111,7 @@ type Input struct {
 }
 
 // Groups Run dispatches on.
-const Groups = 10
+const Groups = 11
 
 func Process(s, i []byte) uint64 { return Run(s, i) }
 
@@ -144,6 +144,8 @@ func Run(out, in []byte) uint64 {
 		quoteGroup(w, v)
 	case 9:
 		langGroup(w, v)
+	case 10:
+		ioGroup(w, v)
 	}
 	return uint64(w.o)
 }

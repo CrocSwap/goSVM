@@ -72,7 +72,7 @@ func globalProbeSource(decls string) string {
 }
 
 // runGlobalProgram builds program for the profile, runs the cases and
-// returns each case's CU and the ELF hash.
+// returns each case's CU, the ELF hash and the ELF size.
 func runGlobalProgram(t *testing.T, llvm, runner, profile, name string, program *Program, cases []allocCase, keep string) map[string]any {
 	t.Helper()
 	dir := t.TempDir()
@@ -114,7 +114,8 @@ func runGlobalProgram(t *testing.T, llvm, runner, profile, name string, program 
 	if len(parsed.Cases) != len(cases) {
 		t.Fatalf("%s: ran %d of %d cases", name, len(parsed.Cases), len(cases))
 	}
-	out := map[string]any{"elf_sha256": fmt.Sprintf("%x", sha256.Sum256(mustRead(t, elf)))}
+	elfData := mustRead(t, elf)
+	out := map[string]any{"elf_sha256": fmt.Sprintf("%x", sha256.Sum256(elfData)), "elf_bytes": int64(len(elfData))}
 	for _, c := range parsed.Cases {
 		out[c.Name] = c.Steps[0].CU
 	}

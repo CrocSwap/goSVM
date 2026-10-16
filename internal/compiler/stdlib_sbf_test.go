@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"sort"
@@ -104,6 +105,7 @@ var stdlibProbes = []struct {
 			return uint64(x) + uint64(n)
 		}},
 	{"utf8.RuneCount(64 bytes)", `"unicode/utf8"`, `r = uint64(utf8.RuneCount(in[1:65]))`, func(in []byte) uint64 { return uint64(utf8.RuneCount(in[1:65])) }},
+	{"io.EOF.Error()", `"io"`, `r = uint64(len(io.EOF.Error()))`, func(in []byte) uint64 { return uint64(len(io.EOF.Error())) }},
 	{"unicode.ToUpper(non-ASCII)", `"unicode"`, `r = uint64(unicode.ToUpper(rune(in[1]) + 0xb0))`, func(in []byte) uint64 { return uint64(unicode.ToUpper(rune(in[1]) + 0xb0)) }},
 }
 

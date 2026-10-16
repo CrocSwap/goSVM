@@ -256,6 +256,21 @@ func (f *frontend) globalUseWrites(stack []ast.Node) bool {
 			cur, i = sel, i-1 // pkg.V
 		}
 	}
+	// A read-only variable that is not plain data (a string or a slice) is
+	// emitted as a value, not an object, so its own address may not reach
+	// a read-only pointer parameter (pointers to strings and slices are not
+	// in the subset today; this keeps the rule sound if they are added).
+	// Its elements' addresses are fine.
+	addressable := plainData(f.info.Types[cur.(ast.Expr)].Type)
+	return f.globalStorageWrites(stack, i, cur, addressable)
+}
+
+// globalStorageWrites classifies a use of storage cur (a package-level
+// variable or a path into it, or the storage a read-only pointer parameter
+// points to) whose ancestors are stack[:i+1]. addressable reports whether
+// cur itself may be addressed for a read-only pointer parameter; paths into
+// it always may.
+func (f *frontend) globalStorageWrites(stack []ast.Node, i int, cur ast.Node, addressable bool) bool {
 	// copied reports a read of cur's whole value: a slice value could then
 	// be written through.
 	copied := func() bool {
@@ -280,7 +295,7 @@ func (f *frontend) globalUseWrites(stack []ast.Node) bool {
 				return true
 			}
 			if s.Kind() == types.FieldVal {
-				cur = p
+				cur, addressable = p, true
 				continue
 			}
 			fn, _ := f.info.Uses[p.Sel].(*types.Func)
@@ -291,15 +306,18 @@ func (f *frontend) globalUseWrites(stack []ast.Node) bool {
 			if recv == nil {
 				return true
 			}
-			_, pointerRecv := recv.Type().(*types.Pointer)
-			return pointerRecv || copied()
+			if _, pointerRecv := recv.Type().(*types.Pointer); pointerRecv {
+				// A read-only receiver only reads (readonlyptr.go).
+				return !addressable || !f.pointerReceiverRead(stack, i, fn)
+			}
+			return copied()
 		case *ast.IndexExpr:
 			if p.X != cur {
 				return copied()
 			}
 			switch f.info.Types[p.X].Type.Underlying().(type) {
 			case *types.Array, *types.Slice:
-				cur = p
+				cur, addressable = p, true
 				continue
 			}
 			return false // a map lookup or a string byte
@@ -309,7 +327,12 @@ func (f *frontend) globalUseWrites(stack []ast.Node) bool {
 			}
 			return !isString(f.info.Types[p.X].Type)
 		case *ast.UnaryExpr:
-			return p.Op == token.AND || copied()
+			if p.Op == token.AND {
+				// An address passed only to a read-only pointer
+				// parameter (readonlyptr.go).
+				return !addressable || !f.addressRead(stack, i)
+			}
+			return copied()
 		case *ast.AssignStmt:
 			for _, lhs := range p.Lhs {
 				if lhs == cur {
@@ -418,6 +441,7 @@ func (f *frontend) buildGlobals(importer *programImporter, lowered []*ast.File) 
 			roots = append(roots, init.Rhs)
 		}
 	}
+	f.roPointers = f.newReadOnlyPointers(roots)
 	written := f.globalWrites(roots, byVar)
 	for _, g := range all {
 		g.ReadOnly = !written[g.Var] && f.readOnlyCandidate(g)

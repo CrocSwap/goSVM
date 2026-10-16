@@ -881,6 +881,10 @@ func (g *generator) exprValue(e ast.Expr) string {
 			if isFuncValue(tv.Type) {
 				return g.temp(e, tv.Type, g.expr(e.Args[0]))
 			}
+			if _, ok := tv.Type.Underlying().(*types.Pointer); ok {
+				// The same address as the converted type's C pointer.
+				return g.temp(e, tv.Type, fmt.Sprintf("((%s)(%s))", g.variable(e, tv.Type), g.expr(e.Args[0])))
+			}
 		}
 		var o types.Object
 		builtinName := ""
