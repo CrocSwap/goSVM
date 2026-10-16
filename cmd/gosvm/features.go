@@ -21,6 +21,8 @@ func featuresCommand(args []string) error {
 	dir := fs.String("dir", ".", "project directory")
 	output := fs.String("o", "", "output JSON file (default stdout)")
 	generate := fs.Bool("generate", false, "run gosvm generate before reporting (default: read existing generated files)")
+	var trim trimFlag
+	fs.Var(&trim, "trim", "low-level form: opt in to trimming for packages matching this pattern (repeatable; docs/GO_PACKAGES.md#trimming)")
 	if err := fs.Parse(args); err != nil {
 		if err == flag.ErrHelp {
 			return nil
@@ -28,7 +30,7 @@ func featuresCommand(args []string) error {
 		return err
 	}
 	if fs.NArg() > 1 {
-		return fmt.Errorf("usage: gosvm features [-dir project] [-generate] [-o out.json] [package-directory|source.go]")
+		return fmt.Errorf("usage: gosvm features [-dir project] [-generate] [-o out.json] [-trim pattern]... [package-directory|source.go]")
 	}
 	var usage *features.Usage
 	var err error
@@ -36,8 +38,11 @@ func featuresCommand(args []string) error {
 		if *generate {
 			return fmt.Errorf("-generate applies to projects; omit the package directory")
 		}
-		usage, err = packageFeatures(fs.Arg(0))
+		usage, err = packageFeatures(fs.Arg(0), trim)
 	} else {
+		if len(trim) > 0 {
+			return fmt.Errorf("-trim applies to the low-level form; projects set \"trim\" in gosvm.json")
+		}
 		usage, err = projectFeatures(*dir, *generate)
 	}
 	if err != nil {
@@ -57,8 +62,8 @@ func featuresCommand(args []string) error {
 	return os.WriteFile(*output, b, 0644)
 }
 
-func packageFeatures(path string) (*features.Usage, error) {
-	program, err := compiler.ReadProgram(path)
+func packageFeatures(path string, trim []string) (*features.Usage, error) {
+	program, err := compiler.ReadProgramWithOptions(path, compiler.ReadOptions{Trim: trim})
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +99,7 @@ func projectFeatures(dir string, generate bool) (*features.Usage, error) {
 	if err != nil {
 		return nil, err
 	}
-	u, err := packageFeatures(root)
+	u, err := packageFeatures(root, config.Trim)
 	if err != nil {
 		return nil, err
 	}

@@ -542,10 +542,15 @@ needed [variadic functions](../docs/GO_FUNCTIONS.md#variadic-functions) and
 user code can use too. See
 [standard-library packages, provenance, deviations and costs](../docs/GO_STDLIB.md).
 Published third-party modules (holiman/uint256, KyberNetwork/int256, the
-uniswapv3-sdk-uint256 math, lukechampine.com/uint128) run on chain from
-trimmed copies; see [real libraries](../results/compiler/2026-10-16-real-libraries/README.md),
+uniswapv3-sdk-uint256 math, lukechampine.com/uint128) run on chain; see
+[real libraries](../results/compiler/2026-10-16-real-libraries/README.md),
 which also added elided `&T{...}` array elements, pointer conversions and
-read-only pointer parameters for package-level tables.
+read-only pointer parameters for package-level tables, and first compiled
+them from trimmed copies. They now compile unmodified with the explicit
+[trimming opt-in](GO_PACKAGES.md#trimming) (`"trim"` in `gosvm.json`, or
+`-trim <pattern>`): only the declarations `Process` reaches in the named
+dependency packages are checked and compiled, and every dropped declaration
+and initializer is reported ([results](../results/compiler/2026-10-16-trim-opt-in/README.md)).
 
 Generics are monomorphized: generic functions, generic structs and named arrays
 with methods, explicit and inferred instantiation, type-set (`~uint64 | ~uint32`),

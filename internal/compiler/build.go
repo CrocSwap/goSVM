@@ -3,6 +3,7 @@ package compiler
 import (
 	"crypto/sha256"
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"gosvm/internal/targets"
 	"os"
@@ -32,6 +33,38 @@ type BuildOptions struct {
 	// HeapBytes is the invocation heap budget for allocation; 0 selects the
 	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
 	HeapBytes int
+	// Trim lists the import-path patterns of packages checked and compiled
+	// only as far as Process reaches them (Program.Trim,
+	// docs/GO_PACKAGES.md#trimming). A build of a program with trimming
+	// writes its TrimReport beside the output (TrimReportPath).
+	Trim []string
+}
+
+// TrimReportPath is where a build writes the trim report of the program in
+// output: output + ".trim.json".
+func TrimReportPath(output string) string { return output + ".trim.json" }
+
+// TrimWarnings are the build warnings for the trim report beside output:
+// one line per trimmed package that dropped declarations or imports, then
+// where the full list is. None without a report (no trimming).
+func TrimWarnings(output string) ([]string, error) {
+	path := TrimReportPath(output)
+	b, err := os.ReadFile(path)
+	if os.IsNotExist(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	var report TrimReport
+	if err = json.Unmarshal(b, &report); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
+	}
+	lines := report.Summary()
+	if len(lines) > 0 {
+		lines = append(lines, "full list of dropped declarations: "+path)
+	}
+	return lines, nil
 }
 
 // readProgramWith reads source and applies the options to the program.
@@ -39,7 +72,7 @@ func readProgramWith(source string, o BuildOptions) (*Program, error) {
 	if err := ValidateHeapBytes(o.HeapBytes); err != nil {
 		return nil, err
 	}
-	program, err := ReadProgram(source)
+	program, err := ReadProgramWithOptions(source, ReadOptions{Trim: o.Trim})
 	if err != nil {
 		return nil, err
 	}
@@ -56,6 +89,12 @@ func BuildWithOptions(source, output, llvm, arch string, o BuildOptions) error {
 	return buildProgram(program, output, llvm, arch)
 }
 func buildProgram(program *Program, output, llvm, arch string) error {
+	return buildProgramReport(program, output, llvm, arch, TrimReportPath(output))
+}
+
+// buildProgramReport is buildProgram writing the trim report to report (and
+// removing a stale one for a program without trimming).
+func buildProgramReport(program *Program, output, llvm, arch, report string) error {
 	libraryProfile := arch
 	cpu, script := "generic", linkerScript
 	modern := arch == target.Fogo || arch == target.Solana
@@ -81,11 +120,26 @@ func buildProgram(program *Program, output, llvm, arch string) error {
 	default:
 		return fmt.Errorf("unsupported SBF target %q", arch)
 	}
-	c, functionNames, err := compileProgramNamed(program)
+	checked, err := Check(program)
+	if err != nil {
+		return err
+	}
+	c, functionNames, err := emitCNamed(checked)
 	if err != nil {
 		return err
 	}
 	if err = os.MkdirAll(filepath.Dir(output), 0755); err != nil {
+		return err
+	}
+	if checked.Trimmed != nil {
+		b, err := MarshalTrimReport(checked.Trimmed)
+		if err != nil {
+			return err
+		}
+		if err = os.WriteFile(report, b, 0644); err != nil {
+			return err
+		}
+	} else if err = os.Remove(report); err != nil && !os.IsNotExist(err) {
 		return err
 	}
 	dir, err := os.MkdirTemp("", "gosvm-")

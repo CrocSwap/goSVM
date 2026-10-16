@@ -1,0 +1,318 @@
+{
+  "schema": 1,
+  "date": "2026-10-16",
+  "network_validation": false,
+  "trim_patterns": [
+    "github.com/holiman/uint256",
+    "github.com/KyberNetwork/int256",
+    "github.com/KyberNetwork/uniswapv3-sdk-uint256/...",
+    "lukechampine.com/uint128"
+  ],
+  "host_differential": {
+    "vectors": 22126,
+    "go_panics": 489,
+    "forms": {
+      "opt-in": "all match",
+      "trimmed-copies": "all match"
+    }
+  },
+  "sbf": {
+    "fogo-v0": {
+      "opt-in": {
+        "cases": 1188,
+        "aborts": 32,
+        "panic_lines": 24,
+        "elf_bytes": 296224,
+        "elf_sha256": "5754167c9f1ed66d0b4e47bc355cef967c064c77f3176cdcf89948fb1886be76",
+        "idle_cu": 26970,
+        "median_vector_cu": 30056
+      },
+      "trimmed-copies": {
+        "cases": 1188,
+        "aborts": 32,
+        "panic_lines": 24,
+        "elf_bytes": 296480,
+        "elf_sha256": "e31170215da0e5020a909f3b9f557b2108b29a12049eb80f4697081a08d246e2",
+        "idle_cu": 26997,
+        "median_vector_cu": 30083
+      },
+      "bench_call_cu_identical": true,
+      "bench_total_cu_delta": [
+        -27
+      ],
+      "init_cu": [
+        {
+          "probe": "none",
+          "opt-in": 0,
+          "trimmed-copies": 0,
+          "elf_bytes_opt_in": 2384,
+          "elf_bytes_trimmed_copies": 2384
+        },
+        {
+          "probe": "uint256",
+          "opt-in": 198,
+          "trimmed-copies": 484,
+          "elf_bytes_opt_in": 5096,
+          "elf_bytes_trimmed_copies": 8184
+        },
+        {
+          "probe": "int256",
+          "opt-in": 198,
+          "trimmed-copies": 434,
+          "elf_bytes_opt_in": 5096,
+          "elf_bytes_trimmed_copies": 7496
+        },
+        {
+          "probe": "uint128",
+          "opt-in": 30,
+          "trimmed-copies": 15,
+          "elf_bytes_opt_in": 2976,
+          "elf_bytes_trimmed_copies": 2712
+        },
+        {
+          "probe": "constants (and uint256)",
+          "opt-in": 1,
+          "trimmed-copies": 3706,
+          "elf_bytes_opt_in": 2416,
+          "elf_bytes_trimmed_copies": 13104
+        },
+        {
+          "probe": "utils (all four packages)",
+          "opt-in": 30,
+          "trimmed-copies": 25442,
+          "elf_bytes_opt_in": 2984,
+          "elf_bytes_trimmed_copies": 34632
+        },
+        {
+          "probe": "app: ComputeSwapStep only",
+          "opt-in": 5398,
+          "trimmed-copies": 25442,
+          "elf_bytes_opt_in": 50520,
+          "elf_bytes_trimmed_copies": 70920
+        },
+        {
+          "probe": "app: tick math only",
+          "opt-in": 20967,
+          "trimmed-copies": 26276,
+          "elf_bytes_opt_in": 45264,
+          "elf_bytes_trimmed_copies": 53040
+        },
+        {
+          "probe": "replica: tick_math.go sqrtConst1-21 and MaxUint256 (22 MustFromHex)",
+          "opt-in": 11196,
+          "trimmed-copies": 11356,
+          "elf_bytes_opt_in": 11408,
+          "elf_bytes_trimmed_copies": 13064
+        },
+        {
+          "probe": "replica: Uint128Max, Uint160Max, MaxUint160 (3 MustFromHex)",
+          "opt-in": 1985,
+          "trimmed-copies": 2145,
+          "elf_bytes_opt_in": 8840,
+          "elf_bytes_trimmed_copies": 10496
+        },
+        {
+          "probe": "replica: MaxSqrtRatioU256 (MustFromDecimal, 49 digits)",
+          "opt-in": 2422,
+          "trimmed-copies": 2569,
+          "elf_bytes_opt_in": 12144,
+          "elf_bytes_trimmed_copies": 13824
+        },
+        {
+          "probe": "replica: magicSqrt10001, magicTickLow, magicTickHigh (3 int256.MustFromDec)",
+          "opt-in": 4873,
+          "trimmed-copies": 4970,
+          "elf_bytes_opt_in": 13712,
+          "elf_bytes_trimmed_copies": 14704
+        },
+        {
+          "probe": "replica: constants.TickSpacings (a 7-entry map)",
+          "opt-in": 477,
+          "trimmed-copies": 477,
+          "elf_bytes_opt_in": 4584,
+          "elf_bytes_trimmed_copies": 4584
+        },
+        {
+          "probe": "replica: constants.Q96U256 (uint256 Exp(2, 96))",
+          "opt-in": 2951,
+          "trimmed-copies": 3238,
+          "elf_bytes_opt_in": 8264,
+          "elf_bytes_trimmed_copies": 11368
+        }
+      ]
+    },
+    "solana-v3": {
+      "opt-in": {
+        "cases": 1188,
+        "aborts": 32,
+        "panic_lines": 24,
+        "elf_bytes": 301896,
+        "elf_sha256": "3a54bdaa2e07fef6afd9f34beb66d47c6ac137d75a8a38d8df98532880950df9",
+        "idle_cu": 26992,
+        "median_vector_cu": 30062
+      },
+      "trimmed-copies": {
+        "cases": 1188,
+        "aborts": 32,
+        "panic_lines": 24,
+        "elf_bytes": 302152,
+        "elf_sha256": "c81aca147808ad1f1ad13e98bc1f876dec1e9dbb40e1b60511a5210b46e397cc",
+        "idle_cu": 27019,
+        "median_vector_cu": 30089
+      },
+      "bench_call_cu_identical": true,
+      "bench_total_cu_delta": [
+        -27
+      ],
+      "init_cu": [
+        {
+          "probe": "none",
+          "opt-in": 0,
+          "trimmed-copies": 0,
+          "elf_bytes_opt_in": 1552,
+          "elf_bytes_trimmed_copies": 1552
+        },
+        {
+          "probe": "uint256",
+          "opt-in": 198,
+          "trimmed-copies": 484,
+          "elf_bytes_opt_in": 4056,
+          "elf_bytes_trimmed_copies": 7040
+        },
+        {
+          "probe": "int256",
+          "opt-in": 198,
+          "trimmed-copies": 434,
+          "elf_bytes_opt_in": 4056,
+          "elf_bytes_trimmed_copies": 6416
+        },
+        {
+          "probe": "uint128",
+          "opt-in": 30,
+          "trimmed-copies": 15,
+          "elf_bytes_opt_in": 2040,
+          "elf_bytes_trimmed_copies": 1880
+        },
+        {
+          "probe": "constants (and uint256)",
+          "opt-in": 1,
+          "trimmed-copies": 3706,
+          "elf_bytes_opt_in": 1584,
+          "elf_bytes_trimmed_copies": 11944
+        },
+        {
+          "probe": "utils (all four packages)",
+          "opt-in": 30,
+          "trimmed-copies": 25445,
+          "elf_bytes_opt_in": 2048,
+          "elf_bytes_trimmed_copies": 32592
+        },
+        {
+          "probe": "app: ComputeSwapStep only",
+          "opt-in": 5398,
+          "trimmed-copies": 25445,
+          "elf_bytes_opt_in": 50304,
+          "elf_bytes_trimmed_copies": 70040
+        },
+        {
+          "probe": "app: tick math only",
+          "opt-in": 20972,
+          "trimmed-copies": 26281,
+          "elf_bytes_opt_in": 44296,
+          "elf_bytes_trimmed_copies": 51872
+        },
+        {
+          "probe": "replica: tick_math.go sqrtConst1-21 and MaxUint256 (22 MustFromHex)",
+          "opt-in": 11196,
+          "trimmed-copies": 11356,
+          "elf_bytes_opt_in": 9912,
+          "elf_bytes_trimmed_copies": 11536
+        },
+        {
+          "probe": "replica: Uint128Max, Uint160Max, MaxUint160 (3 MustFromHex)",
+          "opt-in": 1985,
+          "trimmed-copies": 2145,
+          "elf_bytes_opt_in": 7568,
+          "elf_bytes_trimmed_copies": 9192
+        },
+        {
+          "probe": "replica: MaxSqrtRatioU256 (MustFromDecimal, 49 digits)",
+          "opt-in": 2422,
+          "trimmed-copies": 2569,
+          "elf_bytes_opt_in": 10936,
+          "elf_bytes_trimmed_copies": 12520
+        },
+        {
+          "probe": "replica: magicSqrt10001, magicTickLow, magicTickHigh (3 int256.MustFromDec)",
+          "opt-in": 4878,
+          "trimmed-copies": 4975,
+          "elf_bytes_opt_in": 12448,
+          "elf_bytes_trimmed_copies": 13408
+        },
+        {
+          "probe": "replica: constants.TickSpacings (a 7-entry map)",
+          "opt-in": 477,
+          "trimmed-copies": 477,
+          "elf_bytes_opt_in": 3736,
+          "elf_bytes_trimmed_copies": 3736
+        },
+        {
+          "probe": "replica: constants.Q96U256 (uint256 Exp(2, 96))",
+          "opt-in": 2951,
+          "trimmed-copies": 3238,
+          "elf_bytes_opt_in": 7224,
+          "elf_bytes_trimmed_copies": 10224
+        }
+      ]
+    }
+  },
+  "trim_report": {
+    "github.com/KyberNetwork/int256": {
+      "dropped": 7,
+      "dropped_initializers": 1,
+      "type_only_imports": [
+        "math/big"
+      ]
+    },
+    "github.com/KyberNetwork/uniswapv3-sdk-uint256/constants": {
+      "dropped": 9,
+      "dropped_initializers": 8,
+      "type_only_imports": [
+        "github.com/daoleno/uniswap-sdk-core/entities",
+        "github.com/ethereum/go-ethereum/common",
+        "math/big"
+      ]
+    },
+    "github.com/KyberNetwork/uniswapv3-sdk-uint256/utils": {
+      "dropped": 21,
+      "dropped_initializers": 4,
+      "type_only_imports": [
+        "github.com/daoleno/uniswap-sdk-core/entities",
+        "github.com/ethereum/go-ethereum/accounts/abi",
+        "github.com/ethereum/go-ethereum/common",
+        "github.com/ethereum/go-ethereum/crypto",
+        "math/big"
+      ]
+    },
+    "github.com/holiman/uint256": {
+      "dropped": 21,
+      "dropped_initializers": 6,
+      "type_only_imports": [
+        "database/sql",
+        "database/sql/driver",
+        "encoding",
+        "encoding/json",
+        "fmt",
+        "math/big"
+      ]
+    },
+    "lukechampine.com/uint128": {
+      "dropped": 4,
+      "dropped_initializers": 0,
+      "type_only_imports": [
+        "fmt",
+        "math/big"
+      ]
+    }
+  }
+}

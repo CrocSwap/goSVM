@@ -309,7 +309,7 @@ func TestRealLibrariesInitSBF(t *testing.T) {
 					probes = append(probes, map[string]any{"probe": probe.name, "cu": cu, "init_cu": int64(cu) - int64(initCU["none"]),
 						"elf_bytes": r["elf_bytes"], "elf_sha256": r["elf_sha256"]})
 				}
-				program := realLibsSBFProgram(t, env)
+				program := realLibsSBFProgram(t, env.program)
 				program.RuntimeInit = runtimeInit
 				r := runGlobalProgram(t, llvm, runner, profile, mode+"-real-libraries", program, cases, keepDir(t, keep, profile))
 				benches := []map[string]any{}

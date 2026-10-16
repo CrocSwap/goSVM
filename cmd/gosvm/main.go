@@ -42,12 +42,18 @@ func legacy() {
 	profileName := flag.String("target", "", "explicit profile; raw -arch retains historical semantics")
 	noCache := flag.Bool("no-cache", false, "rebuild even if source, compiler, backend and output match the last build")
 	heapBytes := flag.Int("heap-bytes", 0, "invocation heap budget for allocation: a multiple of 1024 from 32768 to 262144 (0: 32768); above 32768 every transaction must send ComputeBudget RequestHeapFrame")
+	var trim trimFlag
+	flag.Var(&trim, "trim", "opt in to trimming for packages matching this import path or path/... pattern: only the declarations Process reaches are checked and compiled (repeatable; docs/GO_PACKAGES.md#trimming)")
 	flag.Parse()
 	if err := compiler.ValidateHeapBytes(*heapBytes); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	options := compiler.BuildOptions{HeapBytes: *heapBytes}
+	if err := compiler.ValidateTrim(trim); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	options := compiler.BuildOptions{HeapBytes: *heapBytes, Trim: trim}
 	emitArch := *arch
 	if *profileName != "" {
 		explicitArch, explicitLLVM := false, false
@@ -89,10 +95,14 @@ func legacy() {
 	if *emit {
 		var out []byte
 		var src *compiler.Program
-		src, err = compiler.ReadProgram(flag.Arg(0))
+		src, err = compiler.ReadProgramWithOptions(flag.Arg(0), compiler.ReadOptions{Trim: options.Trim})
 		if err == nil {
 			src.HeapBytes = options.HeapBytes
-			out, err = compiler.CompileProgram(src)
+			var checked *compiler.CheckedProgram
+			if checked, err = compiler.Check(src); err == nil {
+				out, err = compiler.EmitC(checked)
+				printTrimSummary(checked.Trimmed, "")
+			}
 		}
 		if err == nil {
 			err = os.MkdirAll(filepath.Dir(*output), 0755)
@@ -109,9 +119,36 @@ func legacy() {
 		} else {
 			err = compiler.BuildCachedWithOptions(flag.Arg(0), *output, *llvm, *arch, options)
 		}
+		if err == nil {
+			err = printTrimWarnings(*output)
+		}
 	}
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
+	}
+}
+
+// trimFlag collects repeated -trim patterns.
+type trimFlag []string
+
+func (f *trimFlag) String() string     { return strings.Join(*f, ",") }
+func (f *trimFlag) Set(v string) error { *f = append(*f, v); return nil }
+
+// printTrimWarnings prints the warnings for the trim report beside a built
+// program (docs/GO_PACKAGES.md#trimming): nothing without trimming.
+func printTrimWarnings(output string) error {
+	lines, err := compiler.TrimWarnings(output)
+	for _, line := range lines {
+		fmt.Fprintln(os.Stderr, "gosvm: warning:", line)
+	}
+	return err
+}
+
+// printTrimSummary prints a trim report's summary as warnings, for commands
+// that write no report file.
+func printTrimSummary(report *compiler.TrimReport, prefix string) {
+	for _, line := range report.Summary() {
+		fmt.Fprintln(os.Stderr, "gosvm: warning:", prefix+line)
 	}
 }

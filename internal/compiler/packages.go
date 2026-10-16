@@ -41,6 +41,36 @@ type Program struct {
 	// initializer runs at run time on every invocation. A diagnostic and
 	// comparison switch; the observable behaviour is the same either way.
 	RuntimeInit bool `json:",omitempty"`
+	// Trim lists the import-path patterns (an exact path, or a prefix
+	// followed by "/...") of packages whose declarations are checked and
+	// compiled only when Process reaches them (docs/GO_PACKAGES.md#trimming).
+	// Empty: every declaration of every package is checked (the default).
+	Trim []string `json:",omitempty"`
+	// TypeOnly holds module packages that only trimmed packages import,
+	// with their module dependencies: type information for those imports.
+	// Check compiles one on chain only when a reached declaration uses it.
+	// Empty without Trim.
+	TypeOnly []PackageSources `json:",omitempty"`
+	// TypeOnlyUnsupported maps each TypeOnly package whose sources cannot
+	// be compiled on chain (build constraints, cgo, platform-specific
+	// files) to why. Its Sources are then the files Go selects for
+	// linux/amd64 without cgo, used for type information only.
+	TypeOnlyUnsupported map[string]string `json:",omitempty"`
+}
+
+// ReadOptions are program settings that change resolution.
+type ReadOptions struct {
+	// Trim is Program.Trim; see ValidateTrim.
+	Trim []string
+}
+
+// ReadProgramWithOptions is ReadProgram with resolution options.
+func ReadProgramWithOptions(path string, o ReadOptions) (*Program, error) {
+	sources, err := ReadSources(path)
+	if err != nil {
+		return nil, err
+	}
+	return ReadProgramWithSourcesOptions(path, sources, o)
 }
 
 // ReadProgram retains the file/directory input convention. Only user imports
@@ -59,11 +89,20 @@ func ReadProgram(path string) (*Program, error) {
 // it, without publishing a partially generated file or consulting stale bindings.
 // Dependencies and module metadata are read with ReadProgram's offline policy.
 func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
+	return ReadProgramWithSourcesOptions(path, sources, ReadOptions{})
+}
+
+// ReadProgramWithSourcesOptions is ReadProgramWithSources with resolution
+// options.
+func ReadProgramWithSourcesOptions(path string, sources []Source, o ReadOptions) (*Program, error) {
+	if err := ValidateTrim(o.Trim); err != nil {
+		return nil, err
+	}
 	imports, err := sourceImports(sources)
 	if err != nil {
 		return nil, err
 	}
-	p := &Program{Entry: "program", Packages: []PackageSources{{"program", sources}}}
+	p := &Program{Entry: "program", Packages: []PackageSources{{Path: "program", Sources: sources}}, Trim: append([]string(nil), o.Trim...)}
 	// Project snapshots select the exact API used by their ordinary Go modules.
 	dir, err := filepath.Abs(path)
 	if err != nil {
@@ -122,6 +161,10 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 	p.Packages = nil
 	p.Metadata = append(p.Metadata, resolver.metadata...)
 	seen := map[string]bool{}
+	// Module imports of trimmed packages are optional: resolved after the
+	// on-chain graph, for type information (trim.go).
+	var optional []sourceImport
+	optionalFrom := map[string]string{}
 	active := map[string]bool{}
 	metadata := map[string]bool{}
 	for _, source := range p.Metadata {
@@ -169,8 +212,22 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 		if e != nil {
 			return e
 		}
+		trimmed := matchTrim(p.Trim, packagePath)
 		for _, im := range imports {
 			if compilerImport(im.path) {
+				continue
+			}
+			if trimmed && !seen[im.path] && !active[im.path] && im.path != p.Entry {
+				// Only reached declarations of a trimmed package need its
+				// imports on chain: a standard-library package is type
+				// information from GOROOT, a module package is resolved
+				// below and compiled only if Check finds it used.
+				if !standardPackage(im.path) {
+					if _, dup := optionalFrom[im.path]; !dup {
+						optionalFrom[im.path] = packagePath
+						optional = append(optional, im)
+					}
+				}
 				continue
 			}
 			if im.path == p.Entry || active[im.path] {
@@ -183,11 +240,11 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 				continue
 			}
 			if standardPackage(im.path) {
-				return fmt.Errorf("%s: %s", im.position, stdlibImportRule(im.path))
+				return fmt.Errorf("%s: %s%s", im.position, stdlibImportRule(im.path), trimHint(p, packagePath))
 			}
 			dependency, e := resolver.resolve(im.path)
 			if _, ok := e.(standardImportError); ok {
-				return fmt.Errorf("%s: %s", im.position, stdlibImportRule(im.path))
+				return fmt.Errorf("%s: %s%s", im.position, stdlibImportRule(im.path), trimHint(p, packagePath))
 			}
 			if e != nil {
 				return fmt.Errorf("%s: resolve import %q: %w", im.position, im.path, e)
@@ -204,11 +261,22 @@ func ReadProgramWithSources(path string, sources []Source) (*Program, error) {
 			}
 		}
 		active[packagePath] = false
-		p.Packages = append(p.Packages, PackageSources{packagePath, src})
+		p.Packages = append(p.Packages, PackageSources{Path: packagePath, Sources: src})
 		return nil
 	}
 	if err = visit(p.Entry, sources, root); err != nil {
 		return nil, err
+	}
+	var pending []sourceImport
+	for _, im := range optional {
+		if !seen[im.path] {
+			pending = append(pending, im)
+		}
+	}
+	if len(pending) > 0 {
+		if err = resolveTypeOnly(p, resolver, pending, optionalFrom, seen, metadata); err != nil {
+			return nil, err
+		}
 	}
 	sort.Slice(p.Metadata, func(i, j int) bool { return p.Metadata[i].Name < p.Metadata[j].Name })
 	return p, nil
@@ -307,12 +375,18 @@ func newModuleResolver(dir string) (*moduleResolver, error) {
 	}
 	return r, nil
 }
-func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
-	cmd := exec.Command("go", "list", "-find", "-json", "-mod=readonly", "-modfile="+r.modFile, "--", path)
+
+// command is an offline go command in the resolver's module; extra
+// environment settings override the defaults.
+func (r *moduleResolver) command(extra map[string]string, args ...string) *exec.Cmd {
+	cmd := exec.Command("go", args...)
 	cmd.Dir = r.dir
 	// Fix host-dependent workspace/tool flags, prohibit implicit downloads and
 	// toolchain switching, and use the caller's existing module/cache locations.
 	overrides := map[string]string{"GO111MODULE": "on", "GOWORK": "off", "GOPROXY": "off", "GOSUMDB": "off", "GOTOOLCHAIN": "local", "GOFLAGS": ""}
+	for key, value := range extra {
+		overrides[key] = value
+	}
 	for _, entry := range os.Environ() {
 		key, _, _ := strings.Cut(entry, "=")
 		if _, ok := overrides[key]; !ok {
@@ -322,6 +396,11 @@ func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
 	for key, value := range overrides {
 		cmd.Env = append(cmd.Env, key+"="+value)
 	}
+	return cmd
+}
+
+func (r *moduleResolver) resolve(path string) (*listedPackage, error) {
+	cmd := r.command(nil, "list", "-find", "-json", "-mod=readonly", "-modfile="+r.modFile, "--", path)
 	var out, stderr bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &out, &stderr
 	if err := cmd.Run(); err != nil {
@@ -383,6 +462,10 @@ type programImporter struct {
 	bits      *types.Package // math/bits declarations, once imported
 	entryPath string
 	ctxt      *types.Context // shared, so each generic type instance is one *types.Named
+	// trim is the trimming state (trim.go); nil without Program.Trim.
+	// trimmed is its report once the load is complete.
+	trim    *trimLoader
+	trimmed *TrimReport
 }
 
 func (p *programImporter) Import(path string) (*types.Package, error) {
@@ -410,6 +493,13 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 	if !ok && stdlibPackage(path) {
 		// A standard-library overlay package (stdlib.go).
 		unit, ok = PackageSources{Path: path, Sources: stdlibSources(path)}, true
+	}
+	if !ok && p.trim != nil {
+		// A module package only trimmed packages import, which this
+		// package needs on chain (trim.go).
+		if err := p.trim.promoteImport(path); err != nil {
+			return nil, err
+		}
 	}
 	if !ok {
 		if standardPackage(path) {
@@ -446,6 +536,17 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		files = append(files, file)
 	}
 	conf := types.Config{Sizes: &types.StdSizes{WordSize: 8, MaxAlign: 8}, Importer: p, Context: p.ctxt}
+	if p.trim != nil && p.trim.trimmed(path) {
+		// A trimmed package: its type errors are decided once reachability
+		// is known (trim.go).
+		pkg, err := p.trim.checkTrimmed(&conf, path, files)
+		if err != nil {
+			return nil, err
+		}
+		p.checked[path], p.active[path] = pkg, false
+		p.finish(path, files)
+		return pkg, nil
+	}
 	pkg, err := conf.Check(path, p.f.fset, files, p.f.info)
 	if err != nil {
 		// A reference to a standard-library symbol the overlay leaves out
@@ -456,6 +557,12 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		return nil, fmt.Errorf("%s: package %q is a program, not importable", p.f.fset.Position(files[0].Package), path)
 	}
 	p.checked[path], p.active[path] = pkg, false
+	p.finish(path, files)
+	return pkg, nil
+}
+
+// finish records a checked package's initialization order and files.
+func (p *programImporter) finish(path string, files []*ast.File) {
 	// The shared Info's InitOrder is this package's until the next package
 	// finishes checking; keep a copy.
 	if len(p.f.info.InitOrder) > 0 {
@@ -469,7 +576,6 @@ func (p *programImporter) Import(path string) (*types.Package, error) {
 		p.decls = append(p.decls, file.Decls...)
 		p.filePaths = append(p.filePaths, path)
 	}
-	return pkg, nil
 }
 
 // standardImportError is resolve's error for a standard-library package

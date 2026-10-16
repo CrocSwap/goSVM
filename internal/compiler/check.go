@@ -281,6 +281,11 @@ type ResultBorrow struct {
 func Check(program *Program) (checked *CheckedProgram, err error) {
 	defer func() {
 		if err != nil {
+			if program != nil {
+				// A rejection in a dependency package suggests trimming
+				// (docs/GO_PACKAGES.md#trimming).
+				err = withTrimHint(err, program)
+			}
 			checked = nil
 		}
 	}()
@@ -304,7 +309,7 @@ func Check(program *Program) (checked *CheckedProgram, err error) {
 		return nil, fmt.Errorf("require Process([]byte, []byte) uint64 or Process(solana.Context) uint64")
 	}
 	checked = &CheckedProgram{
-		TypedProgram: TypedProgram{Entry: pkg, Packages: importer.checked, Files: importer.files, Info: f.info, Fset: f.fset},
+		TypedProgram: TypedProgram{Entry: pkg, Packages: importer.checked, Files: importer.files, Info: f.info, Fset: f.fset, Trimmed: importer.trimmed},
 		Program:      program,
 		SDK:          program.SDK,
 		Process:      entry,
@@ -551,6 +556,59 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	if err := ValidateHeapBytes(program.HeapBytes); err != nil {
 		return nil, nil, err
 	}
+	if len(program.Trim) == 0 {
+		return loadProgramOnce(program, nil)
+	}
+	if err := ValidateTrim(program.Trim); err != nil {
+		return nil, nil, err
+	}
+	// Trimming (trim.go): load, compute reachability, and load again with
+	// the module packages reached declarations need on chain, until none
+	// is missing.
+	state := &trimState{promoted: map[string]bool{}, fatal: map[string]error{}}
+	for {
+		f, importer, err := loadProgramOnce(program, state)
+		t := importer.trim
+		promote := t.restart
+		if len(promote) == 0 {
+			if err != nil {
+				return nil, nil, err
+			}
+			var report *TrimReport
+			var fatal *trimFatal
+			if promote, report, fatal, err = t.finish(); err != nil {
+				return nil, nil, err
+			}
+			if fatal != nil {
+				// Load again, failing that package's check with the
+				// error, so that its importers report it as they do
+				// without trimming.
+				if state.fatal[fatal.path] != nil {
+					return nil, nil, fatal.err
+				}
+				state.fatal[fatal.path] = fatal.err
+				continue
+			}
+			if len(promote) == 0 {
+				importer.trimmed = report
+				return f, importer, nil
+			}
+		}
+		for _, path := range promote {
+			if state.promoted[path] {
+				return nil, nil, fmt.Errorf("internal error: %q promoted twice", path)
+			}
+			if err := checkPromoted(program, path); err != nil {
+				return nil, nil, err
+			}
+			state.promoted[path] = true
+		}
+	}
+}
+
+// loadProgramOnce is one load of the package graph; state is nil without
+// trimming.
+func loadProgramOnce(program *Program, state *trimState) (*frontend, *programImporter, error) {
 	f := newFrontend(token.NewFileSet(), &types.Info{
 		Types: map[ast.Expr]types.TypeAndValue{}, Defs: map[*ast.Ident]types.Object{}, Uses: map[*ast.Ident]types.Object{},
 		Selections: map[*ast.SelectorExpr]*types.Selection{}, Scopes: map[ast.Node]*types.Scope{},
@@ -563,8 +621,16 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 		}
 		importer.units[unit.Path] = unit
 	}
+	if state != nil {
+		importer.trim = newTrimLoader(importer, program, state)
+		for _, unit := range program.TypeOnly {
+			if state.promoted[unit.Path] {
+				importer.units[unit.Path] = unit
+			}
+		}
+	}
 	if _, err := importer.Import(program.Entry); err != nil {
-		return nil, nil, err
+		return f, importer, err
 	}
 	return f, importer, nil
 }

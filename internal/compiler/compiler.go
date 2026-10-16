@@ -97,7 +97,7 @@ func Compile(filename string, source []byte) ([]byte, error) {
 
 // CompileSources checks a whole package. File order never affects generated output.
 func CompileSources(sources []Source) (out []byte, err error) {
-	return CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", sources}}})
+	return CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{Path: "program", Sources: sources}}})
 }
 
 // CompileProgram checks the on-chain package graph with Check, then emits it

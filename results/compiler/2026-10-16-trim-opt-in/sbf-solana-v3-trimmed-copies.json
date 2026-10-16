@@ -1,0 +1,315 @@
+{
+  "aborts": 32,
+  "bench": [
+    {
+      "call_cu": 0,
+      "cu": 27868,
+      "operation": "none (decode and write only)"
+    },
+    {
+      "call_cu": 35,
+      "cu": 27903,
+      "operation": "uint256 Add (256-bit)"
+    },
+    {
+      "call_cu": 376,
+      "cu": 28244,
+      "operation": "uint256 Mul (256 x 256-bit)"
+    },
+    {
+      "call_cu": 376,
+      "cu": 28244,
+      "operation": "uint256 Mul (128 x 128-bit)"
+    },
+    {
+      "call_cu": 822,
+      "cu": 28690,
+      "operation": "uint256 Div (256 / 64-bit)"
+    },
+    {
+      "call_cu": 1365,
+      "cu": 29233,
+      "operation": "uint256 Div (256 / 192-bit, Knuth)"
+    },
+    {
+      "call_cu": 1557,
+      "cu": 29425,
+      "operation": "uint256 Div (256 / 128-bit, Knuth)"
+    },
+    {
+      "call_cu": 3848,
+      "cu": 31716,
+      "operation": "uint256 MulDivOverflow (200 x 200 / 150-bit)"
+    },
+    {
+      "call_cu": 7874,
+      "cu": 35742,
+      "operation": "uint256 MulMod (256-bit operands)"
+    },
+    {
+      "call_cu": 30962,
+      "cu": 58830,
+      "operation": "uint256 Exp (256-bit base, 64-bit exponent)"
+    },
+    {
+      "call_cu": 121038,
+      "cu": 148906,
+      "operation": "uint256 Exp (256-bit base, 256-bit exponent)"
+    },
+    {
+      "call_cu": 9872,
+      "cu": 37740,
+      "operation": "uint256 Sqrt (256-bit)"
+    },
+    {
+      "call_cu": 109,
+      "cu": 27977,
+      "operation": "uint256 Sqrt (64-bit)"
+    },
+    {
+      "call_cu": 109,
+      "cu": 27977,
+      "operation": "uint256 Log10 (200-bit)"
+    },
+    {
+      "call_cu": 7565,
+      "cu": 35433,
+      "operation": "uint256 Dec (78 digits)"
+    },
+    {
+      "call_cu": 766,
+      "cu": 28634,
+      "operation": "uint256 SetFromHex (32 hex digits, = one MustFromHex)"
+    },
+    {
+      "call_cu": 3037,
+      "cu": 30905,
+      "operation": "uint256 SetFromDecimal (49 digits, = MaxSqrtRatioU256)"
+    },
+    {
+      "call_cu": 399,
+      "cu": 28267,
+      "operation": "int256 Mul (128-bit signed)"
+    },
+    {
+      "call_cu": 1656,
+      "cu": 29524,
+      "operation": "int256 Quo (256 / 128-bit signed)"
+    },
+    {
+      "call_cu": 2052,
+      "cu": 29920,
+      "operation": "int256 SetFromDec (37 digits, = one MustFromDec)"
+    },
+    {
+      "call_cu": 2444,
+      "cu": 30312,
+      "operation": "GetSqrtRatioAtTickV2 (tick 1)"
+    },
+    {
+      "call_cu": 5249,
+      "cu": 33117,
+      "operation": "GetSqrtRatioAtTickV2 (tick 500000)"
+    },
+    {
+      "call_cu": 4737,
+      "cu": 32605,
+      "operation": "GetSqrtRatioAtTickV2 (tick -887272, MinTick)"
+    },
+    {
+      "call_cu": 7873,
+      "cu": 35741,
+      "operation": "GetTickAtSqrtRatioV2 (price 1)"
+    },
+    {
+      "call_cu": 12370,
+      "cu": 40238,
+      "operation": "GetTickAtSqrtRatioV2 (tick ~ 500000)"
+    },
+    {
+      "call_cu": 13761,
+      "cu": 41629,
+      "operation": "GetTickAtSqrtRatioV2 (MaxSqrtRatio - 1)"
+    },
+    {
+      "call_cu": 2921,
+      "cu": 30789,
+      "operation": "utils.MulDivV2 (512-bit product)"
+    },
+    {
+      "call_cu": 4490,
+      "cu": 32358,
+      "operation": "GetAmount0DeltaV2 (round up)"
+    },
+    {
+      "call_cu": 4829,
+      "cu": 32697,
+      "operation": "GetNextSqrtPriceFromInput (zeroForOne)"
+    },
+    {
+      "call_cu": 17168,
+      "cu": 45036,
+      "operation": "ComputeSwapStep (exact in, within the range)"
+    },
+    {
+      "call_cu": 10449,
+      "cu": 38317,
+      "operation": "ComputeSwapStep (exact in, reaches the target)"
+    },
+    {
+      "call_cu": 17808,
+      "cu": 45676,
+      "operation": "ComputeSwapStep (exact out)"
+    },
+    {
+      "call_cu": 51,
+      "cu": 27919,
+      "operation": "uint128 MulWrap (128-bit)"
+    },
+    {
+      "call_cu": 390,
+      "cu": 28258,
+      "operation": "uint128 QuoRem (128 / 100-bit)"
+    },
+    {
+      "call_cu": 167,
+      "cu": 28035,
+      "operation": "uint128 QuoRem (128 / 64-bit)"
+    }
+  ],
+  "cases": 1188,
+  "elf_bytes": 302152,
+  "elf_sha256": "c81aca147808ad1f1ad13e98bc1f876dec1e9dbb40e1b60511a5210b46e397cc",
+  "form": "trimmed-copies",
+  "idle_cu": 27019,
+  "init": [
+    {
+      "cu": 97,
+      "elf_bytes": 1552,
+      "elf_sha256": "8f38d4d2c3ea378717491ebb74e6a4984a887ed9342fa915ab183cdb0f9d6141",
+      "init_cu": 0,
+      "probe": "none"
+    },
+    {
+      "base": "none",
+      "cu": 581,
+      "elf_bytes": 7040,
+      "elf_sha256": "057910b2dac057cda6d00f58bb8b4ef1ee9587c6cc0e3998876045f15d50e395",
+      "init_cu": 484,
+      "own_cu": 484,
+      "probe": "uint256"
+    },
+    {
+      "base": "none",
+      "cu": 531,
+      "elf_bytes": 6416,
+      "elf_sha256": "61817f69e2b21acf23eb1edf2ae681b8d3f8daa3c9d31449c70e175c432c8de5",
+      "init_cu": 434,
+      "own_cu": 434,
+      "probe": "int256"
+    },
+    {
+      "base": "none",
+      "cu": 112,
+      "elf_bytes": 1880,
+      "elf_sha256": "ecf3b5c86ea0f388929680020c87880d7bcba3c4c2ea623b740acc57ba65d2dd",
+      "init_cu": 15,
+      "own_cu": 15,
+      "probe": "uint128"
+    },
+    {
+      "base": "uint256",
+      "cu": 3803,
+      "elf_bytes": 11944,
+      "elf_sha256": "6b8f22a51505005664650bf74d2fb8c8bffd86995d5d2bbeb118228b2f3acdd0",
+      "init_cu": 3706,
+      "own_cu": 3222,
+      "probe": "constants (and uint256)"
+    },
+    {
+      "base": "none",
+      "cu": 25542,
+      "elf_bytes": 32592,
+      "elf_sha256": "50a16fa2768bf1963fee1a13fa2cc2720976883fcd598e061d8d9e30304a6288",
+      "init_cu": 25445,
+      "own_cu": 25445,
+      "probe": "utils (all four packages)"
+    },
+    {
+      "base": "none",
+      "cu": 25542,
+      "elf_bytes": 70040,
+      "elf_sha256": "7c761e85720d74575a27759f0f89e8f9d75170e659734ab9a3ae91d50b7d931c",
+      "init_cu": 25445,
+      "own_cu": 25445,
+      "probe": "app: ComputeSwapStep only"
+    },
+    {
+      "base": "none",
+      "cu": 26378,
+      "elf_bytes": 51872,
+      "elf_sha256": "6ad5fa21076bf6a07e34e0db23f2170e92a7861ca8d9002b5956359880f17934",
+      "init_cu": 26281,
+      "own_cu": 26281,
+      "probe": "app: tick math only"
+    },
+    {
+      "base": "uint256",
+      "cu": 11453,
+      "elf_bytes": 11536,
+      "elf_sha256": "4d501e58b82d908a3c38de3c8b66a623f130f65fc1d32edce1095fe754f9cd40",
+      "init_cu": 11356,
+      "own_cu": 10872,
+      "probe": "replica: tick_math.go sqrtConst1-21 and MaxUint256 (22 MustFromHex)"
+    },
+    {
+      "base": "uint256",
+      "cu": 2242,
+      "elf_bytes": 9192,
+      "elf_sha256": "3fa2a0070d427059421912ce925054ab3007b6ccc4ddb2ea00b09056c9f8e893",
+      "init_cu": 2145,
+      "own_cu": 1661,
+      "probe": "replica: Uint128Max, Uint160Max, MaxUint160 (3 MustFromHex)"
+    },
+    {
+      "base": "uint256",
+      "cu": 2666,
+      "elf_bytes": 12520,
+      "elf_sha256": "078dd0239702931fbe4994352f4ed7a28dd51b8c3315fe78d4b6560399230344",
+      "init_cu": 2569,
+      "own_cu": 2085,
+      "probe": "replica: MaxSqrtRatioU256 (MustFromDecimal, 49 digits)"
+    },
+    {
+      "base": "int256",
+      "cu": 5072,
+      "elf_bytes": 13408,
+      "elf_sha256": "9fc141cc218b4613255fd4c926e5907e63a7a1359d90c7cbf80d412496b755d7",
+      "init_cu": 4975,
+      "own_cu": 4541,
+      "probe": "replica: magicSqrt10001, magicTickLow, magicTickHigh (3 int256.MustFromDec)"
+    },
+    {
+      "base": "none",
+      "cu": 574,
+      "elf_bytes": 3736,
+      "elf_sha256": "b127c41567b17953d6f50d4f6144336c80d0a12076bd65690ca75dbe53853a14",
+      "init_cu": 477,
+      "own_cu": 477,
+      "probe": "replica: constants.TickSpacings (a 7-entry map)"
+    },
+    {
+      "base": "uint256",
+      "cu": 3335,
+      "elf_bytes": 10224,
+      "elf_sha256": "19d0192d0e27cf039139b9f6ccd7b4714e9cb2b41f8a48db1b25fd162e1adcb3",
+      "init_cu": 3238,
+      "own_cu": 2754,
+      "probe": "replica: constants.Q96U256 (uint256 Exp(2, 96))"
+    }
+  ],
+  "max_vector_cu": 242603,
+  "median_vector_cu": 30089,
+  "panic_lines": 24,
+  "profile": "solana-v3"
+}

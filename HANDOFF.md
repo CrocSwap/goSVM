@@ -238,6 +238,30 @@ line after a prefix, 64 KiB heap frame fault). Corpus: only the two empty
 `init` programs' C changed. Full-swap ELFs unchanged. Announced in the
 ERROR_CONTRACT changelog for Qushta.
 [Results](results/compiler/2026-10-16-const-init/README.md).
+**Opt-in trimming (October 16, Feature B):** user decision: whole-package
+checking stays the default; dependency packages can opt in, by import-path
+pattern (`"trim": ["github.com/x/lib/..."]` in `gosvm.json`, repeatable
+`-trim` for low-level builds and `gosvm features`), to checking and
+compiling only the declarations `Process` reaches
+([GO_PACKAGES](docs/GO_PACKAGES.md#trimming), `internal/compiler/trim.go`).
+Trimmed packages are type-checked whole (unsupported standard-library
+imports from GOROOT source, other modules from the module cache, required
+offline even when only dropped code uses them; never compiled); methods are
+kept when a reached interface could call them; `init` functions are never
+dropped; initializers of unreferenced variables are dropped (Go would run
+them) and, like every dropped declaration and type-only import, reported:
+build warnings plus `<output>.trim.json`, `gosvm features` `uses.trimmed`,
+`CheckedProgram.Trimmed`; the receipt/dependency keys include the
+configuration. The entry package is trimmed only when named exactly.
+Default builds are unchanged (corpus unchanged, full-swap ELFs identical);
+whole-package rejections in module dependency packages now end with a hint
+naming the opt-in (ERROR_CONTRACT changelog; announce to Qushta).
+`examples/real-libraries` now compiles the four modules **unmodified**
+under the opt-in: host differential and 1,188 SBF cases per target match
+native Go, call CU identical to the trimmed copies, initialization 27 CU
+cheaper (`int256.MaxI256` and other unreferenced initializers dropped);
+the trim tool/copies stay for the historical results
+([results](results/compiler/2026-10-16-trim-opt-in/README.md)).
 
 **Qushta verified backend (October 14):** Qushta is building an IR backend
 (typed Go → IR-SVM → proved SBF, `solana-v3` first) in its own fork; see the

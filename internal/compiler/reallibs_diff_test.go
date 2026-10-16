@@ -19,22 +19,50 @@ import (
 // KyberNetwork/int256 v0.1.4, the KyberNetwork/uniswapv3-sdk-uint256 v0.5.5
 // math and lukechampine.com/uint128 v1.3.0, consumed as module
 // dependencies. Natively the example runs against the unmodified modules;
-// goSVM compiles it against trimmed copies (trim/trim.json: upstream minus
-// the declarations goSVM rejects, every kept declaration byte-identical),
-// resolved through ordinary go.mod replacements. Both need the modules in
-// the Go module cache; the tests skip, saying so, when they are missing.
+// goSVM compiles it against the same unmodified modules with trimming
+// opted in for them (docs/GO_PACKAGES.md#trimming), and, for the
+// historical results, against trimmed copies (trim/trim.json: upstream
+// minus the declarations goSVM rejects, every kept declaration
+// byte-identical) resolved through ordinary go.mod replacements. All need
+// the modules in the Go module cache; the tests skip, saying so, when they
+// are missing.
 
 const realLibsExample = "../../examples/real-libraries"
 
-// realLibsEnv is the shared setup: the trimmed module copies, the on-chain
-// module using them, the native oracle and the loaded program.
+// realLibsEnv is the shared setup: the native oracle and the program in its
+// two forms. The main form is the example itself, compiled against the
+// unmodified modules from the module cache with trimming opted in for the
+// four library modules (realLibsTrim, docs/GO_PACKAGES.md#trimming). The
+// historical form (results/compiler/2026-10-16-real-libraries) compiles it
+// against the trimmed module copies of examples/real-libraries/trim.
 type realLibsEnv struct {
 	dir     string // scratch directory holding everything below
 	oracle  string // native oracle binary
-	onchain string // module directory goSVM compiles
+	onchain string // module directory goSVM compiles against the trimmed copies
 	program *Program
-	skip    string // why the prerequisites are missing
-	err     error  // resolving the on-chain module failed
+	// upstream is the example module with trimming opted in; upstreamDir
+	// is a scratch module with its go.mod and go.sum (for probes).
+	upstream    *Program
+	upstreamDir string
+	skip        string // why the prerequisites are missing
+	err         error  // resolving the on-chain module failed
+}
+
+// realLibsTrim are the trim patterns of the example (its gosvm.json
+// "trim"): the four library modules, never the example's own package.
+var realLibsTrim = []string{"github.com/holiman/uint256", "github.com/KyberNetwork/int256", "github.com/KyberNetwork/uniswapv3-sdk-uint256/...", "lukechampine.com/uint128"}
+
+// realLibsVariant is one form of the program.
+type realLibsVariant struct {
+	name    string
+	program *Program
+	dir     string // module directory for probes
+	trim    []string
+}
+
+// variants are the two forms of the program, the main one first.
+func (env *realLibsEnv) variants() []realLibsVariant {
+	return []realLibsVariant{{"opt-in", env.upstream, env.upstreamDir, realLibsTrim}, {"trimmed-copies", env.program, env.onchain, nil}}
 }
 
 var (
@@ -126,6 +154,28 @@ func realLibs(t *testing.T) *realLibsEnv {
 		// A resolution failure here is a goSVM failure, not a missing
 		// prerequisite: the tests fail with it.
 		env.program, env.err = ReadProgram(env.onchain)
+		if env.err != nil {
+			return
+		}
+		env.upstream, env.err = ReadProgramWithOptions(example, ReadOptions{Trim: realLibsTrim})
+		if env.err != nil {
+			return
+		}
+		env.upstreamDir = filepath.Join(dir, "upstream")
+		if err := os.MkdirAll(env.upstreamDir, 0755); err != nil {
+			env.skip = err.Error()
+			return
+		}
+		for _, name := range []string{"go.mod", "go.sum"} {
+			data, err := os.ReadFile(filepath.Join(example, name))
+			if err == nil {
+				err = os.WriteFile(filepath.Join(env.upstreamDir, name), data, 0644)
+			}
+			if err != nil {
+				env.skip = err.Error()
+				return
+			}
+		}
 	})
 	env := &realLibsSetup
 	if env.skip != "" {
@@ -487,19 +537,26 @@ func nativeRealLibs(t *testing.T, oracle string, vectors [][]byte) []string {
 	return lines
 }
 
-// TestRealLibrariesDifferential compiles examples/real-libraries for the host
-// against the trimmed modules and compares every vector's output, result and
+// TestRealLibrariesDifferential compiles examples/real-libraries for the host,
+// against the unmodified modules with trimming opted in and against the
+// trimmed module copies, and compares every vector's output, result and
 // panic with the unmodified modules run natively.
 func TestRealLibrariesDifferential(t *testing.T) {
 	env := realLibs(t)
-	c, err := CompileProgram(env.program)
+	vectors := append(realLibsVectors(20261016, 80), realLibsTickSweep()...)
+	vectors = append(vectors, realLibsSBFVectors()...)
+	want := nativeRealLibs(t, env.oracle, vectors)
+	for _, v := range env.variants() {
+		t.Run(v.name, func(t *testing.T) { realLibsDifferential(t, env, v.program, vectors, want) })
+	}
+}
+
+func realLibsDifferential(t *testing.T, env *realLibsEnv, program *Program, vectors [][]byte, want []string) {
+	c, err := CompileProgram(program)
 	if err != nil {
 		t.Fatal(err)
 	}
 	bin := hostCompile(t, c, DefaultHeapBytes, realLibsDriver, false)
-	vectors := append(realLibsVectors(20261016, 80), realLibsTickSweep()...)
-	vectors = append(vectors, realLibsSBFVectors()...)
-	want := nativeRealLibs(t, env.oracle, vectors)
 	panics, runs := compareHostVectors(t, bin, vectors, want)
 	total := 0
 	for _, n := range panics {
@@ -567,8 +624,9 @@ func TestRealLibrariesDifferential(t *testing.T) {
 
 // realLibsWhole pins why each unmodified library package does not compile
 // on chain as a whole: the first rejection goSVM reports when a program
-// imports it straight from the module cache (every file of a reachable
-// package must satisfy the subset; docs/GO_PACKAGES.md).
+// imports it straight from the module cache (by default every file of a
+// reachable package must satisfy the subset; docs/GO_PACKAGES.md), which
+// names the trimming opt-in; with it, each compiles.
 var realLibsWhole = []struct{ path, use, at, want string }{
 	{"github.com/holiman/uint256", "uint256.NewInt(1).Uint64()", "github.com/holiman/uint256@v1.3.1/conversion.go:8:2", stdlibImportRule("database/sql")},
 	{"github.com/KyberNetwork/int256", "int256.NewInt(1).Uint64()", "github.com/!kyber!network/int256@v0.1.4/conversion.go:6:2", stdlibImportRule("math/big")},
@@ -614,9 +672,18 @@ func TestRealLibrariesWholePackages(t *testing.T) {
 		if err != nil {
 			got = err.Error()
 		}
-		want := filepath.Join(modcache, filepath.FromSlash(c.at)) + ": " + c.want
+		// The rejection names the opt-in (docs/GO_PACKAGES.md#trimming).
+		want := filepath.Join(modcache, filepath.FromSlash(c.at)) + ": " + c.want + fmt.Sprintf(trimHintText, c.path)
 		if got != want {
 			t.Errorf("%s:\ngot  %q\nwant %q", c.path, got, want)
+		}
+		// With the opt-in, the unmodified package compiles.
+		p, err = ReadProgramWithOptions(dir, ReadOptions{Trim: realLibsTrim})
+		if err == nil {
+			_, err = CompileProgram(p)
+		}
+		if err != nil {
+			t.Errorf("%s with trimming: %v", c.path, err)
 		}
 	}
 }

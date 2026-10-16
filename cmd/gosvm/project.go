@@ -71,11 +71,15 @@ with "elf_source": "external" and the ELF's elf_sha256.
 Programs are copied to build/fogo/program.so and build/solana/program.so;
 isolated outputs/reports are under build/<profile>/<tools>/<backend>/deps-<dependencies>/.
 Historical outputs retain build/program.so and build/svm-results.json.
-Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] [-heap-bytes N] source.go|directory
+Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] [-heap-bytes N] [-trim pattern]... source.go|directory
 Raw -arch v0|v3 retains historical low-level semantics.
 Heap: gosvm.json "heap_bytes" (projects) or -heap-bytes (low level) sets the
 allocation budget, 32768..262144 in 1 KiB steps (default 32768); above 32768
 every transaction must send ComputeBudget RequestHeapFrame (docs/GO_ALLOCATION.md).
+Trimming: gosvm.json "trim": ["example.com/lib/..."] (projects) or repeated -trim
+(low level, also gosvm features) opts the matching dependency packages in to
+checking and compiling only the declarations Process reaches; builds warn with
+what was dropped and write <output>.trim.json (docs/GO_PACKAGES.md#trimming).
 `
 
 func llvmDefault() string {
@@ -236,7 +240,7 @@ func projectCommand(args []string) error {
 		if err != nil {
 			return err
 		}
-		buildOptions.HeapBytes = config.HeapBytes
+		buildOptions.HeapBytes, buildOptions.Trim = config.HeapBytes, config.Trim
 		if profiles, err = config.TargetProfiles(); err != nil {
 			return err
 		}
@@ -413,7 +417,7 @@ func projectCommand(args []string) error {
 		return e
 	}
 	if building {
-		key, err := compiler.DependencyKey(*dir)
+		key, err := compiler.DependencyKeyWithOptions(*dir, buildOptions)
 		if err != nil {
 			return err
 		}
@@ -497,6 +501,9 @@ func buildTarget(ctx context.Context, dir string, p target.Profile, llvm, output
 		return e
 	}
 	fmt.Printf("Built %s (%d bytes, %s)\n", output, st.Size(), time.Since(start).Round(time.Millisecond))
+	if e = printTrimWarnings(output); e != nil {
+		return e
+	}
 	if network := p.Network(); network != "" {
 		stable := filepath.Join(dir, "build", network, "program.so")
 		if e = copyAtomic(output, stable); e != nil {

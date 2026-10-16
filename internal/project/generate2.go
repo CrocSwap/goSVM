@@ -32,7 +32,7 @@ func generateMulti(dir string, c Config) error {
 	}
 	// Replace provisional declarations with the complete adapter, then perform
 	// the compiler's language and borrowing checks before changing any artifact.
-	program, err := compiler.ReadProgramWithSources(dir, append(sources, compiler.Source{Name: filepath.Join(dir, "zz_gosvm.go"), Data: adapter}))
+	program, err := compiler.ReadProgramWithSourcesOptions(dir, append(sources, compiler.Source{Name: filepath.Join(dir, "zz_gosvm.go"), Data: adapter}), compiler.ReadOptions{Trim: c.Trim})
 	if err != nil {
 		return err
 	}

@@ -142,6 +142,24 @@ type Uses struct {
 	// can rely on that proof. See docs/GO_FUNCTIONS.md#recursion.
 	RecursionCheckInconclusive bool     `json:"recursion_check_inconclusive"`
 	RecursionCheckReasons      []string `json:"recursion_check_reasons,omitempty"`
+	// Trimmed lists, per trimmed package, what opt-in trimming removed
+	// (docs/GO_PACKAGES.md#trimming); omitted without trimming. The
+	// language counters above describe only the declarations kept. Added
+	// within gosvm-features-v1.
+	Trimmed []TrimmedUse `json:"trimmed,omitempty"`
+}
+
+// TrimmedUse is what trimming removed from one package: its dropped
+// declarations ("kind name", kind func, method, type, var or const; a var
+// or const specification's names joined by ", "), the dropped var
+// specifications with initializers (which Go would run), and the imports
+// only dropped declarations used (type information, neither compiled nor
+// initialized). All sorted.
+type TrimmedUse struct {
+	Package             string   `json:"package"`
+	DroppedDeclarations []string `json:"dropped_declarations"`
+	DroppedInitializers []string `json:"dropped_initializers"`
+	TypeOnlyImports     []string `json:"type_only_imports"`
 }
 
 // InitUse is a program's package initialization after compile-time
@@ -610,7 +628,32 @@ func Report(tp *compiler.TypedProgram) (*Usage, error) {
 	if len(stdlibPackages) > 0 {
 		u.Uses.Stdlib = sortedSet(stdlibPackages)
 	}
+	u.Uses.Trimmed = trimmedUses(tp.Trimmed)
 	return u, nil
+}
+
+// trimmedUses reports what trimming removed (docs/GO_PACKAGES.md#trimming):
+// one entry per trimmed package, nil without trimming.
+func trimmedUses(r *compiler.TrimReport) []TrimmedUse {
+	if r == nil {
+		return nil
+	}
+	out := []TrimmedUse{}
+	for _, p := range r.Packages {
+		t := TrimmedUse{Package: p.Path, DroppedDeclarations: []string{}, DroppedInitializers: []string{}, TypeOnlyImports: append([]string{}, p.TypeOnlyImports...)}
+		for _, d := range p.Dropped {
+			t.DroppedDeclarations = append(t.DroppedDeclarations, d.Kind+" "+d.Name)
+			if d.Initializer {
+				t.DroppedInitializers = append(t.DroppedInitializers, d.Name)
+			}
+		}
+		sort.Strings(t.DroppedDeclarations)
+		sort.Strings(t.DroppedInitializers)
+		sort.Strings(t.TypeOnlyImports)
+		out = append(out, t)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Package < out[j].Package })
+	return out
 }
 
 // genericUses lists the program's generic declarations with the

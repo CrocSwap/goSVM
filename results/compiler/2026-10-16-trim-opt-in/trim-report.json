@@ -1,0 +1,391 @@
+{
+  "patterns": [
+    "github.com/holiman/uint256",
+    "github.com/KyberNetwork/int256",
+    "github.com/KyberNetwork/uniswapv3-sdk-uint256/...",
+    "lukechampine.com/uint128"
+  ],
+  "packages": [
+    {
+      "path": "github.com/KyberNetwork/int256",
+      "dropped": [
+        {
+          "name": "maxWords",
+          "kind": "const",
+          "position": "conversion.go:13"
+        },
+        {
+          "name": "FromBig",
+          "kind": "func",
+          "position": "conversion.go:28"
+        },
+        {
+          "name": "MustFromBig",
+          "kind": "func",
+          "position": "conversion.go:36"
+        },
+        {
+          "name": "Int.SetFromBig",
+          "kind": "method",
+          "position": "conversion.go:169"
+        },
+        {
+          "name": "Int.ToBig",
+          "kind": "method",
+          "position": "conversion.go:212"
+        },
+        {
+          "name": "MaxI256",
+          "kind": "var",
+          "position": "int256.go:14",
+          "initializer": true
+        },
+        {
+          "name": "Int.Sqrt",
+          "kind": "method",
+          "position": "int256.go:529"
+        }
+      ],
+      "type_only_imports": [
+        "math/big"
+      ]
+    },
+    {
+      "path": "github.com/KyberNetwork/uniswapv3-sdk-uint256/constants",
+      "dropped": [
+        {
+          "name": "FactoryAddress",
+          "kind": "var",
+          "position": "constants.go:14",
+          "initializer": true
+        },
+        {
+          "name": "AddressZero",
+          "kind": "var",
+          "position": "constants.go:15",
+          "initializer": true
+        },
+        {
+          "name": "FeeMax",
+          "kind": "const",
+          "position": "constants.go:32"
+        },
+        {
+          "name": "NegativeOne",
+          "kind": "var",
+          "position": "constants.go:47",
+          "initializer": true
+        },
+        {
+          "name": "Zero",
+          "kind": "var",
+          "position": "constants.go:48",
+          "initializer": true
+        },
+        {
+          "name": "One",
+          "kind": "var",
+          "position": "constants.go:49",
+          "initializer": true
+        },
+        {
+          "name": "Q96",
+          "kind": "var",
+          "position": "constants.go:52",
+          "initializer": true
+        },
+        {
+          "name": "Q192",
+          "kind": "var",
+          "position": "constants.go:53",
+          "initializer": true
+        },
+        {
+          "name": "PercentZero",
+          "kind": "var",
+          "position": "constants.go:57",
+          "initializer": true
+        }
+      ],
+      "type_only_imports": [
+        "github.com/daoleno/uniswap-sdk-core/entities",
+        "github.com/ethereum/go-ethereum/common",
+        "math/big"
+      ]
+    },
+    {
+      "path": "github.com/KyberNetwork/uniswapv3-sdk-uint256/utils",
+      "dropped": [
+        {
+          "name": "MethodParameters",
+          "kind": "type",
+          "position": "calldata.go:7"
+        },
+        {
+          "name": "ToHex",
+          "kind": "func",
+          "position": "calldata.go:17"
+        },
+        {
+          "name": "ComputePoolAddress",
+          "kind": "func",
+          "position": "compute_pool_address.go:22"
+        },
+        {
+          "name": "getCreate2Address",
+          "kind": "func",
+          "position": "compute_pool_address.go:42"
+        },
+        {
+          "name": "abiEncode",
+          "kind": "func",
+          "position": "compute_pool_address.go:53"
+        },
+        {
+          "name": "EncodeSqrtRatioX96",
+          "kind": "func",
+          "position": "encode.go:11"
+        },
+        {
+          "name": "One",
+          "kind": "var",
+          "position": "full_math.go:12",
+          "initializer": true
+        },
+        {
+          "name": "maxLiquidityForAmount0Imprecise",
+          "kind": "func",
+          "position": "max_liquidity_for_amounts.go:20"
+        },
+        {
+          "name": "maxLiquidityForAmount0Precise",
+          "kind": "func",
+          "position": "max_liquidity_for_amounts.go:36"
+        },
+        {
+          "name": "maxLiquidityForAmount1",
+          "kind": "func",
+          "position": "max_liquidity_for_amounts.go:52"
+        },
+        {
+          "name": "MaxLiquidityForAmounts",
+          "kind": "func",
+          "position": "max_liquidity_for_amounts.go:70"
+        },
+        {
+          "name": "TickToPrice",
+          "kind": "func",
+          "position": "price_tick_conversions.go:18"
+        },
+        {
+          "name": "PriceToClosestTick",
+          "kind": "func",
+          "position": "price_tick_conversions.go:40"
+        },
+        {
+          "name": "GetAmount0Delta",
+          "kind": "func",
+          "position": "sqrtprice_math.go:31"
+        },
+        {
+          "name": "GetAmount1Delta",
+          "kind": "func",
+          "position": "sqrtprice_math.go:76"
+        },
+        {
+          "name": "Q32",
+          "kind": "var",
+          "position": "tick_math.go:17",
+          "initializer": true
+        },
+        {
+          "name": "MinSqrtRatio",
+          "kind": "var",
+          "position": "tick_math.go:18",
+          "initializer": true
+        },
+        {
+          "name": "MaxSqrtRatio, _",
+          "kind": "var",
+          "position": "tick_math.go:19",
+          "initializer": true
+        },
+        {
+          "name": "GetSqrtRatioAtTick",
+          "kind": "func",
+          "position": "tick_math.go:63"
+        },
+        {
+          "name": "GetTickAtSqrtRatio",
+          "kind": "func",
+          "position": "tick_math.go:167"
+        },
+        {
+          "name": "SortsBefore",
+          "kind": "func",
+          "position": "token.go:10"
+        }
+      ],
+      "type_only_imports": [
+        "github.com/daoleno/uniswap-sdk-core/entities",
+        "github.com/ethereum/go-ethereum/accounts/abi",
+        "github.com/ethereum/go-ethereum/common",
+        "github.com/ethereum/go-ethereum/crypto",
+        "math/big"
+      ]
+    },
+    {
+      "path": "github.com/holiman/uint256",
+      "dropped": [
+        {
+          "name": "maxWords",
+          "kind": "const",
+          "position": "conversion.go:23"
+        },
+        {
+          "name": "_",
+          "kind": "const",
+          "position": "conversion.go:29"
+        },
+        {
+          "name": "_",
+          "kind": "const",
+          "position": "conversion.go:30"
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:35",
+          "initializer": true
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:36",
+          "initializer": true
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:37",
+          "initializer": true
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:38",
+          "initializer": true
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:39",
+          "initializer": true
+        },
+        {
+          "name": "_",
+          "kind": "var",
+          "position": "conversion.go:40",
+          "initializer": true
+        },
+        {
+          "name": "Int.ToBig",
+          "kind": "method",
+          "position": "conversion.go:45"
+        },
+        {
+          "name": "Int.IntoBig",
+          "kind": "method",
+          "position": "conversion.go:56"
+        },
+        {
+          "name": "FromBig",
+          "kind": "func",
+          "position": "conversion.go:110"
+        },
+        {
+          "name": "MustFromBig",
+          "kind": "func",
+          "position": "conversion.go:123"
+        },
+        {
+          "name": "Int.Float64",
+          "kind": "method",
+          "position": "conversion.go:141"
+        },
+        {
+          "name": "Int.SetFromBig",
+          "kind": "method",
+          "position": "conversion.go:244"
+        },
+        {
+          "name": "Int.Format",
+          "kind": "method",
+          "position": "conversion.go:294"
+        },
+        {
+          "name": "Int.MarshalSSZInto",
+          "kind": "method",
+          "position": "conversion.go:618"
+        },
+        {
+          "name": "Int.UnmarshalSSZ",
+          "kind": "method",
+          "position": "conversion.go:645"
+        },
+        {
+          "name": "Int.EncodeRLP",
+          "kind": "method",
+          "position": "conversion.go:667"
+        },
+        {
+          "name": "Int.Value",
+          "kind": "method",
+          "position": "conversion.go:817"
+        },
+        {
+          "name": "Int.CmpBig",
+          "kind": "method",
+          "position": "uint256.go:973"
+        }
+      ],
+      "type_only_imports": [
+        "database/sql",
+        "database/sql/driver",
+        "encoding",
+        "encoding/json",
+        "fmt",
+        "math/big"
+      ]
+    },
+    {
+      "path": "lukechampine.com/uint128",
+      "dropped": [
+        {
+          "name": "Uint128.Big",
+          "kind": "method",
+          "position": "uint128.go:389"
+        },
+        {
+          "name": "Uint128.Scan",
+          "kind": "method",
+          "position": "uint128.go:397"
+        },
+        {
+          "name": "FromBig",
+          "kind": "func",
+          "position": "uint128.go:439"
+        },
+        {
+          "name": "FromString",
+          "kind": "func",
+          "position": "uint128.go:451"
+        }
+      ],
+      "type_only_imports": [
+        "fmt",
+        "math/big"
+      ]
+    }
+  ]
+}

@@ -47,7 +47,7 @@ Every field is documented in `check.go`. In summary:
 
 | Field | Meaning |
 | --- | --- |
-| `TypedProgram` (embedded) | `Entry` package, `Packages` by import path (SDK excluded), `Files` in dependency-first order, shared `Info` and `Fset` |
+| `TypedProgram` (embedded) | `Entry` package, `Packages` by import path (SDK excluded), `Files` in dependency-first order, shared `Info` and `Fset`; `Trimmed`, what opt-in trimming removed ([trimming](#trimming); nil without it) |
 | `Program` | The input, including `Libraries` and `SDK` |
 | `SDK`, `SDKPackage` | SDK API version (0/2 current, 1 legacy) and the checked `gosvm/solana` package, or nil if it is not imported |
 | `Process`, `EntryKind` | Entry function; `EntryBytes` or `EntryContext` |
@@ -634,6 +634,31 @@ new field:
   analysis gives the result `p`'s origins, as for other pointer and slice
   conversions. `gosvm features` reports `uses.pointer_conversions`.
 - **Read-only pointer parameters** only change `Global.ReadOnly` (above).
+
+## Trimming
+
+Opt-in trimming ([GO_PACKAGES.md](GO_PACKAGES.md#trimming),
+`Program.Trim`) is decided entirely in Check, before the subset rules run,
+so a backend needs nothing for it:
+
+- Dropped declarations are absent from the checked program: from `Files`
+  (and the lowered files), `Functions`, `CallOrder`, `Globals`, `Inits`
+  (a dropped variable's initializer is not in its package's `Vars`) and
+  every other field. `Info` may still hold entries for their nodes (the
+  package was type-checked whole); nothing reachable from `Files` refers to
+  them.
+- Imports only dropped declarations used are removed from the files'
+  import declarations and `ast.File.Imports`; those packages (unsupported
+  standard-library packages, `Program.TypeOnly` modules) are not in
+  `Packages`, and `Packages[p].Imports()` of a trimmed package may still
+  list them (go/types recorded them): ignore imports that are not in
+  `Packages`, as `packageOrder` does.
+- `TypedProgram.Trimmed` (`*TrimReport`) lists, per trimmed package, the
+  dropped declarations (`Dropped`: name, kind, position, whether a var
+  specification with an initializer) and the type-only imports.
+
+A backend must not run the dropped initializers: initialization is exactly
+`Inits`, as always.
 
 ## Pointers to pointers
 

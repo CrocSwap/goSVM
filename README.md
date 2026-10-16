@@ -128,7 +128,10 @@ interfaces) and [`math/bits`](docs/GO_BITS.md), compiled from Go 1.22's own
 source. Published modules work as ordinary `go.mod` dependencies; holiman/uint256,
 KyberNetwork/int256 and the Uniswap v3 math of uniswapv3-sdk-uint256 run on
 chain with Go's results ([real libraries](results/compiler/2026-10-16-real-libraries/README.md)),
-from copies that leave out their `math/big`/`fmt` conversions. It lowers
+unmodified, by opting those dependencies in to
+[trimming](docs/GO_PACKAGES.md#trimming) (only the declarations `Process`
+reaches are checked and compiled; the rest, such as their `math/big`/`fmt`
+conversions, are dropped and reported). It lowers
 Go through checked C and Solana Clang/LLD to SBF.
 
 Full Go language support is outside the current scope: garbage collection, map

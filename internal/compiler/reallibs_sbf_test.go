@@ -16,13 +16,13 @@ import (
 	"gosvm/internal/testvm"
 )
 
-// realLibsSBFProgram is examples/real-libraries (against the trimmed
-// modules) with a Context entrypoint: account 0 is the 1 KiB output and the
-// instruction data is Run's input.
-func realLibsSBFProgram(t *testing.T, env *realLibsEnv) *Program {
+// realLibsSBFProgram is examples/real-libraries (either form) with a
+// Context entrypoint: account 0 is the 1 KiB output and the instruction data
+// is Run's input.
+func realLibsSBFProgram(t *testing.T, program *Program) *Program {
 	t.Helper()
-	p := *env.program
-	p.Packages = append([]PackageSources(nil), env.program.Packages...)
+	p := *program
+	p.Packages = append([]PackageSources(nil), program.Packages...)
 	patched := false
 	for i, unit := range p.Packages {
 		if unit.Path != p.Entry {
@@ -288,13 +288,15 @@ func Process(c solana.Context) uint64 {
 `
 }
 
-// TestRealLibrariesSBF builds examples/real-libraries against the trimmed
-// modules for fogo-v0 and solana-v3 and runs the vectors through the pinned
+// TestRealLibrariesSBF builds examples/real-libraries for fogo-v0 and
+// solana-v3, against the unmodified modules with trimming opted in and
+// against the trimmed module copies, and runs the vectors through the pinned
 // runners: every output must match the unmodified libraries run natively,
 // and every native panic must abort and roll back (with its log line). It
 // also measures the bench operations' CU, each library's per-invocation
-// initialization and the ELF sizes. GOSVM_REALLIBS_RESULTS=<dir> keeps
-// fixtures, ELFs, reports and a summary.
+// initialization and the ELF sizes of both forms.
+// GOSVM_REALLIBS_RESULTS=<dir> keeps fixtures, ELFs, reports and a summary
+// per target and form.
 func TestRealLibrariesSBF(t *testing.T) {
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
@@ -353,78 +355,87 @@ func TestRealLibrariesSBF(t *testing.T) {
 		}
 		cases = append(cases, c)
 	}
-	program := realLibsSBFProgram(t, env)
 	keep := os.Getenv("GOSVM_REALLIBS_RESULTS")
 	for _, profile := range []string{target.Fogo, target.Solana} {
-		t.Run(profile, func(t *testing.T) {
-			runner, err := testvm.RunnerFor("", profile)
-			if err != nil {
-				t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
-			}
-			// A fixture suite holds at most 1,024 cases: run the same ELF
-			// (built identically each time) in parts.
-			result := map[string]any{}
-			for part, from := 0, 0; from < len(cases); part, from = part+1, from+1000 {
-				to := min(from+1000, len(cases))
-				r := runGlobalProgram(t, llvm, runner, profile, fmt.Sprintf("real-libraries-%d", part), program, cases[from:to], keep)
-				if result["elf_sha256"] != nil && r["elf_sha256"] != result["elf_sha256"] {
-					t.Fatalf("part %d built a different ELF", part)
-				}
-				for k, v := range r {
-					result[k] = v
-				}
-			}
-			var cus []uint64
-			for name, v := range result {
-				if strings.HasPrefix(name, "v") {
-					cus = append(cus, v.(uint64))
-				}
-			}
-			sort.Slice(cus, func(i, j int) bool { return cus[i] < cus[j] })
-			none := result[benchCase[benches[0].name]].(uint64)
-			table := []map[string]any{}
-			for _, b := range benches {
-				cu := result[benchCase[b.name]].(uint64)
-				table = append(table, map[string]any{"operation": b.name, "cu": cu, "call_cu": int64(cu) - int64(none)})
-			}
-			// Initialization: one program per library or replica.
-			inits := []map[string]any{}
-			initCU := map[string]uint64{}
-			for j, probe := range realLibsInitProbes {
-				dir := filepath.Join(env.onchain, "probes", fmt.Sprintf("p%02d", j))
-				if err := os.MkdirAll(dir, 0755); err != nil {
-					t.Fatal(err)
-				}
-				if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(realLibsInitSource(probe.imports, probe.decls, probe.use)), 0644); err != nil {
-					t.Fatal(err)
-				}
-				p, err := ReadProgram(dir)
-				if err != nil {
-					t.Fatal(err)
-				}
-				idleCase := allocCase{name: "idle", in: make([]byte, 8), output: make([]byte, 1024)}
-				r := runGlobalProgram(t, llvm, runner, profile, fmt.Sprintf("init-%02d", j), p, []allocCase{idleCase}, keep)
-				cu := r["idle"].(uint64)
-				initCU[probe.name] = cu
-				entry := map[string]any{"probe": probe.name, "cu": cu, "init_cu": int64(cu) - int64(initCU["none"]),
-					"elf_bytes": r["elf_bytes"], "elf_sha256": r["elf_sha256"]}
-				if probe.base != "" {
-					entry["base"] = probe.base
-					entry["own_cu"] = int64(cu) - int64(initCU[probe.base])
-				}
-				inits = append(inits, entry)
-			}
-			summary := map[string]any{"profile": profile, "elf_sha256": result["elf_sha256"], "elf_bytes": result["elf_bytes"],
-				"cases": len(cases), "aborts": aborts, "panic_lines": panics,
-				"idle_cu": result["idle"], "median_vector_cu": cus[len(cus)/2], "max_vector_cu": cus[len(cus)-1],
-				"bench": table, "init": inits}
-			encoded, _ := json.MarshalIndent(summary, "", "  ")
-			t.Logf("%s: %d cases (%d aborts with rollback, %d panic lines) match native Go\n%s", profile, len(cases), aborts, panics, encoded)
-			if keep != "" {
-				if err = os.WriteFile(filepath.Join(keep, profile, "summary.json"), append(encoded, '\n'), 0644); err != nil {
-					t.Fatal(err)
-				}
-			}
-		})
+		for _, v := range env.variants() {
+			t.Run(profile+"/"+v.name, func(t *testing.T) {
+				realLibsSBF(t, env, v, profile, llvm, keep, cases, benches, benchCase, aborts, panics)
+			})
+		}
+	}
+}
+
+func realLibsSBF(t *testing.T, env *realLibsEnv, v realLibsVariant, profile, llvm, keep string, cases []allocCase, benches []realLibsBench, benchCase map[string]string, aborts, panics int) {
+	program := realLibsSBFProgram(t, v.program)
+	if keep != "" {
+		keep = filepath.Join(keep, v.name)
+	}
+	runner, err := testvm.RunnerFor("", profile)
+	if err != nil {
+		t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
+	}
+	// A fixture suite holds at most 1,024 cases: run the same ELF
+	// (built identically each time) in parts.
+	result := map[string]any{}
+	for part, from := 0, 0; from < len(cases); part, from = part+1, from+1000 {
+		to := min(from+1000, len(cases))
+		r := runGlobalProgram(t, llvm, runner, profile, fmt.Sprintf("real-libraries-%d", part), program, cases[from:to], keep)
+		if result["elf_sha256"] != nil && r["elf_sha256"] != result["elf_sha256"] {
+			t.Fatalf("part %d built a different ELF", part)
+		}
+		for k, v := range r {
+			result[k] = v
+		}
+	}
+	var cus []uint64
+	for name, v := range result {
+		if strings.HasPrefix(name, "v") {
+			cus = append(cus, v.(uint64))
+		}
+	}
+	sort.Slice(cus, func(i, j int) bool { return cus[i] < cus[j] })
+	none := result[benchCase[benches[0].name]].(uint64)
+	table := []map[string]any{}
+	for _, b := range benches {
+		cu := result[benchCase[b.name]].(uint64)
+		table = append(table, map[string]any{"operation": b.name, "cu": cu, "call_cu": int64(cu) - int64(none)})
+	}
+	// Initialization: one program per library or replica.
+	inits := []map[string]any{}
+	initCU := map[string]uint64{}
+	for j, probe := range realLibsInitProbes {
+		dir := filepath.Join(v.dir, "probes", fmt.Sprintf("p%02d", j))
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(realLibsInitSource(probe.imports, probe.decls, probe.use)), 0644); err != nil {
+			t.Fatal(err)
+		}
+		p, err := ReadProgramWithOptions(dir, ReadOptions{Trim: v.trim})
+		if err != nil {
+			t.Fatal(err)
+		}
+		idleCase := allocCase{name: "idle", in: make([]byte, 8), output: make([]byte, 1024)}
+		r := runGlobalProgram(t, llvm, runner, profile, fmt.Sprintf("init-%02d", j), p, []allocCase{idleCase}, keep)
+		cu := r["idle"].(uint64)
+		initCU[probe.name] = cu
+		entry := map[string]any{"probe": probe.name, "cu": cu, "init_cu": int64(cu) - int64(initCU["none"]),
+			"elf_bytes": r["elf_bytes"], "elf_sha256": r["elf_sha256"]}
+		if probe.base != "" {
+			entry["base"] = probe.base
+			entry["own_cu"] = int64(cu) - int64(initCU[probe.base])
+		}
+		inits = append(inits, entry)
+	}
+	summary := map[string]any{"profile": profile, "form": v.name, "elf_sha256": result["elf_sha256"], "elf_bytes": result["elf_bytes"],
+		"cases": len(cases), "aborts": aborts, "panic_lines": panics,
+		"idle_cu": result["idle"], "median_vector_cu": cus[len(cus)/2], "max_vector_cu": cus[len(cus)-1],
+		"bench": table, "init": inits}
+	encoded, _ := json.MarshalIndent(summary, "", "  ")
+	t.Logf("%s (%s): %d cases (%d aborts with rollback, %d panic lines) match native Go\n%s", profile, v.name, len(cases), aborts, panics, encoded)
+	if keep != "" {
+		if err = os.WriteFile(filepath.Join(keep, profile, "summary.json"), append(encoded, '\n'), 0644); err != nil {
+			t.Fatal(err)
+		}
 	}
 }

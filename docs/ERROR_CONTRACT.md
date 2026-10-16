@@ -632,3 +632,19 @@ Handler results propagate unchanged.
   and `EvaluatedFuncs`, and `Program.RuntimeInit` (off: evaluate). Recorded
   under contracted runtime behaviour above; the corpus's two empty `init`
   functions are no longer called (their C changed).
+- 2026-10-16: addition (opt-in trimming; announce to Qushta), no trap or
+  code added and nothing changed without the opt-in: a program can name
+  dependency packages (`"trim"` in `gosvm.json`, `-trim`, `Program.Trim`)
+  whose declarations are checked and compiled only when `Process` reaches
+  them ([trimming](GO_PACKAGES.md#trimming)). In those packages an
+  initializer of a variable no kept code references does not run (it is
+  dropped and reported; Go would run it, so its allocation, panic or
+  writes do not happen), and an import only dropped declarations use is
+  neither compiled nor initialized; `init` functions and every other
+  initializer run as before, and kept code is checked with the existing
+  rules and messages. Diagnostic change: a whole-package rejection located
+  in a module package other than the entry package (an import path
+  starting with a domain name) ends with `; to check only the declarations
+  Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
+  (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
+  changed (their dependency packages are not module paths).

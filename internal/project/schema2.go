@@ -371,7 +371,7 @@ func resolveMulti(dir string, c Config) (*multiModel, error) {
 		}
 		fmt.Fprint(&stub, "}\n")
 	}
-	program, err := compiler.ReadProgramWithSources(dir, append(sources, compiler.Source{Name: filepath.Join(dir, "zz_gosvm.go"), Data: stub.Bytes()}))
+	program, err := compiler.ReadProgramWithSourcesOptions(dir, append(sources, compiler.Source{Name: filepath.Join(dir, "zz_gosvm.go"), Data: stub.Bytes()}), compiler.ReadOptions{Trim: c.Trim})
 	if err != nil {
 		return nil, err
 	}

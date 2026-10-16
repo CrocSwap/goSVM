@@ -49,6 +49,10 @@ type Config struct {
 	// Larger budgets require every transaction to send ComputeBudget
 	// RequestHeapFrame; see docs/GO_ALLOCATION.md.
 	HeapBytes int `json:"heap_bytes,omitempty"`
+	// Trim lists the import-path patterns (a path, or path/...) of the
+	// dependency packages checked and compiled only as far as Process
+	// reaches them; see docs/GO_PACKAGES.md#trimming.
+	Trim []string `json:"trim,omitempty"`
 }
 
 func sdkHash() string { return fmt.Sprintf("%x", sha256.Sum256([]byte(solana.LegacySource))) }
@@ -98,6 +102,9 @@ func Load(dir string) (Config, error) {
 		return c, fmt.Errorf("invalid project name or Go module import path")
 	}
 	if e := compiler.ValidateHeapBytes(c.HeapBytes); e != nil {
+		return c, e
+	}
+	if e := compiler.ValidateTrim(c.Trim); e != nil {
 		return c, e
 	}
 	if c.SDKVersion != 0 && c.SDKVersion != 1 && c.SDKVersion != 2 || c.Schema == Schema && c.SDKVersion == 2 {

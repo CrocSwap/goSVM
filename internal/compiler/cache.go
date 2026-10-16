@@ -28,7 +28,8 @@ func BuildCachedWithOptions(source, output, llvm, arch string, o BuildOptions) e
 	if err != nil {
 		return err
 	}
-	if cacheHit(output, key) {
+	_, reportErr := os.Stat(TrimReportPath(output))
+	if cacheHit(output, key) && (len(program.Trim) == 0 || reportErr == nil) {
 		return nil
 	}
 	if err = os.MkdirAll(filepath.Dir(output), 0755); err != nil {
@@ -43,7 +44,7 @@ func BuildCachedWithOptions(source, output, llvm, arch string, o BuildOptions) e
 		return err
 	}
 	defer os.Remove(temp)
-	if err = buildProgram(program, temp, llvm, arch); err != nil {
+	if err = buildProgramReport(program, temp, llvm, arch, TrimReportPath(output)); err != nil {
 		return err
 	}
 	// Hash our own output before publishing it. Concurrent builds may leave a
@@ -89,12 +90,19 @@ func buildKey(source, llvm, arch string) (string, error) {
 // imported Go packages, module resolution and pinned foreign-library changes.
 // Application edits reuse that namespace and invalidate the normal build receipt.
 func DependencyKey(source string) (string, error) {
-	program, err := ReadProgram(source)
+	return DependencyKeyWithOptions(source, BuildOptions{})
+}
+
+// DependencyKeyWithOptions is DependencyKey for a build with options (only
+// Trim changes resolution).
+func DependencyKeyWithOptions(source string, o BuildOptions) (string, error) {
+	program, err := ReadProgramWithOptions(source, ReadOptions{Trim: o.Trim})
 	if err != nil {
 		return "", err
 	}
 	h := sha256.New()
 	fmt.Fprintf(h, "gosvm-dependencies-v1\x00%d\x00%x\n", program.SDK, sha256.Sum256([]byte(sdkSource(program.SDK))))
+	writeTrimIdentity(h, program)
 	for _, unit := range program.Packages {
 		if unit.Path == program.Entry {
 			continue
@@ -132,6 +140,7 @@ func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	if program.HeapBytes != 0 {
 		fmt.Fprintf(h, "heap:%d\n", program.HeapBytes)
 	}
+	writeTrimIdentity(h, program)
 	for _, unit := range program.Packages {
 		fmt.Fprintf(h, "package:%s\x00", unit.Path)
 		for _, src := range unit.Sources {
@@ -216,4 +225,34 @@ func writeStdlibIdentity(h io.Writer, program *Program) error {
 		fmt.Fprintf(h, "stdlib:%s\x00%s\x00%s\n", StdlibVersion, strings.Join(paths, ","), id)
 	}
 	return nil
+}
+
+// writeTrimIdentity adds the trim configuration to a receipt or dependency
+// key: the patterns, the type-only module packages' sources and the GOROOT
+// version whose standard library supplies type information
+// (docs/GO_PACKAGES.md#trimming). Programs without trimming keep their
+// earlier keys.
+func writeTrimIdentity(h io.Writer, program *Program) {
+	if len(program.Trim) == 0 {
+		return
+	}
+	fmt.Fprintf(h, "trim:%s\x00%s\n", strings.Join(program.Trim, ","), gorootVersion())
+	for _, unit := range program.TypeOnly {
+		fmt.Fprintf(h, "typeonly:%s\x00%s\x00", unit.Path, program.TypeOnlyUnsupported[unit.Path])
+		for _, src := range unit.Sources {
+			fmt.Fprintf(h, "%s\x00%x\n", filepath.Base(src.Name), sha256.Sum256(src.Data))
+		}
+	}
+}
+
+// gorootVersion is the first line of GOROOT's VERSION file, or the GOROOT
+// path when it has none.
+func gorootVersion() string {
+	root := goroot()
+	b, err := os.ReadFile(filepath.Join(root, "VERSION"))
+	if err != nil {
+		return root
+	}
+	line, _, _ := strings.Cut(string(b), "\n")
+	return line
 }
