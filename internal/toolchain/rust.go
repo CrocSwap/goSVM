@@ -42,14 +42,16 @@ type fullPackage struct {
 
 func officialFull() fullPackage {
 	files := map[string]string{}
-	for name, hash := range target.ModernBackendHashes {
+	// The full tree is pinned for macOS arm64 only (InstallRustArchive).
+	for name, hash := range target.ModernBackendPins["darwin-arm64"] {
 		files["llvm/bin/"+name] = hash
 	}
 	paths := map[string]string{"rustc": "rust/bin/rustc", "cargo": "rust/bin/cargo", "librustc_driver": rustDriver, "llvm-objcopy": "llvm/bin/llvm-objcopy", "llvm-ar": "llvm/bin/llvm-ar"}
 	for name, hash := range target.RustToolHashes {
 		files[paths[name]] = hash
 	}
-	return fullPackage{URL: ModernArchiveURL, SHA: modernArchiveSHA, Size: modernArchiveSize, Files: files}
+	a, _ := archiveFor(target.ModernTools, "darwin-arm64")
+	return fullPackage{URL: downloadURL(target.ModernTools, a), SHA: a.SHA, Size: a.Size, Files: files}
 }
 
 // RustRoot is the managed full-tree root; its platform-tools/ subdirectory is
@@ -149,8 +151,10 @@ func hashTreeFiles(tree string, files map[string]string) (map[string]string, err
 // producer from the official archive (archive == "" downloads it), and the
 // slim Clang/LLD backend too when missing, using one download for both.
 func InstallRustArchive(ctx context.Context, archive string, out io.Writer, download Download) error {
-	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-		return fmt.Errorf("platform-tools %s is currently qualified on macOS arm64 only", target.ModernTools)
+	// The Rust producer's tool pins, host target and driver library name are
+	// macOS-specific; Go programs and published Bend libraries do not need it.
+	if target.Host() != "darwin-arm64" {
+		return fmt.Errorf("the Rust library producer toolchain (-rust) is qualified on macOS arm64 only; this host is %s (the Go backend and SVM runners install without -rust)", target.Host())
 	}
 	return installRust(ctx, ModernRoot(), RustRoot(), archive, out, download, officialModern(), officialFull())
 }

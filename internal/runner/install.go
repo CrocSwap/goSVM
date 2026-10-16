@@ -8,7 +8,7 @@ import (
 	"compress/gzip"
 	"context"
 	"crypto/sha256"
-	_ "embed"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -31,19 +31,114 @@ const ModernVersion = "0.6.0"
 const ModernIdentity = "gosvm-svm-runner 0.6.0 (LiteSVM 0.13.0 + rent-error patch; modern profiles)"
 
 // Pins are part of the frontend, never supplied by an archive or its sender.
-// No public download endpoint is configured for these local experimental packages.
+// pins/release/<version>-<platform>.json are the published release packages
+// that `gosvm runner install` downloads. The two historical local packages
+// (pins/darwin-arm64.json for 0.5.0, pins/0.6.0-darwin-arm64.json) contain the
+// same runner binaries and stay accepted for -archive and existing installs.
 //
-//go:embed pins/darwin-arm64.json
-var pinned []byte
-
-//go:embed pins/0.6.0-darwin-arm64.json
-var modernPinned []byte
+//go:embed pins
+var pinFiles embed.FS
 
 var identities = map[string]string{Version: Identity, ModernVersion: ModernIdentity}
-var pins = map[string][]byte{Version: pinned, ModernVersion: modernPinned}
+
+// DefaultReleaseBase is where runner release assets are published:
+// <base>/runner-v<version>/<archive name>.
+const DefaultReleaseBase = "https://github.com/CrocSwap/goSVM/releases/download"
+
+// ReleaseBaseEnv overrides DefaultReleaseBase (https://, http:// or file://)
+// for mirrors and offline tests. Downloads are verified against the embedded
+// pins exactly as local archives are, so the source is not a trust root.
+const ReleaseBaseEnv = "GOSVM_RELEASE_BASE_URL"
+
+// Download copies the asset at a URL into a writer.
+type Download func(context.Context, string, io.Writer) error
 
 // Versions lists the pinned runner packages this frontend can install.
 func Versions() []string { return []string{Version, ModernVersion} }
+
+// Host is the GOOS-GOARCH platform name of pins and cache slots.
+func Host() string { return runtime.GOOS + "-" + runtime.GOARCH }
+
+// Tag is the release tag holding a runner version's archives.
+func Tag(version string) string { return "runner-v" + version }
+
+// URL is where a release pin's archive is downloaded from.
+func URL(p Pin) string {
+	base := strings.TrimRight(os.Getenv(ReleaseBaseEnv), "/")
+	if base == "" {
+		base = DefaultReleaseBase
+	}
+	return base + "/" + Tag(p.Version) + "/" + p.ArchiveName
+}
+
+// embeddedPins returns every valid embedded pin for version and platform,
+// release pins first, each with whether it is a release (downloadable) pin.
+func embeddedPins(version, platform string) ([]Pin, []bool, error) {
+	var pins []Pin
+	var release []bool
+	for _, dir := range []string{"pins/release", "pins"} {
+		entries, err := pinFiles.ReadDir(dir)
+		if err != nil && dir == "pins/release" {
+			continue // No release pins in this build.
+		}
+		if err != nil {
+			return nil, nil, err
+		}
+		for _, e := range entries {
+			if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+				continue
+			}
+			data, err := pinFiles.ReadFile(dir + "/" + e.Name())
+			if err != nil {
+				return nil, nil, err
+			}
+			var p Pin
+			if err = json.Unmarshal(data, &p); err != nil {
+				return nil, nil, fmt.Errorf("embedded runner pin %s: %w", e.Name(), err)
+			}
+			if p.Version != version || p.Platform != platform {
+				continue
+			}
+			if p.Schema != 1 || p.Identity != identities[version] || len(p.Files) == 0 || p.ArchiveName == "" || len(p.ArchiveSHA) != 64 {
+				return nil, nil, fmt.Errorf("invalid embedded runner pin %s", e.Name())
+			}
+			pins = append(pins, p)
+			release = append(release, dir == "pins/release")
+		}
+	}
+	return pins, release, nil
+}
+
+// otherPins lists every embedded pin to name a wrong-platform archive (tests replace it).
+var otherPins = allEmbedded
+
+// allEmbedded returns every embedded pin for every platform (diagnostics only).
+func allEmbedded() []Pin {
+	var all []Pin
+	for _, platform := range []string{"darwin-arm64", "linux-amd64", "linux-arm64"} {
+		for _, v := range Versions() {
+			pins, _, _ := embeddedPins(v, platform)
+			all = append(all, pins...)
+		}
+	}
+	return all
+}
+
+// Accepted returns every pin this frontend accepts for version on this host:
+// the release pin first, then historical local packages.
+func Accepted(version string) ([]Pin, error) {
+	if _, ok := identities[version]; !ok {
+		return nil, fmt.Errorf("no pinned runner package %q", version)
+	}
+	pins, _, err := embeddedPins(version, Host())
+	if err != nil {
+		return nil, err
+	}
+	if len(pins) == 0 {
+		return nil, fmt.Errorf("this gosvm build has no pinned runner %s package for host %s; supply an explicit runner with -svm-runner or GOSVM_TEST_RUNNER", version, Host())
+	}
+	return pins, nil
+}
 
 type File struct {
 	SHA256 string `json:"sha256"`
@@ -63,32 +158,40 @@ type Pin struct {
 // Package returns the historical 0.5.0 pin.
 func Package() (Pin, error) { return PackageFor(Version) }
 
-// PackageFor returns the frontend's embedded pin for a runner version.
+// PackageFor returns the frontend's preferred embedded pin for a runner
+// version on this host: the release package when one is pinned.
 func PackageFor(version string) (Pin, error) {
-	var p Pin
-	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-		return p, fmt.Errorf("managed runner package is currently verified on macOS arm64 only; supply an explicit runner")
+	pins, err := Accepted(version)
+	if err != nil {
+		return Pin{}, err
 	}
-	data, ok := pins[version]
-	if !ok {
-		return p, fmt.Errorf("no pinned runner package %q", version)
+	return pins[0], nil
+}
+
+// ReleaseFor returns the downloadable release pin for version on this host.
+func ReleaseFor(version string) (Pin, error) {
+	if _, ok := identities[version]; !ok {
+		return Pin{}, fmt.Errorf("no pinned runner package %q", version)
 	}
-	if err := json.Unmarshal(data, &p); err != nil {
-		return p, err
+	pins, release, err := embeddedPins(version, Host())
+	if err != nil {
+		return Pin{}, err
 	}
-	if p.Schema != 1 || p.Version != version || p.Identity != identities[version] || p.Platform != runtime.GOOS+"-"+runtime.GOARCH || len(p.Files) == 0 {
-		return p, fmt.Errorf("invalid embedded runner pin")
+	for i, p := range pins {
+		if release[i] {
+			return p, nil
+		}
 	}
-	return p, nil
+	return Pin{}, fmt.Errorf("this gosvm build pins no released runner %s package for host %s; supply an explicit runner with -svm-runner or GOSVM_TEST_RUNNER", version, Host())
 }
 
 // InstallHint is the exact command that installs a pinned runner version.
 func InstallHint(version string) string {
-	name := "<pinned-package>"
-	if p, err := PackageFor(version); err == nil {
-		name = p.ArchiveName
+	p, err := PackageFor(version)
+	if err != nil {
+		return "-svm-runner <runner binary> (no pinned runner " + version + " for " + Host() + ")"
 	}
-	return "gosvm runner install -archive " + name
+	return "gosvm runner install -version " + version + " (offline: gosvm runner install -archive " + p.ArchiveName + ")"
 }
 
 // Root is the historical 0.5.0 slot.
@@ -129,11 +232,24 @@ func Verify(root string) (Pin, error) { return VerifyVersion(Version, root) }
 
 // VerifyVersion checks an installed root against the pinned package for version.
 func VerifyVersion(version, root string) (Pin, error) {
-	p, err := PackageFor(version)
+	pins, err := Accepted(version)
 	if err != nil {
-		return p, err
+		return Pin{}, err
 	}
-	return p, verify(root, p)
+	return verifyAny(root, pins)
+}
+
+// verifyAny accepts an installation matching any of pins (receipt first).
+func verifyAny(root string, pins []Pin) (Pin, error) {
+	var receipt Pin
+	if b, err := os.ReadFile(filepath.Join(root, "receipt.json")); err == nil && json.Unmarshal(b, &receipt) == nil {
+		for _, p := range pins {
+			if reflect.DeepEqual(receipt, p) {
+				return p, verify(root, p)
+			}
+		}
+	}
+	return pins[0], verify(root, pins[0])
 }
 
 func verify(root string, p Pin) error {
@@ -199,36 +315,118 @@ func ManagedPathFor(version string) (string, bool, error) {
 }
 
 // Install identifies which pinned package a local archive is (by size and
-// SHA-256) and installs it into that version's slot.
-func Install(ctx context.Context, archive string, out io.Writer) error {
+// SHA-256) and installs it into that version's slot. With archive == "", it
+// downloads the release package of each of versions (all when empty) from
+// URL(pin) instead; the downloaded bytes pass the same checks.
+func Install(ctx context.Context, archive string, versions []string, out io.Writer, download Download) error {
+	if archive == "" {
+		if len(versions) == 0 {
+			versions = Versions()
+		}
+		for _, v := range versions {
+			if err := installRelease(ctx, v, out, download); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
 	var known []Pin
 	for _, v := range Versions() {
-		p, err := PackageFor(v)
+		pins, err := Accepted(v)
 		if err != nil {
-			return err
+			continue
 		}
-		known = append(known, p)
+		known = append(known, pins...)
 	}
-	if archive == "" {
-		msg := "no public runner download is configured; install a pinned local package:"
-		for _, p := range known {
-			msg += fmt.Sprintf("\n  gosvm runner install -archive %s   (%s, SHA-256 %s)", p.ArchiveName, p.Identity, p.ArchiveSHA)
-		}
-		return fmt.Errorf("%s", msg)
+	if len(known) == 0 {
+		return fmt.Errorf("this gosvm build has no pinned runner packages for host %s; supply an explicit runner with -svm-runner or GOSVM_TEST_RUNNER", Host())
 	}
 	p, err := identify(ctx, archive, known)
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(out, "Recognized pinned package %s\n", p.Identity)
+	fmt.Fprintf(out, "Recognized pinned package %s (%s)\n", p.Identity, p.Platform)
 	return install(ctx, RootFor(p.Version), archive, out, p, smokeFor(p.Identity))
+}
+
+// installRelease downloads and installs one version's release package unless
+// a verified installation of an accepted package already exists.
+func installRelease(ctx context.Context, version string, out io.Writer, download Download) error {
+	p, err := ReleaseFor(version)
+	if err != nil {
+		return err
+	}
+	root := RootFor(version)
+	if root == "" {
+		return fmt.Errorf("cannot resolve runner cache; set GOSVM_CACHE to an absolute path")
+	}
+	if _, err := os.Lstat(root); err == nil {
+		if _, err = VerifyVersion(version, root); err != nil {
+			return fmt.Errorf("managed runner %s at %s: %w; move it aside and reinstall", version, root, err)
+		}
+		fmt.Fprintf(out, "Runner %s already installed and verified: %s\n", version, root)
+		return nil
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	if download == nil {
+		return fmt.Errorf("no downloader configured")
+	}
+	if err := os.MkdirAll(filepath.Dir(root), 0755); err != nil {
+		return err
+	}
+	tmp, err := os.MkdirTemp(filepath.Dir(root), ".runner-download-")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(tmp)
+	file := filepath.Join(tmp, p.ArchiveName)
+	f, err := os.OpenFile(file, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
+	if err != nil {
+		return err
+	}
+	url := URL(p)
+	fmt.Fprintf(out, "Downloading runner %s for %s (%.1f MB): %s\n", version, p.Platform, float64(p.ArchiveBytes)/1e6, url)
+	w := &boundedWriter{w: f, limit: p.ArchiveBytes}
+	copyErr := download(ctx, url, w)
+	closeErr := f.Close()
+	if copyErr != nil {
+		return fmt.Errorf("runner %s download: %w", version, copyErr)
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	if w.n != p.ArchiveBytes {
+		return fmt.Errorf("runner %s download from %s is %d bytes; the pinned package is %d (truncated or wrong file)", version, url, w.n, p.ArchiveBytes)
+	}
+	if err := install(ctx, root, file, out, p, smokeFor(p.Identity)); err != nil {
+		return fmt.Errorf("runner %s from %s: %w (not installed)", version, url, err)
+	}
+	return nil
+}
+
+// boundedWriter refuses bytes beyond the pinned archive size.
+type boundedWriter struct {
+	w     io.Writer
+	n     int64
+	limit int64
+}
+
+func (b *boundedWriter) Write(p []byte) (int, error) {
+	if int64(len(p)) > b.limit-b.n {
+		return 0, fmt.Errorf("download exceeds the pinned archive size %d", b.limit)
+	}
+	n, err := b.w.Write(p)
+	b.n += int64(n)
+	return n, err
 }
 
 // identify hashes at most the largest pinned size; install re-verifies the
 // private snapshot it extracts, so this choice cannot weaken verification.
 func identify(ctx context.Context, archive string, known []Pin) (Pin, error) {
 	var limit int64
-	for _, p := range known {
+	others := otherPins()
+	for _, p := range append(append([]Pin(nil), known...), others...) {
 		if p.ArchiveBytes > limit {
 			limit = p.ArchiveBytes
 		}
@@ -249,6 +447,11 @@ func identify(ctx context.Context, archive string, known []Pin) (Pin, error) {
 			return p, nil
 		}
 	}
+	for _, p := range others {
+		if digest == p.ArchiveSHA && p.Platform != Host() {
+			return Pin{}, fmt.Errorf("runner archive is the pinned %s package for %s; this host is %s: use the %s package", p.Version, p.Platform, Host(), Host())
+		}
+	}
 	var names []string
 	for _, p := range known {
 		names = append(names, p.ArchiveName+" ("+p.ArchiveSHA+")")
@@ -264,7 +467,13 @@ func install(ctx context.Context, root, archive string, out io.Writer, p Pin, ch
 		return err
 	}
 	if _, err := os.Lstat(root); err == nil {
-		if err = verify(root, p); err != nil {
+		// Another accepted package of the same version (same runner binary)
+		// may already be installed; either verifies.
+		accepted := []Pin{p}
+		if pins, e := Accepted(p.Version); e == nil {
+			accepted = append(accepted, pins...)
+		}
+		if _, err = verifyAny(root, accepted); err != nil {
 			return err
 		}
 		fmt.Fprintf(out, "Runner already installed and verified: %s\n", root)
@@ -273,7 +482,7 @@ func install(ctx context.Context, root, archive string, out io.Writer, p Pin, ch
 		return err
 	}
 	if archive == "" {
-		return fmt.Errorf("no public runner download is configured; use gosvm runner install -archive %s (pinned SHA-256 %s)", p.ArchiveName, p.ArchiveSHA)
+		return fmt.Errorf("no runner archive supplied; use gosvm runner install (download) or -archive %s (pinned SHA-256 %s)", p.ArchiveName, p.ArchiveSHA)
 	}
 	if err := os.MkdirAll(filepath.Dir(root), 0755); err != nil {
 		return err

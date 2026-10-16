@@ -1,106 +1,138 @@
-# Experimental runner installation
+# SVM runner installation and packaging
 
-The macOS arm64 runner now has a pinned local package and an offline managed
-installer. Projects share this binary without compiling Rust or adding Cargo
-dependencies. Public downloads, notarization, other hosts and redistribution
-review remain open. The [installation evidence](../results/svm/2026-10-05-runner-install-complete/README.md)
-records successful compiled-SBF regressions and integrity failures.
+`gosvm test --svm` runs compiled programs in a pinned local SVM runner built from
+the vendored, patched LiteSVM. Two runner versions exist: **0.5.0** (LiteSVM 0.8.2,
+selected for `fogo-v0` and the legacy profile) and **0.6.0** (LiteSVM 0.13.0,
+selected for `solana-v3`). Users never compile Rust: the CLI downloads a pinned
+archive and verifies it against SHA-256 pins compiled into the CLI.
 
 ## Install and select
 
-With the current source-built CLI, from this checkout:
-
 ```sh
-# A workspace cache is useful for isolated experiments; otherwise use the OS cache.
-export GOSVM_CACHE="$PWD/build/dev-tool-cache"
-build/gosvm runner install -archive \
-  results/svm/2026-10-05-runner-install-complete/gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
-build/gosvm runner status
-build/gosvm test --svm -dir examples/typed-swap
+gosvm toolchain install          # backend, then both runners (-runners=false skips)
+gosvm runner install             # runners only; -version 0.5.0|0.6.0 selects one
+gosvm runner install -archive gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz   # offline
+gosvm runner status
 ```
 
-The archive is 3,165,750 bytes; its expected SHA-256 is
-`a73c0b01a4c6f6655b305567b0e7c294f53e4e3b0082f3825c8299334be4ee0f`.
-The frontend embeds this pin and every extracted member's size and digest.
-Supplying a checksum next to an arbitrary archive cannot change that trust root.
-This checksum is an experimental artifact pin, not a publisher signature.
+Downloads happen only in these explicit install commands; builds and tests never
+download or silently install anything. The release layout is:
 
-Managed installations live under
-`<OS user cache>/gosvm/runners/0.5.0/darwin-arm64`, or
-`<GOSVM_CACHE>/runners/0.5.0/darwin-arm64`. `GOSVM_CACHE` must be absolute.
-This is separate from project `build/` outputs and the managed LLVM backend.
+| Tag | Assets |
+| --- | --- |
+| `runner-v0.5.0` | `gosvm-svm-runner-0.5.0-<platform>.tar.gz` |
+| `runner-v0.6.0` | `gosvm-svm-runner-0.6.0-<platform>.tar.gz` |
+| `v<cli version>` (e.g. `v0.1.0-alpha.1`) | `gosvm-v…-<platform>.tar.gz`, `SHA256SUMS`, `install-release.sh` |
 
-Runner selection order is:
+`<platform>` is `darwin-arm64`, `linux-amd64` or `linux-arm64` (Go's GOOS-GOARCH
+names, as in the cache paths). Runner URLs are
+`https://github.com/CrocSwap/goSVM/releases/download/runner-v<version>/<archive>`;
+`GOSVM_RELEASE_BASE_URL` replaces the `…/releases/download` base (https://,
+http:// or file://) for mirrors, air-gapped caches and tests. A download from any
+source passes exactly the checks of a local archive, so the URL is not a trust root.
+Runner tags are immutable and shared by every CLI release that pins them; a new
+runner build gets a new runner version.
+
+| Runner | Platform | Archive bytes | SHA-256 | Binary SHA-256 |
+| --- | --- | ---: | --- | --- |
+| 0.5.0 | darwin-arm64 | 3,177,170 | `f39fc2ef…e158d7c4` | `886ea293…be0a2bc3` (unchanged) |
+| 0.6.0 | darwin-arm64 | 3,435,809 | `25a8d37f…68913060` | `550bac10…ec9dff30` (unchanged) |
+| both | linux-amd64, linux-arm64 | **pending**: built by the release workflow; pins committed afterwards | | |
+
+Pins: `internal/runner/pins/release/<version>-<platform>.json`. The macOS release
+archives repackage the qualified binaries of the earlier local packages
+(`internal/runner/pins/darwin-arm64.json`, `internal/runner/pins/0.6.0-darwin-arm64.json`),
+adding the license files below; those earlier archives and installations made from
+them remain accepted. Until Linux pins are committed, a Linux CLI reports that it
+pins no runner for the host and `gosvm test --svm` needs `-svm-runner` or
+`GOSVM_TEST_RUNNER` (for example a runner built with `scripts/build_runner_linux.sh`).
+
+Managed installations live under `<OS user cache>/gosvm/runners/<version>/<platform>`,
+or `<GOSVM_CACHE>/runners/…` (`GOSVM_CACHE` must be absolute). Selection order:
 
 1. Explicit `-svm-runner` for project tests or `-runner` for standalone `svm-test`.
 2. `GOSVM_TEST_RUNNER`.
-3. A managed installation verified against the frontend's embedded package pin.
+3. A managed installation verified against an embedded pin.
 4. `gosvm-svm-runner` on PATH when no managed installation exists.
 
-Explicit and PATH runners retain the exact protocol/version check. A damaged
-managed installation causes an integrity error rather than a silent PATH
-fallback. An explicit runner is an intentional override for source builds and
-experiments. Every result continues to record the selected runner's actual hash.
-`doctor` reports the optional selected runner; `runner status` verifies the
-managed package specifically. Validator testing remains the default.
-
-Installation and ordinary tests do not download tools or invoke Cargo. With no
-installed package, `runner install` without `-archive` explains that no public
-download is configured. A verified existing installation is idempotent.
+A damaged managed installation is an integrity error, never a silent PATH fallback.
 
 ## Verification and recovery
 
-Installation copies the input into private staging with a fixed size bound,
-checks SHA-256 before parsing, then extracts exactly the pinned regular members.
-It rejects duplicate, missing, unexpected, linked, traversal and mismatched
-members, with bounds on expanded bytes. It validates the gzip trailer, executable
-identity and stdio VM initialization before publishing by rename. Errors and
-cancellation remove staging and the installer's lock, and never select a partial
-installation. Concurrent installers cannot take each other's lock.
+A download is written to a private temporary file, bounded by the pinned size;
+a short or long download fails before hashing ("truncated or wrong file"). Then,
+as for `-archive`: the bytes are copied into private staging with a size bound,
+SHA-256 is checked before parsing, exactly the pinned regular members are
+extracted (duplicate, missing, unexpected, linked, traversal and mismatched
+members are rejected, expanded bytes are bounded, the gzip trailer is validated),
+the runner's identity and stdio initialization are smoke-tested, and the
+installation is published by rename. A local archive that is the pinned package
+of another platform is named as such. Errors and cancellation remove staging and
+the lock and never select a partial installation. Installed files are compared
+with the embedded pin; the editable receipt cannot substitute new hashes. These
+checks detect altered package bytes; they do not protect against an actor able to
+replace the CLI or change files between verification and execution.
 
-Installed files are compared with the embedded pin, including provenance and
-license inventory; the editable receipt cannot substitute new trusted hashes.
-These checks detect altered package bytes. They do not protect against an actor
-able to replace the CLI or change files between verification and execution.
+If an installation is damaged, move aside its exact version/platform directory
+and reinstall. A process killed during installation can leave `<install-root>.lock`;
+remove that exact lock only after checking that no installer is running.
 
-If an installation is damaged, inspect and move aside its exact version/platform
-directory, then reinstall the pinned archive. The installer does not overwrite
-damaged or incompatible installations automatically. A process forcibly killed
-during installation can leave `<install-root>.lock`; remove that exact lock only
-after checking that no installer is running. CLI/runner upgrades should use new
-versioned roots, keeping older artifacts for rollback with a compatible frontend.
+## Archive contents and licensing
 
-## Maintainer package recipe
+`bin/gosvm-svm-runner`; `LICENSE` and `NOTICE` (goSVM, Apache-2.0);
+`THIRD_PARTY_NOTICES`; `README`; `Cargo.lock`; `litesvm/` (0.5.0: the vendored
+LiteSVM's `GOSVM_PATCH.md`, `GOSVM_PROVENANCE.json` and `LICENSE-APACHE`; 0.6.0:
+`build_modern_runner.py`, which reconstructs and patches the checksummed LiteSVM
+0.13.0 crate, and the Apache-2.0 text, since that crate ships none);
+`licenses/<crate>-<version>/…` (every license/notice file shipped by a crate in the
+target's dependency graph); `licenses/Apache-2.0.txt`; `CRATE_LICENSES.txt` (each
+crate, its declared license, source and packaged texts; generated from `cargo
+metadata` and the crate sources, build dependencies included); `dependencies.json`;
+`provenance.json` (build kind, source hashes, binary hash, dynamic libraries);
+`manifest.json`; repackaged archives also keep `original/provenance.json`.
+The macOS archives list 286 (0.5.0) and 321 (0.6.0) crates; five MIT crates of
+0.6.0 (`five8`, `five8_const`, `five8_core`, `qstring`, `void`) ship no license text
+and are marked "review required". The inventory is not a legal review.
 
-```sh
-python3 scripts/package_runner.py --output build/runner-packages/new-package
-```
+## Building runner archives (maintainers)
 
-The recipe uses host Cargo/Rust, the locked dependency graph and cached crate
-sources in offline mode. It builds only the runner executable, checks its identity
-and existing macOS ad-hoc signature, and packages the binary, Cargo lock,
-source/toolchain provenance, LiteSVM patch provenance, third-party notices and
-available dependency license files. The crate inventory is filtered to the
-macOS arm64 dependency graph. It includes build dependencies and does not imply
-that every listed crate contributes linked code.
+`scripts/package_runner_release.py --version 0.5.0|0.6.0 --output DIR` writes the
+archive, `pin.json`, `dependencies.json` and `provenance.json`. Tar ordering,
+metadata and gzip header are fixed; repeated runs give identical bytes.
 
-Archive ordering, metadata, timestamps and gzip filename are fixed. Two repeated
-build/package runs produced identical archive bytes. This proves repeatability
-for these local inputs; different Rust/linker versions or source inputs may
-produce different binaries and pins. The recipe emits `pin.json` for maintainer
-review and never updates the frontend's checked-in pin or publishes an artifact.
-Only an explicitly reviewed package pin belongs in a rebuilt frontend. Consumers
-do not need this recipe to install the recorded package.
+- **macOS arm64:** `--from-archive <earlier pinned package>` repackages its runner
+  binary (checked against the historical pin). The released macOS archives were
+  made this way, offline, twice with identical results.
+- **Linux:** `bash scripts/build_runner_linux.sh build/runner-release amd64|arm64`
+  builds from this checkout inside `rust:1.98.1-bookworm` pinned by digest (the
+  Rust release recorded for the macOS binaries), with the checkout at `/gosvm` and
+  Cargo's home at `/cargo`, so embedded paths do not depend on the host. Crates come
+  from `Cargo.lock` (checksummed by Cargo; `--locked`), LiteSVM 0.8.2 from
+  `third_party/` and LiteSVM 0.13.0 from the SHA-256-pinned crate patched by
+  `scripts/build_modern_runner.py`. The release workflow runs the same command.
+- `scripts/update_runner_pins.py ARCHIVE…` derives each pin from the archive bytes
+  alone and writes `internal/runner/pins/release/<version>-<platform>.json`;
+  `--check` verifies committed pins against published archives.
 
-The local binary depends on system libiconv and libSystem, with no external Rust
-library path. Actual minimum-OS compatibility and fresh-machine Gatekeeper
-behavior still need testing. Ad-hoc signing is not Developer ID signing or
-notarization. The Cargo inventory lists 286 packages; 118 have no packaged license
-file, including goSVM's currently unlicensed runner. Cargo license declarations
-and available texts are recorded, but project license selection, complete runtime
-notices and redistribution review are release gates.
+**Reproducibility limits found on October 16, 2026.** Neither existing macOS binary
+can be rebuilt from this repository byte for byte: the 0.5.0 binary was built from
+an earlier `benchmarks/svm-runner/src/lib.rs` (SHA-256 `eea4eda8…`) than the one
+committed (`fbb57e9b…`, which adds `returnData` to simulation results — reported
+over stdio too — and `logMessages`/`computeUnitsConsumed` to stored transaction
+metadata; the pinned 0.5.0 binary contains no `returnData` string), and both
+binaries embed the maintainer's Cargo home or checkout paths. The macOS release
+therefore reuses the qualified binaries, while a Linux 0.5.0 runner built from the
+committed source would report return data that macOS 0.5.0 omits, under the same
+version string. **Decision needed before publishing Linux 0.5.0:** accept that
+asymmetry, or cut a new runner version (e.g. 0.5.1) built from source on every
+platform and requalify it. 0.6.0's committed source matches its packaged binary's
+recorded source hashes, so only paths differ there.
+The Linux runners have not been executed by this work (no working Docker daemon);
+CI's SBF suites run them once their pins are committed.
 
-Before a public distribution, establish release ownership/repository, signing
-and notarization policy, complete the notice review, add a pinned download source
-and supported-host CI, and verify install/upgrade/recovery on clean machines.
-No public release was made by this work.
+Ad-hoc signing is not Developer ID signing or notarization. Archives are fetched
+with curl/Go's HTTP client, which set no quarantine attribute; a browser download
+of an archive does, and `-archive` installs then need `xattr -d com.apple.quarantine`.
+Historical evidence: [the first local package](../results/svm/2026-10-05-runner-install-complete/README.md),
+[the 0.6.0 package](../results/svm/2026-10-09-runner-0.6.0-package/README.md),
+[the public-install preparation](../results/svm/2026-10-16-public-install/README.md).

@@ -5,17 +5,19 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
 	"gosvm/internal/compiler"
+	"gosvm/internal/fetch"
 	"gosvm/internal/library"
 	"gosvm/internal/project"
+	"gosvm/internal/runner"
 	"gosvm/internal/sbftest"
 	"gosvm/internal/targets"
 	"gosvm/internal/testvm"
@@ -30,10 +32,12 @@ const help = `gosvm experimental project tools
   gosvm library build-rust Build a pure no_std Rust crate into ABI v1 library artifacts
   gosvm new <directory>    Create a typed bounded-swap program and tests
   gosvm toolchain install Download the pinned platform-tools v1.57 backend (fogo-v0, solana-v3)
+                          and the pinned SVM runners (-runners=false skips them)
                           (-archive local copy, -llvm import, -target legacy-v1.51-v3,
-                          -rust also the full tree for Rust/Bend-source libraries)
+                          -rust also the full tree for Rust/Bend-source libraries, macOS arm64)
   gosvm toolchain status  Verify the managed backend and the optional Rust toolchain
-  gosvm runner install    Install a pinned local runner package: -archive <0.5.0 or 0.6.0 package>
+  gosvm runner install    Download and verify the pinned SVM runners (-version 0.5.0|0.6.0),
+                          or install a local package offline: -archive <package.tar.gz>
   gosvm runner status     Verify the managed runners (0.6.0 solana-v3; 0.5.0 fogo-v0/legacy)
   gosvm doctor            Check Go, backends and runners for fogo-v0/solana-v3, with fixes
   gosvm generate          Generate account checks, codecs, client, and IDL
@@ -58,6 +62,10 @@ Project commands accept -dir <directory>. Build/test accept -llvm <directory>
 and -no-cache. New projects target both fogo and solana; build and test --svm
 cover every configured target. -target fogo|solana selects one for a command.
 SBF_LLVM overrides the selected profile backend directory.
+Downloads happen only in toolchain/runner install. GOSVM_PLATFORM_TOOLS_BASE_URL and
+GOSVM_RELEASE_BASE_URL (https://, http:// or file://) select mirrors; downloads from
+any source are verified against the pins built into this CLI. Hosts: darwin-arm64,
+linux-amd64, linux-arm64 (runners where this CLI pins them; Rust libraries macOS only).
 Build/test accept -timings to print JSON phase durations for workflow diagnostics.
 Fast tests accept -svm-run <fixture regex> and -svm-runner <binary path>.
 Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed runner for
@@ -81,6 +89,9 @@ Trimming: gosvm.json "trim": ["example.com/lib/..."] (projects) or repeated -tri
 checking and compiling only the declarations Process reaches; builds warn with
 what was dropped and write <output>.trim.json (docs/GO_PACKAGES.md#trimming).
 `
+
+// cliVersion is set by release builds (-ldflags -X main.cliVersion=v0.1.0-alpha.1).
+var cliVersion = "dev"
 
 func llvmDefault() string {
 	if p := os.Getenv("SBF_LLVM"); p != "" {
@@ -143,7 +154,7 @@ func projectCommand(args []string) error {
 		return nil
 	}
 	if command == "version" {
-		fmt.Println("gosvm experimental (fogo = fogo-v0, solana = solana-v3; legacy-v1.51-v3 retained)")
+		fmt.Printf("gosvm %s experimental %s (fogo = fogo-v0, solana = solana-v3; legacy-v1.51-v3 retained)\n", cliVersion, runtime.GOOS+"-"+runtime.GOARCH)
 		return nil
 	}
 	if command == "new" {
@@ -245,8 +256,12 @@ func projectCommand(args []string) error {
 			return err
 		}
 	} else {
-		p, _ := target.Resolve(target.Legacy)
-		profiles = []target.Profile{p}
+		// Outside a project, doctor checks what `gosvm new` targets and plain
+		// `gosvm toolchain install` installs (fogo and solana); -target legacy-v1.51-v3
+		// selects the historical profile.
+		fogo, _ := target.Resolve(target.Fogo)
+		solana, _ := target.Resolve(target.Solana)
+		profiles = []target.Profile{fogo, solana}
 	}
 	if *profileName != "" {
 		p, err := target.Resolve(*profileName)
@@ -578,10 +593,11 @@ func toolchainCommand(args []string) error {
 	fs := flag.NewFlagSet("gosvm toolchain "+args[0], flag.ContinueOnError)
 	profileName := fs.String("target", target.Solana, "fogo-v0 / solana-v3 (shared platform-tools v1.57 backend) or legacy-v1.51-v3")
 	localLLVM := fs.String("llvm", "", "import Clang/LLD from an existing platform-tools v1.57 llvm directory instead of downloading")
-	archive, rust := "", false
+	archive, rust, runners := "", false, true
 	if args[0] == "install" {
 		fs.StringVar(&archive, "archive", "", "use a local copy of the official archive (same size/SHA-256/content verification)")
-		fs.BoolVar(&rust, "rust", false, "also install the full platform-tools v1.57 tree for Rust libraries (one download)")
+		fs.BoolVar(&rust, "rust", false, "also install the full platform-tools v1.57 tree for Rust libraries (one download; macOS arm64 only)")
+		fs.BoolVar(&runners, "runners", true, "also download the pinned SVM runners for gosvm test --svm (0.5.0 fogo-v0, 0.6.0 solana-v3; about 7 MB)")
 	}
 	if e := fs.Parse(args[1:]); e != nil {
 		if e == flag.ErrHelp {
@@ -612,16 +628,22 @@ func toolchainCommand(args []string) error {
 		case "install":
 			ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 			defer stop()
-			if rust {
-				return toolchain.InstallRustArchive(ctx, archive, os.Stdout, downloadBackend)
-			}
-			if *localLLVM != "" {
+			var err error
+			switch {
+			case rust:
+				err = toolchain.InstallRustArchive(ctx, archive, os.Stdout, downloadBackend)
+			case *localLLVM != "":
 				if archive != "" {
 					return fmt.Errorf("choose either -archive or -llvm")
 				}
-				return toolchain.InstallModern(ctx, toolchain.ModernRoot(), *localLLVM, os.Stdout)
+				err = toolchain.InstallModern(ctx, toolchain.ModernRoot(), *localLLVM, os.Stdout)
+			default:
+				err = toolchain.InstallModernArchive(ctx, toolchain.ModernRoot(), archive, os.Stdout, downloadBackend)
 			}
-			return toolchain.InstallModernArchive(ctx, toolchain.ModernRoot(), archive, os.Stdout, downloadBackend)
+			if err != nil || !runners {
+				return err
+			}
+			return installRunnersAfterToolchain(ctx, runner.Versions(), os.Stdout)
 		default:
 			return fmt.Errorf("unknown toolchain command %q", args[0])
 		}
@@ -639,7 +661,10 @@ func toolchainCommand(args []string) error {
 	case "install":
 		ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 		defer stop()
-		return toolchain.Install(ctx, toolchain.Root(), archive, os.Stdout, downloadBackend)
+		if err := toolchain.Install(ctx, toolchain.Root(), archive, os.Stdout, downloadBackend); err != nil || !runners {
+			return err
+		}
+		return installRunnersAfterToolchain(ctx, []string{runner.Version}, os.Stdout)
 	default:
 		return fmt.Errorf("unknown toolchain command %q", args[0])
 	}
@@ -668,22 +693,10 @@ func backendInstallCommand(p target.Profile) string {
 	return "gosvm toolchain install -target " + target.Legacy
 }
 
+// downloadBackend fetches an official platform-tools archive (or its mirror,
+// toolchain.MirrorEnv); the toolchain package verifies every byte.
 func downloadBackend(ctx context.Context, url string, out io.Writer) error {
-	req, e := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if e != nil {
-		return e
-	}
-	client := http.Client{Timeout: 15 * time.Minute}
-	response, e := client.Do(req)
-	if e != nil {
-		return e
-	}
-	defer response.Body.Close()
-	if response.StatusCode != http.StatusOK {
-		return fmt.Errorf("backend download: HTTP %s", response.Status)
-	}
-	_, e = io.Copy(out, response.Body)
-	return e
+	return fetch.Get(ctx, url, out)
 }
 
 func llvmForTools(version string) string {

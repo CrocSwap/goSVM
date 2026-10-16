@@ -1,0 +1,156 @@
+{
+ "bytes": 528839404,
+ "members": {
+  "llvm/bin/clang": {
+   "link": "clang-22",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/clang++": {
+   "link": "clang-22",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/clang-22": {
+   "needed": [
+    "libz.so.1",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "eba6e975225cfd44291bdcace57f1e9a6e3c4942be98475468a74f5b4789ac78",
+   "size": 138188376,
+   "type": "0"
+  },
+  "llvm/bin/clang-cl": {
+   "link": "clang-22",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/clang-cpp": {
+   "link": "clang-22",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/ld.lld": {
+   "link": "lld",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/lld": {
+   "needed": [
+    "libz.so.1",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "bc01c50986b5c38501df0fc1d57d7f702850c05e01ec4dd39376998bd3a5cdfb",
+   "size": 87801120,
+   "type": "0"
+  },
+  "llvm/bin/lld-link": {
+   "link": "lld",
+   "size": 0,
+   "type": "2"
+  },
+  "llvm/bin/lldb": {
+   "needed": [
+    "liblldb.so.22.1-rust-dev",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "02f6ad04939db9d6142898164c3103c9105869217db2fba1ed27b29710c521fc",
+   "size": 724840,
+   "type": "0"
+  },
+  "llvm/bin/lldb_commands": {
+   "needed": null,
+   "sha256": "edf978033e063849b46add63587d43f3925e83280972b26ed15441404cc7909e",
+   "size": 1819,
+   "type": "0"
+  },
+  "llvm/bin/lldb_lookup.py": {
+   "needed": null,
+   "sha256": "c0a5074467aa15ad15c52fe32d43ffefff8edbe87f5bcf03b63a1e29f2e7b0d4",
+   "size": 4347,
+   "type": "0"
+  },
+  "llvm/bin/lldb_providers.py": {
+   "needed": null,
+   "sha256": "a2e48b99f18608efc7c8dbd70fd09b9c85cd9dd902fc59e049879870fec42fde",
+   "size": 25547,
+   "type": "0"
+  },
+  "llvm/bin/llvm-ar": {
+   "needed": [
+    "libz.so.1",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "eee90c0b14dfd1fbc1b0c37cfb8069c9ca71fa1ac2b141f11fcf97ec89b7e6a7",
+   "size": 14952528,
+   "type": "0"
+  },
+  "llvm/bin/llvm-objcopy": {
+   "needed": [
+    "libz.so.1",
+    "libstdc++.so.6",
+    "libm.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "35c8e83448d959d36116e7b85d722db4cc3881736d6bf62ef21ebd9226e78a0a",
+   "size": 6656936,
+   "type": "0"
+  },
+  "rust/bin/cargo": {
+   "needed": [
+    "libssl.so.3",
+    "libcrypto.so.3",
+    "libz.so.1",
+    "libgcc_s.so.1",
+    "libm.so.6",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "b591c2b1964a260d4416feaf80a027331335639670cc9fe1333ac17852415257",
+   "size": 35866496,
+   "type": "0"
+  },
+  "rust/bin/rustc": {
+   "needed": [
+    "librustc_driver-dc292d2be2117141.so",
+    "libc.so.6"
+   ],
+   "sha256": "2bcb206bfff6ae212b86c717378aa5d762bd630dc13ea064ddc284bb1c7dfc61",
+   "size": 9560,
+   "type": "0"
+  },
+  "rust/lib/librustc_driver-dc292d2be2117141.so": {
+   "needed": [
+    "libm.so.6",
+    "libz.so.1",
+    "libstdc++.so.6",
+    "libgcc_s.so.1",
+    "libc.so.6",
+    "ld-linux-aarch64.so.1"
+   ],
+   "sha256": "170f7b4aa73e4fe625a34b713dad75a5014f72babc60da39d98a157bfbb5eeea",
+   "size": 231301632,
+   "type": "0"
+  }
+ },
+ "sha256": "f2f31c9325cb2d00244df23b4a1a0904e51819cec49d39235a3ed3ee2320375d",
+ "url": "https://github.com/anza-xyz/platform-tools/releases/download/v1.57/platform-tools-linux-aarch64.tar.bz2"
+}

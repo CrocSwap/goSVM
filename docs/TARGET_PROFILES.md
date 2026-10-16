@@ -37,12 +37,25 @@ The v1.57 backend is qualified locally on **macOS arm64** with exact Clang/LLD
 content pins in `internal/targets/profile.go`. This qualifies the two compiler
 executables for the recorded corpus, not every component of platform-tools,
 all host platforms or an entire network release. Version text alone is insufficient.
+Since October 16, 2026 the frontend also pins **linux-amd64** and **linux-arm64**:
+the official archive of each host (size and SHA-256 from the GitHub release digest,
+confirmed by downloading every archive) and the SHA-256 of its extracted `clang-22`
+and `lld`. Those Linux pins come from Anza's archives, not from a local acceptance
+run; CI qualifies linux-amd64 by rebuilding the reference ELFs byte for byte
+(`scripts/check_rebuild_reference.py`). Other hosts get a clear error naming the
+supported ones. Archive pins are in `internal/toolchain/archives.go`
+([evidence](../results/svm/2026-10-16-public-install/README.md)).
 
-`gosvm toolchain install` downloads the official platform-tools v1.57 macOS arm64
-archive (430,747,800 bytes, SHA-256 `48c32c2e…bc932b34a`, both pinned in the
-frontend), verifies it before decompression, keeps only Clang and LLD, and refuses
-to install unless they equal the content pins. One install serves `fogo-v0` and
-`solana-v3`. Alternatives use the same pins: `-archive <local copy>` or
+`gosvm toolchain install` downloads the official platform-tools v1.57 archive for
+the host (macOS arm64: 430,747,800 bytes, SHA-256 `48c32c2e…bc932b34a`; Linux
+x86_64: 531,380,716 bytes, `b0f7af10…320c2b00`; Linux aarch64: 528,839,404 bytes,
+`f2f31c93…2320375d`), verifies it before decompression, keeps only Clang and LLD,
+and refuses to install unless they equal the host's content pins. It then
+downloads the pinned SVM runners (`-runners=false` skips them; see below). One
+install serves `fogo-v0` and `solana-v3`. goSVM does not redistribute
+platform-tools: archives come from Anza's release (or a mirror set with
+`GOSVM_PLATFORM_TOOLS_BASE_URL`, laid out as `<base>/v1.57/<asset>`, verified
+identically). The Linux binaries need glibc, libstdc++ and zlib. Alternatives use the same pins: `-archive <local copy>` or
 `-llvm <existing platform-tools v1.57 llvm dir>` (receipts record
 `official-archive` or `qualified-local-backend`). `gosvm doctor` reports backend
 and runner state for both profiles with the exact fix command.
@@ -50,7 +63,8 @@ and runner state for both profiles with the exact fix command.
 [Rust libraries](RUST_LIBRARIES.md) need the complete platform-tools tree
 (rustc, cargo, their SBF sysroots, LLVM utilities). `gosvm toolchain install -rust`
 extracts it from the same pinned archive (one download also installs the
-Clang/LLD backend if missing) into a separate managed root,
+Clang/LLD backend if missing; macOS arm64 only, other hosts are refused with an
+explicit message) into a separate managed root,
 `<cache>/toolchains/v1.57-full/darwin-arm64` (about 1.4 GB). Every directory,
 file and symlink is kept; paths and links must stay inside the tree. The install
 is staged, published by rename with a receipt, and refused unless Clang, LLD,
@@ -147,13 +161,17 @@ become modern-v3 or Fogo measurements.
 ## Local runtime qualification
 
 Both runners are frontend-pinned packages with separate managed cache slots.
-`gosvm runner install -archive <package>` recognizes which one it is; `gosvm runner
-status` reports both. No public runner download exists. The 0.6.0 package is built
-by `scripts/package_modern_runner.py` (the 0.5.0 recipe is unchanged).
+`gosvm runner install` downloads both from the GitHub releases `runner-v0.5.0` and
+`runner-v0.6.0` (once published) and verifies them against the embedded pins;
+`-version` selects one, `-archive <package>` installs a local copy offline and
+recognizes which one it is; `gosvm runner status` reports both. Release packaging
+is described in [runner packaging](SVM_RUNNER_PACKAGING.md); the earlier local
+packages (`scripts/package_runner.py`, `scripts/package_modern_runner.py`) remain
+accepted.
 
 ```sh
-gosvm runner install -archive gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz
-gosvm runner install -archive gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz
+gosvm runner install                     # both, verified download
+gosvm runner install -archive gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz   # offline
 gosvm test -target solana-v3 --svm     # selects managed 0.6.0
 gosvm test -target fogo-v0 --svm       # selects managed 0.5.0
 # General fixture paths are relative to the caller's working directory.

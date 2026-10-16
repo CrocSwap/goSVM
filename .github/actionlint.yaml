@@ -1,0 +1,5 @@
+# GitHub-hosted arm64 Linux runners (generally available January 2025) are
+# missing from older actionlint label lists.
+self-hosted-runner:
+  labels:
+    - ubuntu-24.04-arm

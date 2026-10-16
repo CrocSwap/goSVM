@@ -11,7 +11,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 )
@@ -200,35 +199,67 @@ func TestGzipTrailerAndInstalledFileType(t *testing.T) {
 }
 
 func TestEmbeddedPinsAndPackageDetection(t *testing.T) {
-	if runtime.GOOS != "darwin" || runtime.GOARCH != "arm64" {
-		t.Skip("pins are qualified on macOS arm64 only")
-	}
-	for _, v := range Versions() {
-		p, err := PackageFor(v)
-		if err != nil || p.Files["bin/gosvm-svm-runner"].SHA256 == "" {
-			t.Fatalf("%s: %v", v, err)
-		}
-		// Every pinned member must be installable within extraction limits.
-		var total int64
-		for name, f := range p.Files {
-			if !safeMember(name) || f.Bytes <= 0 || f.Bytes > 32<<20 || len(f.SHA256) != 64 {
-				t.Fatalf("%s: uninstallable member %s %+v", v, name, f)
+	for _, platform := range []string{"darwin-arm64", "linux-amd64", "linux-arm64"} {
+		for _, v := range Versions() {
+			pins, release, err := embeddedPins(v, platform)
+			if err != nil {
+				t.Fatal(err)
 			}
-			total += f.Bytes
+			for i, p := range pins {
+				if p.Files["bin/gosvm-svm-runner"].SHA256 == "" || p.Platform != platform {
+					t.Fatalf("%s %s: %+v", v, platform, p)
+				}
+				// Every pinned member must be installable within extraction limits.
+				var total int64
+				for name, f := range p.Files {
+					if !safeMember(name) || f.Bytes <= 0 || f.Bytes > 32<<20 || len(f.SHA256) != 64 {
+						t.Fatalf("%s: uninstallable member %s %+v", v, name, f)
+					}
+					total += f.Bytes
+				}
+				if total > 64<<20 {
+					t.Fatalf("%s: package exceeds extraction limit", v)
+				}
+				// Release packages carry the project and third-party notices.
+				if release[i] {
+					for _, name := range []string{"LICENSE", "NOTICE", "THIRD_PARTY_NOTICES", "CRATE_LICENSES.txt", "licenses/Apache-2.0.txt", "litesvm/LICENSE-APACHE", "manifest.json", "provenance.json"} {
+						if _, ok := p.Files[name]; !ok {
+							t.Fatalf("%s %s release package lacks %s", v, platform, name)
+						}
+					}
+					if p.ArchiveName != "gosvm-svm-runner-"+v+"-"+platform+".tar.gz" {
+						t.Fatalf("release archive name %s", p.ArchiveName)
+					}
+				}
+			}
 		}
-		if total > 64<<20 {
-			t.Fatalf("%s: package exceeds extraction limit", v)
+	}
+	// The released macOS packages repackage the qualified historical binaries.
+	for _, v := range Versions() {
+		pins, release, _ := embeddedPins(v, "darwin-arm64")
+		if len(pins) != 2 || !release[0] || release[1] || pins[0].Files["bin/gosvm-svm-runner"] != pins[1].Files["bin/gosvm-svm-runner"] {
+			t.Fatalf("%s: darwin-arm64 release and historical pins must share the runner binary", v)
 		}
 	}
 	t.Setenv("GOSVM_CACHE", t.TempDir())
 	if RootFor(Version) == RootFor(ModernVersion) || Root() != RootFor(Version) {
 		t.Fatal("runner versions must use separate cache slots")
 	}
-	err := Install(context.Background(), "", io.Discard)
-	for _, want := range []string{"gosvm-svm-runner-0.5.0-darwin-arm64.tar.gz", "gosvm-svm-runner-0.6.0-darwin-arm64.tar.gz"} {
-		if err == nil || !strings.Contains(err.Error(), "gosvm runner install -archive "+want) {
-			t.Fatalf("missing actionable hint for %s: %v", want, err)
+	t.Setenv(ReleaseBaseEnv, "")
+	if p, err := ReleaseFor(ModernVersion); err == nil {
+		if URL(p) != "https://github.com/CrocSwap/goSVM/releases/download/runner-v0.6.0/gosvm-svm-runner-0.6.0-"+Host()+".tar.gz" {
+			t.Fatal(URL(p))
 		}
+		t.Setenv(ReleaseBaseEnv, "file:///mirror/")
+		if URL(p) != "file:///mirror/runner-v0.6.0/gosvm-svm-runner-0.6.0-"+Host()+".tar.gz" {
+			t.Fatal(URL(p))
+		}
+		if !strings.Contains(InstallHint(ModernVersion), "gosvm runner install -version 0.6.0") ||
+			!strings.Contains(InstallHint(ModernVersion), "-archive gosvm-svm-runner-0.6.0-") {
+			t.Fatal(InstallHint(ModernVersion))
+		}
+	} else if !strings.Contains(err.Error(), Host()) {
+		t.Fatalf("unpinned host error must name the host: %v", err)
 	}
 	a := testArchive(t, member{"bin/gosvm-svm-runner", "pinned executable", tar.TypeReg})
 	b := testArchive(t, member{"bin/gosvm-svm-runner", "other executable", tar.TypeReg})
@@ -248,6 +279,95 @@ func TestEmbeddedPinsAndPackageDetection(t *testing.T) {
 	}
 }
 
+// fakeDownload serves bytes as the asset at want, recording requests.
+func fakeDownload(t *testing.T, want string, data []byte) Download {
+	return func(ctx context.Context, url string, w io.Writer) error {
+		if url != want {
+			return fmt.Errorf("unexpected URL %s", url)
+		}
+		_, err := w.Write(data)
+		return err
+	}
+}
+
+func TestDownloadRejectsWrongBytesBeforeExecution(t *testing.T) {
+	p, err := ReleaseFor(Version)
+	if err != nil {
+		t.Skipf("no release pin for this host: %v", err)
+	}
+	t.Setenv("GOSVM_CACHE", t.TempDir())
+	t.Setenv(ReleaseBaseEnv, "https://mirror.invalid/base")
+	url := "https://mirror.invalid/base/runner-v0.5.0/" + p.ArchiveName
+	for name, c := range map[string]struct {
+		data []byte
+		want string
+	}{
+		"truncated":  {make([]byte, p.ArchiveBytes-1), "truncated"},
+		"oversized":  {make([]byte, p.ArchiveBytes+1), "exceeds the pinned archive size"},
+		"wrong-hash": {make([]byte, p.ArchiveBytes), "SHA-256 mismatch"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			err := Install(context.Background(), "", []string{Version}, io.Discard, fakeDownload(t, url, c.data))
+			if err == nil || !strings.Contains(err.Error(), c.want) {
+				t.Fatalf("%s: %v", name, err)
+			}
+			if _, err := os.Stat(RootFor(Version)); !os.IsNotExist(err) {
+				t.Fatal("rejected download published a runner")
+			}
+			entries, _ := os.ReadDir(filepath.Dir(RootFor(Version)))
+			if len(entries) != 0 {
+				t.Fatalf("left temporary state: %v", entries)
+			}
+		})
+	}
+	failing := func(context.Context, string, io.Writer) error { return fmt.Errorf("HTTP 404 Not Found") }
+	if err := Install(context.Background(), "", []string{Version}, io.Discard, failing); err == nil || !strings.Contains(err.Error(), "404") {
+		t.Fatal(err)
+	}
+	if err := Install(context.Background(), "", []string{"9.9.9"}, io.Discard, failing); err == nil {
+		t.Fatal("accepted an unknown version")
+	}
+}
+
+func TestWrongPlatformArchiveIsNamed(t *testing.T) {
+	data := testArchive(t, member{"bin/gosvm-svm-runner", "pinned executable", tar.TypeReg})
+	elsewhere := testPin(data)
+	elsewhere.Platform = "linux-arm64"
+	if Host() == "linux-arm64" {
+		elsewhere.Platform = "darwin-arm64"
+	}
+	saved := otherPins
+	otherPins = func() []Pin { return []Pin{elsewhere} }
+	defer func() { otherPins = saved }()
+	file := filepath.Join(t.TempDir(), "package.tar.gz")
+	if err := os.WriteFile(file, data, 0600); err != nil {
+		t.Fatal(err)
+	}
+	other := testArchive(t, member{"bin/gosvm-svm-runner", "other executable", tar.TypeReg})
+	_, err := identify(context.Background(), file, []Pin{testPin(other)})
+	if err == nil || !strings.Contains(err.Error(), "for "+elsewhere.Platform+"; this host is "+Host()) {
+		t.Fatalf("wrong-platform archive: %v", err)
+	}
+}
+
+func TestReleasePinAcceptsHistoricalInstall(t *testing.T) {
+	// An existing installation of another accepted package of the same version
+	// (here: a different test pin standing in for the historical one) verifies.
+	data := testArchive(t, member{"bin/gosvm-svm-runner", "pinned executable", tar.TypeReg})
+	historical := testPin(data)
+	root, err := testInstall(t, data, historical, context.Background(), func(context.Context, string) error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	release := testPin(data)
+	release.ArchiveName = "release.tar.gz"
+	if got, err := verifyAny(root, []Pin{release, historical}); err != nil || got.ArchiveName != historical.ArchiveName {
+		t.Fatalf("historical install: %v %v", got.ArchiveName, err)
+	}
+	if _, err := verifyAny(root, []Pin{release}); err == nil {
+		t.Fatal("accepted a receipt matching no pin")
+	}
+}
 func TestBusyInstallPreservesLock(t *testing.T) {
 	root := filepath.Join(t.TempDir(), "runner")
 	if err := os.Mkdir(root+".lock", 0700); err != nil {
