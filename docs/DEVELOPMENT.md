@@ -258,10 +258,15 @@ manual and only creates **draft** releases. Tags: `runner-v0.5.1`, `runner-v0.6.
    python3 scripts/update_runner_pins.py build/rr/linux/*.tar.gz
    make test && go vet ./...
    git add internal/runner/pins/release && git commit -m "Pin Linux runner release archives"
-   git push            # CI on main then installs and runs the Linux runners
+   git push
+   gh workflow run runner-draft-check.yml   # installs the draft runners, runs the tests
    ```
+   CI's read-only token cannot see draft assets, so `runner-draft-check.yml`
+   (manual, write-scoped) installs each platform's draft archives through the
+   verified download path and runs `make test` and the starter's `test --svm` on
+   linux-amd64, linux-arm64 and macOS arm64.
 4. **Publish runners:** `gh release edit runner-v0.5.1 --draft=false` and the same
-   for `runner-v0.6.0`, after CI on the pinned commit is green.
+   for `runner-v0.6.0`, after CI and the draft check on the pinned commit are green.
 5. **CLI draft:** `gh workflow run release.yml -f component=cli -f version=v0.1.0-alpha.1`.
    It refuses to build unless the committed pins equal the runner release assets
    (`update_runner_pins.py --check`), then attaches the three CLI archives,

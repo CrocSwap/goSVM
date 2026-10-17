@@ -1,0 +1,81 @@
+# Manually triggered qualification of DRAFT runner releases before they are
+# published (docs/DEVELOPMENT.md#cut-a-release, step 3). Draft assets are only
+# visible to a token with write access, so this lives apart from ci.yml, which
+# runs on pull requests with a read-only token. It downloads this platform's
+# pinned runner archives from the drafts into a local mirror, installs them
+# through the normal verified download path, and runs the root tests and the
+# starter's `test --svm`. Nothing is published; no keys, clusters or secrets.
+name: Runner draft check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    name: draft runners (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-amd64
+          - os: ubuntu-24.04-arm
+            platform: linux-arm64
+          - os: macos-14
+            platform: darwin-arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.0'
+          cache: true
+
+      - name: Isolated gosvm cache
+        run: echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
+
+      - name: Build CLI
+        run: bash scripts/build-cli.sh build/gosvm
+
+      - name: Cache platform-tools backend
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/gosvm-cache/toolchains
+          key: platform-tools-v1.57-${{ matrix.platform }}-${{ hashFiles('internal/toolchain/archives.go', 'internal/targets/profile.go') }}
+
+      - name: Install backend
+        run: build/gosvm toolchain install -runners=false
+
+      - name: Install runners from the draft releases
+        run: |
+          mirror="$RUNNER_TEMP/runner-mirror"
+          for pin in internal/runner/pins/release/*-${{ matrix.platform }}.json; do
+            version="$(basename "$pin" "-${{ matrix.platform }}.json")"
+            tag="runner-v$version"
+            mkdir -p "$mirror/$tag"
+            gh release download "$tag" -p "gosvm-svm-runner-$version-${{ matrix.platform }}.tar.gz" -D "$mirror/$tag"
+          done
+          GOSVM_RELEASE_BASE_URL="file://$mirror" build/gosvm runner install
+          build/gosvm runner status
+
+      - name: Root tests with the runners installed
+        run: |
+          (cd examples/real-libraries && go mod download)
+          make test
+
+      - name: Starter test --svm
+        run: |
+          cli="$GITHUB_WORKSPACE/build/gosvm"
+          mkdir -p "$RUNNER_TEMP/walkthrough"
+          cd "$RUNNER_TEMP/walkthrough"
+          "$cli" new my-swap
+          cd my-swap
+          "$cli" build
+          "$cli" test --svm
