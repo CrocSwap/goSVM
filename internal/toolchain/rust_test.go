@@ -172,10 +172,12 @@ func TestRustPlatformToolsReceipt(t *testing.T) {
 
 func TestOfficialFullPins(t *testing.T) {
 	pkg := officialFull()
-	if pkg.SHA != officialModern().SHA || len(pkg.Files) != len(target.ModernBackendHashes)+len(target.RustToolHashes) {
+	darwin, _ := archiveFor(target.ModernTools, "darwin-arm64")
+	if pkg.SHA != darwin.SHA || pkg.Size != darwin.Size || len(pkg.Files) != len(target.ModernBackendHashes)+len(target.RustToolHashes) {
 		t.Fatalf("%+v", pkg)
 	}
-	for name, hash := range officialModern().Files {
+	for name, hash := range target.ModernBackendPins["darwin-arm64"] {
+		name = "llvm/bin/" + name
 		if pkg.Files[name] != hash {
 			t.Fatalf("%s not pinned like the backend", name)
 		}

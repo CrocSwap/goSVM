@@ -363,7 +363,7 @@ func TestRealLibraryFormsSBF(t *testing.T) {
 		t.Run(profile, func(t *testing.T) {
 			runner, err := testvm.RunnerFor("", profile)
 			if err != nil {
-				t.Fatalf("runner unavailable: %v", err)
+				t.Skipf("runner unavailable: %v", err)
 			}
 			for name, src := range formPrograms {
 				want := formNative(t, src, inputs)

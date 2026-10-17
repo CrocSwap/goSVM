@@ -111,7 +111,7 @@ func TestConstInitSBF(t *testing.T) {
 		t.Run(profile, func(t *testing.T) {
 			runner, err := testvm.RunnerFor("", profile)
 			if err != nil {
-				t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
+				t.Skipf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
 			}
 			summary := map[string]any{"profile": profile, "cases": len(cases), "aborts": aborts}
 			baseline := runGlobalProgram(t, llvm, runner, profile, "baseline", &Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: []byte(globalProbeSource(""))}}}}},
@@ -204,7 +204,7 @@ func Process(c solana.Context) uint64 {
 		t.Run(profile, func(t *testing.T) {
 			runner, err := testvm.RunnerFor("", profile)
 			if err != nil {
-				t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
+				t.Skipf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
 			}
 			summary := map[string]any{"profile": profile}
 			for _, runtimeInit := range []bool{false, true} {
@@ -272,7 +272,7 @@ func TestRealLibrariesInitSBF(t *testing.T) {
 		t.Run(profile, func(t *testing.T) {
 			runner, err := testvm.RunnerFor("", profile)
 			if err != nil {
-				t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
+				t.Skipf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
 			}
 			modes := map[string]any{}
 			for _, runtimeInit := range []bool{false, true} {

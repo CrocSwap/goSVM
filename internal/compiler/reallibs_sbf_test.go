@@ -372,7 +372,7 @@ func realLibsSBF(t *testing.T, env *realLibsEnv, v realLibsVariant, profile, llv
 	}
 	runner, err := testvm.RunnerFor("", profile)
 	if err != nil {
-		t.Fatalf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
+		t.Skipf("runner unavailable: %v (install the pinned runners; see docs/DEVELOPMENT.md)", err)
 	}
 	// A fixture suite holds at most 1,024 cases: run the same ELF
 	// (built identically each time) in parts.

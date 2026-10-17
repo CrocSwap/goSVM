@@ -71,7 +71,10 @@ jobs:
         run: build/gosvm doctor
 
       - name: Root tests
-        run: make test
+        run: |
+          # The real-libraries tests read these modules from the module cache.
+          (cd examples/real-libraries && go mod download)
+          make test
 
       - name: Example and benchmark module tests
         run: |

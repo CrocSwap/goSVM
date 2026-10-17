@@ -173,7 +173,11 @@ func TestModernReceiptSources(t *testing.T) {
 
 func TestOfficialModernPins(t *testing.T) {
 	pkg := officialModern()
-	if pkg.Size != 430747800 || len(pkg.SHA) != 64 || len(pkg.Files) != 2 || pkg.Files["llvm/bin/clang"] != target.ModernBackendHashes["clang"] || pkg.Files["llvm/bin/ld.lld"] != target.ModernBackendHashes["ld.lld"] {
+	host, err := hostArchive(target.ModernTools)
+	if err != nil {
+		t.Skip(err)
+	}
+	if pkg.Size != host.Size || pkg.SHA != host.SHA || len(pkg.SHA) != 64 || len(pkg.Files) != 2 || pkg.Files["llvm/bin/clang"] != target.ModernBackendHashes["clang"] || pkg.Files["llvm/bin/ld.lld"] != target.ModernBackendHashes["ld.lld"] {
 		t.Fatalf("%+v", pkg)
 	}
 	for _, dest := range pkg.Members {

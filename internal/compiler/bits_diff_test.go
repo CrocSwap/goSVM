@@ -7,7 +7,6 @@ import (
 	"math/bits"
 	"math/rand"
 	"os/exec"
-	"runtime"
 	"sort"
 	"strings"
 	"testing"
@@ -248,7 +247,6 @@ func TestBitsDifferentialAgainstGo(t *testing.T) {
 		a, b, c uint64
 	}
 	var vectors []vector
-	intrinsicCarry := runtime.GOARCH == "amd64" || runtime.GOARCH == "arm64"
 	small := []uint64{0, 1, 2, 3, ^uint64(0), ^uint64(0) - 1, 1 << 63, 1 << 32}
 	for n, op := range ops {
 		mask := ^uint64(0) >> (64 - op.width)
@@ -265,10 +263,10 @@ func TestBitsDifferentialAgainstGo(t *testing.T) {
 			return (rng.Uint64() & mask) >> uint(rng.Intn(op.width))
 		}
 		add := func(a, b, c uint64) {
-			// Add64/Sub64 carries other than 0/1 are undefined by the package
-			// documentation; the compiled oracle treats them as nonzero=1 on
-			// amd64/arm64, which goSVM matches.
-			if !intrinsicCarry && (op.name == "Add64" || op.name == "Sub64" || op.name == "Add" || op.name == "Sub") && c > 1 {
+			// Add/Sub carries other than 0 or 1 are undefined by the package
+			// documentation, and native Go's result differs between amd64 and
+			// arm64, so there is no oracle for them.
+			if (op.name == "Add64" || op.name == "Sub64" || op.name == "Add" || op.name == "Sub") && c > 1 {
 				return
 			}
 			vectors = append(vectors, vector{n, a, b, c})
