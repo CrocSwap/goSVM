@@ -142,7 +142,7 @@ int main(void){
  for (u64 j = 1; j < used / 8; j++) {
   u64 x = gosvm_host_heap[j];
   if (x >= base && x < base + GOSVM_HEAP_BYTES) printf("h%llx,", x - base);
-  else if (x >= 0x100000000ULL && x < 0x800000000000ULL) printf("p,"); /* rodata */
+  else if (x >= 0x100000000ULL && x < 0x1000000000000ULL) printf("p,"); /* rodata; 48-bit user space (arm64 Linux loads near 0xaaaa...) */
   else printf("%llx,", x);
  }
  printf("\n");
