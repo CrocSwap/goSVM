@@ -66,15 +66,17 @@ not the complete contract. [Benchmark scope and evidence](docs/WHIRLPOOLS_133_TA
 
 ## Try it
 
-Source installation is tested on **macOS arm64**, with Go and host Clang required.
+Release binaries run on **macOS arm64**, **Linux x86_64** and **Linux arm64**. The
+installer checks the download's SHA-256; `gosvm toolchain install` then fetches
+Anza's official Solana platform-tools (a one-time 430–530 MB download, ~210 MB
+kept) and goSVM's SVM test runners, each verified against pins built into the CLI.
 One project builds for both Fogo and Solana; goSVM picks the instruction set,
-pinned compiler backend and test runtime for each network. Building Go programs
-does not require Cargo or Rust.
+pinned compiler backend and test runtime for each network. `gosvm test` runs your
+Go tests, so install [Go](https://go.dev/dl/) too. Building Go programs does not
+require Cargo or Rust.
 
 ```sh
-git clone https://github.com/CrocSwap/goSVM.git
-cd goSVM
-bash scripts/install.sh "$HOME/.local/bin"
+curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.1/install-release.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
 
 gosvm toolchain install   # Download the pinned backend and SVM test runners
@@ -104,8 +106,10 @@ Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with
 `gosvm library add`, from published manifests or built from a `.bend` source
 (`-bend-source PROOF.bend -root ns.fn`); [Rust crates](docs/RUST_LIBRARIES.md)
 with `-rust`. [Targets, deployment and migration](docs/TARGET_PROFILES.md)
-cover the details. Release binaries, Linux hosts and the release procedure are in
-[installation details](docs/DEVELOPMENT.md#start-a-go-project).
+cover the details. To build the CLI from source instead (Go 1.22 and host Clang),
+clone the repository and run `bash scripts/install.sh "$HOME/.local/bin"`; see
+[installation details](docs/DEVELOPMENT.md#start-a-go-project) and the
+[releases](https://github.com/CrocSwap/goSVM/releases).
 
 ## Share code with your backend
 
