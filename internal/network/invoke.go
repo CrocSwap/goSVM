@@ -80,25 +80,27 @@ func Transaction(payer ed25519.PrivateKey, program, blockhash []byte, data []byt
 
 // Invoke simulates the instruction, or when send is true submits it and waits
 // for confirmation, returning the runtime's error, return data, CU and logs.
+// The payer is the instruction's only account (a signer).
 func Invoke(ctx context.Context, r RPC, payer ed25519.PrivateKey, programID string, data []byte, send bool) (Outcome, error) {
-	var out Outcome
 	program, err := DecodeBase58(programID)
 	if err != nil || len(program) != 32 {
-		return out, fmt.Errorf("invalid program ID %q", programID)
+		return Outcome{}, fmt.Errorf("invalid program ID %q", programID)
 	}
-	var latest struct {
-		Value struct {
-			Blockhash string `json:"blockhash"`
-		} `json:"value"`
-	}
-	if err = r.Call(ctx, "getLatestBlockhash", []any{map[string]any{"commitment": "confirmed"}}, &latest); err != nil {
-		return out, err
-	}
-	blockhash, err := DecodeBase58(latest.Value.Blockhash)
+	return InvokeInstructions(ctx, r, payer, []Instruction{{program, []Meta{{payer.Public().(ed25519.PublicKey), true, true}}, data}}, nil, send)
+}
+
+// InvokeInstructions simulates or sends one transaction of ixs, paid by payer
+// and also signed by signers. Return data and CU come from the transaction.
+func InvokeInstructions(ctx context.Context, r RPC, payer ed25519.PrivateKey, ixs []Instruction, signers []ed25519.PrivateKey, send bool) (Outcome, error) {
+	var out Outcome
+	blockhash, err := r.blockhash(ctx)
 	if err != nil {
 		return out, err
 	}
-	tx, signature := Transaction(payer, program, blockhash, data)
+	tx, signature, err := Sign(payer, blockhash, ixs, signers...)
+	if err != nil {
+		return out, err
+	}
 	encoded := base64.StdEncoding.EncodeToString(tx)
 	type meta struct {
 		Err        json.RawMessage `json:"err"`

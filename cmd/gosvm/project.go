@@ -49,7 +49,10 @@ const help = `gosvm experimental project tools
   gosvm test --svm        Also run fast compiled-ELF fixtures with an experimental runner
   gosvm svm-test          Run general fixtures against an already-compiled ELF
   gosvm deploy -network N Check the cluster accepts the target, then deploy (fogo-testnet, solana-devnet, ...)
-  gosvm call -network N   Simulate (or -send) an instruction to the deployed program; prints return data/CU/logs
+  gosvm call -network N <Instruction> [-arg value]...
+                          Simulate (or -send, or -dry-run) a schema-2 instruction by name, with
+                          accounts resolved from the schema; prints error names/return data/CU/logs
+                          (-list shows instructions; -data <hex> sends raw instruction data)
   gosvm authority -network N  Show, transfer (-set key.json) or remove (-immutable) the upgrade authority
   gosvm features          Report Go language features and SDK calls as JSON (gosvm-features-v1)
                           (-o out.json, -generate to regenerate first, or a package directory)
