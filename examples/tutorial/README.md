@@ -9,7 +9,11 @@ a per-owner counter with a limit, scaffolded by `gosvm new -schema 2 -sdk 2
   57-byte account, paid by the owner.
 - `Increment` adds to the count; only the recorded owner can sign.
 - `Preview` applies the same rule to its arguments and returns the new count
-  as return data. Its only account is a signer, so `gosvm call` can invoke it.
+  as return data; it needs only a signer.
+
+`gosvm call -list` shows the instructions; `gosvm call -network solana-devnet
+Increment -amount 3` simulates one, deriving the counter's PDA from the schema
+(`-send` commits, `-dry-run` only prints the resolved instruction).
 
 `model/` holds the state, arguments, error codes and the `Next` rule, shared by
 the program and the off-chain code. `cmd/counter` is an ordinary Go client for a

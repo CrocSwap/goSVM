@@ -104,7 +104,8 @@ runtime, choosing the matching managed runner, which `gosvm toolchain install`
 downloads and verifies against pins built into the CLI; add
 `-target solana -elf other.so` to test an ELF from another backend. `gosvm deploy`
 reads the cluster's live feature gates before deploying with a dedicated
-per-network payer, and `gosvm call` simulates or sends an instruction.
+per-network payer, and `gosvm call Increment -amount 3` simulates or sends an instruction by name,
+resolving its accounts from the schema.
 Pure [Bend libraries](docs/BEND_LIBRARIES.md) join a program with
 `gosvm library add`, from published manifests or built from a `.bend` source
 (`-bend-source PROOF.bend -root ns.fn`); [Rust crates](docs/RUST_LIBRARIES.md)

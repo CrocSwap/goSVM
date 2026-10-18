@@ -220,7 +220,9 @@ which deliberately changed the full swap (fogo-v0 `a66c5a97…`, solana-v3
 ```sh
 gosvm deploy -network solana-devnet -check   # build, then read the cluster's feature gates
 gosvm deploy -network solana-devnet          # deploy (fund the printed payer first)
-gosvm call -network solana-devnet -data <hex>        # simulate; -send commits
+gosvm call -list                                     # schema-2 instructions, args, accounts
+gosvm call -network solana-devnet Increment -amount 3   # simulate; -send commits, -dry-run prints only
+gosvm call -network solana-devnet -data <hex>        # raw instruction data
 ```
 
 Networks: `fogo-testnet`, `fogo-mainnet`, `solana-devnet`, `solana-testnet`,
@@ -255,9 +257,16 @@ record from the chain. Mainnets also require `-mainnet`. The fee payer/upgrade a
 `deploy/keys/<network>-program.json`; both are created on first use in a Git-ignored
 directory. GoSVM never uses the Solana CLI's configured keypair, which may belong
 to an unrelated production program. `deploy/<network>.json` records program ID,
-authority, ELF hash, profile and cluster genesis hash. `gosvm call` passes the
-payer as the instruction's only (signer) account and prints error, return data,
-compute units and logs.
+authority, ELF hash, profile and cluster genesis hash. `gosvm call <Instruction>`
+calls a schema-2 instruction by name: one flag per argument, encoded with the
+generated layout, and accounts resolved from the schema (fixed program
+addresses, PDA seeds with the canonical bump, key relations, state read from the
+cluster, the payer as default signer), with `-account Name=<address>`,
+`-signer Name=<keypair>` and `-seed Field=value` for the rest. It prints the
+resolved instruction, then the error (custom codes named from the schema),
+return data, compute units and logs. `-data <hex>` passes the payer as the only
+(signer) account, or exactly the accounts given by `-account <address>[:w|:s|:ws]`
+and `-signer <keypair>[:w]`. See the [tutorial](TUTORIAL.md#6-call-the-program).
 
 [Public-network validation](../results/network/2026-10-09-go-bend-rust-probe/README.md):
 a Go+Bend+Rust probe on Solana devnet and Fogo testnet.

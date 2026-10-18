@@ -166,8 +166,8 @@ Accounts are listed in the order a transaction passes them. What each part does:
   must not exist yet.
 - `relations` binds a key stored in state to an account: `Increment` only runs
   when `Counter.Owner` equals the signing `Owner`.
-- `Preview` needs only a signer. That makes it callable with `gosvm call`, which
-  passes the fee payer as an instruction's only account.
+- `Preview` needs only a signer and returns its result as return data, so it
+  touches no state.
 
 Each instruction has an 8-byte discriminator derived from its name and version;
 see `idl.json`. The generated code checks, in order, the instruction data, the
@@ -568,12 +568,92 @@ deploy it there with real funds.
 
 ### With `gosvm call`
 
-`gosvm call` sends one instruction to the deployed program with hex data,
-passing the project's payer as the instruction's only account (a signer). That
-fits `Preview`. Its data is the discriminator `f52cd645c1e8e782` (from
-`client.EncodeInstructionPreview`, or `idl.json`) followed by `Count`, `Limit` and
-`Amount` as little-endian 64-bit integers; here 5, 10 and 3. By default the call
-is simulated, which costs nothing:
+`gosvm call` invokes an instruction by name. It reads the instruction's
+arguments and accounts from the project's schema, so run it from the project
+directory. `-list` shows what each instruction takes:
+
+```console
+$ gosvm call -list
+counter instructions (gosvm call [flags] <Instruction> [-arg value]...; [-arg] is derived when omitted):
+
+Create -limit uint64 [-bump byte]
+  Counter  writable         state Counter: PDA ["counter", Owner, args.Bump]
+  Owner    writable signer  the fee payer, unless -signer Owner=<keypair file>
+  System   readonly         System program
+
+Increment -amount uint64
+  Counter  writable  state Counter: PDA ["counter", Owner, args.Bump] as declared in Create
+  Owner    signer    the fee payer, unless -signer Owner=<keypair file>
+
+Preview -count uint64 -limit uint64 -amount uint64
+  Caller  signer  the fee payer, unless -signer Caller=<keypair file>
+```
+
+Each argument is a flag, parsed by its Go type and encoded with the same
+layout as the generated client. Accounts are filled in from the schema: the
+counter's PDA is derived from the seed `"counter"` and the owner's key, with
+the canonical bump (which also becomes `Create`'s `Bump` argument). `Increment`
+declares no PDA for its counter, so `gosvm call` uses the derivation `Create`
+declares for the same account. The deploy payer signs as the owner. `-dry-run`
+prints the resolved instruction without contacting the network:
+
+```console
+$ gosvm call -network solana-devnet Create -limit 10 -dry-run
+Create on solana-devnet (dry run)
+  program  2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW  deploy/solana-devnet.json
+  data     b2840bbe154bd9eb0a00000000000000ff
+  args
+    -limit  10
+    -bump   255  canonical bump of Counter
+  accounts
+    Counter  writable         C1BJmChuqfobxVNvfgtjLuVmYKghu551M9836wfgt8mj  PDA ["counter", Owner, bump 255]
+    Owner    writable signer  7G3WW6WDo3KY5Pf2CQAmRXx7Hziv788qBjVSMTsTs8MB  fee payer (deploy/keys/solana-devnet-payer.json)
+    System   readonly         11111111111111111111111111111111              System program
+$ gosvm call -network solana-devnet Increment -amount 3 -dry-run
+Increment on solana-devnet (dry run)
+  program  2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW  deploy/solana-devnet.json
+  data     7a818aa208ac54d40300000000000000
+  args
+    -amount  3
+  accounts
+    Counter  writable  C1BJmChuqfobxVNvfgtjLuVmYKghu551M9836wfgt8mj  PDA ["counter", Owner, bump 255] as declared in Create
+    Owner    signer    7G3WW6WDo3KY5Pf2CQAmRXx7Hziv788qBjVSMTsTs8MB  fee payer (deploy/keys/solana-devnet-payer.json)
+```
+
+Your payer, and so your counter's address, will differ. Without `-dry-run`
+the call is simulated, which costs nothing, and `gosvm call` prints the same
+summary followed by the result: `simulated: ok` or `failed` with the compute
+units, the error, return data and logs. Custom errors are named from the
+schema, for example `custom 4101 ErrLimit` for an increment past the limit,
+`custom 6009 AccountInit` for creating a counter that already exists or
+`custom 6007 AccountRelation` when someone other than its owner signs. Add
+`-send` to submit a real transaction; the result then reads `committed` and
+includes the signature:
+
+```sh
+gosvm call -network solana-devnet Create -limit 10 -send
+gosvm call -network solana-devnet Increment -amount 3 -send
+gosvm call -network solana-devnet Preview -count 5 -limit 10 -amount 3
+```
+
+`Preview` returns the new count as eight bytes of return data, which
+`gosvm call` also shows as a little-endian integer (8 here). Before sending,
+`gosvm call` reads state accounts and warns when one it needs does not exist
+yet, or one it would create already does. `-signer Owner=other.json` signs as
+another owner (the counter's PDA follows that key), `-account Name=<address>`
+supplies any account the schema cannot derive, and `-json` prints the
+instruction and result as JSON. `-program` and `-keypair` override the program
+ID and payer read from `deploy/`.
+
+#### Raw instruction data
+
+`-data <hex>` sends instruction bytes as given, passing the payer as the only
+account (a signer); `-account <address>[:w|:s|:ws]` and `-signer <keypair>[:w]`
+list the accounts explicitly instead, in order (`payer` and `program` name
+those keys). This is how the tutorial first called `Preview` on devnet. Its
+data is the discriminator `f52cd645c1e8e782` (from
+`client.EncodeInstructionPreview`, or `idl.json`) followed by `Count`, `Limit`
+and `Amount` as little-endian 64-bit integers; here 5, 10 and 3:
 
 ```console
 $ gosvm call -network solana-devnet -data f52cd645c1e8e78205000000000000000a000000000000000300000000000000
@@ -591,17 +671,13 @@ $ gosvm call -network solana-devnet -data f52cd645c1e8e78205000000000000000a0000
 }
 ```
 
-The return data is 8, little-endian. Starting from 9 instead
-(`...0900000000000000...`) the program returns `ErrLimit`, reported as
-`{"InstructionError":[0,{"Custom":4101}]}`. Add `-send` to submit a real
-transaction; the output then includes its signature and `"committed": true`.
-`gosvm call` reads the program ID and payer from `deploy/`; `-program` and
-`-keypair` override them.
+Starting from 9 instead (`...0900000000000000...`) the program returns
+`ErrLimit`, reported as `{"InstructionError":[0,{"Custom":4101}]}`.
 
 ### From Go
 
-`Create` and `Increment` need more accounts than `gosvm call` passes, so call
-them from Go. `cmd/counter`, copied in section 4, is an ordinary Go program:
+Your backend calls the program the same way, from Go. `cmd/counter`, copied
+in section 4, is an ordinary Go program:
 it reads the program ID from the deploy record, derives the counter's PDA and
 bump, builds instructions with the generated client and sends them with
 `solrpc`. The `increment` command first applies the program's own rule:

@@ -164,15 +164,45 @@ func createAccount(payer, account []byte, lamports, space uint64, owner []byte) 
 
 // ProgramDataAddress is the loader-v3 PDA [program] of the upgradeable loader.
 func ProgramDataAddress(program []byte) []byte {
-	loader := mustKey(LoaderV3)
+	address, _, ok := FindProgramAddress([][]byte{program}, mustKey(LoaderV3))
+	if !ok {
+		panic("no PDA bump")
+	}
+	return address
+}
+
+// CreateProgramAddress derives the address of seeds (each at most 32 bytes,
+// at most 16 including any bump) under program, reporting false when the hash
+// lies on the curve or the seeds are out of bounds.
+func CreateProgramAddress(seeds [][]byte, program []byte) ([]byte, bool) {
+	if len(seeds) > 16 {
+		return nil, false
+	}
+	h := sha256.New()
+	for _, s := range seeds {
+		if len(s) > 32 {
+			return nil, false
+		}
+		h.Write(s)
+	}
+	h.Write(program)
+	h.Write([]byte("ProgramDerivedAddress"))
+	sum := h.Sum(nil)
+	if onCurve(sum) {
+		return nil, false
+	}
+	return sum, true
+}
+
+// FindProgramAddress appends the canonical bump: the highest of 255..0 whose
+// address is off the curve, as Solana's find_program_address does.
+func FindProgramAddress(seeds [][]byte, program []byte) ([]byte, byte, bool) {
 	for bump := 255; bump >= 0; bump-- {
-		data := append(append(append(bytes.Clone(program), byte(bump)), loader...), []byte("ProgramDerivedAddress")...)
-		h := sha256.Sum256(data)
-		if !onCurve(h[:]) {
-			return h[:]
+		if address, ok := CreateProgramAddress(append(append([][]byte(nil), seeds...), []byte{byte(bump)}), program); ok {
+			return address, byte(bump), true
 		}
 	}
-	panic("no PDA bump")
+	return nil, 0, false
 }
 
 // onCurve reports whether 32 bytes decompress to an Edwards25519 point (math/big).
