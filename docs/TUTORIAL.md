@@ -16,6 +16,8 @@ The finished project is [examples/tutorial](../examples/tutorial/README.md).
 You need Go 1.22 or newer. On macOS 26, use Go 1.23 or newer: binaries built by
 Go 1.22 that use networking abort there with `missing LC_UUID load command`
 (adding `-ldflags=-linkmode=external` to `go run`/`go test` also works).
+`gosvm doctor` warns when the `go` on your `PATH` (after `GOTOOLCHAIN`) is
+affected, and `gosvm test` names the fix if its test binaries abort this way.
 
 ## 1. Create the project
 
@@ -516,25 +518,26 @@ dedicated keypair for this project and network, then stops until you fund it:
 $ gosvm deploy -network solana-devnet
 ...
 Created deployment payer .../counter/deploy/keys/solana-devnet-payer.json (address CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT)
-gosvm: payer CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT has 0.000000 on solana-devnet; deployment needs about 0.162370. Fund it (https://faucet.solana.com or solana airdrop -u devnet), then rerun
+gosvm: payer CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT has 0.000000 SOL on solana-devnet; deployment needs about 0.162370 SOL.
+Fund it, then rerun:
+  https://faucet.solana.com (choose devnet; sign in with GitHub for a larger allowance;
+    public airdrops are rate-limited per IP address per day)
+  or: solana airdrop 1 CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT --url https://api.devnet.solana.com
 ```
 
-`deploy/keys/` gets its own `.gitignore`, so keys stay out of Git. The amounts
-in that message are in SOL: deploying this 14.8 KB program needs about 0.16 SOL
-(rent for the program's data, the same again for a temporary upload buffer that
-is refunded, and fees). Fund the printed address with devnet SOL from
+`deploy/keys/` gets its own `.gitignore`, so keys stay out of Git. Deploying
+this 14.8 KB program needs about 0.16 SOL (rent for the program's data, the same
+again for a temporary upload buffer that is refunded, and fees). Fund the
+printed address with devnet SOL from
 [https://faucet.solana.com](https://faucet.solana.com): paste the address,
 choose devnet and request 0.5 or 1 SOL.
 
 The faucet and the devnet airdrop RPC are rate-limited per IP address and day;
 a refusal reads "You've either reached your airdrop limit today or the airdrop
 faucet has run dry". If that happens, sign in to the faucet with GitHub for a
-larger allowance, or try again later. The Solana CLI uses the same faucet; if
-you use it, pass the devnet URL explicitly so it cannot act on another cluster:
-
-```sh
-solana airdrop 1 <payer address> --url https://api.devnet.solana.com
-```
+larger allowance, or try again later. The Solana CLI uses the same faucet; the
+printed command passes the devnet URL explicitly so it cannot act on another
+cluster your CLI configuration points at.
 
 Once the payer has at least 0.16 SOL, rerun:
 
@@ -560,7 +563,7 @@ shows or transfers the upgrade authority, or makes the program immutable.
 
 Fogo works the same way: `gosvm deploy -network fogo-testnet` builds the `fogo`
 target (SBPFv0), creates a separate `fogo-testnet` payer and points you to
-[faucet.fogo.io](https://faucet.fogo.io). Mainnets (`solana-mainnet`,
+[faucet.fogo.io](https://faucet.fogo.io) for the FOGO it needs. Mainnets (`solana-mainnet`,
 `fogo-mainnet`) also require `-mainnet`; goSVM is an unaudited alpha, so do not
 deploy it there with real funds.
 

@@ -337,24 +337,22 @@ func projectCommand(args []string) error {
 	}
 	if command == "doctor" {
 		failed := false
-		for _, tool := range []struct {
-			name     string
-			args     []string
-			optional bool
-		}{{"go", []string{"version"}, false}, {"solana-test-validator", []string{"--version"}, true}} {
-			b, e := exec.Command(tool.name, tool.args...).CombinedOutput()
-			if e != nil {
-				fmt.Printf("MISSING %s", tool.name)
-				if tool.optional {
-					fmt.Print(" (only needed for test --sbf)")
-				} else {
-					failed = true
-				}
-				fmt.Println()
-				continue
-			}
+		if b, e := exec.Command("go", "version").CombinedOutput(); e != nil {
+			fmt.Println(goMissingMessage)
+			failed = true
+		} else {
 			fmt.Println(strings.TrimSpace(string(b)))
-			if tool.optional && !strings.Contains(string(b), " "+project.Validator+" ") {
+			if version, e := goVersion(*dir); e == nil {
+				if warning := goHostWarning(macOSMajor(), version); warning != "" {
+					fmt.Println(warning)
+				}
+			}
+		}
+		if b, e := exec.Command("solana-test-validator", "--version").CombinedOutput(); e != nil {
+			fmt.Println("MISSING solana-test-validator (only needed for test --sbf)")
+		} else {
+			fmt.Println(strings.TrimSpace(string(b)))
+			if !strings.Contains(string(b), " "+project.Validator+" ") {
 				fmt.Printf("Expected validator %s for SBF tests\n", project.Validator)
 			}
 		}
@@ -462,9 +460,14 @@ func projectCommand(args []string) error {
 		cmd := exec.CommandContext(ctx, "go", append([]string{"test", "./..."}, testArgs...)...)
 		cmd.Dir = *dir
 		cmd.Env = append(os.Environ(), "GOWORK=off")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		watcher := &lcUUIDWatcher{}
+		cmd.Stdout = io.MultiWriter(os.Stdout, watcher)
+		cmd.Stderr = io.MultiWriter(os.Stderr, watcher)
 		if e := timings.measure("native_tests", cmd.Run); e != nil {
+			if watcher.found {
+				version, _ := goVersion(*dir)
+				fmt.Fprintln(os.Stderr, lcUUIDHint(version))
+			}
 			return e
 		}
 		if !*sbf && !svmValue {

@@ -5,6 +5,7 @@ import (
 	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -125,7 +126,7 @@ func deployCommand(args []string) error {
 	}
 	need := 2*rent + 10_000_000
 	if balance.Value < need {
-		return fmt.Errorf("payer %s has %.6f on %s; deployment needs about %.6f. Fund it (%s), then rerun", network.Address(payerKey), float64(balance.Value)/1e9, cluster.Name, float64(need)/1e9, cluster.Faucet)
+		return errors.New(cluster.FundingMessage(network.Address(payerKey), balance.Value, need))
 	}
 	keyPath := filepath.Join(root, "deploy", "keys", cluster.Name+"-program.json")
 	key, created, err := network.EnsureKeypair(keyPath)

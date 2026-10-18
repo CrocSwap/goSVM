@@ -26,15 +26,41 @@ type Cluster struct {
 	URL     string
 	Profile string
 	Mainnet bool
-	Faucet  string
+	// Token is the native token that pays rent and fees (SOL or FOGO).
+	Token string
+	// Faucet is the public faucet for a test network; empty on mainnets.
+	Faucet string
 }
 
 var clusters = map[string]Cluster{
-	"fogo-testnet":   {"fogo-testnet", "https://testnet.fogo.io", target.Fogo, false, "https://faucet.fogo.io"},
-	"fogo-mainnet":   {"fogo-mainnet", "https://mainnet.fogo.io", target.Fogo, true, "transfer FOGO to it"},
-	"solana-devnet":  {"solana-devnet", "https://api.devnet.solana.com", target.Solana, false, "https://faucet.solana.com or solana airdrop -u devnet"},
-	"solana-testnet": {"solana-testnet", "https://api.testnet.solana.com", target.Solana, false, "https://faucet.solana.com or solana airdrop -u testnet"},
-	"solana-mainnet": {"solana-mainnet", "https://api.mainnet-beta.solana.com", target.Solana, true, "transfer SOL to it"},
+	"fogo-testnet":   {"fogo-testnet", "https://testnet.fogo.io", target.Fogo, false, "FOGO", "https://faucet.fogo.io"},
+	"fogo-mainnet":   {"fogo-mainnet", "https://mainnet.fogo.io", target.Fogo, true, "FOGO", ""},
+	"solana-devnet":  {"solana-devnet", "https://api.devnet.solana.com", target.Solana, false, "SOL", "https://faucet.solana.com"},
+	"solana-testnet": {"solana-testnet", "https://api.testnet.solana.com", target.Solana, false, "SOL", "https://faucet.solana.com"},
+	"solana-mainnet": {"solana-mainnet", "https://api.mainnet-beta.solana.com", target.Solana, true, "SOL", ""},
+}
+
+// FundingMessage explains that payer holds balance lamports but a deployment
+// needs about need, in the cluster's native token, and how to fund it. Faucet
+// hints appear only on test networks.
+func (c Cluster) FundingMessage(payer string, balance, need uint64) string {
+	var b strings.Builder
+	fmt.Fprintf(&b, "payer %s has %.6f %s on %s; deployment needs about %.6f %s.\n", payer, float64(balance)/1e9, c.Token, c.Name, float64(need)/1e9, c.Token)
+	switch {
+	case c.Mainnet || c.Faucet == "":
+		fmt.Fprintf(&b, "Transfer at least %.6f %s to %s, then rerun.", float64(need-balance)/1e9, c.Token, payer)
+	case c.Profile == target.Solana:
+		network := strings.TrimPrefix(c.Name, "solana-")
+		// A whole-token airdrop covering the shortfall.
+		amount := (need - balance + 999_999_999) / 1_000_000_000
+		fmt.Fprintf(&b, "Fund it, then rerun:\n")
+		fmt.Fprintf(&b, "  %s (choose %s; sign in with GitHub for a larger allowance;\n", c.Faucet, network)
+		fmt.Fprintf(&b, "    public airdrops are rate-limited per IP address per day)\n")
+		fmt.Fprintf(&b, "  or: solana airdrop %d %s --url %s", amount, payer, c.URL)
+	default:
+		fmt.Fprintf(&b, "Fund it from %s, then rerun.", c.Faucet)
+	}
+	return b.String()
 }
 
 func Names() []string {

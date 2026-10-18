@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"gosvm/internal/targets"
@@ -66,5 +67,34 @@ func TestEnsureKeypairRoundTrips(t *testing.T) {
 	}
 	if Base58([]byte{0, 0, 1}) != "112" {
 		t.Fatal(Base58([]byte{0, 0, 1}))
+	}
+}
+
+func TestFundingMessage(t *testing.T) {
+	const payer = "CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT"
+	devnet, _ := Lookup("solana-devnet")
+	got := devnet.FundingMessage(payer, 0, 162_370_000)
+	want := "payer " + payer + " has 0.000000 SOL on solana-devnet; deployment needs about 0.162370 SOL.\n" +
+		"Fund it, then rerun:\n" +
+		"  https://faucet.solana.com (choose devnet; sign in with GitHub for a larger allowance;\n" +
+		"    public airdrops are rate-limited per IP address per day)\n" +
+		"  or: solana airdrop 1 " + payer + " --url https://api.devnet.solana.com"
+	if got != want {
+		t.Fatalf("devnet message:\n%s\nwant:\n%s", got, want)
+	}
+	testnet, _ := Lookup("solana-testnet")
+	if got := testnet.FundingMessage(payer, 500_000_000, 2_800_000_000); !strings.Contains(got, "choose testnet") || !strings.Contains(got, "solana airdrop 3 "+payer+" --url https://api.testnet.solana.com") {
+		t.Fatalf("testnet message: %s", got)
+	}
+	fogo, _ := Lookup("fogo-testnet")
+	if got, want := fogo.FundingMessage(payer, 0, 162_370_000), "payer "+payer+" has 0.000000 FOGO on fogo-testnet; deployment needs about 0.162370 FOGO.\nFund it from https://faucet.fogo.io, then rerun."; got != want {
+		t.Fatalf("fogo-testnet message:\n%s\nwant:\n%s", got, want)
+	}
+	for _, name := range []string{"solana-mainnet", "fogo-mainnet"} {
+		c, _ := Lookup(name)
+		got := c.FundingMessage(payer, 0, 162_370_000)
+		if strings.Contains(got, "faucet") || strings.Contains(got, "airdrop") || !strings.Contains(got, "Transfer at least 0.162370 "+c.Token+" to "+payer) {
+			t.Fatalf("%s message: %s", name, got)
+		}
 	}
 }
