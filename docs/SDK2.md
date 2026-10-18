@@ -31,6 +31,23 @@ identity, clearing and reset semantics. SDK 1 has no setter. See the
 [Phoenix compiler/return-data handoff](PHOENIX_DEPENDENCIES.md) for actual v0/v3
 simulation/submission proofs, new frontend/SDK pins and runner observability.
 
+`solana.Secp256k1Recover(c, hash, recoveryID, signature, output)` recovers the
+uncompressed secp256k1 public key (64 bytes, without the 0x04 prefix) behind a
+64-byte `r||s` signature of a 32-byte hash, using the runtime's
+`sol_secp256k1_recover` syscall. `recoveryID` is 0–3 (Ethereum's `v - 27`).
+Wrong hash, signature or output lengths return 2018 without a syscall;
+otherwise the runtime's status propagates unchanged: 2 for an invalid recovery
+ID (including any above 255) and 3 for an invalid signature (zero or
+out-of-range scalars, or no curve point). Failures leave `output` unchanged.
+The runtime accepts high-s signatures, recovering the same key with the other
+parity, and recovery does not authenticate anything by itself: compare the
+result, or `keccak256(output)[12:]` for an Ethereum address, with the expected
+signer. The syscall costs 25,000 CU. Native contexts supply
+`RecoverSecp256k1 func(hash []byte, recoveryID uint64, signature []byte) ([]byte, uint64)`;
+a nil callback returns 2009. The [secp256k1 SBF test](../internal/compiler/secp256k1_sbf_test.go)
+compares recovered keys and statuses with an independent `math/big` oracle on
+fogo-v0 and solana-v3.
+
 `pda.Seeds` supports `AddBytes`, `AddKey`, `AddByte`, `AddUint32` and `AddUint64`.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using

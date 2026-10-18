@@ -418,6 +418,7 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 2015 | Rent output not 17 bytes |
 | 2016 | Clock output not 40 bytes |
 | 2017 | Return data longer than 1,024 bytes |
+| 2018 | Secp256k1 hash, signature, output or native result length wrong |
 
 ### SDK 2 helpers
 

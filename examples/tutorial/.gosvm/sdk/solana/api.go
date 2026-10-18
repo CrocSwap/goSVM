@@ -18,9 +18,10 @@ type Context struct {
 	Hash                func(input []byte) []byte
 	InvokeInstruction   func(program uint64, metas, data, signerSeeds []byte) uint64
 	DeriveAddress       func(seeds, program, output []byte) uint64
-	ReadRent            func(output []byte) uint64 // Canonical 17-byte rate/threshold-bits/burn encoding.
-	ReadClock           func(output []byte) uint64 // Canonical five-word Clock encoding; signed timestamps are raw bits.
-	WriteReturnData     func(data []byte)          // Native callback receives an owned copy; CPI callbacks model clearing.
+	ReadRent            func(output []byte) uint64                                              // Canonical 17-byte rate/threshold-bits/burn encoding.
+	ReadClock           func(output []byte) uint64                                              // Canonical five-word Clock encoding; signed timestamps are raw bits.
+	WriteReturnData     func(data []byte)                                                       // Native callback receives an owned copy; CPI callbacks model clearing.
+	RecoverSecp256k1    func(hash []byte, recoveryID uint64, signature []byte) ([]byte, uint64) // 64-byte key or runtime status.
 }
 
 // SetReturnData copies at most 1,024 bytes into the runtime's current return
@@ -209,6 +210,31 @@ func SHA256(c Context, input []byte, offset, length uint64, output []byte, outOf
 	for i := uint64(0); i < 32; i++ {
 		output[outOffset+i] = h[i]
 	}
+	return 0
+}
+
+// Secp256k1Recover recovers the uncompressed secp256k1 public key, without its
+// 0x04 prefix, that produced a 64-byte r||s signature of a 32-byte hash, and
+// writes it to the 64-byte output. recoveryID is 0-3 (Ethereum's v-27). Wrong
+// lengths return 2018 without a syscall; otherwise the runtime's status
+// propagates: 2 invalid recovery ID, 3 invalid signature. Failures leave output
+// unchanged. Recovery alone does not authenticate a signer: compare the result
+// with an expected key or address.
+func Secp256k1Recover(c Context, hash []byte, recoveryID uint64, signature, output []byte) uint64 {
+	if len(hash) != 32 || len(signature) != 64 || len(output) != 64 {
+		return 2018
+	}
+	if c.RecoverSecp256k1 == nil {
+		return 2009
+	}
+	key, code := c.RecoverSecp256k1(hash, recoveryID, signature)
+	if code != 0 {
+		return code
+	}
+	if len(key) != 64 {
+		return 2018
+	}
+	copy(output, key)
 	return 0
 }
 

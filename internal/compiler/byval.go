@@ -524,7 +524,7 @@ func (a *evalAnalysis) calleeOperands(c *ast.CallExpr) []ast.Expr {
 // sdkOutputs are the gosvm/solana functions that write bytes into an output
 // slice the program supplies (their last argument); the other writing ones
 // change account state only, which holds no Go variable.
-var sdkOutputs = map[string]bool{"Clock": true, "Rent": true, "SHA256": true, "CreateAddress": true}
+var sdkOutputs = map[string]bool{"Clock": true, "Rent": true, "SHA256": true, "CreateAddress": true, "Secp256k1Recover": true}
 
 // siteEffect is what a write site may write.
 type siteEffect struct {
