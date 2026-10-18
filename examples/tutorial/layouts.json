@@ -1,0 +1,282 @@
+{
+  "format": "gosvm-layouts-2",
+  "layouts": [
+    {
+      "kind": "account",
+      "name": "Counter",
+      "type": "example.com/counter/model.Counter",
+      "version": 1,
+      "discriminator": [
+        108,
+        53,
+        225,
+        83,
+        4,
+        217,
+        23,
+        3
+      ],
+      "size": 57,
+      "fields": [
+        {
+          "name": "Owner",
+          "type": "example.com/counter/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Count",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 48,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 56,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Policy",
+      "type": "example.com/counter/model.Policy",
+      "version": 1,
+      "discriminator": [
+        110,
+        179,
+        69,
+        64,
+        154,
+        226,
+        155,
+        81
+      ],
+      "size": 48,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.com/counter/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "account",
+      "name": "Vault",
+      "type": "example.com/counter/model.Vault",
+      "version": 1,
+      "discriminator": [
+        245,
+        188,
+        106,
+        229,
+        232,
+        89,
+        114,
+        30
+      ],
+      "size": 61,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.com/counter/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Audit",
+          "type": "example.com/counter/model.Audit",
+          "offset": 40,
+          "size": 5,
+          "fields": [
+            {
+              "name": "Tag",
+              "type": "byte",
+              "offset": 40,
+              "size": 1
+            },
+            {
+              "name": "Epoch",
+              "type": "uint32",
+              "offset": 41,
+              "size": 4
+            }
+          ]
+        },
+        {
+          "name": "Balance",
+          "type": "uint64",
+          "offset": 45,
+          "size": 8
+        },
+        {
+          "name": "Moves",
+          "type": "uint64",
+          "offset": 53,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Create",
+      "type": "example.com/counter/model.CreateArgs",
+      "version": 1,
+      "discriminator": [
+        178,
+        132,
+        11,
+        190,
+        21,
+        75,
+        217,
+        235
+      ],
+      "size": 17,
+      "fields": [
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 16,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Increment",
+      "type": "example.com/counter/model.IncrementArgs",
+      "version": 1,
+      "discriminator": [
+        122,
+        129,
+        138,
+        162,
+        8,
+        172,
+        84,
+        212
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Move",
+      "type": "example.com/counter/model.MoveArgs",
+      "version": 1,
+      "discriminator": [
+        213,
+        149,
+        102,
+        219,
+        35,
+        164,
+        146,
+        236
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Preview",
+      "type": "example.com/counter/model.PreviewArgs",
+      "version": 1,
+      "discriminator": [
+        245,
+        44,
+        214,
+        69,
+        193,
+        232,
+        231,
+        130
+      ],
+      "size": 32,
+      "fields": [
+        {
+          "name": "Count",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 16,
+          "size": 8
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 24,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "SetLimit",
+      "type": "example.com/counter/model.SetLimitArgs",
+      "version": 1,
+      "discriminator": [
+        254,
+        147,
+        165,
+        148,
+        69,
+        9,
+        30,
+        209
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    }
+  ]
+}

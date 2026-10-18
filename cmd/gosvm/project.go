@@ -71,7 +71,8 @@ Fast tests accept -svm-run <fixture regex> and -svm-runner <binary path>.
 Runner selection: explicit flag, GOSVM_TEST_RUNNER, verified managed runner for
 the target (solana-v3 0.6.0; fogo-v0/legacy 0.5.1, else an installed 0.5.0), PATH.
 Use -svm-sysvars <JSON file> for explicit Clock/Rent values in fast tests.
-Use -svm-fixtures <JSON file> for general multi-account project fixtures.
+Use -svm-fixtures <JSON file> for general multi-account project fixtures
+(default: testdata/svm.json when the project has no schema-1 testdata/sbf.json).
 test --svm -elf <program.so> tests an externally built ELF instead of compiling
 (native Go tests still run; one target, so add -target when several are configured;
 the header must match the target). Report: build/external/<profile>/svm-results.json
@@ -175,7 +176,7 @@ func projectCommand(args []string) error {
 		if e := project.NewModuleTarget(fs.Arg(0), *module, *schema, *sdkVersion, *profileName); e != nil {
 			return e
 		}
-		fmt.Printf("Created %s\nNext: cd %q && gosvm check && go test ./... && gosvm build\n", fs.Arg(0), fs.Arg(0))
+		fmt.Printf("Created %s\nNext: cd %q && gosvm check && gosvm test && gosvm build\n", fs.Arg(0), fs.Arg(0))
 		return nil
 	}
 	fs := flag.NewFlagSet("gosvm "+command, flag.ContinueOnError)
@@ -240,6 +241,13 @@ func projectCommand(args []string) error {
 		return findErr
 	}
 	if svmValue {
+		if svmFixtures == "" && svmSysvars == "" {
+			fixtures, err := defaultSVMFixtures(*dir)
+			if err != nil {
+				return err
+			}
+			svmFixtures = fixtures
+		}
 		if err := os.Remove(filepath.Join(*dir, "build/svm-results.json")); err != nil && !os.IsNotExist(err) {
 			return err
 		}
@@ -493,6 +501,20 @@ func projectCommand(args []string) error {
 	}
 	timings.Passed = true
 	return nil
+}
+
+// defaultSVMFixtures chooses what test --svm runs when no -svm-fixtures is
+// given: "" for a schema-1 testdata/sbf.json, which the fast runner reads
+// itself, otherwise the project's general testdata/svm.json.
+func defaultSVMFixtures(dir string) (string, error) {
+	if _, err := os.Stat(filepath.Join(dir, "testdata", "sbf.json")); err == nil {
+		return "", nil
+	}
+	general := filepath.Join(dir, "testdata", "svm.json")
+	if _, err := os.Stat(general); err == nil {
+		return general, nil
+	}
+	return "", fmt.Errorf("no SVM fixtures in %s: add testdata/svm.json (docs/SVM_FIXTURES.md) or pass -svm-fixtures <file>", filepath.Join(dir, "testdata"))
 }
 
 // buildTarget compiles one profile into its isolated output directory, publishes

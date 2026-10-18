@@ -1,0 +1,614 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+  "payer_seed": "13935f6731908007ded33201bdb49cce73a91157ec97bd97f5c23f723e491a98",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "owner",
+      "seed": "ffcb43d683e13ae5e6230f493c1d222d63c059f55b998f889834c980b7567ba0"
+    },
+    {
+      "name": "intruder",
+      "seed": "d581c71992d6bfdc6c8c455314d65b1747a504df48de8a2ac9c30c69a706641e"
+    }
+  ],
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "8iURtPxghzomfLRwxeH7SyfEi5U87Vrh1HLmwcXJyo6w",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "owner"
+    },
+    {
+      "address": "H6jgqf4R97UCVMM6CuX1nzYRbPQTffFDNFuktGq6RsUX",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "intruder"
+    },
+    {
+      "address": "9CXsCnj5rXusofnQTT1BYBCFahT3HJx14yRSkghmfasf",
+      "name": "counter"
+    }
+  ],
+  "cases": [
+    {
+      "name": "create-and-increment",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292000000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9eb0a00000000000000ff",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292003000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "7a818aa208ac54d40300000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab2429200a000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "7a818aa208ac54d40700000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "increment-past-limit",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292000000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9eb0a00000000000000ff",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292000000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4101
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "7a818aa208ac54d40b00000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "only-the-owner-increments",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292000000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9eb0a00000000000000ff",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998712400,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "counter",
+                "state": {
+                  "data": "6c35e15304d9170372a1a2c4344e8ff2815c0ec85096106782b0208992ba67d8ae449ce5ab24292000000000000000000a00000000000000ff",
+                  "executable": false,
+                  "lamports": 1287600,
+                  "owner": "A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "intruder",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "7a818aa208ac54d40100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "failed-create-rolls-back",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "counter"
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 4101
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "counter",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9eb0000000000000000ff",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "preview",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owner",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "counter"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari CAAAAAAAAAA=": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "owner",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "f52cd645c1e8e78205000000000000000a000000000000000300000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

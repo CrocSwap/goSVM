@@ -1,0 +1,265 @@
+{
+  "format": "gosvm-2",
+  "name": "counter",
+  "accounts": [
+    {
+      "kind": "account",
+      "name": "Counter",
+      "type": "example.com/counter/model.Counter",
+      "version": 1,
+      "discriminator": [
+        108,
+        53,
+        225,
+        83,
+        4,
+        217,
+        23,
+        3
+      ],
+      "size": 57,
+      "fields": [
+        {
+          "name": "Owner",
+          "type": "example.com/counter/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Count",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 48,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 56,
+          "size": 1
+        }
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "kind": "instruction",
+      "name": "Create",
+      "type": "example.com/counter/model.CreateArgs",
+      "version": 1,
+      "discriminator": [
+        178,
+        132,
+        11,
+        190,
+        21,
+        75,
+        217,
+        235
+      ],
+      "size": 17,
+      "fields": [
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 16,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Increment",
+      "type": "example.com/counter/model.IncrementArgs",
+      "version": 1,
+      "discriminator": [
+        122,
+        129,
+        138,
+        162,
+        8,
+        172,
+        84,
+        212
+      ],
+      "size": 16,
+      "fields": [
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Preview",
+      "type": "example.com/counter/model.PreviewArgs",
+      "version": 1,
+      "discriminator": [
+        245,
+        44,
+        214,
+        69,
+        193,
+        232,
+        231,
+        130
+      ],
+      "size": 32,
+      "fields": [
+        {
+          "name": "Count",
+          "type": "uint64",
+          "offset": 8,
+          "size": 8
+        },
+        {
+          "name": "Limit",
+          "type": "uint64",
+          "offset": 16,
+          "size": 8
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 24,
+          "size": 8
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Create",
+      "handler": "Create",
+      "args": "model.CreateArgs",
+      "bundle": "CreateAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Counter",
+          "kind": "state",
+          "layout": "Counter",
+          "access": "write",
+          "owner": "program_id",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "636f756e746572"
+              },
+              {
+                "kind": "key",
+                "account": "Owner"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          },
+          "init": {
+            "payer": "Owner",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Owner",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "Increment",
+      "handler": "Increment",
+      "args": "model.IncrementArgs",
+      "bundle": "IncrementAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Counter",
+          "kind": "state",
+          "layout": "Counter",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Owner",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Counter.Owner",
+          "account": "Owner"
+        }
+      ]
+    },
+    {
+      "name": "Preview",
+      "handler": "Preview",
+      "args": "model.PreviewArgs",
+      "bundle": "PreviewAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Caller",
+          "kind": "signer",
+          "access": "read"
+        }
+      ]
+    }
+  ],
+  "errors": {
+    "AccountAlias": 6006,
+    "AccountCount": 6000,
+    "AccountFlags": 6001,
+    "AccountIdentity": 6005,
+    "AccountInit": 6009,
+    "AccountOwner": 6002,
+    "AccountPDA": 6008,
+    "AccountRelation": 6007,
+    "ErrLimit": 4101,
+    "ErrZeroAmount": 4100,
+    "InstructionLayout": 6004,
+    "StateLayout": 6003
+  },
+  "validation_order": [
+    "instruction_layout",
+    "account_count",
+    "privileges",
+    "identity_owner",
+    "alias_policy",
+    "init_target",
+    "state_layout",
+    "relations",
+    "pda",
+    "initialize",
+    "handler",
+    "writable_state_commit"
+  ]
+}
