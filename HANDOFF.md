@@ -5,6 +5,16 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**First-program tutorial and release walkthrough (October 18):**
+[docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
+([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,
+native tests, SVM fixtures with a rollback case, devnet deploy, `gosvm call` and a
+stdlib Go client. The published v0.1.0-alpha.1 installer, toolchain and tutorial
+sections 1–4 pass from an isolated HOME; **the devnet deploy/calls are pending**
+(devnet airdrops returned 429 all session) and the tutorial's deploy/call output
+is marked as not yet recorded. `gosvm test --svm` now defaults to
+`testdata/svm.json`. [Evidence and rough edges](results/svm/2026-10-18-release-devnet/README.md).
+
 **Runner 0.5.1 replaces 0.5.0 for fogo-v0/legacy (October 16, user-approved;
 not published):** resolves the 0.5.0 source decision below. 0.5.1 is the committed
 `benchmarks/svm-runner` source (LiteSVM 0.8.2 + rent-error patch, plus `returnData`

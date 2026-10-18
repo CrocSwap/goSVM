@@ -96,6 +96,9 @@ Edit `program.go` and rebuild. For multi-account applications, explore the
 [token swap](examples/full-swap/README.md) and [escrow](examples/escrow/README.md),
 or scaffold with `gosvm new -schema 2 -sdk 2 my-program`.
 
+**Next:** [the tutorial](docs/TUTORIAL.md) builds a program with accounts, tests
+it, deploys it to Solana devnet and calls it from Go.
+
 `gosvm test --svm` runs the compiled program for every target in a local SVM
 runtime, choosing the matching managed runner, which `gosvm toolchain install`
 downloads and verifies against pins built into the CLI; add
@@ -151,6 +154,7 @@ and SBPFv3 for Solana ([target profiles](docs/TARGET_PROFILES.md)).
 
 ## Explore
 
+- **Start here:** [first-program tutorial](docs/TUTORIAL.md).
 - **Examples:** [bounded starter](examples/typed-swap/README.md),
   [token-swap lifecycle](examples/full-swap/README.md),
   [SOL escrow](examples/escrow/README.md), [Go backend](examples/full-swap-service/README.md),

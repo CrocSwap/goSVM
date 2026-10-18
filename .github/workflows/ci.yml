@@ -80,7 +80,7 @@ jobs:
         run: |
           flags=""
           if [ "$(uname -s)" = Darwin ]; then flags="-ldflags=-linkmode=external"; fi
-          for dir in examples/typed-swap examples/full-swap examples/escrow examples/multi-state \
+          for dir in examples/typed-swap examples/full-swap examples/escrow examples/multi-state examples/tutorial \
                      examples/shared-packages examples/shared-packages/service examples/full-swap-service \
                      benchmarks/svm-transport; do
             echo "::group::$dir"
@@ -99,6 +99,13 @@ jobs:
           "$cli" test
           "$cli" build
           if "$cli" runner status; then "$cli" test --svm; fi
+
+      - name: Tutorial program (check, test, test --svm)
+        run: |
+          cli="$GITHUB_WORKSPACE/build/gosvm"
+          cd examples/tutorial
+          "$cli" check
+          if "$cli" runner status; then "$cli" test --svm -svm-fixtures testdata/svm.json; else "$cli" test; fi
 
       # Cross-host qualification of the backend content pins: fresh builds of
       # the reference workloads must reproduce the reference ELFs byte for byte.
