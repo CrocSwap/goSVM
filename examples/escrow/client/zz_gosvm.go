@@ -132,3 +132,82 @@ func DecodeInstructionCancel(b []byte) (model0.CancelArgs, error) {
 	}
 	return v, nil
 }
+
+// AccountMeta is one account reference of an instruction.
+type AccountMeta = struct {
+	Key      [32]byte
+	Signer   bool
+	Writable bool
+}
+
+// Instruction is an instruction's ordered accounts and data, for this program's ID.
+type Instruction = struct {
+	Accounts []AccountMeta
+	Data     []byte
+}
+
+// OpenKeys holds the addresses of Open's accounts.
+type OpenKeys struct {
+	Escrow      [32]byte
+	Creator     [32]byte
+	Beneficiary [32]byte
+}
+
+// OpenInstruction encodes Open with its accounts in declared order.
+// Fixed addresses from gosvm.json: System.
+func OpenInstruction(keys OpenKeys, args model0.OpenArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Escrow, Signer: false, Writable: true},
+		{Key: keys.Creator, Signer: true, Writable: true},
+		{Key: keys.Beneficiary, Signer: false, Writable: false},
+		{Key: [32]byte{}, Signer: false, Writable: false}, // System
+	}, Data: EncodeInstructionOpen(args)}
+}
+
+// ClaimKeys holds the addresses of Claim's accounts.
+type ClaimKeys struct {
+	Escrow      [32]byte
+	Creator     [32]byte
+	Beneficiary [32]byte
+}
+
+// ClaimInstruction encodes Claim with its accounts in declared order.
+func ClaimInstruction(keys ClaimKeys, args model0.ClaimArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Escrow, Signer: false, Writable: true},
+		{Key: keys.Creator, Signer: false, Writable: false},
+		{Key: keys.Beneficiary, Signer: true, Writable: true},
+	}, Data: EncodeInstructionClaim(args)}
+}
+
+// CancelKeys holds the addresses of Cancel's accounts.
+type CancelKeys struct {
+	Escrow  [32]byte
+	Creator [32]byte
+}
+
+// CancelInstruction encodes Cancel with its accounts in declared order.
+func CancelInstruction(keys CancelKeys, args model0.CancelArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Escrow, Signer: false, Writable: true},
+		{Key: keys.Creator, Signer: true, Writable: true},
+	}, Data: EncodeInstructionCancel(args)}
+}
+
+// Error codes: the program's own and the generated validation's.
+const (
+	ErrAccountAlias      uint64 = 6006
+	ErrAccountCount      uint64 = 6000
+	ErrAccountFlags      uint64 = 6001
+	ErrAccountIdentity   uint64 = 6005
+	ErrAccountInit       uint64 = 6009
+	ErrAccountOwner      uint64 = 6002
+	ErrAccountPDA        uint64 = 6008
+	ErrAccountRelation   uint64 = 6007
+	ErrAmount            uint64 = 4100
+	ErrBeneficiary       uint64 = 4101
+	ErrInstructionLayout uint64 = 6004
+	ErrNonce             uint64 = 4103
+	ErrSecret            uint64 = 4102
+	ErrStateLayout       uint64 = 6003
+)

@@ -13,6 +13,13 @@ gosvm test
 gosvm build
 ```
 
+With SDK 2, `cmd/fixtures` writes `testdata/svm.json`, the transaction scenarios
+`gosvm test --svm` runs against the compiled program in a local SVM, using the
+host-only builder `gosvm/sdk/fixture` and the generated client's instruction
+builders. Regenerate the file after changing scenarios, layouts or instructions
+(`go run ./cmd/fixtures > testdata/svm.json`); `cmd/fixtures/main_test.go` fails
+while it is stale. See docs/SVM_FIXTURES.md in the goSVM repository.
+
 `model/` defines canonical ordinary-Go types and `CanMove`; `client/` imports those
 same types and generates codecs without importing the handler or runtime SDK.
 `gosvm.json` declares layout versions, account order, minimum privileges and key

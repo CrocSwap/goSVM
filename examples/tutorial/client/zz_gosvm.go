@@ -106,3 +106,74 @@ func DecodeInstructionPreview(b []byte) (model1.PreviewArgs, error) {
 	v.Amount = uint64(binary.LittleEndian.Uint64(b[24:]))
 	return v, nil
 }
+
+// AccountMeta is one account reference of an instruction.
+type AccountMeta = struct {
+	Key      [32]byte
+	Signer   bool
+	Writable bool
+}
+
+// Instruction is an instruction's ordered accounts and data, for this program's ID.
+type Instruction = struct {
+	Accounts []AccountMeta
+	Data     []byte
+}
+
+// CreateKeys holds the addresses of Create's accounts.
+type CreateKeys struct {
+	Counter [32]byte
+	Owner   [32]byte
+}
+
+// CreateInstruction encodes Create with its accounts in declared order.
+// Fixed addresses from gosvm.json: System.
+func CreateInstruction(keys CreateKeys, args model1.CreateArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Counter, Signer: false, Writable: true},
+		{Key: keys.Owner, Signer: true, Writable: true},
+		{Key: [32]byte{}, Signer: false, Writable: false}, // System
+	}, Data: EncodeInstructionCreate(args)}
+}
+
+// IncrementKeys holds the addresses of Increment's accounts.
+type IncrementKeys struct {
+	Counter [32]byte
+	Owner   [32]byte
+}
+
+// IncrementInstruction encodes Increment with its accounts in declared order.
+func IncrementInstruction(keys IncrementKeys, args model1.IncrementArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Counter, Signer: false, Writable: true},
+		{Key: keys.Owner, Signer: true, Writable: false},
+	}, Data: EncodeInstructionIncrement(args)}
+}
+
+// PreviewKeys holds the addresses of Preview's accounts.
+type PreviewKeys struct {
+	Caller [32]byte
+}
+
+// PreviewInstruction encodes Preview with its accounts in declared order.
+func PreviewInstruction(keys PreviewKeys, args model1.PreviewArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Caller, Signer: true, Writable: false},
+	}, Data: EncodeInstructionPreview(args)}
+}
+
+// Error codes: the program's own and the generated validation's.
+const (
+	ErrAccountAlias      uint64 = 6006
+	ErrAccountCount      uint64 = 6000
+	ErrAccountFlags      uint64 = 6001
+	ErrAccountIdentity   uint64 = 6005
+	ErrAccountInit       uint64 = 6009
+	ErrAccountOwner      uint64 = 6002
+	ErrAccountPDA        uint64 = 6008
+	ErrAccountRelation   uint64 = 6007
+	ErrInstructionLayout uint64 = 6004
+	ErrLimit             uint64 = 4101
+	ErrStateLayout       uint64 = 6003
+	ErrZeroAmount        uint64 = 4100
+)

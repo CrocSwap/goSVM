@@ -100,6 +100,16 @@ jobs:
           "$cli" build
           if "$cli" runner status; then "$cli" test --svm; fi
 
+      - name: SDK-2 starter (new, test, test --svm with generated fixtures)
+        run: |
+          cli="$GITHUB_WORKSPACE/build/gosvm"
+          mkdir -p "$RUNNER_TEMP/walkthrough2"
+          cd "$RUNNER_TEMP/walkthrough2"
+          "$cli" new -schema 2 -sdk 2 my-ledger
+          cd my-ledger
+          "$cli" check
+          if "$cli" runner status; then "$cli" test --svm; else "$cli" test; fi
+
       - name: Tutorial program (check, test, test --svm)
         run: |
           cli="$GITHUB_WORKSPACE/build/gosvm"

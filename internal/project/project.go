@@ -24,7 +24,7 @@ const MultiSchema = 2
 const Tools = "v1.51"
 const Validator = "3.0.15"
 
-//go:embed templates/* schema2/*
+//go:embed templates/* schema2/* schema2fixtures/*
 var templates embed.FS
 
 type Config struct {
@@ -64,7 +64,7 @@ func sdkFiles(version int) map[string][]byte {
 	}
 	files := map[string][]byte{"solana/api.go": []byte(source)}
 	if version == 2 {
-		for _, path := range []string{"pda/pda.go", "cpi/cpi.go", "token/token.go", "token/lifecycle.go", "system/system.go", "system/rent.go"} {
+		for _, path := range []string{"pda/pda.go", "cpi/cpi.go", "token/token.go", "token/lifecycle.go", "system/system.go", "system/rent.go", hostFixture} {
 			b, err := sdk.Sources.ReadFile(path)
 			if err != nil {
 				panic(err)
@@ -73,6 +73,24 @@ func sdkFiles(version int) map[string][]byte {
 		}
 	}
 	return files
+}
+
+// hostFixture is the host-only fixture builder (gosvm/sdk/fixture). Programs
+// never import it, so snapshots from before it existed remain valid without
+// it; Generate adds it to them.
+const hostFixture = "fixture/fixture.go"
+
+// installHostFixture adds the fixture builder to an SDK-2 snapshot that
+// predates it. Load has already checked any existing copy.
+func installHostFixture(dir string, c Config) error {
+	if c.SDKVersion != 2 {
+		return nil
+	}
+	path := filepath.Join(dir, ".gosvm/sdk/sdk", hostFixture)
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		return err
+	}
+	return writeChanged(path, sdkFiles(2)["sdk/"+hostFixture])
 }
 
 var nameRE = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
@@ -131,6 +149,9 @@ func Load(dir string) (Config, error) {
 	}
 	for name, expected := range files {
 		b, e := os.ReadFile(filepath.Join(dir, ".gosvm/sdk", name))
+		if os.IsNotExist(e) && name == "sdk/"+hostFixture {
+			continue
+		}
 		if e != nil {
 			return c, e
 		}
@@ -242,17 +263,34 @@ func NewModuleSDK(path, module string, schema, sdkVersion int) error {
 			}, Relations: []KeyRelation{{Field: "Policy.Authority", Account: "Authority"}}},
 		}
 	}
-	entries, e := templates.ReadDir(templateDir)
-	if e != nil {
-		return e
+	type scaffoldFile struct{ dir, name string }
+	var scaffold []scaffoldFile
+	dirs := []string{templateDir}
+	if schema == MultiSchema && sdkVersion == 2 {
+		// The SVM fixture generator, its staleness test and its output.
+		dirs = append(dirs, "schema2fixtures")
 	}
-	for _, entry := range entries {
-		b, e := templates.ReadFile(templateDir + "/" + entry.Name())
+	for _, dir := range dirs {
+		entries, e := templates.ReadDir(dir)
+		if e != nil {
+			return e
+		}
+		for _, entry := range entries {
+			scaffold = append(scaffold, scaffoldFile{dir, entry.Name()})
+		}
+	}
+	for _, entry := range scaffold {
+		b, e := templates.ReadFile(entry.dir + "/" + entry.name)
 		if e != nil {
 			return e
 		}
 		b = []byte(strings.ReplaceAll(string(b), "MODULE", c.Module))
-		out := strings.TrimSuffix(entry.Name(), ".tmpl")
+		out := strings.TrimSuffix(entry.name, ".tmpl")
+		if entry.dir == "schema2fixtures" && out == "svm.json" {
+			out = "testdata/svm.json"
+		} else if entry.dir == "schema2fixtures" {
+			out = "cmd/fixtures/" + out
+		}
 		if out == "sbf.json" {
 			out = "testdata/sbf.json"
 		}

@@ -34,6 +34,7 @@ directory. The project targets both Fogo and Solana. It is an ordinary Go module
 | `model/` | Your state and argument types, as plain Go; shared with off-chain code |
 | `program.go` | Your instruction handlers |
 | `program_test.go` | Native Go tests |
+| `cmd/fixtures/` | Writes `testdata/svm.json`, the scenarios run against the compiled program |
 | `zz_gosvm.go` | Generated: the `Process` entrypoint, account checks and wire decoding |
 | `client/zz_gosvm.go` | Generated: encoders and decoders for off-chain Go |
 | `idl.json` | Generated description of instructions, accounts, layouts and error codes |
@@ -245,8 +246,9 @@ transaction with that custom error code and rolls back every change. Constants
 named `Err*` in the root package are listed under `errors` in `idl.json`; they
 must be between 1 and 5999.
 
-The scaffold's `program_test.go` tests the old program, so delete it for now
-(`rm program_test.go`), then check the program against goSVM's Go subset:
+The scaffold's `program_test.go` and its fixture generator `cmd/fixtures` test
+the old program, so delete them for now (`rm -r program_test.go cmd/fixtures`),
+then check the program against goSVM's Go subset:
 
 ```console
 $ gosvm check
@@ -372,43 +374,132 @@ a transaction fails; test those in a real SVM.
 scenarios against the compiled ELF in a local SVM (LiteSVM), with no network.
 Scenarios live in a fixture file of named accounts, test signers and ordered
 transactions with exact expected account states
-([format](SVM_FIXTURES.md)). Because they hold exact addresses and bytes, write
-them with a small Go program that uses the generated client.
+([format](SVM_FIXTURES.md)), written by a small Go program. The fixture
+builder `gosvm/sdk/fixture`, in the SDK copy, derives keys and addresses and
+tracks each account's expected state; the generated client supplies the
+instructions and account bytes. (The builder and the generated instruction
+builders are newer than v0.1.0-alpha.2; with that release, build `gosvm` from
+source for this section.)
 
-The finished example has that generator, `cmd/fixtures`, and a small Solana
-helper package, `solrpc` (base58, PDA derivation, transactions and the JSON-RPC
-calls used later). Copy both, and the client from section 6, from the goSVM
-repository:
-
-```sh
-git clone --depth 1 https://github.com/CrocSwap/goSVM gosvm-src
-cp -R gosvm-src/examples/tutorial/solrpc gosvm-src/examples/tutorial/cmd .
-rm -rf gosvm-src
-go get filippo.io/edwards25519@v1.1.0
-```
-
-`solrpc` keeps the example free of a Solana SDK; it uses
-[`filippo.io/edwards25519`](https://pkg.go.dev/filippo.io/edwards25519) only to
-check that a derived address is off the curve. Off-chain packages like these and
-`cmd/` are ordinary Go: only code reachable from the on-chain entrypoint has to
-fit goSVM's subset, so they never reach the compiler.
-
-The generator derives the counter's address the way a client would, and states
-every expectation with the client encoders:
+Recreate the generator as `cmd/fixtures/main.go`:
 
 ```go
-counter, bump, err := solrpc.FindProgramAddress(program, []byte("counter"), owner[:])
-...
-state := func(count uint64) obj {
-	data := client.EncodeAccountCounter(model.Counter{Owner: model.PublicKey(owner), Count: count, Limit: 10, Bump: bump})
-	return obj{"data": hex.EncodeToString(data), "owner": program.String(), "lamports": rent, "executable": false, "rent_epoch": 0}
+// Command fixtures writes testdata/svm.json, the local SVM scenarios for
+// gosvm test --svm, using the generated client's instructions and encoders.
+//
+//	go run ./cmd/fixtures > testdata/svm.json
+package main
+
+import (
+	"encoding/binary"
+	"os"
+
+	"example.com/counter/client"
+	"example.com/counter/model"
+	"gosvm/sdk/fixture"
+)
+
+func main() {
+	b, err := suiteJSON()
+	if err != nil {
+		os.Stderr.WriteString(err.Error() + "\n")
+		os.Exit(1)
+	}
+	os.Stdout.Write(b)
+}
+
+// suiteJSON returns the fixture file's contents.
+func suiteJSON() ([]byte, error) {
+	// Keys derive from this namespace and each name: local test identities only.
+	f := fixture.New("counter tutorial")
+	owner := f.Signer("owner", 1_000_000_000)
+	intruder := f.Signer("intruder", 1_000_000_000)
+	counter := f.PDA("counter", []byte("counter"), owner.Key[:])
+
+	create := func(limit uint64) fixture.Instruction {
+		return client.CreateInstruction(client.CreateKeys{Counter: counter.Key, Owner: owner.Key},
+			model.CreateArgs{Limit: limit, Bump: counter.Bump})
+	}
+	increment := func(signer fixture.Account, amount uint64) fixture.Instruction {
+		return client.IncrementInstruction(client.IncrementKeys{Counter: counter.Key, Owner: signer.Key},
+			model.IncrementArgs{Amount: amount})
+	}
+	state := func(count uint64) []byte {
+		return client.EncodeAccountCounter(model.Counter{Owner: owner.Key, Count: count, Limit: 10, Bump: counter.Bump})
+	}
+	// Create makes the rent-exempt counter, paid by the owner, with one
+	// System program invocation.
+	created := func(s *fixture.Scenario) {
+		s.Step(create(10)).ExpectCreated(counter, state(0), owner).ExpectInvocations(fixture.SystemProgram, 1)
+	}
+
+	s := f.Scenario("create-and-increment")
+	created(s)
+	s.Step(increment(owner, 3)).ExpectData(counter, state(3))
+	s.Step(increment(owner, 7)).ExpectData(counter, state(10))
+
+	s = f.Scenario("increment-past-limit")
+	created(s)
+	s.Step(increment(owner, 11)).Fails(model.ErrLimit)
+
+	s = f.Scenario("only-the-owner-increments")
+	created(s)
+	s.Step(increment(intruder, 1)).Fails(client.ErrAccountRelation)
+
+	// A failed transaction rolls back the account the generated code created.
+	f.Scenario("failed-create-rolls-back").Step(create(0)).Fails(model.ErrLimit)
+
+	var next [8]byte
+	binary.LittleEndian.PutUint64(next[:], 8)
+	f.Scenario("preview").
+		Step(client.PreviewInstruction(client.PreviewKeys{Caller: owner.Key}, model.PreviewArgs{Count: 5, Limit: 10, Amount: 3})).
+		ExpectReturn(next[:])
+
+	return f.JSON()
 }
 ```
 
-It writes five scenarios: create and increment twice up to the limit, an
-increment past the limit, an increment signed by someone other than the owner,
-a `Create` that fails, and `Preview`. Here is the failing `Create` in the
-generated file, abbreviated:
+`f.Signer` declares a test signer with a funded wallet and `f.PDA` derives the
+counter's address and bump the way a client would; both are named in the
+fixture file. `client.CreateInstruction` and the other generated builders take
+the instruction's accounts by name and pass them in the declared order with
+their signer and writable flags (the System program's fixed address comes from
+`gosvm.json`). `client.ErrAccountRelation` and the other error codes match
+`idl.json`.
+
+Each step checks every declared account. A step's expectations change the
+expected states and the rest carry over: `ExpectCreated` expects a new
+program-owned account holding exactly those bytes and the rent-exempt balance
+for them, paid by the owner, and `ExpectData` new data in an existing account.
+A failing step (`Fails`) expects every account unchanged, because the runtime
+rolls the transaction back. `ExpectReturn` expects the program's return data.
+
+Then add `cmd/fixtures/main_test.go`, so `gosvm test` fails while the committed
+file differs from what the generator writes:
+
+```go
+package main
+
+import (
+	"bytes"
+	"os"
+	"testing"
+)
+
+// The committed fixtures must match what the generator writes.
+func TestFixturesUpToDate(t *testing.T) {
+	want, err := suiteJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile("../../testdata/svm.json")
+	if err != nil || !bytes.Equal(got, want) {
+		t.Fatalf("testdata/svm.json is stale (%v); run: go run ./cmd/fixtures > testdata/svm.json", err)
+	}
+}
+```
+
+Here is the failing `Create` in the generated file, abbreviated:
 
 ```json
 {
@@ -443,7 +534,7 @@ $ go run ./cmd/fixtures > testdata/svm.json
 $ gosvm test --svm
 ok  	example.com/counter	0.011s
 ...
-Built .../build/fogo-v0/v1.57/f731d72ca2cb5616/deps-25c3169730b00da4/program.so (16000 bytes, 2.2s)
+Built .../build/fogo-v0/v1.57/f731d72ca2cb5616/deps-ef006d66c9b97d33/program.so (16000 bytes, 2.2s)
 fogo program: .../build/fogo/program.so
 Testing 5 compiled SBF scenarios with LiteSVM...
 PASS create-and-increment step 1          14844 CU
@@ -455,7 +546,7 @@ PASS only-the-owner-increments step 1     14844 CU
 PASS only-the-owner-increments step 2     1329 CU
 PASS failed-create-rolls-back step 1      14000 CU
 PASS preview step 1                       259 CU
-Built .../build/solana-v3/v1.57/f731d72ca2cb5616/deps-25c3169730b00da4/program.so (14824 bytes, 3.31s)
+Built .../build/solana-v3/v1.57/f731d72ca2cb5616/deps-ef006d66c9b97d33/program.so (14824 bytes, 3.31s)
 solana program: .../build/solana/program.so
 Testing 5 compiled SBF scenarios with LiteSVM...
 PASS create-and-increment step 1          14790 CU
@@ -494,7 +585,27 @@ Program A4bd41Uazko5AD5syV6owBKns4v9HdFuCYPW2U5w5Ari success
 
 Add `-target solana` to test one target and `-svm-run <regexp>` to select
 scenarios. Fixture keys come from fixed test seeds; they are never used on a
-real network.
+real network. The [fixture builder reference](SVM_FIXTURES.md#writing-fixtures-in-go)
+covers accounts that exist before a scenario, closing, other programs, Clock and
+Rent, and compute-unit checks.
+
+Section 6 calls the deployed program from Go with `cmd/counter` and a small
+Solana helper package, `solrpc` (base58, PDA derivation, transactions and the
+JSON-RPC calls it uses). Copy both from the goSVM repository now:
+
+```sh
+git clone --depth 1 https://github.com/CrocSwap/goSVM gosvm-src
+cp -R gosvm-src/examples/tutorial/solrpc .
+cp -R gosvm-src/examples/tutorial/cmd/counter cmd/
+rm -rf gosvm-src
+go get filippo.io/edwards25519@v1.1.0
+```
+
+`solrpc` keeps the example free of a Solana SDK; it uses
+[`filippo.io/edwards25519`](https://pkg.go.dev/filippo.io/edwards25519) only to
+check that a derived address is off the curve. Off-chain packages like these and
+`cmd/` are ordinary Go: only code reachable from the on-chain entrypoint has to
+fit goSVM's subset, so they never reach the compiler.
 
 ## 5. Deploy to Solana devnet
 

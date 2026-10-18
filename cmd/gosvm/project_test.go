@@ -49,11 +49,19 @@ func TestSVMFixturesDefault(t *testing.T) {
 	if got, e := defaultSVMFixtures(starter); got != "" || e != nil {
 		t.Fatalf("schema-1 starter: %q, %v", got, e)
 	}
-	general := filepath.Join(t.TempDir(), "ledger")
-	if e := project.NewModuleSDK(general, "", 2, 2); e != nil {
+	// A fresh SDK-2 project has generated fixtures.
+	vaults := filepath.Join(t.TempDir(), "vaults")
+	if e := project.NewModuleSDK(vaults, "", 2, 2); e != nil {
 		t.Fatal(e)
 	}
-	// A fresh schema-2 project has no fixtures: fail before building, naming the fix.
+	if got, e := defaultSVMFixtures(vaults); got != filepath.Join(vaults, "testdata", "svm.json") || e != nil {
+		t.Fatalf("SDK-2 scaffold: %q, %v", got, e)
+	}
+	general := filepath.Join(t.TempDir(), "ledger")
+	if e := project.NewModuleSDK(general, "", 2, 1); e != nil {
+		t.Fatal(e)
+	}
+	// A fresh SDK-1 schema-2 project has no fixtures: fail before building, naming the fix.
 	e := projectCommand([]string{"test", "--svm", "-dir", general})
 	if e == nil || !strings.Contains(e.Error(), "add testdata/svm.json") || !strings.Contains(e.Error(), "-svm-fixtures") {
 		t.Fatalf("missing fixtures: %v", e)

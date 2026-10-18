@@ -57,6 +57,9 @@ func Generate(dir string) error {
 		return e
 	}
 	if c.Schema == MultiSchema {
+		if e = installHostFixture(dir, c); e != nil {
+			return e
+		}
 		return generateMulti(dir, c)
 	}
 	sources, e := compiler.ReadSources(dir)

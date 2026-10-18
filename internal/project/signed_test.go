@@ -19,6 +19,10 @@ func TestSchema2SignedFieldsAndSeeds(t *testing.T) {
 	if err := NewModuleSDK(dir, "example.org/multi-state", MultiSchema, 2); err != nil {
 		t.Fatal(err)
 	}
+	// The edits change the scaffold's layouts, which its SVM fixtures encode.
+	if err := os.RemoveAll(filepath.Join(dir, "cmd/fixtures")); err != nil {
+		t.Fatal(err)
+	}
 	replace := func(name, old, new string) {
 		t.Helper()
 		path := filepath.Join(dir, name)

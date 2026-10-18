@@ -200,3 +200,144 @@ func DecodeInstructionClosePool(b []byte) (model0.ClosePoolArgs, error) {
 	}
 	return v, nil
 }
+
+// AccountMeta is one account reference of an instruction.
+type AccountMeta = struct {
+	Key      [32]byte
+	Signer   bool
+	Writable bool
+}
+
+// Instruction is an instruction's ordered accounts and data, for this program's ID.
+type Instruction = struct {
+	Accounts []AccountMeta
+	Data     []byte
+}
+
+// SwapKeys holds the addresses of Swap's accounts.
+type SwapKeys struct {
+	Pool      [32]byte
+	User      [32]byte
+	UserX     [32]byte
+	VaultX    [32]byte
+	VaultY    [32]byte
+	UserY     [32]byte
+	Authority [32]byte
+}
+
+// SwapInstruction encodes Swap with its accounts in declared order.
+// Fixed addresses from gosvm.json: TokenProgram.
+func SwapInstruction(keys SwapKeys, args model0.SwapArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Pool, Signer: false, Writable: true},
+		{Key: keys.User, Signer: true, Writable: false},
+		{Key: keys.UserX, Signer: false, Writable: true},
+		{Key: keys.VaultX, Signer: false, Writable: true},
+		{Key: keys.VaultY, Signer: false, Writable: true},
+		{Key: keys.UserY, Signer: false, Writable: true},
+		{Key: keys.Authority, Signer: false, Writable: false},
+		{Key: [32]byte{6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169}, Signer: false, Writable: false}, // TokenProgram
+	}, Data: EncodeInstructionSwap(args)}
+}
+
+// CreatePoolKeys holds the addresses of CreatePool's accounts.
+type CreatePoolKeys struct {
+	Pool      [32]byte
+	Creator   [32]byte
+	CreatorX  [32]byte
+	VaultX    [32]byte
+	VaultY    [32]byte
+	CreatorY  [32]byte
+	Authority [32]byte
+	MintX     [32]byte
+	MintY     [32]byte
+}
+
+// CreatePoolInstruction encodes CreatePool with its accounts in declared order.
+// Fixed addresses from gosvm.json: TokenProgram, System.
+func CreatePoolInstruction(keys CreatePoolKeys, args model0.CreatePoolArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Pool, Signer: true, Writable: true},
+		{Key: keys.Creator, Signer: true, Writable: true},
+		{Key: keys.CreatorX, Signer: false, Writable: true},
+		{Key: keys.VaultX, Signer: false, Writable: true},
+		{Key: keys.VaultY, Signer: false, Writable: true},
+		{Key: keys.CreatorY, Signer: false, Writable: true},
+		{Key: keys.Authority, Signer: false, Writable: false},
+		{Key: [32]byte{6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169}, Signer: false, Writable: false}, // TokenProgram
+		{Key: [32]byte{}, Signer: false, Writable: false}, // System
+		{Key: keys.MintX, Signer: false, Writable: false},
+		{Key: keys.MintY, Signer: false, Writable: false},
+	}, Data: EncodeInstructionCreatePool(args)}
+}
+
+// ManagedSwapKeys holds the addresses of ManagedSwap's accounts.
+type ManagedSwapKeys struct {
+	Pool      [32]byte
+	User      [32]byte
+	UserX     [32]byte
+	VaultX    [32]byte
+	VaultY    [32]byte
+	UserY     [32]byte
+	Authority [32]byte
+}
+
+// ManagedSwapInstruction encodes ManagedSwap with its accounts in declared order.
+// Fixed addresses from gosvm.json: TokenProgram.
+func ManagedSwapInstruction(keys ManagedSwapKeys, args model0.SwapArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Pool, Signer: false, Writable: true},
+		{Key: keys.User, Signer: true, Writable: false},
+		{Key: keys.UserX, Signer: false, Writable: true},
+		{Key: keys.VaultX, Signer: false, Writable: true},
+		{Key: keys.VaultY, Signer: false, Writable: true},
+		{Key: keys.UserY, Signer: false, Writable: true},
+		{Key: keys.Authority, Signer: false, Writable: false},
+		{Key: [32]byte{6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169}, Signer: false, Writable: false}, // TokenProgram
+	}, Data: EncodeInstructionManagedSwap(args)}
+}
+
+// ClosePoolKeys holds the addresses of ClosePool's accounts.
+type ClosePoolKeys struct {
+	Pool      [32]byte
+	Creator   [32]byte
+	CreatorX  [32]byte
+	VaultX    [32]byte
+	VaultY    [32]byte
+	CreatorY  [32]byte
+	Authority [32]byte
+}
+
+// ClosePoolInstruction encodes ClosePool with its accounts in declared order.
+// Fixed addresses from gosvm.json: TokenProgram.
+func ClosePoolInstruction(keys ClosePoolKeys, args model0.ClosePoolArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Pool, Signer: false, Writable: true},
+		{Key: keys.Creator, Signer: true, Writable: true},
+		{Key: keys.CreatorX, Signer: false, Writable: true},
+		{Key: keys.VaultX, Signer: false, Writable: true},
+		{Key: keys.VaultY, Signer: false, Writable: true},
+		{Key: keys.CreatorY, Signer: false, Writable: true},
+		{Key: keys.Authority, Signer: false, Writable: false},
+		{Key: [32]byte{6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169}, Signer: false, Writable: false}, // TokenProgram
+	}, Data: EncodeInstructionClosePool(args)}
+}
+
+// Error codes: the program's own and the generated validation's.
+const (
+	ErrAccountAlias      uint64 = 6006
+	ErrAccountCount      uint64 = 6000
+	ErrAccountFlags      uint64 = 6001
+	ErrAccountIdentity   uint64 = 6005
+	ErrAccountInit       uint64 = 6009
+	ErrAccountOwner      uint64 = 6002
+	ErrAccountPDA        uint64 = 6008
+	ErrAccountRelation   uint64 = 6007
+	ErrCounter           uint64 = 114
+	ErrInput             uint64 = 112
+	ErrInstructionLayout uint64 = 6004
+	ErrLiquidity         uint64 = 115
+	ErrMint              uint64 = 109
+	ErrOutput            uint64 = 113
+	ErrStateLayout       uint64 = 6003
+)

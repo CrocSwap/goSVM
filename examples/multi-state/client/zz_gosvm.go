@@ -108,3 +108,62 @@ func DecodeInstructionSetLimit(b []byte) (model0.SetLimitArgs, error) {
 	v.Limit = uint64(binary.LittleEndian.Uint64(b[8:]))
 	return v, nil
 }
+
+// AccountMeta is one account reference of an instruction.
+type AccountMeta = struct {
+	Key      [32]byte
+	Signer   bool
+	Writable bool
+}
+
+// Instruction is an instruction's ordered accounts and data, for this program's ID.
+type Instruction = struct {
+	Accounts []AccountMeta
+	Data     []byte
+}
+
+// MoveKeys holds the addresses of Move's accounts.
+type MoveKeys struct {
+	Source      [32]byte
+	Destination [32]byte
+	Policy      [32]byte
+	Authority   [32]byte
+}
+
+// MoveInstruction encodes Move with its accounts in declared order.
+func MoveInstruction(keys MoveKeys, args model0.MoveArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Source, Signer: false, Writable: true},
+		{Key: keys.Destination, Signer: false, Writable: true},
+		{Key: keys.Policy, Signer: false, Writable: false},
+		{Key: keys.Authority, Signer: true, Writable: false},
+	}, Data: EncodeInstructionMove(args)}
+}
+
+// SetLimitKeys holds the addresses of SetLimit's accounts.
+type SetLimitKeys struct {
+	Policy    [32]byte
+	Authority [32]byte
+}
+
+// SetLimitInstruction encodes SetLimit with its accounts in declared order.
+func SetLimitInstruction(keys SetLimitKeys, args model0.SetLimitArgs) Instruction {
+	return Instruction{Accounts: []AccountMeta{
+		{Key: keys.Policy, Signer: false, Writable: true},
+		{Key: keys.Authority, Signer: true, Writable: false},
+	}, Data: EncodeInstructionSetLimit(args)}
+}
+
+// Error codes: the program's own and the generated validation's.
+const (
+	ErrAccountAlias      uint64 = 6006
+	ErrAccountCount      uint64 = 6000
+	ErrAccountFlags      uint64 = 6001
+	ErrAccountIdentity   uint64 = 6005
+	ErrAccountOwner      uint64 = 6002
+	ErrAccountRelation   uint64 = 6007
+	ErrCounter           uint64 = 2
+	ErrInstructionLayout uint64 = 6004
+	ErrMove              uint64 = 1
+	ErrStateLayout       uint64 = 6003
+)

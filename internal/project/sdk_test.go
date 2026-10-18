@@ -65,6 +65,53 @@ func Probe(c solana.Context)uint64{var seeds pda.Seeds;if seeds.AddUint64(42)!=0
 	}
 }
 
+// An SDK-2 scaffold ships the host fixture builder, a generator whose output
+// is the committed testdata/svm.json (runNative runs its staleness test), and
+// typed client instructions. Older snapshots without the builder still load,
+// and generation adds it.
+func TestSDK2FixtureScaffold(t *testing.T) {
+	dir := filepath.Join(t.TempDir(), "fixtures")
+	if err := NewModuleSDK(dir, "example.org/fixtures", MultiSchema, 2); err != nil {
+		t.Fatal(err)
+	}
+	for _, p := range []string{"cmd/fixtures/main.go", "cmd/fixtures/main_test.go", "testdata/svm.json", ".gosvm/sdk/sdk/fixture/fixture.go"} {
+		if _, err := os.Stat(filepath.Join(dir, p)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	client, err := os.ReadFile(filepath.Join(dir, "client/zz_gosvm.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{"func MoveInstruction(keys MoveKeys, args model0.MoveArgs) Instruction", "{Key: keys.Authority, Signer: true, Writable: false}", "ErrAccountRelation uint64 = 6007", "ErrMove uint64 = 1"} {
+		if !strings.Contains(strings.Join(strings.Fields(string(client)), " "), want) {
+			t.Fatalf("client lacks %q:\n%s", want, client)
+		}
+	}
+	runNative(t, dir)
+	builder := filepath.Join(dir, ".gosvm/sdk/sdk/fixture/fixture.go")
+	if err := os.Remove(builder); err != nil {
+		t.Fatal(err)
+	}
+	mustLoad(t, dir)
+	if err := Generate(dir); err != nil {
+		t.Fatal(err)
+	}
+	if b, err := os.ReadFile(builder); err != nil || !bytes.Equal(b, sdkFiles(2)["sdk/fixture/fixture.go"]) {
+		t.Fatalf("generation did not restore the fixture builder: %v", err)
+	}
+	if err := os.WriteFile(builder, []byte("package fixture\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(dir); err == nil || !strings.Contains(err.Error(), "SDK differs") {
+		t.Fatalf("fixture builder drift accepted: %v", err)
+	}
+	legacy := multiStarter(t)
+	if _, err := os.Stat(filepath.Join(legacy, "cmd/fixtures")); !os.IsNotExist(err) {
+		t.Fatalf("SDK-1 scaffold has a fixture generator: %v", err)
+	}
+}
+
 func TestSDK1RejectsNewBoundaryCalls(t *testing.T) {
 	dir := starter(t)
 	if err := os.WriteFile(filepath.Join(dir, "probe.go"), []byte("package program\nimport \"gosvm/solana\"\nfunc Probe(c solana.Context)uint64{return solana.Lamports(c,0)}\n"), 0600); err != nil {

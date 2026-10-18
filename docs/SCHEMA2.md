@@ -90,6 +90,15 @@ migration instruction. Restore deleted history rather than regenerating it away.
 
 `client/zz_gosvm.go` generates `EncodeAccountVault`, `DecodeAccountVault`,
 `EncodeInstructionMove`, and corresponding functions/constants for other layouts.
+For each instruction it also generates a `MoveKeys` struct, one `[32]byte` field
+per account without a fixed `address`, and `MoveInstruction(keys, args)`, which
+returns the encoded data and every account in declared order with its signer and
+writable flags (fixed addresses come from the manifest). `Instruction` and
+`AccountMeta` alias unnamed struct types, so they are the same types as
+[`gosvm/sdk/fixture`](SVM_FIXTURES.md#writing-fixtures-in-go)'s and any package
+can declare an identical alias. `ErrMove`, `ErrAccountRelation` and the other
+constants list the program's `Err*` codes and the generated validation codes
+(`ErrAccountCount` = 6000 and so on), as in `idl.json`.
 Clients use ordinary Go allocation and encoding libraries. They import the pure
 model packages, so an independent service needs no compiler, SBF tools, runtime
 SDK replacement or copied offsets to use them. Normal Go module resolution is
