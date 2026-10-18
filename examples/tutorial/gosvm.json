@@ -12,7 +12,7 @@
   "instruction": "",
   "handler": "",
   "result": "",
-  "sdk_sha256": "c16d2232c17339649c0358ccf3919c20ec1dd1ac2972ec9816480af2d525dadd",
+  "sdk_sha256": "3909c4fc6e88b4ce681a8eaaa503caea16d9fd61d4f4f973e13bb6f53378256a",
   "sdk_version": 2,
   "imports": {
     "model": "example.com/counter/model"

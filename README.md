@@ -42,7 +42,7 @@ func priceAt(tick int) (*uint256.Int, error) {
   generates owner, signer, writable, PDA and relationship checks, wire codecs,
   Go clients and an experimental IDL.
 - **Real Solana integration.** SPL Token transfers, signed CPIs, Clock and Rent,
-  account creation and closing, and return data.
+  account creation and closing, return data, and Keccak-256 hashing.
 
 ## What does it cost?
 

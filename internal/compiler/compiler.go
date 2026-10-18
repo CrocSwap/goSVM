@@ -305,6 +305,9 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		g.WriteString(solanaRuntime)
 		if program.SDK != 1 {
 			g.WriteString(cpiRuntime)
+			if usesSDK(g.info, "Keccak256") {
+				g.WriteString(keccakRuntime)
+			}
 		}
 	}
 	// Define value structs and array wrappers before function prototypes.

@@ -31,6 +31,19 @@ identity, clearing and reset semantics. SDK 1 has no setter. See the
 [Phoenix compiler/return-data handoff](PHOENIX_DEPENDENCIES.md) for actual v0/v3
 simulation/submission proofs, new frontend/SDK pins and runner observability.
 
+`solana.Keccak256(c, input, offset, length, output, outOffset)` hashes
+`input[offset:offset+length]` with Keccak-256 as Ethereum does (the original
+0x01 padding, not SHA3-256) into `output[outOffset:outOffset+32]`, using the
+runtime's `sol_keccak256` syscall. Bounds and statuses match `SHA256`: 2003 for
+a range outside `input` or `output`, checked before the syscall, and 2004 for a
+native result that is not 32 bytes. Hash a concatenation, such as a Merkle node
+`keccak256(left || right)`, from one buffer. The syscall costs 85 CU plus half
+a CU per input byte on the pinned runners. Native contexts supply
+`Keccak func(input []byte) []byte`; a nil callback returns 2009. The
+[Keccak SBF test](../internal/compiler/keccak_sbf_test.go) compares whole and
+partial inputs from 0 to 10,240 bytes with a reference implementation on
+fogo-v0 and solana-v3.
+
 `pda.Seeds` supports `AddBytes`, `AddKey`, `AddByte`, `AddUint32` and `AddUint64`.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using

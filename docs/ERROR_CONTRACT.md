@@ -403,8 +403,8 @@ SDK 1 single-account programs use 10–14 for their input checks
 | --- | --- |
 | 2001 | Program account not executable, or not the classic Token program where required |
 | 2002 | SDK 1 signed-transfer seed longer than 32 bytes |
-| 2003 | SHA-256 input or output range out of bounds |
-| 2004 | SHA-256 result not 32 bytes |
+| 2003 | SHA-256 or Keccak-256 input or output range out of bounds |
+| 2004 | SHA-256 or Keccak-256 result not 32 bytes |
 | 2005 | Account index out of range |
 | 2006 | Malformed CPI account metas |
 | 2007 | Malformed signer seeds or PDA input |
