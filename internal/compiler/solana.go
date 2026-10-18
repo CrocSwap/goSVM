@@ -20,6 +20,9 @@ var accountsABI string
 //go:embed cpi.c.txt
 var cpiRuntime string
 
+//go:embed return_data.c.txt
+var getReturnDataRuntime string
+
 func sdkSource(version int) string {
 	if version == 1 {
 		return solana.LegacySource
@@ -71,4 +74,16 @@ func joinArgs(args []string) string {
 		out += a
 	}
 	return out
+}
+
+// usesSDK reports whether the program calls gosvm/solana's function name.
+// Runtimes added after SDK 2's first release are emitted only for programs
+// that call them, so existing programs keep byte-identical C and ELFs.
+func usesSDK(info *types.Info, name string) bool {
+	for _, object := range info.Uses {
+		if fn, ok := object.(*types.Func); ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && fn.Name() == name {
+			return true
+		}
+	}
+	return false
 }

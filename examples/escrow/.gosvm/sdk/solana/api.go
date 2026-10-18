@@ -18,9 +18,10 @@ type Context struct {
 	Hash                func(input []byte) []byte
 	InvokeInstruction   func(program uint64, metas, data, signerSeeds []byte) uint64
 	DeriveAddress       func(seeds, program, output []byte) uint64
-	ReadRent            func(output []byte) uint64 // Canonical 17-byte rate/threshold-bits/burn encoding.
-	ReadClock           func(output []byte) uint64 // Canonical five-word Clock encoding; signed timestamps are raw bits.
-	WriteReturnData     func(data []byte)          // Native callback receives an owned copy; CPI callbacks model clearing.
+	ReadRent            func(output []byte) uint64    // Canonical 17-byte rate/threshold-bits/burn encoding.
+	ReadClock           func(output []byte) uint64    // Canonical five-word Clock encoding; signed timestamps are raw bits.
+	WriteReturnData     func(data []byte)             // Native callback receives an owned copy; CPI callbacks model clearing.
+	ReadReturnData      func() (data, program []byte) // Current return data and its setter; nil reads as none.
 }
 
 // SetReturnData copies at most 1,024 bytes into the runtime's current return
@@ -37,6 +38,33 @@ func SetReturnData(c Context, data []byte) uint64 {
 	copy(owned, data)
 	c.WriteReturnData(owned)
 	return 0
+}
+
+// GetReturnData reads the current return data: the bytes most recently set by
+// this program or by a program it invoked. It returns the full size (at most
+// 1,024; zero when there is none) and copies min(len(output), size) bytes into
+// output. When it copies at least one byte it also writes the setting program's
+// key into program; otherwise both are unchanged. A size above len(output)
+// means output holds a prefix. Check the setter before trusting the bytes: a
+// CPI that sets nothing leaves earlier return data in place. program must be
+// exactly 32 bytes; any other length traps.
+func GetReturnData(c Context, output, program []byte) uint64 {
+	if len(program) != 32 {
+		panic("gosvm/solana: GetReturnData program is not 32 bytes")
+	}
+	if c.ReadReturnData == nil {
+		return 0
+	}
+	data, setter := c.ReadReturnData()
+	n := len(data)
+	if n > len(output) {
+		n = len(output)
+	}
+	if n != 0 {
+		copy(output[:n], data)
+		copy(program, setter)
+	}
+	return uint64(len(data))
 }
 
 // Clock writes exactly 40 bytes: slot, epoch-start timestamp bits, epoch,

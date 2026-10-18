@@ -31,6 +31,20 @@ identity, clearing and reset semantics. SDK 1 has no setter. See the
 [Phoenix compiler/return-data handoff](PHOENIX_DEPENDENCIES.md) for actual v0/v3
 simulation/submission proofs, new frontend/SDK pins and runner observability.
 
+`solana.GetReturnData(c, output, program)` reads the current return data, set by
+this program or by the last program it invoked that set any. It returns the full
+size (0–1,024; 0 when there is none) and copies `min(len(output), size)` bytes.
+When it copies at least one byte it also writes the setter's 32-byte key into
+`program`; otherwise both buffers are unchanged, as in the runtime syscall. A
+size above `len(output)` means `output` holds a prefix. `program` must be
+exactly 32 bytes; any other length traps. Check the setter before decoding: a
+callee that sets nothing leaves earlier bytes in place, and the runtime clears
+return data before each top-level instruction. Native contexts supply
+`ReadReturnData func() (data, program []byte)`; a nil callback reads as no
+return data. The [return-data SBF test](../internal/compiler/return_data_sbf_test.go)
+reads data set by real self-CPIs, the program itself, a silent callee and an
+earlier instruction, with prefix copies and the trap, on fogo-v0 and solana-v3.
+
 `pda.Seeds` supports `AddBytes`, `AddKey`, `AddByte`, `AddUint32` and `AddUint64`.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using
