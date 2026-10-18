@@ -70,3 +70,32 @@ func (s *Seeds) Matches(c solana.Context, index uint64, program [32]byte) (bool,
 	}
 	return true, 0
 }
+
+// Find derives the canonical program address for the seeds plus a bump byte,
+// searching from 255 down as Solana's find_program_address does. A status of 1
+// (the runtime's result for an on-curve candidate) tries the next bump; other
+// statuses propagate. It needs room for the bump seed and returns ErrSeeds if
+// no bump yields an address. Each candidate costs one CreateAddress call; pass
+// a known bump to Address or Matches when the caller already has one.
+func (s *Seeds) Find(c solana.Context, program [32]byte) ([32]byte, byte, uint64) {
+	var address [32]byte
+	if s.count >= 16 || s.used > 527 {
+		return address, 0, ErrSeeds
+	}
+	// Copy once, then rewrite only the trailing bump byte for each candidate.
+	candidate := *s
+	if candidate.AddByte(255) != 0 {
+		return address, 0, ErrSeeds
+	}
+	for bump := uint64(256); bump > 0; bump-- {
+		candidate.buffer[candidate.used] = byte(bump - 1)
+		found, code := candidate.Address(c, program)
+		if code == 0 {
+			return found, byte(bump - 1), 0
+		}
+		if code != 1 {
+			return address, 0, code
+		}
+	}
+	return address, 0, ErrSeeds
+}

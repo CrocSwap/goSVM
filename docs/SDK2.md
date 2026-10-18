@@ -9,7 +9,7 @@ gosvm new -schema 2 -sdk 2 -module example.org/my/program my-program
 ```
 
 The manifest records `sdk_version: 2`. The project receives a pinned local SDK
-snapshot, including `gosvm/solana`, `gosvm/sdk/pda`, `gosvm/sdk/cpi` and
+snapshot, including `gosvm/solana`, `gosvm/sdk/pda`, `gosvm/sdk/cpi`, `gosvm/sdk/ata` and
 `gosvm/sdk/token` and `gosvm/sdk/system`. Native Go and the compiler select that snapshot's API.
 Generation checks its contents and rejects unexpected Go files or drift.
 The snapshot also holds the host-only [fixture builder](SVM_FIXTURES.md#writing-fixtures-in-go)
@@ -35,7 +35,11 @@ simulation/submission proofs, new frontend/SDK pins and runner observability.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using
 an explicit program key; `Matches` compares it with a context account key.
-These methods use supplied seeds; a bump-search convenience API is not provided.
+These methods use supplied seeds. `Find(c, program)` searches the bump from 255
+down, as `find_program_address` does, and returns the address and bump; it
+rewrites one trailing byte per candidate and costs one `CreateAddress` call each.
+A status of 1 (the runtime's on-curve result) tries the next bump; others
+propagate. Pass a stored bump to `Address`/`Matches` when one is known.
 
 `cpi.Metas.Add(index, writable, signer)` builds at most 16 account metas.
 `cpi.Signers.Add(&seeds)` copies at most two seed groups into a 1,024-byte buffer;
@@ -214,6 +218,28 @@ System helper errors are 3021 (program), 3022 (account/alias/layout/privilege),
 2005 (index), 2010 (size/growth), 2011 (privilege/executable), 2012 (owner),
 2013 (self refund/malformed native key), 2014 (refund overflow), and 2015 (Rent
 output length). These are experimental API codes, separate from schema-2 errors.
+
+## Associated token accounts
+
+`ata.Address(c, wallet, tokenProgram, mint)` derives the canonical associated
+token account and its bump with `pda.Seeds.Find` over the wallet, token program
+and mint keys under the ATA program (`ata.ProgramID()`); `ata.Matches` compares
+it with a context account. `ata.CreateIdempotent(c, ataProgram, payer, account,
+wallet, mint, system, tokenProgram)` and `ata.Create` invoke the real ATA program
+with its six accounts; the `...Signed` forms pay with a PDA under the caller.
+They check the ATA, System and token (classic or Token-2022) programs, the mint
+owner, that the writable account is the derived address, and a writable,
+data-less System-owned payer with a transaction signature or matching seeds
+(3030 program, 3031 account, 3032 payer authority). ATA errors propagate, such
+as `IllegalOwner` for `Create` of an existing account. Under Token-2022 the ATA
+program sizes the account for the mint (170 bytes with `ImmutableOwner` for a
+mint without account-required extensions). The caller checks a PDA payer's
+remaining rent if it must stay exempt, as Hyperlane's warp routes do.
+
+The derivation dominates the SDK's own cost: about 2,200 CU per extra bump
+candidate after the first. The ATA program derives the address again itself.
+The [ATA probe](../examples/ata-create/README.md) runs creation and on-chain
+derivation against ATA 1.1.1, Token-2022 8.0.0 and Token 3.5.0.
 
 ## Validation and open work
 
