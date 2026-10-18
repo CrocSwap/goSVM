@@ -523,19 +523,24 @@ Created deployment payer .../counter/deploy/keys/solana-devnet-payer.json (addre
 gosvm: payer 2kHEhYThZiD1rXiTBkwrpC9qfwZiHsbmqcfZPjaKqKis has 0.000000 on solana-devnet; deployment needs about 0.162370. Fund it (https://faucet.solana.com or solana airdrop -u devnet), then rerun
 ```
 
-`deploy/keys/` gets its own `.gitignore`, so keys stay out of Git. Fund the
-printed address with devnet SOL (amounts are in SOL; deploying this 14.8 KB
-program checks for about 0.16 SOL: rent for the program's data, the same again
-for a temporary upload buffer that is refunded, and fees): use
-[faucet.solana.com](https://faucet.solana.com), or the Solana CLI with an explicit
-devnet URL so it cannot touch another cluster:
+`deploy/keys/` gets its own `.gitignore`, so keys stay out of Git. The amounts
+in that message are in SOL: deploying this 14.8 KB program needs about 0.16 SOL
+(rent for the program's data, the same again for a temporary upload buffer that
+is refunded, and fees). Fund the printed address with devnet SOL from
+[https://faucet.solana.com](https://faucet.solana.com): paste the address,
+choose devnet and request 0.5 or 1 SOL.
+
+The faucet and the devnet airdrop RPC are rate-limited per IP address and day;
+a refusal reads "You've either reached your airdrop limit today or the airdrop
+faucet has run dry". If that happens, sign in to the faucet with GitHub for a
+larger allowance, or try again later. The Solana CLI uses the same faucet; if
+you use it, pass the devnet URL explicitly so it cannot act on another cluster:
 
 ```sh
 solana airdrop 1 <payer address> --url https://api.devnet.solana.com
 ```
 
-The public faucet limits requests per IP address and day. If it refuses, wait,
-or sign in to faucet.solana.com with GitHub for a larger allowance. Then rerun:
+Once the payer has at least 0.16 SOL, rerun:
 
 ```console
 $ gosvm deploy -network solana-devnet

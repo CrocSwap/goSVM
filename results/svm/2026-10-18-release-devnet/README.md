@@ -2,9 +2,10 @@
 
 **Status: the published v0.1.0-alpha.1 path works locally end to end; the devnet
 deploy and calls are not done.** Every devnet airdrop request (six, 10:00–10:28
-EDT) was refused with HTTP 429, "You've either reached your airdrop limit today
-or the airdrop faucet has run dry". As instructed, no other funding source was
-used. Program ID, transaction signatures and on-chain CU are therefore not
+EDT, and two more at about 11:35) was refused, mostly with HTTP 429, "You've
+either reached your airdrop limit today or the airdrop faucet has run dry". As
+instructed, no other funding source was used. The payer the user then funded
+was lost with the scratch directory (below). Program ID, transaction signatures and on-chain CU are therefore not
 recorded yet.
 
 ## What ran
@@ -68,10 +69,24 @@ protocol workloads.
 - The public devnet faucet's per-IP daily limit can block a first-time user at
   the deploy step; the tutorial points to faucet.solana.com with GitHub sign-in.
 
+## Payer lost; second payer unfunded
+
+The user later funded `2kHEhYThZiD1rXiTBkwrpC9qfwZiHsbmqcfZPjaKqKis` with
+0.25 SOL, but by then the session's scratch directory, which held the isolated
+HOME and that payer's only keypair, had been cleared. That payer can no longer
+sign; its 0.25 devnet SOL is stranded. Nothing was ever deployed from it.
+
+The release was reinstalled into a new isolated HOME (same binary; same
+solana-v3 ELF, `571ca8b3…33e8`; fixtures pass again), and `gosvm deploy`
+created a second throwaway payer, `CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT`.
+Two airdrop requests for it failed (an RPC internal error, then the same 429).
+It is unfunded and nothing has been deployed.
+
 ## To finish
 
-Fund `2kHEhYThZiD1rXiTBkwrpC9qfwZiHsbmqcfZPjaKqKis` on devnet (about 0.2 SOL),
-then from the scratch project run tutorial sections 5–6 and record the program
-ID, deploy/call signatures and on-chain CU here. The throwaway keypair is kept
-only in the untracked scratch directory until then; no keys are in this
-repository.
+Fund `CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT` on devnet (about 0.25 SOL),
+then run tutorial sections 5–6 from that scratch project and record the program
+ID, signatures and on-chain CU here. Its keypair exists only in untracked scratch
+storage, which can be cleared between sessions, so do this promptly after
+funding; if the key is lost again, a later run needs a fresh payer. No keys are
+in this repository.
