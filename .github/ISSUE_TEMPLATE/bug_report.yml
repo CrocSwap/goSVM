@@ -1,0 +1,52 @@
+name: Bug report
+description: Something compiles wrong, is rejected unexpectedly, or a command fails.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        goSVM is a public alpha. Thank you for reporting. For questions and ideas, use
+        [Discussions](https://github.com/CrocSwap/goSVM/discussions). Please report
+        security issues privately (see SECURITY.md), not here.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got. Paste error output as text.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Smallest reproduction
+      description: The shortest Go source (or a link to a repository) and the commands that show the problem.
+      render: go
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Wrong result on chain or in the local SVM (differs from native Go)
+        - Valid Go rejected by gosvm check / build
+        - Install, toolchain or runner problem
+        - Deploy or call problem
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target
+      multiple: true
+      options: [fogo, solana, not applicable]
+  - type: textarea
+    id: version
+    attributes:
+      label: Version and host
+      description: Output of `gosvm version` and `gosvm doctor`.
+      render: text
+    validations:
+      required: true
