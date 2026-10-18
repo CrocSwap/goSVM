@@ -72,7 +72,7 @@ Anza's official Solana platform-tools (a one-time 430–530 MB download, ~210 MB
 kept) and goSVM's SVM test runners, each verified against pins built into the CLI.
 One project builds for both Fogo and Solana; goSVM picks the instruction set,
 pinned compiler backend and test runtime for each network. `gosvm test` runs your
-Go tests, so install [Go](https://go.dev/dl/) too. Building Go programs does not
+Go tests, so install [Go](https://go.dev/dl/) too (1.23 or newer on macOS 26). Building Go programs does not
 require Cargo or Rust.
 
 ```sh
