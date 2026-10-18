@@ -15,6 +15,18 @@ sections 1–4 pass from an isolated HOME; **the devnet deploy/calls are pending
 is marked as not yet recorded. `gosvm test --svm` now defaults to
 `testdata/svm.json`. [Evidence and rough edges](results/svm/2026-10-18-release-devnet/README.md).
 
+**Typed SVM fixture builder (October 18, user-approved, unreleased):** host-only
+`gosvm/sdk/fixture` ([sdk/fixture](sdk/fixture/fixture.go), shipped in SDK-2
+snapshots; older snapshots load without it and generation adds it) writes
+`testdata/svm.json` from Go with name-derived keys, PDAs, rent-exempt states,
+per-scenario expected-state tracking and automatic rollback expectations. Schema-2
+clients now generate `XKeys`/`XInstruction` builders (aliased
+`Instruction`/`AccountMeta` types shared with the builder) and `Err*` code
+constants. `gosvm new -schema 2 -sdk 2` adds `cmd/fixtures`, its staleness test
+and output, passing `gosvm test --svm` on both targets. The tutorial's generator
+was ported with a byte-identical `svm.json`, identical ELFs and CU.
+[Reference](docs/SVM_FIXTURES.md#writing-fixtures-in-go).
+
 **Runner 0.5.1 replaces 0.5.0 for fogo-v0/legacy (October 16, user-approved;
 not published):** resolves the 0.5.0 source decision below. 0.5.1 is the committed
 `benchmarks/svm-runner` source (LiteSVM 0.8.2 + rent-error patch, plus `returnData`

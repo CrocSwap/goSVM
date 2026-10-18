@@ -4,6 +4,8 @@ The `gosvm-svm-fixtures-v1` format describes named accounts, local test signers,
 additional ELF images, and ordered transaction scenarios. It is a testing format,
 independent of the generated binding schema. The compiler/framework language
 subset has not changed. Existing schema-1 `testdata/sbf.json` files keep working.
+SDK-2 projects write fixtures with a typed Go builder; see
+[writing fixtures in Go](#writing-fixtures-in-go).
 
 ## Commands
 
@@ -38,6 +40,111 @@ is a complete small example covering a swap, exact failure, and atomic rollback.
 The [full token corpus](../results/svm/2026-10-05-general-complete/token-fixtures.json)
 covers eight-account token CPIs and multi-transaction scenarios. It uses the
 matched wire adapter in `build/anchor/go-token.so`; use that exact artifact.
+
+## Writing fixtures in Go
+
+Fixtures hold exact addresses and bytes, so write them with Go rather than by
+hand. In an SDK-2 project, the SDK snapshot includes the host-only package
+`gosvm/sdk/fixture` ([source](../sdk/fixture/fixture.go)), and the generated
+client has a typed builder for each instruction. `gosvm new -schema 2 -sdk 2`
+creates `cmd/fixtures/main.go` with scenarios for the scaffold, its output
+`testdata/svm.json`, and `cmd/fixtures/main_test.go`, which fails (in `go test`
+and so in `gosvm test`) while the committed file differs from the generator's
+output. Regenerate after changing scenarios, layouts or instructions:
+
+```sh
+go run ./cmd/fixtures > testdata/svm.json
+```
+
+From the [tutorial](../examples/tutorial/cmd/fixtures/main.go):
+
+```go
+f := fixture.New("counter tutorial")
+owner := f.Signer("owner", 1_000_000_000)
+intruder := f.Signer("intruder", 1_000_000_000)
+counter := f.PDA("counter", []byte("counter"), owner.Key[:])
+create := client.CreateInstruction(client.CreateKeys{Counter: counter.Key, Owner: owner.Key},
+	model.CreateArgs{Limit: 10, Bump: counter.Bump})
+state := func(count uint64) []byte {
+	return client.EncodeAccountCounter(model.Counter{Owner: owner.Key, Count: count, Limit: 10, Bump: counter.Bump})
+}
+
+s := f.Scenario("create-and-increment")
+s.Step(create).ExpectCreated(counter, state(0), owner).ExpectInvocations(fixture.SystemProgram, 1)
+s.Step(client.IncrementInstruction(client.IncrementKeys{Counter: counter.Key, Owner: owner.Key},
+	model.IncrementArgs{Amount: 3})).ExpectData(counter, state(3))
+
+s = f.Scenario("only-the-owner-increments")
+s.Step(create).ExpectCreated(counter, state(0), owner)
+s.Step(client.IncrementInstruction(client.IncrementKeys{Counter: counter.Key, Owner: intruder.Key},
+	model.IncrementArgs{Amount: 1})).Fails(client.ErrAccountRelation)
+
+b, err := f.JSON() // the contents of testdata/svm.json
+```
+
+**Keys.** `fixture.New(namespace)` derives the program ID, the fee payer and
+every named key from SHA-256 of the namespace and name, so files are stable and
+reviewable. They are local test identities. `SetProgramID` replaces the program
+ID before any `PDA`; `KeyFor(name)` gives a derived address for other uses.
+
+**Accounts.** Every declared account gets an alias in the file:
+
+| Call | Declares |
+| --- | --- |
+| `Signer(name, lamports)` | A test signer with a System-owned wallet (no account for 0 lamports) |
+| `PDA(name, seeds...)` | The program-derived address and `Bump`, absent until created |
+| `Account(name, state)` | An account at `KeyFor(name)` that exists before each scenario |
+| `AccountAt(name, key, *state)` | An account at an explicit address; `nil` for none |
+| `Program(name, key, elf, sha256)` | Another SBF program image, called with `Step.Invoke` |
+
+`Owned(data)` is a program-owned state with the rent-exempt balance for its data,
+and `Wallet(lamports)` a System-owned one. The suite pins the runner's default
+Rent (3,480 lamports per byte-year, threshold 2), so `MinimumBalance(57)` is
+1,287,600 lamports; `SetRent` and `SetClock` change the initial sysvars.
+`SystemProgram`, `ComputeBudgetProgram`, `ClockSysvar` and `RentSysvar` need no
+declaration: an instruction that references one gets the alias `system`,
+`compute-budget`, `clock-sysvar` or `rent-sysvar`. `Payer()` is the runner's fee
+payer (`payer`), which is never asserted.
+
+**Instructions.** `client.XInstruction(client.XKeys{...}, args)` returns a
+`fixture.Instruction`: data and accounts in declared order with their signer and
+writable flags. `Scenario.Step(ixs...)` sends them to the program under test in
+one transaction; `Step.Call` appends another, and `Step.Invoke(programID, ix)`
+appends one for another program, for example
+`Invoke(fixture.ComputeBudgetProgram, fixture.RequestHeapFrame(64*1024))`.
+A signing account must have been declared with `Signer` (or be the payer).
+
+**Expectations.** Each scenario tracks every declared account's expected state,
+starting from its initial state or a `Scenario.Override`. Every step asserts all
+declared accounts, in declaration order. A step's expectations update that state
+and the rest carries over:
+
+| Method | Expects |
+| --- | --- |
+| `Expect(a, state)` / `ExpectAbsent(a)` | A complete state / no account |
+| `ExpectData(a, data)`, `ExpectLamports(a, n)` | A change to an existing account |
+| `ExpectCreated(a, data, payer)` | A new program-owned account holding data and its rent-exempt balance, debited from payer (a generated `init`) |
+| `ExpectClosed(a, to)` | No account, its lamports added to `to`, and the closed record in simulation (a generated `close`) |
+| `Fails(code)`, `FailsAt(i, code)` | Custom error `code` from the only (or `i`th) instruction; every state unchanged |
+| `FailsWith(err)` | Another exact error, such as `fixture.InstructionError(0, "MissingRequiredSignature")` |
+| `ExpectReturn(data)` | The program's return data, as its `Program return:` log |
+| `ExpectLog(text, n)`, `ExpectInvocations(programID, n)` | Exact log-line counts; invocations include CPIs |
+| `CU(n)` | Exact simulated compute units |
+
+A failing step cannot also expect state changes: the runtime rolls the whole
+transaction back. `Step.Clock`, `Step.Rent` and `Step.FreshBlockhash` add the
+step controls described below; a step's Rent also applies to later
+`ExpectCreated` balances in that scenario. `JSON` returns the indented file, or
+the first construction error: an undeclared account, a signer without a test
+seed, a duplicate alias or scenario, and so on. It writes keys in sorted order,
+so the output matches a sorted-map encoding.
+
+The client's `ErrAccountRelation` and other error constants give the generated
+validation codes by name. The builder covers the format's common subset; each
+step asserts every declared account, so a suite has at most 64 declared
+accounts (the per-step limit). Write other shapes, such as subsets of watched
+accounts, directly in the format below. Schema-1 projects and SDK-1 snapshots
+have no builder.
 
 ## Fixture fields
 

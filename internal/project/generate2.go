@@ -359,5 +359,70 @@ func (m *multiModel) client() ([]byte, error) {
 		m.codecFields(&out, l.Fields, "v", "b", false, true)
 		fmt.Fprint(&out, "return v,nil\n}\n")
 	}
+	m.clientInstructions(&out)
 	return m.goSource("client", out.String(), true)
+}
+
+// clientInstructions emits typed instruction builders and the error codes.
+// AccountMeta and Instruction alias unnamed struct types, identical to
+// gosvm/sdk/fixture's, so fixtures accept them without the client importing
+// the SDK.
+func (m *multiModel) clientInstructions(out *bytes.Buffer) {
+	fmt.Fprint(out, "// AccountMeta is one account reference of an instruction.\ntype AccountMeta = struct {\nKey [32]byte\nSigner bool\nWritable bool\n}\n")
+	fmt.Fprint(out, "// Instruction is an instruction's ordered accounts and data, for this program's ID.\ntype Instruction = struct {\nAccounts []AccountMeta\nData []byte\n}\n")
+	for i, ix := range m.Config.Instructions {
+		fixed := []string{}
+		fmt.Fprintf(out, "// %sKeys holds the addresses of %s's accounts.\ntype %sKeys struct {\n", ix.Name, ix.Name, ix.Name)
+		for _, a := range ix.Accounts {
+			if a.Address != "" {
+				fixed = append(fixed, a.Name)
+				continue
+			}
+			fmt.Fprintf(out, "%s [32]byte\n", a.Name)
+		}
+		fmt.Fprint(out, "}\n")
+		comment := ""
+		if len(fixed) != 0 {
+			comment = "\n// Fixed addresses from gosvm.json: " + strings.Join(fixed, ", ") + "."
+		}
+		fmt.Fprintf(out, "// %sInstruction encodes %s with its accounts in declared order.%s\nfunc %sInstruction(keys %sKeys, args %s) Instruction {\nreturn Instruction{Accounts: []AccountMeta{\n", ix.Name, ix.Name, comment, ix.Name, ix.Name, m.typeName(m.Arguments[i].GoType))
+		for _, a := range ix.Accounts {
+			key := "keys." + a.Name
+			if a.Address != "" {
+				b, _ := hexKey(a.Address)
+				parts := make([]string, len(b))
+				for j, v := range b {
+					parts[j] = fmt.Sprint(v)
+				}
+				key = "[32]byte{" + strings.Join(parts, ", ") + "}"
+				if strings.Trim(a.Address, "0") == "" {
+					key = "[32]byte{}"
+				}
+			}
+			fmt.Fprintf(out, "{Key: %s, Signer: %t, Writable: %t},", key, a.Signer || a.Kind == "signer", a.Access == "write")
+			if a.Address != "" {
+				fmt.Fprintf(out, " // %s", a.Name)
+			}
+			fmt.Fprint(out, "\n")
+		}
+		fmt.Fprintf(out, "}, Data: EncodeInstruction%s(args)}\n}\n", ix.Name)
+	}
+	names := make([]string, 0, len(m.Errors))
+	consts := map[string]uint64{}
+	for name, code := range m.Errors {
+		if !strings.HasPrefix(name, "Err") {
+			name = "Err" + name
+			if _, user := m.Errors[name]; user {
+				continue
+			}
+		}
+		names = append(names, name)
+		consts[name] = code
+	}
+	sort.Strings(names)
+	fmt.Fprint(out, "// Error codes: the program's own and the generated validation's.\nconst (\n")
+	for _, name := range names {
+		fmt.Fprintf(out, "%s uint64 = %d\n", name, consts[name])
+	}
+	fmt.Fprint(out, ")\n")
 }

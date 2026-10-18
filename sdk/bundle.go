@@ -3,5 +3,5 @@ package sdk
 
 import "embed"
 
-//go:embed pda/pda.go cpi/cpi.go token/token.go token/lifecycle.go system/system.go system/rent.go
+//go:embed pda/pda.go cpi/cpi.go token/token.go token/lifecycle.go system/system.go system/rent.go fixture/fixture.go
 var Sources embed.FS

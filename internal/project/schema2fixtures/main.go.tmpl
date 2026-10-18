@@ -1,0 +1,68 @@
+// Command fixtures writes testdata/svm.json, the local SVM scenarios for
+// gosvm test --svm, using the generated client's instructions and encoders.
+//
+//	go run ./cmd/fixtures > testdata/svm.json
+//
+// main_test.go fails while the committed file differs from this output.
+package main
+
+import (
+	"os"
+
+	"MODULE/client"
+	"MODULE/model"
+	"gosvm/sdk/fixture"
+)
+
+func main() {
+	b, err := suiteJSON()
+	if err != nil {
+		os.Stderr.WriteString(err.Error() + "\n")
+		os.Exit(1)
+	}
+	os.Stdout.Write(b)
+}
+
+// suiteJSON returns the fixture file's contents.
+func suiteJSON() ([]byte, error) {
+	// Keys derive from this namespace and each name: local test identities only.
+	f := fixture.New("starter")
+	authority := f.Signer("authority", 1_000_000_000)
+	intruder := f.Signer("intruder", 1_000_000_000)
+	vault := func(balance, moves uint64) []byte {
+		return client.EncodeAccountVault(model.Vault{Authority: authority.Key, Balance: balance, Moves: moves})
+	}
+	policy := func(limit uint64) []byte {
+		return client.EncodeAccountPolicy(model.Policy{Authority: authority.Key, Limit: limit})
+	}
+	// Program-owned, rent-exempt accounts that exist before each scenario.
+	source := f.Account("source", f.Owned(vault(100, 0)))
+	destination := f.Account("destination", f.Owned(vault(5, 0)))
+	limits := f.Account("policy", f.Owned(policy(50)))
+
+	move := func(signer fixture.Account, amount uint64) fixture.Instruction {
+		return client.MoveInstruction(client.MoveKeys{Source: source.Key, Destination: destination.Key, Policy: limits.Key, Authority: signer.Key},
+			model.MoveArgs{Amount: amount})
+	}
+	setLimit := func(limit uint64) fixture.Instruction {
+		return client.SetLimitInstruction(client.SetLimitKeys{Policy: limits.Key, Authority: authority.Key},
+			model.SetLimitArgs{Limit: limit})
+	}
+
+	// Each step expects every declared account's state; accounts it does not
+	// mention keep theirs, and a failing step leaves all of them unchanged.
+	f.Scenario("move").
+		Step(move(authority, 10)).ExpectData(source, vault(90, 1)).ExpectData(destination, vault(15, 1))
+
+	f.Scenario("move-over-limit-fails").
+		Step(move(authority, 51)).Fails(client.ErrMove)
+
+	s := f.Scenario("raise-limit-then-move")
+	s.Step(setLimit(80)).ExpectData(limits, policy(80))
+	s.Step(move(authority, 60)).ExpectData(source, vault(40, 1)).ExpectData(destination, vault(65, 1))
+
+	f.Scenario("only-the-authority-moves").
+		Step(move(intruder, 1)).Fails(client.ErrAccountRelation)
+
+	return f.JSON()
+}

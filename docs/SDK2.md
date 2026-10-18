@@ -12,6 +12,11 @@ The manifest records `sdk_version: 2`. The project receives a pinned local SDK
 snapshot, including `gosvm/solana`, `gosvm/sdk/pda`, `gosvm/sdk/cpi` and
 `gosvm/sdk/token` and `gosvm/sdk/system`. Native Go and the compiler select that snapshot's API.
 Generation checks its contents and rejects unexpected Go files or drift.
+The snapshot also holds the host-only [fixture builder](SVM_FIXTURES.md#writing-fixtures-in-go)
+`gosvm/sdk/fixture`, which programs never import. Snapshots from before it existed
+remain valid; generation adds it. A new SDK-2 project includes a fixture generator,
+`cmd/fixtures`, and its output `testdata/svm.json`, so `gosvm test --svm` runs
+scenarios immediately.
 SDK 1 remains the default and retains its original API/runtime; existing projects
 are not upgraded automatically. Schema 1 cannot select SDK 2.
 

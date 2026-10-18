@@ -18,7 +18,9 @@ Increment -amount 3` simulates one, deriving the counter's PDA from the schema
 `model/` holds the state, arguments, error codes and the `Next` rule, shared by
 the program and the off-chain code. `cmd/counter` is an ordinary Go client for a
 deployed counter; `solrpc/` is the small transaction/RPC helper it uses.
-`cmd/fixtures` writes `testdata/svm.json`.
+`cmd/fixtures` writes `testdata/svm.json` with the SDK's fixture builder,
+`gosvm/sdk/fixture`, and the generated client
+(`go run ./cmd/fixtures > testdata/svm.json`).
 
 From this directory, with the CLI and toolchain installed:
 
