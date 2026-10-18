@@ -93,7 +93,7 @@ and native plus actual-SBF tests.
 
 ```sh
 # Released binary (after the first public release; no Go/Clang needed to install):
-curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.2/install-release.sh | sh
+curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.3/install-release.sh | sh
 # ...or from a checkout (needs Go; macOS also host Clang for external linking):
 bash scripts/install.sh "$HOME/.local/bin"
 
@@ -272,7 +272,7 @@ manual and only creates **draft** releases. Tags: `runner-v0.5.1`, `runner-v0.6.
    (`update_runner_pins.py --check`), then attaches the three CLI archives,
    `SHA256SUMS` and the version-stamped `install-release.sh` to a draft prerelease.
 6. **Smoke and publish:** on a clean machine,
-   `curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.2/install-release.sh | sh`
+   `curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.3/install-release.sh | sh`
    (draft assets need `gh release download` instead), `gosvm toolchain install`,
    `gosvm new demo && cd demo && gosvm test --svm`; then
    `gh release edit v0.1.0-alpha.1 --draft=false`.

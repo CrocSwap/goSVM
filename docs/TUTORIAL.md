@@ -380,8 +380,7 @@ transactions with exact expected account states
 builder `gosvm/sdk/fixture`, in the SDK copy, derives keys and addresses and
 tracks each account's expected state; the generated client supplies the
 instructions and account bytes. (The builder and the generated instruction
-builders are newer than v0.1.0-alpha.2; with that release, build `gosvm` from
-source for this section.)
+builders need gosvm v0.1.0-alpha.3 or newer.)
 
 Recreate the generator as `cmd/fixtures/main.go`:
 
