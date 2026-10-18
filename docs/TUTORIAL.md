@@ -498,10 +498,6 @@ real network.
 
 ## 5. Deploy to Solana devnet
 
-<!-- The devnet run of sections 5 and 6 is pending: devnet airdrops were
-rate-limited on 2026-10-18. Output below marked <...> is not yet recorded;
-see results/svm/2026-10-18-release-devnet/README.md. -->
-
 First check that devnet accepts the program. This builds the `solana` target and
 reads the cluster's live feature gates; it sends nothing and needs no keys:
 
@@ -519,8 +515,8 @@ dedicated keypair for this project and network, then stops until you fund it:
 ```console
 $ gosvm deploy -network solana-devnet
 ...
-Created deployment payer .../counter/deploy/keys/solana-devnet-payer.json (address 2kHEhYThZiD1rXiTBkwrpC9qfwZiHsbmqcfZPjaKqKis)
-gosvm: payer 2kHEhYThZiD1rXiTBkwrpC9qfwZiHsbmqcfZPjaKqKis has 0.000000 on solana-devnet; deployment needs about 0.162370. Fund it (https://faucet.solana.com or solana airdrop -u devnet), then rerun
+Created deployment payer .../counter/deploy/keys/solana-devnet-payer.json (address CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT)
+gosvm: payer CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT has 0.000000 on solana-devnet; deployment needs about 0.162370. Fund it (https://faucet.solana.com or solana airdrop -u devnet), then rerun
 ```
 
 `deploy/keys/` gets its own `.gitignore`, so keys stay out of Git. The amounts
@@ -545,10 +541,11 @@ Once the payer has at least 0.16 SOL, rerun:
 ```console
 $ gosvm deploy -network solana-devnet
 ...
-Deploying program <program ID>
-Creating buffer <buffer address> (<bytes> bytes)
-Writing <n> chunks
-Deployed solana on solana-devnet at <program ID>
+Created program keypair .../counter/deploy/keys/solana-devnet-program.json (address 2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW); keep it to redeploy at the same address
+Creating buffer Fk5cTMKsgyTboW4nkWUNWsanq6ZNEf6NFrwdxJKe1rNm (14861 bytes)
+Writing 17 chunks
+Deploying program 2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW
+Deployed solana on solana-devnet at 2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW
 Record: .../counter/deploy/solana-devnet.json
 ```
 
@@ -582,14 +579,14 @@ is simulated, which costs nothing:
 $ gosvm call -network solana-devnet -data f52cd645c1e8e78205000000000000000a000000000000000300000000000000
 {
   "committed": false,
-  "compute_units": <CU>,
+  "compute_units": 258,
   "error": null,
   "input_hex": "f52cd645c1e8e78205000000000000000a000000000000000300000000000000",
   "logs": [...],
   "network": "solana-devnet",
-  "program_id": "<program ID>",
+  "program_id": "2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW",
   "return_data_hex": "0800000000000000",
-  "return_program": "<program ID>",
+  "return_program": "2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW",
   "signature": ""
 }
 ```
@@ -634,15 +631,16 @@ project directory:
 
 ```console
 $ go run ./cmd/counter create 10
-transaction <signature>
-  https://explorer.solana.com/tx/<signature>?cluster=devnet
-  <CU> compute units, error null
-counter <counter address>: count 0 of 10
+transaction 4uzWn7ZnrMv6mgg61pnJw5iFzh4VZ6gGphqLCwSf2Y9QyDRWyqkJRGGy74H5c43THxXKEPUb1xiiNNSqke3FTpBt
+  https://explorer.solana.com/tx/4uzWn7ZnrMv6mgg61pnJw5iFzh4VZ6gGphqLCwSf2Y9QyDRWyqkJRGGy74H5c43THxXKEPUb1xiiNNSqke3FTpBt?cluster=devnet
+  14794 compute units, error null
+counter 8KLtz6PGFAd62kDkcLgpJ3nDC6ZBuWpUZuiTGKBX7aAz: count 0 of 10
 $ go run ./cmd/counter increment 3
 expect count 3
-transaction <signature>
-  ...
-counter <counter address>: count 3 of 10
+transaction 46DeYaKRpwYhVXRxLiG9ENGsi5pSXyZ4B4URncey46mLHV3rHrE396sBntoEowkEQcJEAyio7y5piHdywqSUR9pu
+  https://explorer.solana.com/tx/46DeYaKRpwYhVXRxLiG9ENGsi5pSXyZ4B4URncey46mLHV3rHrE396sBntoEowkEQcJEAyio7y5piHdywqSUR9pu?cluster=devnet
+  1994 compute units, error null
+counter 8KLtz6PGFAd62kDkcLgpJ3nDC6ZBuWpUZuiTGKBX7aAz: count 3 of 10
 $ go run ./cmd/counter increment 8
 the program would reject this increment with error 4101
 ```

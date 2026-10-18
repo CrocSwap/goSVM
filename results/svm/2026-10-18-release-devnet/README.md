@@ -1,12 +1,11 @@
-# Release binary walkthrough and devnet attempt — October 18, 2026
+# Release binary walkthrough and devnet run — October 18, 2026
 
-**Status: the published v0.1.0-alpha.1 path works locally end to end; the devnet
-deploy and calls are not done.** Every devnet airdrop request (six, 10:00–10:28
-EDT, and two more at about 11:35) was refused, mostly with HTTP 429, "You've
-either reached your airdrop limit today or the airdrop faucet has run dry". As
-instructed, no other funding source was used. The payer the user then funded
-was lost with the scratch directory (below). Program ID, transaction signatures and on-chain CU are therefore not
-recorded yet.
+**Status: the published v0.1.0-alpha.1 path works end to end, including a real
+Solana devnet deploy and calls** ([below](#devnet-run)). On-chain CU is within 4
+of the local LiteSVM measurement for every instruction. Public devnet airdrops
+were refused all day, so the user funded the throwaway payer; the first funded
+payer was lost with a cleared scratch directory, and a second one completed the
+run.
 
 ## What ran
 
@@ -40,7 +39,7 @@ project directories), fogo-v0 16,000 bytes (`5bf3006a…3c61`).
 | `Create` with limit 0 (4101, creation rolled back) | 13,946 | 14,000 |
 | `Preview` (return data) | 259 | 259 |
 
-On-chain CU for the same instructions: pending the devnet run. These are the
+On-chain CU is in the [devnet run](#devnet-run). These are the
 tutorial counter's measurements, unrelated to the bounded starter, token swap or
 protocol workloads.
 
@@ -82,11 +81,34 @@ created a second throwaway payer, `CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT`
 Two airdrop requests for it failed (an RPC internal error, then the same 429).
 It is unfunded and nothing has been deployed.
 
-## To finish
+## Devnet run
 
-Fund `CmUSAqkhVTMR63AHPYNJUHAJVMSCSybJyt1i9ucaK3hT` on devnet (about 0.25 SOL),
-then run tutorial sections 5–6 from that scratch project and record the program
-ID, signatures and on-chain CU here. Its keypair exists only in untracked scratch
-storage, which can be cleared between sessions, so do this promptly after
-funding; if the key is lost again, a later run needs a fresh payer. No keys are
-in this repository.
+The user funded the second payer with 0.25 devnet SOL. Its project directory had
+been copied out of scratch first (to an untracked directory outside the repo), and
+the run used the same isolated `HOME` and release binary, against
+`https://api.devnet.solana.com` only.
+
+- Program: [`2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW`](https://explorer.solana.com/address/2cZLWu6XrXjBGyPEVoMzqw5eyXNyxtEzpaLTWa89cFsW?cluster=devnet),
+  upgradeable loader, upgrade authority the payer. Deployed ELF `571ca8b3…`, the
+  same bytes as the local runs.
+- Deploy: buffer `Fk5cTMKs…` (14,861 bytes, 17 chunks), deploy transaction
+  [`39EMg6Yh…`](https://explorer.solana.com/tx/39EMg6YhmZq6CJMGL9JbN9X6h2cFJcoGuBSvYv4RbRAFGPuNTRJh7dr8QfghpwJok9QDx3qcM4XazRvmdeVe3YdZ?cluster=devnet).
+  The whole run (deploy, counter account rent and fees) cost the payer about
+  0.078 SOL (0.25 → 0.172); the upload buffer's rent was refunded.
+- Counter PDA `8KLtz6PGFAd62kDkcLgpJ3nDC6ZBuWpUZuiTGKBX7aAz`.
+
+| Call | How | Result | On-chain CU | Local CU (solana-v3) |
+| --- | --- | --- | ---: | ---: |
+| `Preview(5, 10, 3)` | `gosvm call` (simulate) | returns 8 | 258 | 259 |
+| `Preview(9, 10, 3)` | `gosvm call` (simulate) | `Custom(4101)` (`0x1005`) | 150 | — |
+| `Preview(5, 10, 3)` | `gosvm call -send`, [`3Xus9rK3…`](https://explorer.solana.com/tx/3Xus9rK3t6NAua7ocmMEKQgSnBUQi2rf2y1miUNNNyMhBR1SjUEBjLVR4qyD8zqenauqofkcbaTRF2V3fnvwHk4E?cluster=devnet) | committed | 258 | 259 |
+| `Create(10)` | Go client, [`4uzWn7Zn…`](https://explorer.solana.com/tx/4uzWn7ZnrMv6mgg61pnJw5iFzh4VZ6gGphqLCwSf2Y9QyDRWyqkJRGGy74H5c43THxXKEPUb1xiiNNSqke3FTpBt?cluster=devnet) | count 0 of 10 | 14,794 | 14,790 |
+| `Increment(3)` | Go client, [`46DeYaKR…`](https://explorer.solana.com/tx/46DeYaKRpwYhVXRxLiG9ENGsi5pSXyZ4B4URncey46mLHV3rHrE396sBntoEowkEQcJEAyio7y5piHdywqSUR9pu?cluster=devnet) | count 3 of 10 | 1,994 | 1,995 |
+| `Increment(8)` | Go client | refused client-side by `model.Next` (4101), nothing sent | — | — |
+
+The small CU differences (±4) are runtime differences between devnet (Agave
+4.4.0-beta.0) and runner 0.6.0, not different code: the ELF is identical.
+The tutorial's sections 5–6 now show this output. The payer and program
+keypairs were deleted after the run; only the pubkeys above are recorded, and no
+keys are in this repository. The program stays deployed on devnet, with no
+remaining upgrade authority holder.
