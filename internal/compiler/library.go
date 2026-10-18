@@ -20,7 +20,7 @@ func (g *generator) emitLibraryBody(fn *ast.FuncDecl, b library.Binding) {
 
 // memmoveHelper is libraryMemory as a separate helper object, linked when
 // LLVM references memmove in a program without libraries (build.go).
-const memmoveHelper = "typedef unsigned char u8;\n" + libraryMemory
+const memmoveHelper = "typedef unsigned char u8;\ntypedef unsigned long long u64;\n" + libraryMemory
 
 // The frontend already owns memcpy/memset. Pure foreign libraries can additionally
 // need overlap-safe memmove; provide it locally instead of linking a second
