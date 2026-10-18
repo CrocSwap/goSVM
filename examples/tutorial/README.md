@@ -21,7 +21,7 @@ From this directory, with the CLI and toolchain installed:
 ```sh
 gosvm check
 gosvm test
-gosvm test --svm -svm-fixtures testdata/svm.json
+gosvm test --svm
 gosvm deploy -network solana-devnet -check
 ```
 

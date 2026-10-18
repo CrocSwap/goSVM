@@ -440,7 +440,7 @@ lamports. Native tests cannot show that; the SVM does. Generate the file and run
 
 ```console
 $ go run ./cmd/fixtures > testdata/svm.json
-$ gosvm test --svm -svm-fixtures testdata/svm.json
+$ gosvm test --svm
 ok  	example.com/counter	0.011s
 ...
 Built .../build/fogo-v0/v1.57/f731d72ca2cb5616/deps-25c3169730b00da4/program.so (16000 bytes, 2.2s)
