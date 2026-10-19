@@ -242,6 +242,31 @@ check instruction/meta encoding, preconditions, close-authority selection and
 propagated failures. The new helper is part of the pinned SDK-2 snapshot; adopt
 a matching frontend and complete SDK snapshot rather than adding it to an old CLI.
 
+## Token-2022 extended accounts
+
+`token.ReadMint(c, index)` and `token.ReadAccount(c, index)` decode the current
+mint (`MintState`: optional mint/freeze authorities, supply, decimals) or token
+account (`State`) owned by classic Token or Token-2022, including Token-2022
+extended layouts such as Hyperlane's 234-byte metadata-pointer mint and the
+170-byte ATA with `ImmutableOwner`. Classic Token requires exactly 82/165 bytes.
+A Token-2022 extended account must have zero padding to byte 165, the account
+type at byte 165 (1 mint, 2 account), and TLV entries (type and length as
+little-endian uint16) that fit the data; the 355-byte Multisig length is never
+an extended account. Both reject uninitialized state and noncanonical COption
+tags, and `ReadAccount` rejects wrapped native SOL like `Load`. They take an
+index rather than a checked reference and reread current bytes on every call;
+`Load`, `Read` and the classic helpers still accept only classic Token.
+
+`token.FindExtension(c, index, kind)` returns an extension's data offset and
+length (`ErrExtension`, 3015, when absent). `ReadTransferFeeConfig` decodes
+`TransferFeeConfig`, and `token.Fee(c, mint, epoch, amount)` reproduces
+Token-2022's fee for a pre-fee amount: the older or newer fee by epoch,
+`ceil(amount * basis points / 10000)` capped at the maximum, zero without the
+extension or for classic mints. Pass the epoch from `solana.Clock`. The
+[extension probe](../examples/token-extensions/README.md) checks these against
+accounts written by the real Token-2022 program, and the fee against what it
+withholds across an epoch change.
+
 ## Runtime Clock
 
 `solana.Clock(context, output)` writes exactly 40 bytes from the current runtime

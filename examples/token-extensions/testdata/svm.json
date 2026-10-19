@@ -1,0 +1,3163 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+  "payer_seed": "43ccfe68d54bf7320245fc0a90a05f1c113779780e39e81e2404648ef8dbdb46",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "funder",
+      "seed": "69ecb74a1af9662c44b390722fd7138250b8f31a9e75bad9bbfe2dc78416b30f"
+    },
+    {
+      "name": "issuer",
+      "seed": "74ad2ade29fd2779ccfea0d6111be0231fa013737f0abd7e1f25bf05d36bd868"
+    },
+    {
+      "name": "user",
+      "seed": "e38bb5ecbe57b213aaad48a8510393d4e4b5929fce91f1765fbde3038931183c"
+    },
+    {
+      "name": "other",
+      "seed": "4721c0ce74c9ad254d74ada314439b47cb766e8387b30de64084e915b65ea78b"
+    },
+    {
+      "name": "new-mint",
+      "seed": "39aa942f45d5fdc1f9c20a168c8e7573395c0d1e656102d92826bee4b3fac9d1"
+    },
+    {
+      "name": "new-account",
+      "seed": "0b33eca87ed9f63d949cf663f35dbfe555d255ec8cd0ee75d440869ee31e796d"
+    }
+  ],
+  "programs": [
+    {
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "elf": "../../../third_party/litesvm-0.8.2/src/programs/elf/spl_token_2022-8.0.0.so",
+      "name": "spl-token-2022",
+      "sha256": "d2f8858d3204d0f47cef71a419048380dee8e88da4c63cf207d61d486555d240"
+    }
+  ],
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "8rF2RXgCVJN7dVNDoqjU931RAjgdu3jZ3Egc8qGCtujg",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 10000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "funder"
+    },
+    {
+      "address": "6Wuy1xCVYi6ftvLcKNaoi9NBNLuciqL8jb9rqipR11rq",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "issuer"
+    },
+    {
+      "address": "r9EfMjfLowHEDaymDspru2rccUD3AnxspE7ns2htgxd",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "user"
+    },
+    {
+      "address": "DYYSPjMi8LUDhw68DyAwKHjzLZJuknthkcnpHkJKbTY7",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "other"
+    },
+    {
+      "address": "3oKx4epSp3zSVkEwTrwykoq812Ct2wca5mFsq1HQBDVd",
+      "name": "new-mint"
+    },
+    {
+      "address": "7PjDNJt9FNi6CmqJeKdemVmRfSh44Q2FsuCz5BuvKYBV",
+      "name": "new-account"
+    },
+    {
+      "address": "5YBtHj5vQVfYFyBUhmcqYKUpN8gaZ2Qraqmachjcq53G",
+      "initial": {
+        "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "lamports": 1447680,
+        "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+        "rent_epoch": 0
+      },
+      "name": "result"
+    },
+    {
+      "address": "CAyXN5g3h9BEoK25LmuP6GCyiX7p7dPmtinpevviUPEE",
+      "initial": {
+        "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+        "executable": false,
+        "lamports": 2825760,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "fee-mint"
+    },
+    {
+      "address": "3ja7X5Vjt7G1JPVQjSmU5qX5gBh3WhQw9jfBYHiihe3o",
+      "initial": {
+        "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+        "executable": false,
+        "lamports": 2129760,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "source"
+    },
+    {
+      "address": "ENqrgdzn5CxuyJATMwT24AGswSzDgnnLU7p4T1JBVQ4k",
+      "initial": {
+        "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+        "executable": false,
+        "lamports": 2129760,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "destination"
+    },
+    {
+      "address": "6nKckUGtoLV7PpnyZRNa3ahNfEpHGxLBuUHkBtRmpVFi",
+      "initial": {
+        "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+        "executable": false,
+        "lamports": 2519520,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "pointer-mint"
+    },
+    {
+      "address": "FU62ZX6ViFN1iTg1ttxR9eosFYeJZ5n6r7Xv4VcHQ5kh",
+      "initial": {
+        "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+        "executable": false,
+        "lamports": 2074080,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "ata"
+    },
+    {
+      "address": "4ZbHPjTPtaNiZQiofMqyYz3CJdsbrCFgtsa5nVRHN6nH",
+      "initial": {
+        "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "lamports": 1461600,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 0
+      },
+      "name": "classic-mint"
+    },
+    {
+      "address": "FcBRFC2SbeabkTqnAUadFkjAs4CiuvgT4bXEyr9RTG5R",
+      "initial": {
+        "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "lamports": 2039280,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 0
+      },
+      "name": "classic-account"
+    }
+  ],
+  "cases": [
+    {
+      "name": "token-2022-writes-the-preloaded-layouts",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 9997174240,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0000000000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088130000000000003200000000000000000088130000000000003200",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "funder",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "new-mint",
+                  "signer": true,
+                  "writable": true
+                }
+              ],
+              "data": "00000000201e2b0000000000160100000000000006ddf6e1ee758fde18425dbce46ccddab61afc4d83b90d27febdf928d8a18bfc",
+              "program": "system"
+            },
+            {
+              "accounts": [
+                {
+                  "account": "new-mint",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "1a000151f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0032008813000000000000",
+              "program": "spl-token-2022"
+            },
+            {
+              "accounts": [
+                {
+                  "account": "new-mint",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "140651f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00",
+              "program": "spl-token-2022"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 9995044480,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0000000000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088130000000000003200000000000000000088130000000000003200",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-account",
+                "state": {
+                  "data": "2995846601a743a4dba9221b3faa19100fdd880accee204a2a96aa7f8e9f262c0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "funder",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "new-account",
+                  "signer": true,
+                  "writable": true
+                }
+              ],
+              "data": "00000000607f200000000000b20000000000000006ddf6e1ee758fde18425dbce46ccddab61afc4d83b90d27febdf928d8a18bfc",
+              "program": "system"
+            },
+            {
+              "accounts": [
+                {
+                  "account": "new-account",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "new-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "120c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e",
+              "program": "spl-token-2022"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 9995044480,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0000000000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088130000000000003200000000000000000088130000000000003200",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-account",
+                "state": {
+                  "data": "2995846601a743a4dba9221b3faa19100fdd880accee204a2a96aa7f8e9f262c0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0000000000000000060151f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "new-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 9995044480,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a0000000000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000088130000000000003200000000000000000088130000000000003200",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "new-account",
+                "state": {
+                  "data": "2995846601a743a4dba9221b3faa19100fdd880accee204a2a96aa7f8e9f262c0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000002995846601a743a4dba9221b3faa19100fdd880accee204a2a96aa7f8e9f262c0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "new-account",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "transfer-fee-across-epochs",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "3300000000000000de2600000000000033000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e2f1b0f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84de2600000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008003300000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "fee-mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "source",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "destination",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "user",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "02000102030405112700000000000006",
+              "program": "program"
+            }
+          ],
+          "sysvars": {
+            "clock": {
+              "epoch": 4,
+              "epoch_start_timestamp": 0,
+              "leader_schedule_epoch": 4,
+              "slot": 0,
+              "unix_timestamp": 0
+            }
+          }
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0700000000000000e84d0000000000003a000000000000000500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e1ef40e000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84e84d00000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008003a00000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "fresh_blockhash": true,
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "fee-mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "source",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "destination",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "user",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "02000102030405112700000000000006",
+              "program": "program"
+            }
+          ],
+          "sysvars": {
+            "clock": {
+              "epoch": 5,
+              "epoch_start_timestamp": 0,
+              "leader_schedule_epoch": 5,
+              "slot": 0,
+              "unix_timestamp": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "decode-hyperlane-layouts",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "7b00000000000000090155e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "4d0000000000000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "aa00000000000000400000000000000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "03000100000000120000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "aa00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "03000100000000070000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0500000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "classic-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "040000000000000034ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "classic-account",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "040000000000000034ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3012
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "040000000000000034ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3010
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "040000000000000034ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3015
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "03000100000000010000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "040000000000000034ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3010
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "classic-account",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "03000100000000070000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reject-malformed-extensions",
+      "overrides": [
+        {
+          "name": "pointer-mint",
+          "state": {
+            "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200410051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+            "executable": false,
+            "lamports": 2519520,
+            "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200410051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3012
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000100000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "issuer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "user",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "other",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "new-mint"
+              },
+              {
+                "absent": true,
+                "account": "new-account"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1447680,
+                  "owner": "yaCGMNZQTs8VFjwJ4nYLyzhzzCzmKPrk2xVH6u8ZBiD",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fee-mint",
+                "state": {
+                  "data": "0100000051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a40420f0000000000060100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000101006c0051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040420f00000000003200050000000000000007000000000000002c01",
+                  "executable": false,
+                  "lamports": 2825760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "source",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bf0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e40420f000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "destination",
+                "state": {
+                  "data": "a5feb1dec911357e06874f1ece227c66251bb4cceb856bc44eb55785265ea4bfba60cb8689831d6c22f6d01a279934ca8340a2f537a9276c952ee599fb28aa84000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002020008000000000000000000",
+                  "executable": false,
+                  "lamports": 2129760,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "pointer-mint",
+                "state": {
+                  "data": "0100000055e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d7b0000000000000009010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200410051f42aade7e0c74a7691e9f448fe4ca79630810b878ab31c2beca08155d5fe6a55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata",
+                "state": {
+                  "data": "55e69ee2168a64f8e953248832faf9b009767de72a98e6d6b40ec6579f14451d0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e4d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000005000000000000000201000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-account",
+                "state": {
+                  "data": "34ec68ffa6485d917eaee431bc9448ff524664f60b3fc74948007cc5ecb57ebe0c96c5878fdb5ab787cec6e1070bf43256653f3b3bbd62c6685cf0f1fa71482e0400000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3010
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "pointer-mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "03000100000000120000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
