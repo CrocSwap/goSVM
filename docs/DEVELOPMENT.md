@@ -93,7 +93,7 @@ and native plus actual-SBF tests.
 
 ```sh
 # Released binary (after the first public release; no Go/Clang needed to install):
-curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.3/install-release.sh | sh
+curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.4/install-release.sh | sh
 # ...or from a checkout (needs Go; macOS also host Clang for external linking):
 bash scripts/install.sh "$HOME/.local/bin"
 
@@ -267,15 +267,15 @@ manual and only creates **draft** releases. Tags: `runner-v0.5.1`, `runner-v0.6.
    linux-amd64, linux-arm64 and macOS arm64.
 4. **Publish runners:** `gh release edit runner-v0.5.1 --draft=false` and the same
    for `runner-v0.6.0`, after CI and the draft check on the pinned commit are green.
-5. **CLI draft:** `gh workflow run release.yml -f component=cli -f version=v0.1.0-alpha.1`.
+5. **CLI draft:** `gh workflow run release.yml -f component=cli -f version=v0.1.0-alpha.4`.
    It refuses to build unless the committed pins equal the runner release assets
    (`update_runner_pins.py --check`), then attaches the three CLI archives,
    `SHA256SUMS` and the version-stamped `install-release.sh` to a draft prerelease.
 6. **Smoke and publish:** on a clean machine,
-   `curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.3/install-release.sh | sh`
+   `curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.4/install-release.sh | sh`
    (draft assets need `gh release download` instead), `gosvm toolchain install`,
    `gosvm new demo && cd demo && gosvm test --svm`; then
-   `gh release edit v0.1.0-alpha.1 --draft=false`.
+   `gh release edit v0.1.0-alpha.4 --draft=false`.
 
 Local dry runs need no GitHub: `scripts/package_cli_release.py --version V --platform P
 --output DIR` (and `--checksums DIR`) and the runner commands above produce the same

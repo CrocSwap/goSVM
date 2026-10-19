@@ -76,7 +76,7 @@ Go tests, so install [Go](https://go.dev/dl/) too (1.23 or newer on macOS 26). B
 require Cargo or Rust.
 
 ```sh
-curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.3/install-release.sh | sh
+curl -fsSL https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.4/install-release.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
 
 gosvm toolchain install   # Download the pinned backend and SVM test runners

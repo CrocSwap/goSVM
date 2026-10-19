@@ -5,7 +5,18 @@ Updated October 19, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
-**Hyperlane contribution integration (October 19, unreleased):** PRs #9–#24
+**Published CLI v0.1.0-alpha.4 (October 19):** the public experimental
+[prerelease](https://github.com/CrocSwap/goSVM/releases/tag/v0.1.0-alpha.4)
+tags `939b215500e0219d95b140b1987e0b8363af6244` (merge #25). All three CLI
+archives, installer and checksums are published; runner pins remain unchanged.
+Fresh-HOME macOS release-binary installation, both generated starters' native/SBF
+tests on both modern targets, all four reference ELF rebuilds and the public
+installer passed. Linux/macOS source CI and the release workflow passed.
+SDK-2 users must migrate to complete matching snapshots and rebuild; the release
+notes explain the upgrade. No new public-network qualification was performed.
+[Release evidence and reproduction](results/releases/2026-10-19-alpha.4/README.md).
+
+**Hyperlane contribution integration (October 19, released in alpha.4):** PRs #9–#24
 combine the compiler fixes, syscall bindings, SDK helpers, opt-in 64-account
 decoder, outgoing 64-meta/four-signer CPI bounds and modern memory syscalls.
 The native return-data getter now matches SBF's overlapping-output trap;

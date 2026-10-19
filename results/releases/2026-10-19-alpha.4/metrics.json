@@ -1,0 +1,227 @@
+{
+  "schema": 1,
+  "release": "v0.1.0-alpha.4",
+  "url": "https://github.com/CrocSwap/goSVM/releases/tag/v0.1.0-alpha.4",
+  "published_at": "2026-10-19T18:37:21Z",
+  "prerelease": true,
+  "source_commit": "939b215500e0219d95b140b1987e0b8363af6244",
+  "tag_commit_verified": true,
+  "workflow": {
+    "url": "https://github.com/CrocSwap/goSVM/actions/runs/39303274102",
+    "conclusion": "success",
+    "platforms": [
+      "darwin-arm64",
+      "linux-amd64",
+      "linux-arm64"
+    ]
+  },
+  "source_ci": {
+    "url": "https://github.com/CrocSwap/goSVM/actions/runs/39282416757",
+    "conclusion": "success"
+  },
+  "assets": [
+    {
+      "name": "SHA256SUMS",
+      "bytes": 404,
+      "sha256": "ab1485301eea7a5cc5a87cc823cce13bb57e46a14bf562b7ac2efd95aca5f0f0"
+    },
+    {
+      "name": "gosvm-v0.1.0-alpha.4-darwin-arm64.tar.gz",
+      "bytes": 4317106,
+      "sha256": "c388c22edf37a48ab30611d52349d28da1ca210fb235c94bdfe2e78974e3ecc9",
+      "cli_sha256": "a685c18a6961376192884d6b9dff1f1888baa7032d82ff2d39ecd748d75bfbd9"
+    },
+    {
+      "name": "gosvm-v0.1.0-alpha.4-linux-amd64.tar.gz",
+      "bytes": 4564031,
+      "sha256": "c20324e0bf6dfc38cf680d9ca08a24ad8f4967dd056a7f1239f77b86d232d970",
+      "cli_sha256": "2b81480da6ce3f99e3ddc3418b4411d1b9ef0e1383b4f4ab01bf95fa161d18d8"
+    },
+    {
+      "name": "gosvm-v0.1.0-alpha.4-linux-arm64.tar.gz",
+      "bytes": 4191660,
+      "sha256": "0a9d975ffd664c28e1eb5a6d844c9147b02ebc3ef7bb56514e7202aa635a91c1",
+      "cli_sha256": "1b5b53fd4e4fc48909159820dfa00ec1d54c54b094bcc4845b35e8e8657e01b4"
+    },
+    {
+      "name": "install-release.sh",
+      "bytes": 2993,
+      "sha256": "295dc1e5a069e7d07258e38c5108f67a0864f00f7e7e6f37a4e3b1ef53c0a654"
+    }
+  ],
+  "archive_checks": {
+    "sha256_manifest": true,
+    "expected_five_regular_members": true,
+    "executable_mode_0755": true,
+    "darwin_arm64_codesign_strict": true,
+    "linux_elf64_architectures": true
+  },
+  "smoke": {
+    "host": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "go_version": "go version go1.22.0 darwin/arm64",
+    "go_flags": "-ldflags=-linkmode=external",
+    "isolated_home_and_empty_managed_cache": true,
+    "draft_install_source": "downloaded release assets through a local file mirror",
+    "toolchain_source": "official Anza platform-tools v1.57 download and existing public runner releases",
+    "runners": {
+      "fogo-v0": "0.5.1",
+      "solana-v3": "0.6.0"
+    },
+    "checks": [
+      {
+        "name": "install",
+        "exit_code": 0,
+        "seconds": 0.203
+      },
+      {
+        "name": "version",
+        "exit_code": 0,
+        "seconds": 0.024
+      },
+      {
+        "name": "toolchain-install",
+        "exit_code": 0,
+        "seconds": 109.79
+      },
+      {
+        "name": "doctor",
+        "exit_code": 0,
+        "seconds": 0.777
+      },
+      {
+        "name": "runner-status",
+        "exit_code": 0,
+        "seconds": 0.054
+      },
+      {
+        "name": "new-starter",
+        "exit_code": 0,
+        "seconds": 0.02
+      },
+      {
+        "name": "starter-check",
+        "exit_code": 0,
+        "seconds": 0.011
+      },
+      {
+        "name": "starter-test-svm",
+        "exit_code": 0,
+        "seconds": 7.302
+      },
+      {
+        "name": "new-ledger",
+        "exit_code": 0,
+        "seconds": 0.092
+      },
+      {
+        "name": "ledger-check",
+        "exit_code": 0,
+        "seconds": 0.086
+      },
+      {
+        "name": "ledger-test-svm",
+        "exit_code": 0,
+        "seconds": 2.754
+      },
+      {
+        "name": "rebuild",
+        "exit_code": 0,
+        "seconds": 10.079
+      },
+      {
+        "name": "rebuild-reference",
+        "exit_code": 0,
+        "seconds": 0.03
+      }
+    ],
+    "fixtures": {
+      "schema1_starter": {
+        "native_passed": true,
+        "cases_per_target": 14,
+        "targets": [
+          "fogo-v0",
+          "solana-v3"
+        ]
+      },
+      "schema2_sdk2_ledger": {
+        "native_passed": true,
+        "scenarios_per_target": 4,
+        "steps_per_target": 5,
+        "targets": [
+          "fogo-v0",
+          "solana-v3"
+        ]
+      }
+    },
+    "doctor_notes": [
+      "Go 1.22 on macOS 26: documented external-link workaround enabled for native tests",
+      "Optional Rust producer was not installed"
+    ]
+  },
+  "public_install": {
+    "exit_code": 0,
+    "public_installer": "https://github.com/CrocSwap/goSVM/releases/download/v0.1.0-alpha.4/install-release.sh",
+    "release_base_override": false,
+    "version_override": false,
+    "matches_smoked_binary": true,
+    "cli_sha256": "a685c18a6961376192884d6b9dff1f1888baa7032d82ff2d39ecd748d75bfbd9",
+    "seconds": 1.366
+  },
+  "rebuild": {
+    "reference": "results/compiler/2026-10-19-hyperlane-integration/rebuild/metrics.json",
+    "build_flags": [
+      "-no-cache"
+    ],
+    "copies_per_workload": 2,
+    "fresh_go_cache_per_copy": true,
+    "results": [
+      {
+        "target": "fogo-v0",
+        "workload": "full-swap",
+        "kind": "project",
+        "identical": true,
+        "no_embedded_host_strings": true,
+        "elf_sha256": "234859bb9a00c80657369bd307fa43d227941e11c2bb5633018898220c412f6c",
+        "matches_reference": true,
+        "elf_bytes": 70160
+      },
+      {
+        "target": "fogo-v0",
+        "workload": "clock2",
+        "kind": "low-level",
+        "identical": true,
+        "no_embedded_host_strings": true,
+        "elf_sha256": "d85d909e057f6c6e11c468306e0b9222609dc3498b26cbf9b6dbad1d29bcd327",
+        "matches_reference": true,
+        "elf_bytes": 5272
+      },
+      {
+        "target": "solana-v3",
+        "workload": "full-swap",
+        "kind": "project",
+        "identical": true,
+        "no_embedded_host_strings": true,
+        "elf_sha256": "0e7c540b986a9c1e31349f45a6bd656c731b5502a071787e5502cbc8eb14ca89",
+        "matches_reference": true,
+        "elf_bytes": 70168
+      },
+      {
+        "target": "solana-v3",
+        "workload": "clock2",
+        "kind": "low-level",
+        "identical": true,
+        "no_embedded_host_strings": true,
+        "elf_sha256": "88611a509e500806729bf4e9624fac873b6f302960497c26fd70113781cc6f73",
+        "matches_reference": true,
+        "elf_bytes": 4248
+      }
+    ],
+    "passed": true
+  },
+  "network_validation": false,
+  "limitations": [
+    "Downloaded CLI was executed on macOS arm64; Linux source CI passed on amd64, Linux arm64 archive architecture inspected only",
+    "No public-network deploy, call, authority, or new SDK network qualification",
+    "No dependency-heavy protocol workload or Bend/Rust producer validation in this release smoke"
+  ]
+}
