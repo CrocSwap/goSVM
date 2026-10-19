@@ -99,9 +99,45 @@ LLVM/VM stack limits still apply, so keep large tables in few locals (or on
 the heap through a pointer or slice) and pass them by pointer. One exception:
 a package-level table whose values are never copied (only indexed, passed
 to `len`/`cap` or ranged over by index) may exceed the limit, since it is
-never in a stack frame ([large tables](GO_GLOBALS.md#large-tables)). Slice-to-array
-conversions remain unsupported. Arrays of `solana.Context` are rejected
-(`arrays of Context unsupported`).
+never in a stack frame ([large tables](GO_GLOBALS.md#large-tables)).
+Arrays of `solana.Context` are rejected (`arrays of Context unsupported`).
+
+<a id="slice-to-array-conversions"></a>**Slice-to-array conversions.**
+`(*[N]T)(s)` (Go 1.17) and `[N]T(s)` (Go 1.20) follow Go:
+
+```go
+func firstWord(data []byte) uint64 {
+    k := (*[8]byte)(data) // aliases data[0:8]
+    return binary.LittleEndian.Uint64(k[:])
+}
+
+key := [32]byte(acct[8:40]) // a copy
+```
+
+- `len(s) < N` aborts with the bounds trap
+  ([error contract](ERROR_CONTRACT.md#traps)); Go panics.
+- `(*[N]T)(s)` is the address of `s`'s first element: writes through the
+  pointer and through `s` (or any slice sharing its backing array, including
+  account data) see each other. A nil slice gives a nil pointer (only
+  `N == 0` gets there); a non-nil empty slice gives a non-nil pointer.
+- `[N]T(s)` copies the first `N` elements; `[0]T(s)` reads nothing, so a nil
+  `s` is fine.
+- Both are plain operations in gc's [evaluation order](ERROR_CONTRACT.md#evaluation-order):
+  `s` (and, for `[N]T(s)`, its elements) is read, and the length checked,
+  after the calls in the same statement, so in `(*[8]byte)(b)[0] + f()` a
+  panic in `f` comes first and a new `b` assigned by `f` is the one converted.
+- `len((*[N]T)(s))` is a constant and evaluates nothing, as in Go. An
+  index-only `range` over a conversion keeps the rejection `index-only range
+  over an array conversion unsupported; range over the operand`.
+- The borrow analysis treats the pointer as borrowing what `s` borrows, so a
+  pointer into a local array that escapes moves the array to the heap.
+  Package-level initializers that convert a slice run at run time rather
+  than at [compile time](GO_GLOBALS.md#compile-time-evaluation).
+
+Element types are any storable slice element: scalars, structs, arrays,
+pointers and type parameters (`func First[T any](s []T) *[4]T`).
+Tests: `TestSliceArray*` ([slicearray_test.go](../internal/compiler/slicearray_test.go),
+[evidence](../results/compiler/2026-10-19-slice-array-conversions/README.md)).
 
 [`range`](GO_CONTROL.md#range-loops) iterates over arrays (over a copy
 when a value variable is used) and pointers to arrays. [Constrained array pointers](GO_POINTERS.md), indexed

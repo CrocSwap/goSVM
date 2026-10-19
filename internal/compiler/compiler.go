@@ -873,6 +873,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 			if kind := classifyConversion(g.info, e); kind != notStringConversion {
 				return g.stringConversion(e, kind)
 			}
+			if a, ptr, ok := sliceToArray(g.info, e); ok {
+				return g.sliceToArray(e, tv.Type, a, ptr)
+			}
 			if isIface(tv.Type) {
 				return g.expr(e.Args[0]) // converted, or copied from an interface value
 			}

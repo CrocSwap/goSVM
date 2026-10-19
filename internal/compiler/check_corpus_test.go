@@ -304,6 +304,10 @@ var corpusChanges = map[int]corpusEntry{
 	300: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	302: {CSHA256: "25b08138fe9dd864e7dbeb13f53c1167b5697621e9311b66363f2bea5d3c65ba"},                                                                                                                                                       // model.go
 	309: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+
+	// Slice-to-array conversions (docs/GO_ARRAYS.md#slice-to-array-conversions,
+	// results/compiler/2026-10-19-slice-array-conversions) compile.
+	282: {CSHA256: "dba1a9b2bc23a517d41657a18b7dfd0b5bdcc531cdcb2594cb008c93aebb0acc"}, // arrays-reject.go `a:=[24]byte(s)`: was "array conversions require identical underlying arrays; slice conversions unsupported"
 }
 
 const (
@@ -356,7 +360,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 	// compound assignment, package-level variables, value types (struct
 	// comparison, aliases, composite arrays), pointers to pointers and
 	// variadic functions each turned recorded rejections into accepted
-	// programs (corpusChanges); the rest (59) still exercise Check.
+	// programs (corpusChanges); the rest (58) still exercise Check.
 	if rejected < 57 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}

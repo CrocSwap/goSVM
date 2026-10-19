@@ -5,6 +5,14 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Slice-to-array conversions (October 19, CrocSwap/goSVM#7):** `(*[N]T)(s)`
+passed Check and then broke the C compile; `[N]T(s)` was rejected. Both now
+follow Go ([GO_ARRAYS](docs/GO_ARRAYS.md#slice-to-array-conversions)): bounds
+trap when `len(s) < N`, the pointer aliases the backing array (nil for a nil
+slice), plain operations in gc's order, converting initializers run at run
+time. Host differentials and SBF on both targets; example ELFs unchanged,
+one corpus rejection (`[24]byte(s)`) now compiles. [Evidence](results/compiler/2026-10-19-slice-array-conversions/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,
