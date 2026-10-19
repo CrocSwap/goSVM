@@ -439,6 +439,7 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 3001 | Seeds: more than 16, or one longer than 32 bytes, or nil where required |
 | 3002 | CPI metas: more than 16, or nil |
 | 3003 | CPI signers: more than 2 groups or 1,024 bytes |
+| 3004 | `pda.Seeds.FindAddress`: no bump from 255 to 1 gives an off-curve address |
 | 3010 | Token account invalid (owner, executable, 165-byte layout, state, native) |
 | 3011 | Token account identity |
 | 3012 | Token mints differ |
@@ -700,3 +701,9 @@ Handler results propagate unchanged.
   logging without its write. `sol_log_64_` and `sol_log_pubkey` join the
   admitted fogo-v0 imports. Programs that do not call them compile to the
   same C.
+
+- 2026-10-19: addition (`pda.Seeds.FindAddress`; announce to Qushta), no
+  trap added and no existing behaviour changed: code 3004 is new;
+  `FindAddress` otherwise returns 3001 (no room for the bump) or the
+  create-program-address status. It is SDK Go over `solana.CreateAddress`,
+  so programs that do not call it compile to the same ELF.

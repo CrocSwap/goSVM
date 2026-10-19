@@ -1,0 +1,94 @@
+{
+  "targets": [
+    "fogo",
+    "solana"
+  ],
+  "schema": 2,
+  "name": "find-address",
+  "module": "example.org/gosvm/find-address",
+  "platform_tools": "v1.57",
+  "sbf": "",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "572ca77c60b4112fddea5f3867e0a41bac4f2950c71705a98d48e1cb16ea8389",
+  "sdk_version": 2,
+  "imports": {
+    "model": "example.org/gosvm/find-address/model"
+  },
+  "layouts": [
+    {
+      "name": "Record",
+      "type": "model.Record",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Create",
+      "handler": "Create",
+      "args": "model.CreateArgs",
+      "bundle": "CreateAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Record",
+          "kind": "state",
+          "layout": "Record",
+          "owner": "program_id",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "7265636f7264"
+              },
+              {
+                "kind": "key",
+                "account": "Authority"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          },
+          "init": {
+            "payer": "Authority",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "name": "Derive",
+      "handler": "Derive",
+      "args": "model.DeriveArgs",
+      "bundle": "DeriveAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Caller",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": []
+    }
+  ]
+}

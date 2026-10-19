@@ -44,6 +44,17 @@ full-swap ELFs unchanged; SDK-2 snapshots refreshed.
 [examples/logging](examples/logging/README.md) passes `gosvm test --svm` on
 both targets. [Evidence](results/compiler/2026-10-19-logging/README.md).
 
+**On-chain bump search (October 19, branch `gap4-find-pda`; unreleased, for
+the Hyperlane Sealevel port):** `pda.Seeds.FindAddress(c, program)` is
+`find_program_address`: bumps 255 down to 1 (Solana never tries 0) through
+`solana.CreateAddress`, skipping on-curve results (status 1), about 1,570 CU
+per attempt. It matches 401 vectors from Rust `solana-pubkey` 3.0.0, and the
+host `fixture.FindProgramAddress` was aligned (it used to try bump 0; no
+fixture changed). SDK Go only: full-swap ELFs unchanged; the SDK-2 example
+snapshots were refreshed. [examples/find-address](examples/find-address/README.md)
+passes `gosvm test --svm` on both targets.
+[Evidence](results/compiler/2026-10-19-find-address/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,
