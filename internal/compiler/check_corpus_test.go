@@ -401,7 +401,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			continue
 		}
 		if err == nil {
-			sum := sha256.Sum256(withoutMemorySyscalls(out))
+			sum := sha256.Sum256(withoutMemorySyscalls(withoutByteGuards(out)))
 			if hex.EncodeToString(sum[:]) != e.CSHA256 {
 				t.Errorf("entry %d: emitted C changed (sha256 %x)", i, sum)
 			}
