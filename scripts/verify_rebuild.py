@@ -22,9 +22,9 @@ def main():
     ap.add_argument('--output', type=pathlib.Path, required=True)
     ap.add_argument('--cli', type=pathlib.Path, default=ROOT / 'build/gosvm')
     ap.add_argument('--reference', type=pathlib.Path,
-                    default=ROOT / 'results/compiler/2026-10-19-hyperlane-integration/rebuild/metrics.json',
+                    default=ROOT / 'results/compiler/2026-10-19-byte-array-equal/rebuild/metrics.json',
                     help='earlier metrics.json whose ELF hashes are compared (informational); the default is '
-                         'the current reference (the October 19 combined CPI and memory changes changed the full swap and clock2)')
+                         'the current reference (word-at-a-time byte-array equality changed the full swap)')
     a = ap.parse_args(); a.output = a.output.resolve(); a.cli = a.cli.resolve()
     if a.output.exists():
         sys.exit(f'{a.output} exists; use a new results directory')

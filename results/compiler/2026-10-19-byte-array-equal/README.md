@@ -40,3 +40,15 @@ Measured before #25, on `79cf25c`: `hyperlane-monorepo` `sealevel` at
 23 Rust functional suites, 584/584 pass both ways. Total CU: fee 1.2% less,
 IGP 1.4% less, synthetic token 1.6% less, others within 0.5%; per-call median
 unchanged. Programs that compare keys with `==` gain more.
+
+## Reference ELFs
+
+This change moves the full swap (fogo-v0 `24c23925…`, solana-v3 `83f72984…`).
+`clock2` is unchanged. `rebuild/metrics.json` is the fresh-rebuild check
+against the previous reference (the #25 integration rebuild), and
+`scripts/verify_rebuild.py` now uses it as the default reference:
+
+```sh
+python3 scripts/verify_rebuild.py --output <new-directory> --cli build/gosvm
+python3 scripts/check_rebuild_reference.py <new-directory>/metrics.json
+```
