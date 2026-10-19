@@ -1,0 +1,144 @@
+{
+  "targets": [
+    "fogo",
+    "solana"
+  ],
+  "schema": 2,
+  "name": "fee-vault",
+  "module": "example.org/gosvm/fee-vault",
+  "platform_tools": "v1.57",
+  "sbf": "",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "ef69c9f2ed1dd0743482a91b5231b34dd4d8e4e0aa9256de51ef64c35d42c700",
+  "sdk_version": 2,
+  "imports": {
+    "model": "example.org/gosvm/fee-vault/model"
+  },
+  "layouts": [
+    {
+      "name": "Vault",
+      "type": "model.Vault",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Create",
+      "handler": "Create",
+      "args": "model.CreateArgs",
+      "bundle": "CreateAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "owner": "program_id",
+          "access": "write",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "7661756c74"
+              },
+              {
+                "kind": "key",
+                "account": "Authority"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          },
+          "init": {
+            "payer": "Authority",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "name": "Claim",
+      "handler": "Claim",
+      "args": "model.ClaimArgs",
+      "bundle": "ClaimAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "owner": "program_id",
+          "access": "write",
+          "ref": "VaultRef"
+        },
+        {
+          "name": "Beneficiary",
+          "kind": "account",
+          "access": "write"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Vault.Beneficiary",
+          "account": "Beneficiary"
+        }
+      ]
+    },
+    {
+      "name": "Move",
+      "handler": "Move",
+      "args": "model.MoveArgs",
+      "bundle": "MoveAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "owner": "program_id",
+          "access": "write"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "write"
+        },
+        {
+          "name": "Recipient",
+          "kind": "account",
+          "access": "write"
+        },
+        {
+          "name": "Observer",
+          "kind": "account",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Vault.Authority",
+          "account": "Authority"
+        }
+      ]
+    }
+  ]
+}

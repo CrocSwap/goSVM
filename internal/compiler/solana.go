@@ -20,6 +20,9 @@ var accountsABI string
 //go:embed cpi.c.txt
 var cpiRuntime string
 
+//go:embed lamports.c.txt
+var lamportsRuntime string
+
 func sdkSource(version int) string {
 	if version == 1 {
 		return solana.LegacySource

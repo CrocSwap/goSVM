@@ -112,3 +112,57 @@ func TestRentBoundaryPreservesFailedOutput(t *testing.T) {
 		t.Fatal(output)
 	}
 }
+
+func TestMoveLamportsRules(t *testing.T) {
+	c := lifecycleContext()
+	// Owned source to an unowned writable destination, through duplicates.
+	if code := MoveLamports(c, 2, 3, 30); code != 0 {
+		t.Fatal(code)
+	}
+	for j, want := range []uint64{70, 80, 70, 80} {
+		if c.Accounts[j].Lamports != want {
+			t.Fatal("balances or duplicates", c.Accounts)
+		}
+	}
+	// Moving within one account, even at the maximum balance, changes nothing.
+	c.Accounts[0].Lamports, c.Accounts[2].Lamports = math.MaxUint64, math.MaxUint64
+	if code := MoveLamports(c, 0, 2, math.MaxUint64); code != 0 || c.Accounts[0].Lamports != math.MaxUint64 || c.Accounts[2].Lamports != math.MaxUint64 {
+		t.Fatal("self move", code, c.Accounts)
+	}
+	tests := []struct {
+		name string
+		edit func(*Context)
+		call func(Context) uint64
+		code uint64
+	}{
+		{"source-index", nil, func(c Context) uint64 { return MoveLamports(c, 4, 1, 1) }, 2005},
+		{"destination-index", nil, func(c Context) uint64 { return MoveLamports(c, 0, 4, 1) }, 2005},
+		{"unowned-source", nil, func(c Context) uint64 { return MoveLamports(c, 1, 0, 1) }, 2012},
+		{"readonly-source", func(c *Context) { c.Accounts[0].Writable = false }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
+		{"executable-source", func(c *Context) { c.Accounts[0].Executable = true }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
+		{"readonly-destination", func(c *Context) { c.Accounts[1].Writable = false }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
+		{"executable-destination", func(c *Context) { c.Accounts[1].Executable = true }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
+		{"insufficient", nil, func(c Context) uint64 { return MoveLamports(c, 0, 1, 101) }, 2018},
+		{"insufficient-self", nil, func(c Context) uint64 { return MoveLamports(c, 0, 2, 101) }, 2018},
+		{"overflow", func(c *Context) { c.Accounts[1].Lamports, c.Accounts[3].Lamports = math.MaxUint64, math.MaxUint64 }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2014},
+		{"key", func(c *Context) { c.Accounts[1].Key = nil }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2013},
+	}
+	for _, tc := range tests {
+		c := lifecycleContext()
+		if tc.edit != nil {
+			tc.edit(&c)
+		}
+		before := make([]uint64, len(c.Accounts))
+		for j := range c.Accounts {
+			before[j] = c.Accounts[j].Lamports
+		}
+		if code := tc.call(c); code != tc.code {
+			t.Fatalf("%s: %d, want %d", tc.name, code, tc.code)
+		}
+		for j := range c.Accounts {
+			if c.Accounts[j].Lamports != before[j] {
+				t.Fatalf("%s: a failed move changed balances", tc.name)
+			}
+		}
+	}
+}

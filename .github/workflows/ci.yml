@@ -80,7 +80,7 @@ jobs:
         run: |
           flags=""
           if [ "$(uname -s)" = Darwin ]; then flags="-ldflags=-linkmode=external"; fi
-          for dir in examples/typed-swap examples/full-swap examples/escrow examples/multi-state examples/tutorial \
+          for dir in examples/typed-swap examples/full-swap examples/escrow examples/multi-state examples/tutorial examples/fee-vault \
                      examples/shared-packages examples/shared-packages/service examples/full-swap-service \
                      benchmarks/svm-transport; do
             echo "::group::$dir"

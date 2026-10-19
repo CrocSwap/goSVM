@@ -414,10 +414,11 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 2011 | Account not writable, or executable |
 | 2012 | Account not owned by the program |
 | 2013 | Refund account is the source, or malformed native key |
-| 2014 | Refund lamport overflow |
+| 2014 | Refund or credit lamport overflow |
 | 2015 | Rent output not 17 bytes |
 | 2016 | Clock output not 40 bytes |
 | 2017 | Return data longer than 1,024 bytes |
+| 2018 | `MoveLamports` source balance below the amount |
 
 ### SDK 2 helpers
 
@@ -648,3 +649,8 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+- 2026-10-19: addition (`solana.MoveLamports`; announce to Qushta), no trap
+  added and no existing behaviour changed: code 2018 (source balance below the
+  amount) is new, and 2014 now also covers a destination credit overflow. The
+  other checks reuse 2005, 2011 and 2012 in `ResizeAccount`'s order (source,
+  then destination). Programs that do not call it compile to the same C.
