@@ -12,6 +12,7 @@ trap when `len(s) < N`, the pointer aliases the backing array (nil for a nil
 slice), plain operations in gc's order, converting initializers run at run
 time. Host differentials and SBF on both targets; example ELFs unchanged,
 one corpus rejection (`[24]byte(s)`) now compiles. [Evidence](results/compiler/2026-10-19-slice-array-conversions/README.md).
+
 **Arrays inside generic type arguments (October 19, CrocSwap/goSVM#8):**
 `Pair[uint32, [][32]byte]`, `[]*[4]T`, `map[K][][2]T` and generic struct
 fields such as `V [][3]T` were rejected with `array type was not declared

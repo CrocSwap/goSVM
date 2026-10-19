@@ -429,10 +429,8 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 2016 | Clock output not 40 bytes |
 | 2017 | Return data longer than 1,024 bytes |
 | 2018 | Secp256k1 hash, signature, output or native result length wrong |
-
-| 2020 | `MoveLamports` source balance below the amount |
-
 | 2019 | `LogPubkey` key not 32 bytes |
+| 2020 | `MoveLamports` source balance below the amount |
 
 ### SDK 2 helpers
 
@@ -442,7 +440,6 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 3002 | CPI metas: more than 16, or nil |
 | 3003 | CPI signers: more than 2 groups or 1,024 bytes |
 | 3004 | `pda.Seeds.FindAddress`: no bump from 255 to 1 gives an off-curve address |
-
 | 3002 | CPI metas: more than 64, or nil |
 | 3003 | CPI signers: more than 4 groups or 1,024 bytes |
 | 3010 | Token account invalid (owner, executable, 165-byte layout, state, native) |
@@ -450,6 +447,7 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 3012 | Token mints differ |
 | 3013 | Token authority or close authority mismatch, or missing signature |
 | 3014 | Token account not writable |
+| 3015 | Token-2022 extension absent or invalid value |
 | 3030 | ATA, System or token program invalid |
 | 3031 | ATA account, mint or payer preconditions invalid |
 | 3032 | ATA payer signature or PDA authority invalid |

@@ -44,8 +44,8 @@ Every error, account state and rollback is unchanged.
 - Schema-2 instructions still declare at most 16 accounts and generated
   handlers check the exact count (6000); the option is for low-level `Process`
   programs, which read extra accounts by index.
-- Outgoing CPI metas stay at 16 (`cpi.Metas`); CPI passes the whole table, so
-  a callee can use any of the 64 accounts.
+- Outgoing CPI supports 64 metas and 4 signer groups (`cpi.Metas`); CPI
+  passes the whole table, so a callee can use any of the 64 accounts.
 - A legacy transaction holds at most 33 unique accounts for one small
   instruction with the payer as its only signer (1,228 of 1,232 bytes for the
   test's instruction). Transactions with more unique accounts need address
