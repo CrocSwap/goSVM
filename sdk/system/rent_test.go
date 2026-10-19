@@ -71,3 +71,55 @@ func TestRentCurrentSysvar(t *testing.T) {
 		t.Fatal(n, code)
 	}
 }
+
+// The 2.0 and 1.0 fast path must return exactly what the rounding emulation
+// returns, errors included, at every boundary: n = (128+size)*rate on either
+// side of 2^53 and of uint64 overflow, every size limit, and both thresholds'
+// neighbours, which must take the exact path.
+func TestRentFastPathMatchesExact(t *testing.T) {
+	check := func(rate, bits, size uint64) {
+		t.Helper()
+		amount, code := MinimumBalanceFor(rate, bits, size)
+		want, status := minimumBalanceExact(rate, bits, size)
+		if amount != want || code != status {
+			t.Fatalf("rate=%d threshold=%016x size=%d: (%d,%d), exact (%d,%d)", rate, bits, size, amount, code, want, status)
+		}
+	}
+	thresholds := []uint64{thresholdTwo, thresholdOne, thresholdTwo - 1, thresholdTwo + 1, thresholdOne - 1, thresholdOne + 1,
+		thresholdTwo | 1<<63, thresholdOne | 1<<63, 0, 1 << 63, math.Float64bits(2.5), math.Float64bits(0.5), math.Float64bits(math.NaN())}
+	sizes := []uint64{0, 1, 82, 165, 10240, MaxDataLen - 1, MaxDataLen, MaxDataLen + 1, math.MaxUint64 - 128, math.MaxUint64}
+	fast := 0
+	for _, size := range sizes {
+		rates := []uint64{0, 1, 3480, 6960, math.MaxUint64}
+		if size <= MaxDataLen {
+			exact := (uint64(1)<<53 - 1) / (128 + size) // largest rate with n < 2^53
+			wrap := math.MaxUint64 / (128 + size)       // largest rate without overflow
+			for _, r := range []uint64{exact, wrap} {
+				for d := uint64(0); d < 3; d++ {
+					rates = append(rates, r-d, r+d+1)
+				}
+			}
+		}
+		for _, rate := range rates {
+			for _, bits := range thresholds {
+				check(rate, bits, size)
+				if size <= MaxDataLen && rate <= (uint64(1)<<53-1)/(128+size) && (bits == thresholdTwo || bits == thresholdOne) {
+					fast++
+				}
+			}
+		}
+	}
+	rng := rand.New(rand.NewSource(2026101901))
+	for j := 0; j < 1000000; j++ {
+		size := rng.Uint64() % (MaxDataLen + 2)
+		limit := (uint64(1)<<53 - 1) / (128 + size)
+		rate := limit - 64 + rng.Uint64()%128
+		if j%2 == 0 {
+			rate = rng.Uint64() % (2 * limit)
+		}
+		check(rate, []uint64{thresholdTwo, thresholdOne}[j%4/2], size)
+	}
+	if fast < 90 {
+		t.Fatalf("only %d boundary inputs take the fast path", fast)
+	}
+}

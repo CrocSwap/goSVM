@@ -307,6 +307,11 @@ without floating-point SBF runtime helpers. Sizes above 10 MiB, a uint64 overflo
 in `(128+size)*rate`, and negative/nonfinite thresholds return `ErrRent` (3020).
 Both signed zeros are accepted. The integer-overflow rejection is an intentional
 bounded policy; it does not reproduce Rust release-mode wrapping of that product.
+With a threshold of exactly 2.0 (Fogo, and Solana before SIMD-0194) or 1.0
+(after it) and `(128+size)*rate` below 2^53, the conversion and product are
+exact, so the result is twice or once that product and the rounding emulation
+is skipped: 480 to 760 CU less per call on SBF, and 2 to 8 CU more on other
+thresholds ([measurements](../results/sdk/2026-10-19-rent-fast-path/README.md)).
 
 `solana.Rent(context, output)` exposes the raw runtime values as exactly 17 bytes:
 little-endian uint64 rate, little-endian uint64 threshold bits, and one burn byte.
