@@ -1,16 +1,16 @@
 {
   "cases": 437,
-  "elf_sha256": "f3a481eb94af8f3ecef9293366a57026cfa0124cb2b4f9ae172ccc56ce67db73",
+  "elf_sha256": "041d435cb18bcbfe4c709ef82ed9d5631f52a2a3dc0209625fe4f6c76d0238fb",
   "equal_cu": {
-    "kind0-len8-equal": 302,
-    "kind1-len13-equal": 416,
-    "kind2-len20-equal": 541,
-    "kind3-len32-equal": 750,
-    "kind4-len64-equal": 1343,
-    "kind5-len13-equal": 394,
-    "kind6-len32-equal": 744,
-    "kind7-len32-equal": 1345,
-    "kind8-len16-equal": 159
+    "kind0-len8-equal": 162,
+    "kind1-len13-equal": 197,
+    "kind2-len20-equal": 196,
+    "kind3-len32-equal": 183,
+    "kind4-len64-equal": 207,
+    "kind5-len13-equal": 388,
+    "kind6-len32-equal": 739,
+    "kind7-len32-equal": 1340,
+    "kind8-len16-equal": 154
   },
   "profile": "fogo-v0"
 }
