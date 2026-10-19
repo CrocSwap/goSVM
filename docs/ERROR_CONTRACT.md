@@ -648,3 +648,13 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+- 2026-10-19: Check relaxation (generic type arguments), no trap, code or
+  generated code changed for accepted programs: a type argument holding an
+  array through a slice, pointer, map or function type
+  (`Pair[uint32, [][32]byte]`, `[]*[4]T`), and a generic struct field doing
+  so (`V [][3]T`), compile; they were rejected with `array type was not
+  declared before use` (CrocSwap/goSVM#8). An array in such a type argument
+  that exceeds the per-value limit, or a zero-length array in a slice, now
+  reports that rule's message (`array storage exceeds experimental 1024-byte
+  per-value limit`, `slice elements must not contain zero-length arrays or
+  empty structs`) instead. No recorded corpus program's C changed.

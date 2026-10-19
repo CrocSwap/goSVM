@@ -1107,17 +1107,21 @@ func (f *frontend) method(selector *ast.SelectorExpr) *types.Func {
 }
 
 // typeArgRule admits a type argument: any type a variable may have. Arrays,
-// and pointers to them, are bounded by arrayRule; they are declared where the
-// instance uses them.
+// including those inside pointer and slice types ([][32]byte, []*[4]T), are
+// bounded by arrayRule; they are declared where the instance uses them.
+// Map types bound theirs through mapRule, and function types through
+// funcTypeRule; both apply typeArgRule to their component types.
 func (f *frontend) typeArgRule(n ast.Node, t types.Type) {
 	if p, ok := pointer(t); ok {
-		if a, ok := p.Elem().Underlying().(*types.Array); ok {
-			f.arrayRule(n, a)
-			return
-		}
+		f.pointerRuleWith(n, p, f.typeArgRule)
+		return
 	}
 	if a, ok := t.Underlying().(*types.Array); ok {
 		f.arrayRule(n, a)
+		return
+	}
+	if s, ok := t.(*types.Slice); ok && !types.Identical(s.Elem(), types.Typ[types.Uint8]) {
+		f.sliceRuleWith(n, s, f.typeArgRule)
 		return
 	}
 	f.variableRule(n, t)

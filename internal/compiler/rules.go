@@ -151,6 +151,11 @@ func (f *frontend) variableRule(n ast.Node, t types.Type) {
 
 // pointerRule admits pointers to scalars, value structs and scalar arrays.
 func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
+	f.pointerRuleWith(n, p, f.variableRule)
+}
+
+// pointerRuleWith is pointerRule, applying elemRule to the element type.
+func (f *frontend) pointerRuleWith(n ast.Node, p *types.Pointer, elemRule func(ast.Node, types.Type)) {
 	t := p.Elem()
 	if isContext(t) {
 		f.fail(n, "pointers to Context unsupported")
@@ -161,7 +166,7 @@ func (f *frontend) pointerRule(n ast.Node, p *types.Pointer) {
 		// message predates them).
 		f.fail(n, "pointer elements must be integer/bool scalars, value structs or scalar arrays")
 	}
-	f.variableRule(n, t)
+	elemRule(n, t)
 }
 
 // arrayRule bounds an array value type before it is declared. Elements may
@@ -186,6 +191,36 @@ func (f *frontend) arrayRuleExcept(node ast.Node, a *types.Array, inPlace func(*
 	if size > 0 && a.Len() > maxArrayBytes/size && (inPlace == nil || !inPlace(a)) {
 		f.fail(node, "array storage exceeds experimental %d-byte per-value limit", maxArrayBytes)
 	}
+}
+
+// nestedArrays calls declare for every array type t holds through pointer,
+// slice, map and array types, outer arrays first. A field of an
+// instantiated generic struct (V [][3]T, P *[4]T, M map[K][]Row[T]) can be
+// the only place its arrays are written; Check and the emitter declare them
+// there, before the struct uses them. Programs whose arrays are all written
+// in source have declared them already, so this declares nothing for them.
+func nestedArrays(t types.Type, declare func(*types.Array)) {
+	seen := map[*types.Array]bool{}
+	var visit func(types.Type)
+	visit = func(t types.Type) {
+		switch u := t.Underlying().(type) {
+		case *types.Pointer:
+			visit(u.Elem())
+		case *types.Slice:
+			visit(u.Elem())
+		case *types.Map:
+			visit(u.Key())
+			visit(u.Elem())
+		case *types.Array:
+			if seen[u] {
+				return // a recursive named array: type N [2]*N
+			}
+			seen[u] = true
+			declare(u)
+			visit(u.Elem())
+		}
+	}
+	visit(t)
 }
 
 // compositeElem reports whether an array of elem needs the composite-element

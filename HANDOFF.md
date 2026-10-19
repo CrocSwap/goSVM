@@ -5,6 +5,15 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Arrays inside generic type arguments (October 19, CrocSwap/goSVM#8):**
+`Pair[uint32, [][32]byte]`, `[]*[4]T`, `map[K][][2]T` and generic struct
+fields such as `V [][3]T` were rejected with `array type was not declared
+before use`: type arguments were validated before any array was declared, and
+arrays reached only through a generic field were never declared. Both fixed
+([GO_GENERICS](docs/GO_GENERICS.md)); host differentials and SBF on both
+targets; corpus C and example ELFs unchanged.
+[Evidence](results/compiler/2026-10-19-generic-array-type-args/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,
