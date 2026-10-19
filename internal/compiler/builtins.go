@@ -23,6 +23,8 @@ var legacySyscalls = map[string]bool{
 	"sol_set_return_data":        true,
 	"sol_log_":                   true, // panic's log line (docs/ERROR_CONTRACT.md#panic)
 	"sol_memcpy_":                true, // the initialization image (docs/GO_GLOBALS.md#compile-time-evaluation)
+	"sol_memmove_":               true, // bulk copies (docs/GO_ALLOCATION.md#bulk-memory-on-sbf)
+	"sol_memset_":                true, // bulk zeroing (docs/GO_ALLOCATION.md#bulk-memory-on-sbf)
 }
 
 func undefinedSymbols(path string, dynamic bool) ([]string, error) {

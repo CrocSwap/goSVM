@@ -62,6 +62,9 @@ static u64 sol_ResizeAccount(Context *c,u64 index,u64 n) {
     u64 code=sol_owned_writable(c,index);if(code) return code;
     AccountInfo *a=&c->accounts[index];u64 original=sol_original_len(a);
     if(original>10485760 || n>10485760 || n>original+10240) return 2010;
+#ifdef GOSVM_MEMORY_SYSCALL_SET
+    if(n>a->data_len && n-a->data_len>=GOSVM_MEMORY_SYSCALL_MIN) GOSVM_MEMORY_SYSCALL_SET(a->data+a->data_len,0,n-a->data_len); else
+#endif
     for(u64 j=a->data_len;j<n;j++) a->data[j]=0;
     sol_set_data_len(c,a,n);return 0;
 }

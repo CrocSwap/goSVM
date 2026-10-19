@@ -277,7 +277,7 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
-		g.WriteString(libraryMemory)
+		g.WriteString(libraryMemory())
 	}
 	if len(program.Panics) > 0 {
 		// Only programs that call panic get its runtime, so the C of every
@@ -302,6 +302,8 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		if program.SDK == 2 || ownedLifecycle {
 			g.WriteString("\n#define GOSVM_SDK2 1\n")
 		}
+		// The SDK runtime's bulk moves use the memory syscalls (memops.go).
+		g.WriteString(memorySyscallDecls())
 		g.WriteString(solanaRuntime)
 		if program.SDK != 1 {
 			g.WriteString(cpiRuntime)

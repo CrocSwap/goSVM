@@ -20,13 +20,21 @@ func (g *generator) emitLibraryBody(fn *ast.FuncDecl, b library.Binding) {
 
 // memmoveHelper is libraryMemory as a separate helper object, linked when
 // LLVM references memmove in a program without libraries (build.go).
-const memmoveHelper = "typedef unsigned char u8;\ntypedef unsigned long long u64;\n" + libraryMemory
+func memmoveHelper() string {
+	return "typedef unsigned char u8;\ntypedef unsigned long long u64;\n" + libraryMemory()
+}
 
 // The frontend already owns memcpy/memset. Pure foreign libraries can additionally
 // need overlap-safe memmove; provide it locally instead of linking a second
-// three-helper object and importing unqualified memory syscalls.
-const libraryMemory = `
+// three-helper object. On the modern SBF profiles, moves from a threshold
+// use sol_memmove_ (memops.go).
+func libraryMemory() string { return memorySyscallDecls() + libraryMemmove }
+
+const libraryMemmove = `
 __attribute__((visibility("hidden"))) void *memmove(void *dst,const void *src,__SIZE_TYPE__ n) {
+#ifdef GOSVM_MEMORY_SYSCALL_MOVE
+ if (n>=GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_MOVE(dst,src,n); return dst; }
+#endif
  u8 *d=(u8*)dst;const u8 *s=(const u8*)src;
  if ((u64)d<(u64)s) {for(__SIZE_TYPE__ i=0;i<n;i++) d[i]=s[i];}
  else {while(n>0) {n--;d[n]=s[n];}}

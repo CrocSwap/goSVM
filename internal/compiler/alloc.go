@@ -157,7 +157,8 @@ func (c *checker) sliceLiteral(e *ast.CompositeLit, s *types.Slice) {
 }
 
 // heapRuntime is the invocation allocator and the slice helpers for element
-// types other than byte. It is emitted only for programs that use them; see
+// types other than byte. On the modern SBF profiles gosvm_move hands moves
+// from a threshold to sol_memmove_ (memops.go). It is emitted only for programs that use them; see
 // docs/GO_ALLOCATION.md for the contract it implements.
 const heapRuntime = `
 #ifndef GOSVM_HEAP_BASE
@@ -182,6 +183,9 @@ static u8 *gosvm_alloc(u64 bytes) {
 static void gosvm_move(u8 *dst, const u8 *src, u64 n) {
     __UINTPTR_TYPE__ d = (__UINTPTR_TYPE__)dst, s = (__UINTPTR_TYPE__)src;
     if (n == 0 || d == s) return;
+#ifdef GOSVM_MEMORY_SYSCALL_MOVE
+    if (n >= GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_MOVE(dst, src, n); return; }
+#endif
     if (((d | s | n) & 7) == 0) {
         volatile u64 *dw = (volatile u64 *)dst;
         const volatile u64 *sw = (const volatile u64 *)src;
@@ -250,7 +254,7 @@ func heapRuntimeFor(heapBytes int) string {
 	if heapBytes == 0 {
 		heapBytes = DefaultHeapBytes
 	}
-	return strings.Replace(heapRuntime, "@HEAP@", fmt.Sprint(heapBytes), 1)
+	return memorySyscallDecls() + strings.Replace(heapRuntime, "@HEAP@", fmt.Sprint(heapBytes), 1)
 }
 
 // usesAllocation reports whether the program needs the heap runtime: it

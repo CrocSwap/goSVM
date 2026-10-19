@@ -21,6 +21,9 @@ func containsContinue(body *ast.BlockStmt) bool {
 // Go continue executes a three-clause loop's post statement. A direct C
 // continue in our lowered loop would skip it, so target a label before the post.
 func (g *generator) loop(s *ast.ForStmt) {
+	if g.zeroFor(s) {
+		return
+	}
 	label := ""
 	if containsContinue(s.Body) {
 		g.next++
@@ -32,6 +35,12 @@ func (g *generator) loop(s *ast.ForStmt) {
 	if s.Init != nil {
 		g.stmt(s.Init)
 	}
+	g.loopBody(s, label)
+	g.line("}")
+}
+
+// loopBody emits a three-clause loop after its init statement.
+func (g *generator) loopBody(s *ast.ForStmt, label string) {
 	fresh := g.freshLoopVariables(s)
 	g.line("for (;;) {")
 	if s.Cond != nil {
@@ -46,7 +55,7 @@ func (g *generator) loop(s *ast.ForStmt) {
 	if s.Post != nil {
 		g.stmt(s.Post)
 	}
-	g.line("}\n}")
+	g.line("}")
 }
 
 // Cases may contain calls. Test them in source order and stop evaluating once
@@ -121,6 +130,12 @@ func (g *generator) switchStatement(s *ast.SwitchStmt) {
 //   - slices: the header (and so the length) is fixed at loop start;
 //     elements are read from the shared storage in each iteration.
 func (g *generator) rangeLoop(s *ast.RangeStmt) {
+	if !g.zeroRange(s) {
+		g.rangeLoopPlain(s)
+	}
+}
+
+func (g *generator) rangeLoopPlain(s *ast.RangeStmt) {
 	label := ""
 	if containsContinue(s.Body) {
 		g.next++
