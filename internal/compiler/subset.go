@@ -232,6 +232,7 @@ func (c *checker) namedType(node ast.Node, t types.Type) {
 		if f.Embedded() || isContext(f.Type()) {
 			c.fail(node, "embedded and Context fields unsupported")
 		}
+		nestedArrays(f.Type(), func(a *types.Array) { c.declareArray(node, a) })
 		if a, ok := f.Type().Underlying().(*types.Array); ok {
 			c.declareArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {

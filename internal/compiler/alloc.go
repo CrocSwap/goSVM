@@ -38,13 +38,18 @@ const builtinRule = "only len, cap, new, make, append, copy, delete, clear and p
 // have a nonzero size without zero-length arrays or empty structs, so the Go
 // size used for append growth equals the element's C size.
 func (f *frontend) sliceRule(n ast.Node, s *types.Slice) {
+	f.sliceRuleWith(n, s, f.variableRule)
+}
+
+// sliceRuleWith is sliceRule, applying elemRule to the element type.
+func (f *frontend) sliceRuleWith(n ast.Node, s *types.Slice, elemRule func(ast.Node, types.Type)) {
 	if isContext(s.Elem()) {
 		f.fail(n, "slices of Context unsupported")
 	}
 	if _, ok := s.Elem().(*types.Tuple); ok {
 		f.fail(n, "unsupported type %s", s)
 	}
-	f.variableRule(n, s.Elem())
+	elemRule(n, s.Elem())
 	if zeroSizePart(s.Elem()) {
 		f.fail(n, "slice elements must not contain zero-length arrays or empty structs")
 	}

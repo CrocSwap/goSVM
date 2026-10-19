@@ -69,7 +69,11 @@ Every type argument must be a type the subset can store: an integer scalar
 named scalar, a value struct (including one with pointer, slice, string or
 interface fields), a scalar array of at most 1,024 bytes, a slice of an
 admitted element, a pointer to an admitted element, or an interface type
-(including `error`). Each instance's body must
+(including `error`). Arrays may sit anywhere inside a type argument
+(`Pair[uint32, [][32]byte]`, `[]*[4]T`, `map[K][][2]uint16`, `func([][2]byte)`)
+and inside fields of a generic struct (`V [][3]T`, `P *[4]T`, `Rows []Row[T]`),
+even when the array type is written nowhere else: Check and the emitter
+declare such an array where the instance first uses it. Each instance's body must
 then satisfy every subset rule with the arguments substituted; for example
 `Eq[T comparable]` instantiated with a struct is rejected because struct
 comparison is unsupported, while `Eq[[4]byte]` is accepted.
@@ -190,6 +194,14 @@ counters ([feature report](FEATURES_REPORT.md)).
 - `TestGenericMatchesHandwrittenSBF` builds generic helpers instantiated for
   two widths and a hand-written per-type copy: their `.text` sections are
   byte-identical (800 bytes) on both targets, so size and compute units match.
+- [`generic_arrays_test.go`](../internal/compiler/generic_arrays_test.go)
+  covers arrays nested in type arguments and generic struct fields
+  (CrocSwap/goSVM#8): `TestGenericArrayTypeArgsDifferential` runs two
+  programs over 256 inputs each natively and as host C,
+  `TestGenericArrayTypeArgsSBF` 64 each on fogo-v0 and solana-v3, and
+  `TestGenericArrayTypeArgsForms` the accepted forms and the storage rules
+  still applied inside them
+  ([evidence](../results/compiler/2026-10-19-generic-array-type-args/README.md)).
 - `TestGenericAcceptedForms`, `TestGenericRejections` (exact messages),
   `TestGenericCrossPackage`, `TestCheckedProgramInstances`,
   `TestGenericAliasSpellingsShareInstances`, `TestGenericNamesAreDeterministic`

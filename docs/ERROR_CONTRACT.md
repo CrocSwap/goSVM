@@ -665,3 +665,13 @@ Handler results propagate unchanged.
   `(*[N]T)(s)` passed Check and then failed in the built-in backend's C
   compile (CrocSwap/goSVM#7). The corpus's one recorded slice conversion
   (`a:=[24]byte(s)`) now compiles; no other recorded program changed.
+- 2026-10-19: Check relaxation (generic type arguments), no trap, code or
+  generated code changed for accepted programs: a type argument holding an
+  array through a slice, pointer, map or function type
+  (`Pair[uint32, [][32]byte]`, `[]*[4]T`), and a generic struct field doing
+  so (`V [][3]T`), compile; they were rejected with `array type was not
+  declared before use` (CrocSwap/goSVM#8). An array in such a type argument
+  that exceeds the per-value limit, or a zero-length array in a slice, now
+  reports that rule's message (`array storage exceeds experimental 1024-byte
+  per-value limit`, `slice elements must not contain zero-length arrays or
+  empty structs`) instead. No recorded corpus program's C changed.

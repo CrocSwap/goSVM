@@ -202,6 +202,7 @@ func (g *generator) emitType(node ast.Node, t types.Type) {
 	}
 	for i := 0; i < st.NumFields(); i++ {
 		f := st.Field(i)
+		nestedArrays(f.Type(), func(a *types.Array) { g.emitArray(node, a) })
 		if a, ok := f.Type().Underlying().(*types.Array); ok {
 			g.emitArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {
