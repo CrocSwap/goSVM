@@ -239,6 +239,12 @@ func runAllocProgram(t *testing.T, llvm, runner, profile, name string, source []
 	if err := os.WriteFile(filepath.Join(dir, "program.go"), source, 0644); err != nil {
 		t.Fatal(err)
 	}
+	return runAllocDir(t, llvm, runner, profile, name, dir, heap, cases)
+}
+
+// runAllocDir is runAllocProgram for a program already written into dir.
+func runAllocDir(t *testing.T, llvm, runner, profile, name, dir string, heap int, cases []allocCase) map[string]any {
+	t.Helper()
 	elf := filepath.Join(dir, "program.so")
 	if err := BuildWithOptions(dir, elf, llvm, profile, BuildOptions{HeapBytes: heap}); err != nil {
 		t.Fatal(err)
