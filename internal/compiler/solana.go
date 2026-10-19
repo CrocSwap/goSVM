@@ -23,6 +23,9 @@ var cpiRuntime string
 //go:embed return_data.c.txt
 var getReturnDataRuntime string
 
+//go:embed secp256k1.c.txt
+var secp256k1RecoverRuntime string
+
 func sdkSource(version int) string {
 	if version == 1 {
 		return solana.LegacySource

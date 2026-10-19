@@ -8,7 +8,7 @@
   "instruction": "",
   "handler": "",
   "result": "",
-  "sdk_sha256": "89c97d3818586d57eea106285af79014349d595e6c7d21332426f3284a9a64f6",
+  "sdk_sha256": "7d5b01f557f89ed11820b897a384cb5bdf0bab38615ad52471eb7b0b02f2ec9b",
   "sdk_version": 2,
   "imports": {
     "model": "example.org/gosvm/full-swap/model"

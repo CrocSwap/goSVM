@@ -1,0 +1,11 @@
+// The runtime writes the 64-byte key only on success.
+#ifdef GOSVM_SBF_V3
+#define gosvm_secp256k1_recover ((u64 (*)(const u8 *,u64,const u8 *,u8 *))0x17e40350ULL)
+#else
+extern u64 sol_secp256k1_recover(const u8 *,u64,const u8 *,u8 *);
+#define gosvm_secp256k1_recover sol_secp256k1_recover
+#endif
+static u64 sol_Secp256k1Recover(Context *c,slice hash,u64 recovery_id,slice signature,slice output) {
+    if(hash.len!=32 || signature.len!=64 || output.len!=64) return 2018;
+    return gosvm_secp256k1_recover(hash.ptr,recovery_id,signature.ptr,output.ptr);
+}
