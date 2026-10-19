@@ -1,0 +1,172 @@
+{
+  "cases": 58,
+  "elf_sha256": "3756f17e8d3c29397bce3dd1b685a9cf3b31bad2674a34887539b283f576c1a8",
+  "max_cu_saved": 1228,
+  "median_cu_saved": 472,
+  "min_cu_saved": 373,
+  "profile": "solana-v3",
+  "vectors": {
+    "empty": {
+      "bump": 253,
+      "find_cu": 4829,
+      "loop_cu": 5301,
+      "tries": 3
+    },
+    "fifteen-max": {
+      "bump": 252,
+      "find_cu": 6633,
+      "loop_cu": 7861,
+      "tries": 4
+    },
+    "hyperlane-00": {
+      "bump": 252,
+      "find_cu": 6433,
+      "loop_cu": 7181,
+      "tries": 4
+    },
+    "hyperlane-01": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-02": {
+      "bump": 252,
+      "find_cu": 6433,
+      "loop_cu": 7181,
+      "tries": 4
+    },
+    "hyperlane-03": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-04": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-05": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-06": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-07": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-08": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-09": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-10": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-11": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-12": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-13": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-14": {
+      "bump": 254,
+      "find_cu": 3433,
+      "loop_cu": 3931,
+      "tries": 2
+    },
+    "hyperlane-15": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-16": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-17": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-18": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-19": {
+      "bump": 253,
+      "find_cu": 4933,
+      "loop_cu": 5556,
+      "tries": 3
+    },
+    "hyperlane-20": {
+      "bump": 255,
+      "find_cu": 1933,
+      "loop_cu": 2306,
+      "tries": 1
+    },
+    "hyperlane-21": {
+      "bump": 253,
+      "find_cu": 4933,
+      "loop_cu": 5556,
+      "tries": 3
+    },
+    "hyperlane-22": {
+      "bump": 251,
+      "find_cu": 7933,
+      "loop_cu": 8806,
+      "tries": 5
+    },
+    "hyperlane-23": {
+      "bump": 253,
+      "find_cu": 4933,
+      "loop_cu": 5556,
+      "tries": 3
+    },
+    "one-byte": {
+      "bump": 255,
+      "find_cu": 1853,
+      "loop_cu": 2238,
+      "tries": 1
+    }
+  }
+}
