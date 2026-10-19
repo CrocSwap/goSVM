@@ -648,3 +648,19 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+- 2026-10-19: optimization, no trap or code added and no behaviour changed
+  (announce to Qushta for CU only): on fogo-v0 and solana-v3 the built-in
+  backend's bulk moves (`copy`, `append`, string building, the
+  `memcpy`/`memmove`/`memset` LLVM calls for aggregate assignment and
+  zeroing, duplicate account descriptors, `ResizeAccount`'s zero fill, and
+  the two [zeroing loop](GO_ALLOCATION.md#zeroing-loops) forms) use
+  the `sol_memmove_` and `sol_memset_` syscalls, which join the admitted
+  fogo-v0 imports ([bulk memory](GO_ALLOCATION.md#bulk-memory-on-sbf)).
+  `sol_memcpy_` is not used for them because the runtime fails it on
+  overlapping ranges, including `src == dst`. Traps still fire before any
+  byte moves, `copy`'s result and overlap semantics are Go's, and a write to
+  a read-only account still fails with `ReadonlyDataModified`; only CU and
+  ELF bytes change. Target-less legacy builds are unchanged. The emitted C
+  of SDK programs and programs with the memory or heap runtime gains
+  `#ifdef GOSVM_MEMORY_SYSCALL_*` blocks; with them removed it is byte for
+  byte the earlier C (the corpus test checks this for every entry).

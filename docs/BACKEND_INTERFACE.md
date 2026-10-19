@@ -88,6 +88,13 @@ exhausted), Go 1.22's `growslice` capacities, and the `makeslice` range checks.
 `Program.HeapBytes` comes from `gosvm.json` `heap_bytes` or the CLI's
 `-heap-bytes`.
 
+How a backend moves bytes is not contracted (only CU differ). The built-in
+backend hands every bulk move to `sol_memmove_`/`sol_memset_` on fogo-v0 and
+solana-v3 ([bulk memory](GO_ALLOCATION.md#bulk-memory-on-sbf)). A backend
+that uses the memory syscalls must not use `sol_memcpy_` for `copy`,
+`append` or aggregate assignment: the runtime fails it on any overlap,
+including a value assigned to itself.
+
 `make` lengths and capacities, indexes and slice bounds may have any integer
 type. A negative signed `make` operand traps like `len > cap`; a negative index
 or bound traps like any out-of-range one (the C backend compares them as `u64`,

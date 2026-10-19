@@ -211,9 +211,12 @@ caches, produce the same ELF for `fogo-v0` and `solana-v3` and embed no build
 path or username ([fresh-rebuild evidence](../results/compiler/2026-10-14-v157-rebuild/README.md),
 `scripts/verify_rebuild.py`). Other host packages are not covered. The current
 reference ELFs (`verify_rebuild.py`'s default `--reference`) are those of the
-[October 15 aggregate-parameter fix](../results/compiler/2026-10-15-byval-rebuild/README.md),
-which deliberately changed the full swap (fogo-v0 `a66c5a97…`, solana-v3
-`b419245b…`; `clock2` unchanged).
+[October 19 memory syscalls](../results/compiler/2026-10-19-memory-syscalls/README.md),
+which deliberately changed the full swap (fogo-v0 `9813e0d1…`, solana-v3
+`94862a66…`) and `clock2` (fogo-v0 `d85d909e…`, solana-v3 `88611a50…`); the
+earlier reference is the
+[October 15 aggregate-parameter fix](../results/compiler/2026-10-15-byval-rebuild/README.md)
+(fogo-v0 `a66c5a97…`, solana-v3 `b419245b…`).
 
 ## Deploy and call
 
