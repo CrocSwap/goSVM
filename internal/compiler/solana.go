@@ -32,6 +32,12 @@ var keccakRuntime string
 //go:embed lamports.c.txt
 var lamportsRuntime string
 
+//go:embed log.c.txt
+var logRuntime string
+
+// sdkLogCalls are the gosvm/solana functions logRuntime implements.
+var sdkLogCalls = map[string]bool{"Log": true, "Log64": true, "LogPubkey": true}
+
 func sdkSource(version int) string {
 	if version == 1 {
 		return solana.LegacySource

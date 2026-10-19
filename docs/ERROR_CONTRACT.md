@@ -57,6 +57,11 @@ fails with no custom error code and the transaction rolls back.
   nil and empty maps), where Go panics `hash of unhashable type`.
 - A call of the `panic` builtin, after its argument is evaluated and one log
   line is written ([below](#panic)). This is the only trap that logs.
+- `solana.Log` with a message that is not valid UTF-8 (Rust's `str::from_utf8`
+  rule): the runtime's `sol_log_` syscall fails the instruction
+  (`ProgramFailedToComplete`, logging `failed: invalid utf-8 ...` or
+  `failed: incomplete utf-8 ...`) instead of `abort`; the transaction rolls
+  back the same way. The native SDK panics.
 
 A trap while package-level variables are initialized or an `init` function
 runs aborts the same way, before `Process` runs
@@ -425,6 +430,8 @@ SDK 1 single-account programs use 10–14 for their input checks
 
 | 2020 | `MoveLamports` source balance below the amount |
 
+| 2019 | `LogPubkey` key not 32 bytes |
+
 ### SDK 2 helpers
 
 | Code | Meaning |
@@ -684,3 +691,12 @@ Handler results propagate unchanged.
   amount) is new, and 2014 now also covers a destination credit overflow. The
   other checks reuse 2005, 2011 and 2012 in `ResizeAccount`'s order (source,
   then destination). Programs that do not call it compile to the same C.
+
+- 2026-10-19: addition (`solana.Log`, `Log64`, `LogPubkey`; announce to
+  Qushta), no existing behaviour changed: code 2019 (a `LogPubkey` key not 32
+  bytes) is new, and `Log` of invalid UTF-8 fails in the runtime's log
+  syscall (listed under traps). The three calls log and write nothing a later
+  operand reads, so evaluation order treats them like `SetReturnData`'s
+  logging without its write. `sol_log_64_` and `sol_log_pubkey` join the
+  admitted fogo-v0 imports. Programs that do not call them compile to the
+  same C.

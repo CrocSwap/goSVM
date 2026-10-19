@@ -292,7 +292,7 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		}
 	}
 	if program.SDKPackage != nil {
-		ownedLifecycle, movesLamports := false, false
+		ownedLifecycle, movesLamports, logs := false, false, false
 		for _, object := range g.info.Uses {
 			fn, ok := object.(*types.Func)
 			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && (fn.Name() == "ResizeAccount" || fn.Name() == "CloseAccount") {
@@ -300,6 +300,9 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 			}
 			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && fn.Name() == "MoveLamports" {
 				movesLamports = true
+			}
+			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && sdkLogCalls[fn.Name()] {
+				logs = true
 			}
 		}
 		if program.SDK == 2 || ownedLifecycle {
@@ -320,6 +323,12 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		}
 		if movesLamports {
 			g.WriteString(lamportsRuntime)
+		}
+		if logs {
+			if program.usesStrings {
+				g.WriteString("#define GOSVM_LOG_STRING 1\n")
+			}
+			g.WriteString(logRuntime)
 		}
 	}
 	// Define value structs and array wrappers before function prototypes.

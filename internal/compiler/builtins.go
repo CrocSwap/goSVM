@@ -24,7 +24,9 @@ var legacySyscalls = map[string]bool{
 	"sol_set_return_data":        true,
 	"sol_get_return_data":        true,
 	"sol_secp256k1_recover":      true,
-	"sol_log_":                   true, // panic's log line (docs/ERROR_CONTRACT.md#panic)
+	"sol_log_":                   true, // panic's log line (docs/ERROR_CONTRACT.md#panic) and solana.Log
+	"sol_log_64_":                true, // solana.Log64
+	"sol_log_pubkey":             true, // solana.LogPubkey
 	"sol_memcpy_":                true, // the initialization image (docs/GO_GLOBALS.md#compile-time-evaluation)
 }
 
