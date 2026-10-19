@@ -112,8 +112,9 @@ before `AddByte(bump)`). It returns 0, the runtime's 1 when no bump works
 before the syscall: the runtime aborts on more than 16 seeds or a seed over 32
 bytes, and with 16 it would charge for all 255 bumps. The runtime charges
 1,500 CU per bump tried, the same as one `CreateAddress`, so the saving over a
-`CreateAddress` loop is the per-try seed parsing and copying (about 400 CU per
-bump; [measurements](../results/sdk/2026-10-19-find-address/README.md)).
+`CreateAddress` loop is its per-try seed parsing and its setup: 373 to 1,228
+CU per search, 125 CU per extra try for three seeds
+([measurements](../results/sdk/2026-10-19-find-address/README.md)).
 Native contexts run the same search through `DeriveAddress`.
 
 `cpi.Metas.Add(index, writable, signer)` builds at most 64 account metas
