@@ -597,6 +597,45 @@ func validSignerSeeds(b []byte) bool {
 	return off == len(b)
 }
 
+// FindAddress is Pubkey::find_program_address: it tries bumps 255 down to 1
+// and returns the first off-curve address of seeds plus that one bump byte.
+// seeds is one encoded seed group without the bump, so at most 15 seeds.
+// output is exactly 33 bytes: the address, then the bump. It returns 0 and
+// fills output, 1 when no bump works (output unchanged), 2007 for malformed
+// input, or another nonzero status from the derivation. On chain it is one
+// sol_try_find_program_address syscall, which charges the same 1,500 CU per
+// bump tried as one CreateAddress.
+func FindAddress(c Context, seeds, program, output []byte) uint64 {
+	if len(program) != 32 || len(output) != 33 || len(seeds) > 496 {
+		return 2007
+	}
+	off, ok := validSeedGroup(seeds, 0)
+	if !ok || off != len(seeds) || seeds[0] > 15 {
+		return 2007
+	}
+	if c.DeriveAddress == nil {
+		return 2009
+	}
+	group := make([]byte, len(seeds)+2)
+	copy(group, seeds)
+	group[0]++
+	group[len(seeds)] = 1
+	var address [32]byte
+	for bump := 255; bump >= 1; bump-- {
+		group[len(seeds)+1] = byte(bump)
+		code := c.DeriveAddress(group, program, address[:])
+		if code == 0 {
+			copy(output, address[:])
+			output[32] = byte(bump)
+			return 0
+		}
+		if code != 1 {
+			return code
+		}
+	}
+	return 1
+}
+
 // CreateAddress derives an off-curve PDA with an explicit derivation program.
 // seeds is one encoded seed group, normally produced by sdk/pda.Seeds.Bytes.
 // The output is exactly 32 bytes; the syscall's exact nonzero status propagates.
