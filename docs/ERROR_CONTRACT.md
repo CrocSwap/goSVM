@@ -417,7 +417,7 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 2004 | SHA-256 or Keccak-256 result not 32 bytes |
 | 2005 | Account index out of range |
 | 2006 | Malformed CPI account metas, or more than 64 |
-| 2007 | Malformed signer seeds or PDA input, or more than 4 signer groups |
+| 2007 | Malformed signer seeds or PDA input, or more than 4 signer groups (`FindAddress`: also more than 15 seeds or an output that is not 33 bytes) |
 | 2008 | CPI instruction data longer than 10,240 bytes |
 | 2009 | Native callback missing (native tests only) |
 | 2010 | Resize or original length beyond limits |

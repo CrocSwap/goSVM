@@ -102,6 +102,20 @@ propagate. Store the bump and use `Address` where it is known; see
 [examples/find-address](../examples/find-address/README.md). The host
 `fixture.FindProgramAddress` now also stops at bump 1.
 
+`solana.FindAddress(c, seeds, program, output)` is `find_program_address`: one
+`sol_try_find_program_address` syscall (fogo-v0 by name, solana-v3 hash
+`0x48504a38`) tries bumps 255 down to 1 and writes the first off-curve
+address and its bump into the 33-byte `output`. `seeds` is one encoded group
+without the bump, so at most 15 seeds of at most 32 bytes (`pda.Seeds.Bytes`
+before `AddByte(bump)`). It returns 0, the runtime's 1 when no bump works
+(output unchanged), or 2007 for a malformed group or wrong lengths, checked
+before the syscall: the runtime aborts on more than 16 seeds or a seed over 32
+bytes, and with 16 it would charge for all 255 bumps. The runtime charges
+1,500 CU per bump tried, the same as one `CreateAddress`, so the saving over a
+`CreateAddress` loop is the per-try seed parsing and copying (about 400 CU per
+bump; [measurements](../results/sdk/2026-10-19-find-address/README.md)).
+Native contexts run the same search through `DeriveAddress`.
+
 `cpi.Metas.Add(index, writable, signer)` builds at most 64 account metas
 (`cpi.MaxMetas`); repeated accounts count. `cpi.Signers.Add(&seeds)` copies at
 most four seed groups (`cpi.MaxSigners`) into a 1,024-byte buffer; the combined
