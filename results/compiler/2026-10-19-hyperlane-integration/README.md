@@ -45,9 +45,11 @@ Focused combined compiler/SDK/native-C and SBF tests pass, including the frozen
 compiler corpus, both new compiler fixes, the CPI limits and real Token/ATA
 programs. All separate example/service modules and all six SBF example suites pass
 (tutorial retried with the documented host workaround). `go vet ./...` passes.
-Full root tests and
-GitHub Linux/macOS CI are pending at this checkpoint; final results will be
-recorded before merge. Raw command logs and generated binaries stay local.
+The full root `make test` suite passes (compiler package: 875.228 seconds;
+validation duration, not a build benchmark). GitHub Linux/macOS CI status and
+final merge validation are recorded in [integration PR #25](https://github.com/CrocSwap/goSVM/pull/25).
+The swap and escrow also pass explicit fogo-v0/solana-v3 fixtures; the swap
+lifecycle passes legacy, fogo-v0 and solana-v3. Raw command logs and generated binaries stay local.
 
 ## Reproduce
 

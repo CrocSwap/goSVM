@@ -85,5 +85,48 @@
     "check": "fresh rebuild against new reference",
     "exit": 0,
     "matching_elfs": 4
+  },
+  {
+    "module": "examples/full-swap",
+    "target": "fogo-v0",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "target": "solana-v3",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/escrow",
+    "target": "fogo-v0",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/escrow",
+    "target": "solana-v3",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "fixtures": "testdata/lifecycle.json",
+    "target": "legacy-v1.51-v3",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "fixtures": "testdata/lifecycle.json",
+    "target": "fogo-v0",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "fixtures": "testdata/lifecycle.json",
+    "target": "solana-v3",
+    "svm_exit": 0
+  },
+  {
+    "check": "make test (full root suite)",
+    "exit": 0,
+    "compiler_package_seconds": 875.228
   }
 ]
