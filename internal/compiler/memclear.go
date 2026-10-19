@@ -97,10 +97,16 @@ func (g *generator) zeroRange(s *ast.RangeStmt) bool {
 	if !ok || !g.zeroStore(s.Body, x, i) {
 		return false
 	}
+	// The memset branch reuses the temporary numbers the loop takes, so the
+	// #else branch is exactly the loop earlier compilers emitted.
+	next := g.next
 	g.line("#ifdef GOSVM_MEMORY_SYSCALL_SET")
+	g.line("{")
 	v := g.expr(x)
 	g.line("(void)memset(%s.ptr,0,(u64)%s.len*sizeof(%s));", v, v, g.variable(x, elem))
+	g.line("}")
 	g.line("#else")
+	g.next = next
 	g.rangeLoopPlain(s)
 	g.line("#endif")
 	return true
@@ -164,12 +170,16 @@ func (g *generator) zeroFor(s *ast.ForStmt) bool {
 	defer func() { g.continueLabels = g.continueLabels[:len(g.continueLabels)-1] }()
 	g.line("{")
 	g.stmt(s.Init)
+	next := g.next
 	g.line("#ifdef GOSVM_MEMORY_SYSCALL_SET")
+	g.line("{")
 	v := g.expr(x)
 	size := g.variable(x, elem)
 	start := g.name(j)
 	g.line("if ((u64)%s < (u64)%s.len) (void)memset(%s.ptr+(u64)%s*sizeof(%s),0,((u64)%s.len-(u64)%s)*sizeof(%s));", start, v, v, start, size, v, start, size)
+	g.line("}")
 	g.line("#else")
+	g.next = next
 	g.loopBody(s, "")
 	g.line("#endif")
 	g.line("}")

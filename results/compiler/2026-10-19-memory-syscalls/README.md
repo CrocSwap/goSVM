@@ -153,7 +153,11 @@ for the probe (about 440 CU per duplicate).
   `ReadonlyDataModified` and into an account key succeeds without effect,
   syscall and loop alike, on both profiles.
 - `TestMemoryLegacyUnchanged`: the legacy v1.51 ELF is byte-identical for
-  thresholds 1, 64 and loops only.
+  thresholds 1, 64 and loops only. Against the previous compiler (`9ba2da9`),
+  checked by hand: the target-less full swap builds to the same legacy ELF
+  (`05f52dd2…`), and so does `examples/memory-values` on `legacy-v1.51-v3`
+  (`6ad52755…`); its emitted C with the syscall blocks removed is the
+  previous compiler's C (every new path, including both zeroing loops).
 - `TestCorpusMatchesPreCheckCompiler`: every frozen corpus entry's C equals
   the recording once the added `#ifdef GOSVM_MEMORY_SYSCALL_*` blocks and
   declarations are removed (`withoutMemorySyscalls`); no hash was re-recorded.
