@@ -50,3 +50,15 @@ costs 3 to 17 CU more: the word compare runs before the loop finds it.
 modes save as above, but the untouched loads and the big-endian control also
 cost 8 to 18 CU more: the extra code changes how clang lays out the shared
 `Run`. The probes isolate each loop.
+
+## Reference ELFs
+
+This change moves the full swap (fogo-v0 `963c8f52…`, solana-v3 `cd49e4f1…`).
+`clock2` is unchanged. `rebuild/metrics.json` is the fresh-rebuild check
+against the previous reference (the #25 integration rebuild), and
+`scripts/verify_rebuild.py` now uses it as the default reference:
+
+```sh
+python3 scripts/verify_rebuild.py --output <new-directory> --cli build/gosvm
+python3 scripts/check_rebuild_reference.py <new-directory>/metrics.json
+```
