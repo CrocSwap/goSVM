@@ -80,6 +80,34 @@ func withoutMemorySyscalls(c []byte) []byte {
 	return []byte(strings.Join(out, ""))
 }
 
+// runtimeWordEdits are the runtime template changes of
+// docs/BACKEND_INTERFACE.md#runtime-word-access as {new, old} text.
+// withoutRuntimeWords undoes them, so the corpus proves they are the only
+// change to the emitted C.
+var runtimeWordEdits = [][2]string{
+	{"            sol_write32(p+4,(u32)a->data_len);\n", "            for(u64 j=0;j<4;j++) p[4+j]=(u8)(a->data_len>>(j*8));\n"},
+	{"    sol_write64(output.ptr,rent.rate);sol_write64(output.ptr+8,rent.threshold_bits);\n", "    for(u64 j=0;j<8;j++) {output.ptr[j]=(u8)(rent.rate>>(j*8));output.ptr[8+j]=(u8)(rent.threshold_bits>>(j*8));}\n"},
+	{"    return sol_eq32(a->owner,c->program.ptr) ? 0 : 2012;\n", "    for(u64 j=0;j<32;j++) if(a->owner[j]!=c->program.ptr[j]) return 2012;\n    return 0;\n"},
+	{"    return sol_read32(a->key-4);\n", "    u64 n=0;for(u64 j=0;j<4;j++) n|=(u64)(a->key-4)[j]<<(j*8);return n;\n"},
+	{"    sol_write64(a->data-8,n);\n", "    for(u64 j=0;j<8;j++) (a->data-8)[j]=(u8)(n>>(j*8));\n"},
+	{"    if(sol_eq32(a->key,b->key)) return 2013;\n", "    boolean same=1;for(u64 j=0;j<32;j++) if(a->key[j]!=b->key[j]) same=0;\n    if(same) return 2013;\n"},
+	{"    sol_set_data_len(c,a,0);for(u64 j=0;j<32;j+=8) sol_write64(a->owner+j,0);\n", "    sol_set_data_len(c,a,0);for(u64 j=0;j<32;j++) a->owner[j]=0;\n"},
+	{"    // The syscall reads every seed before it writes, and writes the address\n    // only on success, so output needs no staging copy.\n    return sol_create_pda(seeds,count,program.ptr,output.ptr);\n", "    u8 address[32];u64 code=sol_create_pda(seeds,count,program.ptr,address);\n    if(code) return code;\n    for(u64 j=0;j<32;j++) output.ptr[j]=address[j];\n    return 0;\n"},
+	{"#ifdef __bpf__\n// SBF loads and stores at any alignment, and clang lowers a fixed-size\n// __builtin_memcpy to whole-word ldx/stx: one instruction per 8 bytes instead\n// of a byte loop (docs/BACKEND_INTERFACE.md#runtime-word-access).\nstatic inline u64 sol_read64(const u8 *p) {u64 v;__builtin_memcpy(&v,p,8);return v;}\nstatic inline void sol_write64(u8 *p,u64 v) {__builtin_memcpy(p,&v,8);}\nstatic inline u64 sol_read32(const u8 *p) {u32 v;__builtin_memcpy(&v,p,4);return v;}\nstatic inline void sol_write32(u8 *p,u32 v) {__builtin_memcpy(p,&v,4);}\nstatic inline boolean sol_eq32(const u8 *a,const u8 *b) {\n    u64 x[4],y[4];__builtin_memcpy(x,a,32);__builtin_memcpy(y,b,32);\n    return ((x[0]^y[0])|(x[1]^y[1])|(x[2]^y[2])|(x[3]^y[3]))==0;\n}\n#else\n", ""},
+	{"static void sol_write64(u8 *p,u64 v) {for(u64 i=0;i<8;i++) p[i]=(u8)(v>>(i*8));}\nstatic u64 sol_read32(const u8 *p) {u64 v=0;for(u64 i=0;i<4;i++) v|=(u64)p[i]<<(i*8);return v;}\nstatic void sol_write32(u8 *p,u32 v) {for(u64 i=0;i<4;i++) p[i]=(u8)(v>>(i*8));}\nstatic boolean sol_eq32(const u8 *a,const u8 *b) {for(u64 j=0;j<32;j++) if(a[j]!=b[j]) return 0;return 1;}\n#endif\n", ""},
+	{"    return sol_eq32(a->key,id);\n", "    for(u64 j=0;j<32;j++) if(a->key[j]!=id[j]) return 0;\n    return 1;\n"},
+	{"    return sol_eq32(sol_account(c,i)->key,address);\n", "    u8 *key=sol_account(c,i)->key;\n    for(u64 j=0;j<32;j++) if(key[j]!=address[j]) return 0;\n    return 1;\n"},
+	{"    sol_write64(data+1,amount);\n", "    for(u64 i=0;i<8;i++) data[1+i]=(u8)(amount>>(i*8));\n"},
+}
+
+func withoutRuntimeWords(c []byte) []byte {
+	text := string(c)
+	for _, e := range runtimeWordEdits {
+		text = strings.ReplaceAll(text, e[0], e[1])
+	}
+	return []byte(text)
+}
+
 // corpusChanges lists the recorded programs whose verdict changed on purpose
 // after the corpus was frozen, with the outcome the current compiler must
 // produce instead. The .gz is never edited; every other entry must still match
@@ -401,7 +429,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			continue
 		}
 		if err == nil {
-			sum := sha256.Sum256(withoutMemorySyscalls(out))
+			sum := sha256.Sum256(withoutMemorySyscalls(withoutRuntimeWords(out)))
 			if hex.EncodeToString(sum[:]) != e.CSHA256 {
 				t.Errorf("entry %d: emitted C changed (sha256 %x)", i, sum)
 			}

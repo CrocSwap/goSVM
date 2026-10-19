@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "network_validation": false,
+  "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "cli": "build/gosvm",
+  "cli_sha256": "da3d8653dc71815b563880731d84235c2f29277a62a09cadd2a13f9da9e30431",
+  "build_flags": [
+    "-no-cache"
+  ],
+  "go_version": "go version go1.23.2 darwin/arm64",
+  "workloads": {
+    "full-swap": "examples/full-swap",
+    "clock2": "examples/clock2"
+  },
+  "skipped": {
+    "go-bend-rust": "needs pinned Bend producer manifests and the full Rust producer tree; not part of this offline rebuild check"
+  },
+  "results": [
+    {
+      "target": "fogo-v0",
+      "workload": "full-swap",
+      "kind": "project",
+      "identical": true,
+      "no_embedded_host_strings": true,
+      "elf_sha256": "43bf30faddf254e6e77c55ef52b93a38e4b85ce488ff604b9be6b1c27a40843f",
+      "sides": [
+        {
+          "side": "a",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-a-t8s7l912/work/a/full-swap",
+          "elf_sha256": "43bf30faddf254e6e77c55ef52b93a38e4b85ce488ff604b9be6b1c27a40843f",
+          "size": 68816,
+          "embedded_host_strings": []
+        },
+        {
+          "side": "bb-longer-path",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-bb-longer-path-lwotf15l/work/bb-longer-path/full-swap",
+          "elf_sha256": "43bf30faddf254e6e77c55ef52b93a38e4b85ce488ff604b9be6b1c27a40843f",
+          "size": 68816,
+          "embedded_host_strings": []
+        }
+      ],
+      "matches_reference": false
+    },
+    {
+      "target": "fogo-v0",
+      "workload": "clock2",
+      "kind": "low-level",
+      "identical": true,
+      "no_embedded_host_strings": true,
+      "elf_sha256": "35307d2359edec02abb017c4c0e35244c7f27cf585bbb62210a5283f23dd8522",
+      "sides": [
+        {
+          "side": "a",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-a-re337m6t/work/a/clock2",
+          "elf_sha256": "35307d2359edec02abb017c4c0e35244c7f27cf585bbb62210a5283f23dd8522",
+          "size": 5096,
+          "embedded_host_strings": []
+        },
+        {
+          "side": "bb-longer-path",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-bb-longer-path-ziglnudg/work/bb-longer-path/clock2",
+          "elf_sha256": "35307d2359edec02abb017c4c0e35244c7f27cf585bbb62210a5283f23dd8522",
+          "size": 5096,
+          "embedded_host_strings": []
+        }
+      ],
+      "matches_reference": false
+    },
+    {
+      "target": "solana-v3",
+      "workload": "full-swap",
+      "kind": "project",
+      "identical": true,
+      "no_embedded_host_strings": true,
+      "elf_sha256": "147b1b26f86a886ac40137b03f155809244ec00d157610a772b8fa9587068bc1",
+      "sides": [
+        {
+          "side": "a",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-a-rg0ieni8/work/a/full-swap",
+          "elf_sha256": "147b1b26f86a886ac40137b03f155809244ec00d157610a772b8fa9587068bc1",
+          "size": 68928,
+          "embedded_host_strings": []
+        },
+        {
+          "side": "bb-longer-path",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-bb-longer-path-op44qw_b/work/bb-longer-path/full-swap",
+          "elf_sha256": "147b1b26f86a886ac40137b03f155809244ec00d157610a772b8fa9587068bc1",
+          "size": 68928,
+          "embedded_host_strings": []
+        }
+      ],
+      "matches_reference": false
+    },
+    {
+      "target": "solana-v3",
+      "workload": "clock2",
+      "kind": "low-level",
+      "identical": true,
+      "no_embedded_host_strings": true,
+      "elf_sha256": "38060141cb1bd31f39c2f6ebaf632a2d9eddc7d8ba956b48defdce9552e73e17",
+      "sides": [
+        {
+          "side": "a",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-a-0agfse_y/work/a/clock2",
+          "elf_sha256": "38060141cb1bd31f39c2f6ebaf632a2d9eddc7d8ba956b48defdce9552e73e17",
+          "size": 4072,
+          "embedded_host_strings": []
+        },
+        {
+          "side": "bb-longer-path",
+          "path": "/var/folders/1g/284xdqbn7_338zrkrk4ln6yr0000gn/T/gosvm-rebuild-bb-longer-path-j4vwnj2s/work/bb-longer-path/clock2",
+          "elf_sha256": "38060141cb1bd31f39c2f6ebaf632a2d9eddc7d8ba956b48defdce9552e73e17",
+          "size": 4072,
+          "embedded_host_strings": []
+        }
+      ],
+      "matches_reference": false
+    }
+  ],
+  "backends": [
+    "OK fogo-v0 backend (selected) / platform-tools v1.57 / LLVM 22.1.2: ~/Library/Caches/gosvm/toolchains/v1.57/darwin-arm64/llvm",
+    "OK solana-v3 backend / platform-tools v1.57 / LLVM 22.1.2: ~/Library/Caches/gosvm/toolchains/v1.57/darwin-arm64/llvm"
+  ],
+  "unmanaged_v1_57_llvm_sha256": {},
+  "reference": "results/compiler/2026-10-19-hyperlane-integration/rebuild/metrics.json",
+  "passed": true
+}
