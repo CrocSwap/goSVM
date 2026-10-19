@@ -1,0 +1,89 @@
+[
+  {
+    "module": "examples/typed-swap",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/escrow",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/multi-state",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/tutorial",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/fee-vault",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/logging",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/find-address",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/shared-packages",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/shared-packages/service",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/full-swap-service",
+    "native_exit": 0
+  },
+  {
+    "module": "benchmarks/svm-transport",
+    "native_exit": 0
+  },
+  {
+    "module": "examples/full-swap",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/escrow",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/tutorial",
+    "svm_exit": 0,
+    "initial_svm_exit": 1,
+    "host_workaround": "GOFLAGS=-ldflags=-linkmode=external; Go 1.22 on macOS 26"
+  },
+  {
+    "module": "examples/fee-vault",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/logging",
+    "svm_exit": 0
+  },
+  {
+    "module": "examples/find-address",
+    "svm_exit": 0
+  },
+  {
+    "check": "focused combined compiler/SDK/native-C/SBF tests",
+    "exit": 0
+  },
+  {
+    "check": "go vet ./...",
+    "exit": 0
+  },
+  {
+    "check": "fresh rebuild against new reference",
+    "exit": 0,
+    "matching_elfs": 4
+  }
+]

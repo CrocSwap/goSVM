@@ -43,7 +43,9 @@ A separate fresh verification against these pins reproduces all four ELFs.
 
 Focused combined compiler/SDK/native-C and SBF tests pass, including the frozen
 compiler corpus, both new compiler fixes, the CPI limits and real Token/ATA
-programs. All separate example/service modules were tested. Full root tests and
+programs. All separate example/service modules and all six SBF example suites pass
+(tutorial retried with the documented host workaround). `go vet ./...` passes.
+Full root tests and
 GitHub Linux/macOS CI are pending at this checkpoint; final results will be
 recorded before merge. Raw command logs and generated binaries stay local.
 
