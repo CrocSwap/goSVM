@@ -148,10 +148,31 @@ func (g *generator) emitArray(node ast.Node, a *types.Array) {
 		g.line("for (u64 i=0;i<%dULL;i++) { if (!gosvm_iface_eq(a.items[i],b.items[i])) return 0; }", a.Len())
 	} else if isString(a.Elem()) {
 		g.line("for (u64 i=0;i<%dULL;i++) { if (!gosvm_str_eq(a.items[i],b.items[i])) return 0; }", a.Len())
+	} else if n := a.Len(); isByte(a.Elem()) && n >= 8 {
+		// On SBF a byte loop costs about 11 instructions per byte. Bytes have
+		// no side effects, so compare whole words (one unaligned ldxdw per 8
+		// bytes from the fixed-size memcpy) and fold the differences.
+		g.line("#ifdef __bpf__")
+		g.line("u64 d=0;")
+		g.line("for (u64 i=0;i+8<=%dULL;i+=8) { u64 x,y; __builtin_memcpy(&x,a.items+i,8); __builtin_memcpy(&y,b.items+i,8); d|=x^y; }", n)
+		if n%8 != 0 {
+			g.line("for (u64 i=%dULL;i<%dULL;i++) d|=(u8)(a.items[i]^b.items[i]);", n/8*8, n)
+		}
+		g.line("return d==0;")
+		g.line("#else")
+		g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", n)
+		g.line("#endif")
 	} else {
 		g.line("for (u64 i=0;i<%dULL;i++) { if (a.items[i] != b.items[i]) return 0; }", a.Len())
 	}
 	g.line("return 1;\n}")
+}
+
+// isByte reports whether t is a one-byte integer (byte, uint8 or int8), whose
+// arrays compare bytewise.
+func isByte(t types.Type) bool {
+	b, ok := t.Underlying().(*types.Basic)
+	return ok && (b.Kind() == types.Uint8 || b.Kind() == types.Int8)
 }
 
 // emitElement defines what a composite array element of type t needs

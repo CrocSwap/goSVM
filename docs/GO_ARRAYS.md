@@ -50,7 +50,12 @@ elements of pointer arrays (allocated on the heap). Array equality/inequality
 compare elements in index order and stop at the first difference, as Go does;
 elements that are structs compare field by field ([struct equality](GO_TYPES.md#struct-equality)),
 and arrays of slices, maps or function values are not comparable (go/types
-rejects `==` on them). `len` and `cap` retain Go's operand-evaluation rules.
+rejects `==` on them). On SBF, arrays of at least 8 one-byte integers
+(`byte`, `uint8`, `int8`) compare 8 bytes at a time with no early exit, which
+nothing can observe since byte comparisons have no side effects: a `[32]byte`
+key comparison costs about 25 instructions instead of about 350 for the byte
+loop ([measurements](../results/compiler/2026-10-19-byte-array-equal/README.md)).
+Host C keeps the loop. `len` and `cap` retain Go's operand-evaluation rules.
 Conversion between arrays with identical underlying types is supported,
 including named/unnamed array conversions.
 
