@@ -37,13 +37,16 @@ static boolean sol_IsTokenProgram(Context *c,u64 i) {
 }
 #ifdef GOSVM_SBF_V3
 #define sol_create_pda ((u64 (*)(Seed *,u64,u8 *,u8 *))2474062396ULL)
+#define sol_find_pda ((u64 (*)(Seed *,u64,u8 *,u8 *,u8 *))0x48504a38ULL)
 #define sol_invoke_c ((u64 (*)(Instruction *,AccountInfo *,u64,Seeds *,u64))2720767109ULL)
 #define sol_hash ((u64 (*)(Seed *,u64,u8 *))0x11f49d86ULL)
 #else
 extern u64 sol_create_program_address(Seed *,u64,u8 *,u8 *);
+extern u64 sol_try_find_program_address(Seed *,u64,u8 *,u8 *,u8 *);
 extern u64 sol_invoke_signed_c(Instruction *,AccountInfo *,u64,Seeds *,u64);
 extern u64 sol_sha256(Seed *,u64,u8 *);
 #define sol_create_pda sol_create_program_address
+#define sol_find_pda sol_try_find_program_address
 #define sol_invoke_c sol_invoke_signed_c
 #define sol_hash sol_sha256
 #endif

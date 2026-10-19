@@ -12,7 +12,7 @@
   "instruction": "",
   "handler": "",
   "result": "",
-  "sdk_sha256": "f66ccbb30ab2be273f8bcedc30e8f850e2c061d9414f1c081997d1d1b6572c59",
+  "sdk_sha256": "6e97ac4bb6571bc2d44438fc0a1afe263f678034678e475356660f2301ca503f",
   "sdk_version": 2,
   "imports": {
     "model": "example.org/gosvm/logging/model"

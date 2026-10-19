@@ -94,13 +94,28 @@ of at most 32 bytes each, including any bump. `Address` derives an address using
 an explicit program key; `Matches` compares it with a context account key.
 `FindAddress(c, program)` is Solana's `find_program_address`: it appends each
 bump from 255 down to 1 (never 0, as in Solana) and returns the first
-off-curve address with its bump, using one create-program-address syscall
-(about 1,570 CU) per attempt, so on-curve results are skipped exactly. The
+off-curve address with its bump, so on-curve results are skipped exactly. It
+is one `solana.FindAddress` call (below), 1,500 CU per bump tried. The
 builder is unchanged; add the bump for signing. A builder with 16 seeds has
-no room for the bump (3001), no bump found is 3004, and other syscall statuses
-propagate. Store the bump and use `Address` where it is known; see
+no room for the bump (3001), no bump found is 3004, and other statuses (a
+missing native callback) propagate. Store the bump and use `Address` where it is known; see
 [examples/find-address](../examples/find-address/README.md). The host
 `fixture.FindProgramAddress` now also stops at bump 1.
+
+`solana.FindAddress(c, seeds, program, output)` is `find_program_address`: one
+`sol_try_find_program_address` syscall (fogo-v0 by name, solana-v3 hash
+`0x48504a38`) tries bumps 255 down to 1 and writes the first off-curve
+address and its bump into the 33-byte `output`. `seeds` is one encoded group
+without the bump, so at most 15 seeds of at most 32 bytes (`pda.Seeds.Bytes`
+before `AddByte(bump)`). It returns 0, the runtime's 1 when no bump works
+(output unchanged), or 2007 for a malformed group or wrong lengths, checked
+before the syscall: the runtime aborts on more than 16 seeds or a seed over 32
+bytes, and with 16 it would charge for all 255 bumps. The runtime charges
+1,500 CU per bump tried, the same as one `CreateAddress`, so the saving over a
+`CreateAddress` loop is its per-try seed parsing and its setup: 373 to 1,228
+CU per search, 125 CU per extra try for three seeds
+([measurements](../results/sdk/2026-10-19-find-address/README.md)).
+Native contexts run the same search through `DeriveAddress`.
 
 `cpi.Metas.Add(index, writable, signer)` builds at most 64 account metas
 (`cpi.MaxMetas`); repeated accounts count. `cpi.Signers.Add(&seeds)` copies at

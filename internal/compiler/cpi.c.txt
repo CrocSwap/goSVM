@@ -105,6 +105,17 @@ static u64 sol_CreateAddress(Context *c,slice b,slice program,slice output) {
     return 0;
 }
 
+// One syscall walks bumps 255..1 and charges 1,500 CU per bump tried, as the
+// runtime's find_program_address does. Seeds are checked first: the syscall
+// aborts the program on more than 16 seeds or a seed over 32 bytes, and with
+// exactly 16 it would try (and charge for) all 255 bumps without a result.
+static u64 sol_FindAddress(Context *c,slice b,slice program,slice output) {
+    if(program.len!=32 || output.len!=33 || b.len>496) return 2007;
+    Seed seeds[16];u64 off=0,count=0;
+    if(!sol_seed_group(b,&off,seeds,&count) || off!=(u64)b.len || count>15) return 2007;
+    return sol_find_pda(seeds,count,program.ptr,output.ptr,output.ptr+32);
+}
+
 // Outgoing CPI bounds (solana/api.go Invoke, docs/SDK2.md#cpi-bounds): 64
 // account metas, 4 signer groups of at most 16 seeds of at most 32 bytes, in
 // at most 1,024 encoded bytes. The descriptor arrays take 2,112 bytes, so
