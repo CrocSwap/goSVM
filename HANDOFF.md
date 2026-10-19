@@ -5,6 +5,17 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Program logging (October 19, branch `gap3-logging`; unreleased, for the
+Hyperlane Sealevel port):** `solana.Log(c, string)`, `Log64(c, 5 words)` and
+`LogPubkey(c, key)` call `sol_log_`, `sol_log_64_` and `sol_log_pubkey` (the
+last two join the admitted fogo-v0 imports) and return 0 (2019 for a key that
+is not 32 bytes). Invalid UTF-8 fails the instruction in the runtime's syscall,
+as for Rust; native tests panic, and native contexts get lines through
+`WriteLog`. The logging C runtime is emitted only when called: corpus C and
+full-swap ELFs unchanged; SDK-2 snapshots refreshed.
+[examples/logging](examples/logging/README.md) passes `gosvm test --svm` on
+both targets. [Evidence](results/compiler/2026-10-19-logging/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,

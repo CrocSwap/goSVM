@@ -1,0 +1,56 @@
+{
+  "targets": [
+    "fogo",
+    "solana"
+  ],
+  "schema": 2,
+  "name": "logging",
+  "module": "example.org/gosvm/logging",
+  "platform_tools": "v1.57",
+  "sbf": "",
+  "state": "",
+  "instruction": "",
+  "handler": "",
+  "result": "",
+  "sdk_sha256": "7b19ec1fdb3e8a2f50c8853a5455e07ac0c7203d5269a7b1940e470b96377b59",
+  "sdk_version": 2,
+  "imports": {
+    "model": "example.org/gosvm/logging/model"
+  },
+  "layouts": [
+    {
+      "name": "Journal",
+      "type": "model.Journal",
+      "version": 1
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Note",
+      "handler": "Note",
+      "args": "model.NoteArgs",
+      "bundle": "NoteAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Journal",
+          "kind": "state",
+          "layout": "Journal",
+          "owner": "program_id",
+          "access": "write"
+        },
+        {
+          "name": "Author",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Journal.Author",
+          "account": "Author"
+        }
+      ]
+    }
+  ]
+}

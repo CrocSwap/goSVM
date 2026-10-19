@@ -21,6 +21,7 @@ type Context struct {
 	ReadRent            func(output []byte) uint64 // Canonical 17-byte rate/threshold-bits/burn encoding.
 	ReadClock           func(output []byte) uint64 // Canonical five-word Clock encoding; signed timestamps are raw bits.
 	WriteReturnData     func(data []byte)          // Native callback receives an owned copy; CPI callbacks model clearing.
+	WriteLog            func(message string)       // Each log line's text after "Program log: "; nil discards them.
 }
 
 // SetReturnData copies at most 1,024 bytes into the runtime's current return
@@ -37,6 +38,131 @@ func SetReturnData(c Context, data []byte) uint64 {
 	copy(owned, data)
 	c.WriteReturnData(owned)
 	return 0
+}
+
+// Log writes "Program log: " and message to the transaction log, like Rust's
+// msg!, and returns 0. The runtime fails the instruction when message is not
+// valid UTF-8; natively that panics. Native contexts receive each message
+// through WriteLog; without it the line is discarded.
+func Log(c Context, message string) uint64 {
+	if !validUTF8(message) {
+		panic("solana.Log: message is not valid UTF-8")
+	}
+	if c.WriteLog != nil {
+		c.WriteLog(message)
+	}
+	return 0
+}
+
+// Log64 logs five words in hexadecimal, "0x1, 0x2, 0x0, 0x0, 0x0", like
+// Rust's sol_log_64, and returns 0.
+func Log64(c Context, v0, v1, v2, v3, v4 uint64) uint64 {
+	if c.WriteLog != nil {
+		c.WriteLog(hexWord(v0) + ", " + hexWord(v1) + ", " + hexWord(v2) + ", " + hexWord(v3) + ", " + hexWord(v4))
+	}
+	return 0
+}
+
+// LogPubkey logs a 32-byte key in base58, like Rust's Pubkey::log, and
+// returns 0, or 2019 without logging when key is not 32 bytes.
+func LogPubkey(c Context, key []byte) uint64 {
+	if len(key) != 32 {
+		return 2019
+	}
+	if c.WriteLog != nil {
+		c.WriteLog(base58(key))
+	}
+	return 0
+}
+
+func hexWord(v uint64) string {
+	var b [16]byte
+	n := 16
+	for {
+		n--
+		b[n] = "0123456789abcdef"[v&15]
+		v >>= 4
+		if v == 0 {
+			break
+		}
+	}
+	return "0x" + string(b[n:])
+}
+
+func base58(key []byte) string {
+	const alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+	var digits [44]byte // base58 digits, least significant first
+	n := 0
+	for _, x := range key {
+		carry := int(x)
+		for j := 0; j < n; j++ {
+			carry += int(digits[j]) << 8
+			digits[j] = byte(carry % 58)
+			carry /= 58
+		}
+		for carry > 0 {
+			digits[n] = byte(carry % 58)
+			carry /= 58
+			n++
+		}
+	}
+	out := ""
+	for _, x := range key {
+		if x != 0 {
+			break
+		}
+		out += "1"
+	}
+	for j := n - 1; j >= 0; j-- {
+		out += alphabet[digits[j] : digits[j]+1]
+	}
+	return out
+}
+
+// validUTF8 is Rust's str::from_utf8 acceptance: no overlong forms,
+// surrogates or code points above U+10FFFF.
+func validUTF8(s string) bool {
+	for i := 0; i < len(s); {
+		x := s[i]
+		w := 0
+		switch {
+		case x < 0x80:
+			w = 1
+		case x >= 0xC2 && x <= 0xDF:
+			w = 2
+		case x >= 0xE0 && x <= 0xEF:
+			w = 3
+		case x >= 0xF0 && x <= 0xF4:
+			w = 4
+		default:
+			return false
+		}
+		if w > len(s)-i {
+			return false
+		}
+		if w > 1 {
+			lo, hi := byte(0x80), byte(0xBF)
+			if x == 0xE0 {
+				lo = 0xA0
+			} else if x == 0xED {
+				hi = 0x9F
+			} else if x == 0xF0 {
+				lo = 0x90
+			} else if x == 0xF4 {
+				hi = 0x8F
+			}
+			if s[i+1] < lo || s[i+1] > hi {
+				return false
+			}
+			for k := 2; k < w; k++ {
+				if s[i+k] < 0x80 || s[i+k] > 0xBF {
+					return false
+				}
+			}
+		}
+		i += w
+	}
+	return true
 }
 
 // Clock writes exactly 40 bytes: slot, epoch-start timestamp bits, epoch,

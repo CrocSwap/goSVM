@@ -1,0 +1,326 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+  "payer_seed": "17ce007a0025c8efa17782e50167f410f51ec045b94f2040c162454309eef7fa",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "author",
+      "seed": "bcfea4c0776ff690782d72864e207632394880e22193e35e0b1c6368196f129c"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "AhSsZs9cFhji9r6VbGKQvkHdjaYivvTJY5jjgd3738dC",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "author"
+    },
+    {
+      "address": "J1FxAX7VpC4HgHQ3niEGsfpBFdt9JDyD7h2ZEu7jRY7c",
+      "initial": {
+        "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0000000000000000",
+        "executable": false,
+        "lamports": 1224960,
+        "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+        "rent_epoch": 0
+      },
+      "name": "journal"
+    }
+  ],
+  "cases": [
+    {
+      "name": "note-logs-four-lines",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "author",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "journal",
+                "state": {
+                  "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0100000000000000",
+                  "executable": false,
+                  "lamports": 1224960,
+                  "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program log: 0x1, 0x1, 0xabc, 0x0, 0xffffffffffffffff": 1,
+              "Program log: AhSsZs9cFhji9r6VbGKQvkHdjaYivvTJY5jjgd3738dC": 1,
+              "Program log: gas paid: 世界": 1,
+              "Program log: note": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "journal",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "author",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "107b19475e74532e67617320706169643a20e4b896e7958c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100100000000000000bc0a0000000000000000000000000000ffffffffffffffff",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "author",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "journal",
+                "state": {
+                  "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0200000000000000",
+                  "executable": false,
+                  "lamports": 1224960,
+                  "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program log: 0x2, 0x0, 0x0, 0x0, 0x0": 1,
+              "Program log: AhSsZs9cFhji9r6VbGKQvkHdjaYivvTJY5jjgd3738dC": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "journal",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "author",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "107b19475e74532e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-utf8-62616420ff2062797465-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "author",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "journal",
+                "state": {
+                  "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0000000000000000",
+                  "executable": false,
+                  "lamports": 1224960,
+                  "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "log_counts": {
+              "Program log: note": 1,
+              "utf-8": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "journal",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "author",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "107b19475e74532e62616420ff20627974650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-utf8-eda080-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "author",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "journal",
+                "state": {
+                  "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0000000000000000",
+                  "executable": false,
+                  "lamports": 1224960,
+                  "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "log_counts": {
+              "Program log: note": 1,
+              "utf-8": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "journal",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "author",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "107b19475e74532eeda08000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "invalid-utf8-63757420e4b8-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "author",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "journal",
+                "state": {
+                  "data": "75df1bc71062db919015ab075e8d72d3e21c6c5e2eb77b73ccf58528be02d0158d718f4422fc129f0000000000000000",
+                  "executable": false,
+                  "lamports": 1224960,
+                  "owner": "EZFDKAaHYs2mJ5m6WHzc2MzzkmvhC4Zt6FA7nBYKwNu1",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                "ProgramFailedToComplete"
+              ]
+            },
+            "log_counts": {
+              "Program log: note": 1,
+              "utf-8": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "journal",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "author",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "107b19475e74532e63757420e4b800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

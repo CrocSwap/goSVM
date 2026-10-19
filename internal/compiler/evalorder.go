@@ -48,8 +48,10 @@ var gcSizes = types.SizesFor("gc", "amd64")
 // invocation) or set return data.
 var (
 	sdkPure = map[string]bool{"Count": true, "Data": true, "Executable": true, "Instruction": true, "IsPDA": true,
-		"IsTokenProgram": true, "Key": true, "Lamports": true, "Owner": true, "ProgramID": true, "Signer": true, "Writable": true}
-	sdkLogs = map[string]bool{"Invoke": true, "Transfer": true, "TransferSigned": true, "SetReturnData": true}
+		"IsTokenProgram": true, "Key": true, "Lamports": true, "Owner": true, "ProgramID": true, "Signer": true, "Writable": true,
+		"Log": true, "Log64": true, "LogPubkey": true}
+	sdkLogs = map[string]bool{"Invoke": true, "Transfer": true, "TransferSigned": true, "SetReturnData": true,
+		"Log": true, "Log64": true, "LogPubkey": true}
 )
 
 type evalEvent struct {

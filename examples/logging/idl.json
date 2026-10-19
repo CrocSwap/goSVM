@@ -1,0 +1,130 @@
+{
+  "format": "gosvm-2",
+  "name": "logging",
+  "accounts": [
+    {
+      "kind": "account",
+      "name": "Journal",
+      "type": "example.org/gosvm/logging/model.Journal",
+      "version": 1,
+      "discriminator": [
+        117,
+        223,
+        27,
+        199,
+        16,
+        98,
+        219,
+        145
+      ],
+      "size": 48,
+      "fields": [
+        {
+          "name": "Author",
+          "type": "example.org/gosvm/logging/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Notes",
+          "type": "uint64",
+          "offset": 40,
+          "size": 8
+        }
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "kind": "instruction",
+      "name": "Note",
+      "type": "example.org/gosvm/logging/model.NoteArgs",
+      "version": 1,
+      "discriminator": [
+        16,
+        123,
+        25,
+        71,
+        94,
+        116,
+        83,
+        46
+      ],
+      "size": 105,
+      "fields": [
+        {
+          "name": "Text",
+          "type": "[64]byte",
+          "offset": 8,
+          "size": 64,
+          "length": 64
+        },
+        {
+          "name": "Length",
+          "type": "byte",
+          "offset": 72,
+          "size": 1
+        },
+        {
+          "name": "Words",
+          "type": "[4]uint64",
+          "offset": 73,
+          "size": 32,
+          "length": 4
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Note",
+      "handler": "Note",
+      "args": "model.NoteArgs",
+      "bundle": "NoteAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Journal",
+          "kind": "state",
+          "layout": "Journal",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Author",
+          "kind": "signer",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Journal.Author",
+          "account": "Author"
+        }
+      ]
+    }
+  ],
+  "errors": {
+    "AccountAlias": 6006,
+    "AccountCount": 6000,
+    "AccountFlags": 6001,
+    "AccountIdentity": 6005,
+    "AccountOwner": 6002,
+    "AccountRelation": 6007,
+    "ErrLength": 1,
+    "InstructionLayout": 6004,
+    "StateLayout": 6003
+  },
+  "validation_order": [
+    "instruction_layout",
+    "account_count",
+    "privileges",
+    "identity_owner",
+    "alias_policy",
+    "state_layout",
+    "relations",
+    "handler",
+    "writable_state_commit"
+  ]
+}
