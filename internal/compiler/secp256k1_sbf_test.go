@@ -188,6 +188,7 @@ func secpIx(c secpCase, lengths [3]byte) []byte {
 // syscall. It skips without the v1.57 backend or a runner.
 // GOSVM_SECP256K1_RESULTS=<dir> keeps the fixtures, ELFs and reports.
 func TestSecp256k1RecoverSBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

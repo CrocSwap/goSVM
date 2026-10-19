@@ -14,6 +14,7 @@ import (
 )
 
 func TestSDK2AggregateMemory(t *testing.T) {
+	t.Parallel()
 	cc, err := exec.LookPath("clang")
 	if err != nil {
 		t.Skip("host Clang is needed for aggregate memory validation")
@@ -62,6 +63,7 @@ int main(void) {
 }
 
 func TestSDK2ArrayValueSemantics(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/array-values/program.go")
 	if err != nil {
 		t.Fatal(err)

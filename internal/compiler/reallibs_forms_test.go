@@ -306,6 +306,7 @@ func formInputs() [][]byte {
 }
 
 func TestRealLibraryFormsDifferential(t *testing.T) {
+	t.Parallel()
 	inputs := formInputs()
 	for name, src := range formPrograms {
 		t.Run(name, func(t *testing.T) {
@@ -333,6 +334,7 @@ func TestRealLibraryFormsDifferential(t *testing.T) {
 // The checked program's view: the large table stays read-only, the written
 // table does not, and the converted local escapes to the heap.
 func TestRealLibraryFormsCheck(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(globalsProgram(unitFiles("program", formHostSource(formPrograms["read-only-pointer-params"]))))
 	if err != nil {
 		t.Fatal(err)
@@ -359,6 +361,7 @@ func TestRealLibraryFormsCheck(t *testing.T) {
 }
 
 func TestRealLibraryFormsSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

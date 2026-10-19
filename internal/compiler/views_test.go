@@ -12,6 +12,7 @@ import (
 )
 
 func TestSliceViewsDifferential(t *testing.T) {
+	t.Parallel()
 	p, err := ReadProgram("../../examples/slice-views")
 	if err != nil {
 		t.Fatal(err)
@@ -57,6 +58,7 @@ func TestSliceViewsDifferential(t *testing.T) {
 	}
 }
 func TestSliceViewArrayBoundary(t *testing.T) {
+	t.Parallel()
 	p, err := ReadProgram("../../examples/slice-views")
 	if err != nil {
 		t.Fatal(err)
@@ -82,6 +84,7 @@ func TestSliceViewArrayBoundary(t *testing.T) {
 	}
 }
 func TestSliceViewRejections(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"unaddressable array": `func k()[4]byte{return [4]byte{}};func Process(s,i []byte)uint64{return uint64(len(k()[:]))}`,
 	} {
@@ -94,6 +97,7 @@ func TestSliceViewRejections(t *testing.T) {
 	}
 }
 func TestSDKViewCapacities(t *testing.T) {
+	t.Parallel()
 	source := `package p;import "gosvm/solana";func Process(c solana.Context)uint64 {s:=solana.Data(c,0);k:=solana.Key(c,0);o:=solana.Owner(c,0);i:=solana.Instruction(c);p:=solana.ProgramID(c);if cap(s)!=24||cap(k)!=32||cap(o)!=32||cap(i)!=16||cap(p)!=32{return 1};v:=s[4:8:12];w:=v[:8];w[7]=41;return 0}`
 	c, err := Compile("sdk-views.go", []byte(source))
 	if err != nil {
@@ -106,6 +110,7 @@ func TestSDKViewCapacities(t *testing.T) {
 }
 
 func TestNilSliceContexts(t *testing.T) {
+	t.Parallel()
 	source := `package p
  type V uint64
  func accept(s []byte)uint64{if s!=nil{return 1};return uint64(cap(s))}
@@ -130,6 +135,7 @@ func TestNilSliceContexts(t *testing.T) {
 	}
 }
 func TestViewCapacityBoundary(t *testing.T) {
+	t.Parallel()
 	source := `package p
  func Process(s,i []byte)uint64 {
   var k [1024]byte
@@ -149,6 +155,7 @@ func TestViewCapacityBoundary(t *testing.T) {
 }
 
 func TestSDKNilSliceArguments(t *testing.T) {
+	t.Parallel()
 	source := `package p;import "gosvm/solana";func Process(c solana.Context)uint64{if solana.SHA256(c,nil,0,0,nil,0)!=2003{return 1};return 0}`
 	c, err := Compile("sdk-nil.go", []byte(source))
 	if err != nil {
@@ -161,6 +168,7 @@ func TestSDKNilSliceArguments(t *testing.T) {
 }
 
 func TestViewAggregateReturn(t *testing.T) {
+	t.Parallel()
 	// Multiple borrowed descriptors form an aggregate even without array types.
 	// Preserve their individual pointer/length/capacity fields across forwarding.
 	var resultTypes, returns, names, terms []string

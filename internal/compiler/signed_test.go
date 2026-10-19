@@ -10,6 +10,7 @@ import (
 // admits an unsigned scalar admits them, and len/cap results, range keys and
 // math/bits counts are ordinary int values.
 func TestIntegerChecksAccept(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"locals":        `func Process(s, i []byte) uint64 { var a int8 = -128; b := int16(a) * 3; var c int32; d := int64(-1); e := 5; var f uint = 7; c = int32(b) - 1; return uint64(a) + uint64(b) + uint64(c) + uint64(d) + uint64(e) + uint64(f) }`,
 		"params":        `func f(a int8, b int, c uint) (int64, int) { return int64(a) * int64(b), b - int(c) };func Process(s, i []byte) uint64 { x, y := f(-1, 2, 3); return uint64(x) ^ uint64(y) }`,
@@ -38,6 +39,7 @@ func TestIntegerChecksAccept(t *testing.T) {
 }
 
 func TestIntegerChecksReject(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ source, want string }{
 		"float":             {`func Process(s, i []byte) uint64 { var f float64; _ = f; return 0 }`, "unsupported type float64"},
 		"uintptr":           {`func Process(s, i []byte) uint64 { var p uintptr; _ = p; return 0 }`, "unsupported type uintptr"},
@@ -68,6 +70,7 @@ func TestIntegerChecksReject(t *testing.T) {
 // programs without a signed / or % emit no division helpers, so their C is
 // unchanged (the frozen corpus checks every recorded program's hash).
 func TestSignedRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	for _, tc := range []struct {
 		source           string
 		typedefs, divide bool

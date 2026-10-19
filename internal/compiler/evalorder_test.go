@@ -47,6 +47,7 @@ func hoistedText(p *CheckedProgram) []string {
 // Check records where gc's order differs observably from left to right:
 // a package variable read before a call that writes it, and nowhere else.
 func TestEvalOrderHoisted(t *testing.T) {
+	t.Parallel()
 	p := checkEvalOrder(t, `package p
 var x uint64
 func f() uint64 { x = 10; return 1 }
@@ -77,6 +78,7 @@ func Process(o, in []byte) uint64 {
 // Captured and address-taken locals are writable by calls; a call that
 // may panic makes an earlier trap observable (its log line).
 func TestEvalOrderLocalsAndTraps(t *testing.T) {
+	t.Parallel()
 	p := checkEvalOrder(t, `package p
 func set(q *uint64) uint64 { *q = 3; return 0 }
 func boom(v byte) uint64 {
@@ -106,6 +108,7 @@ func Process(o, in []byte) uint64 {
 // Map literals insert static entries first; m[k] = append(m[k], f()) reuses
 // the target's early copies; slow-path interface keys convert early.
 func TestEvalOrderMaps(t *testing.T) {
+	t.Parallel()
 	p := checkEvalOrder(t, `package p
 type PM struct{ m map[uint64][]uint64 }
 var pm *PM
@@ -154,6 +157,7 @@ func Process(o, in []byte) uint64 {
 // write, calls that write nothing), Check records nothing, so the C is
 // unchanged.
 func TestEvalOrderNothingToHoist(t *testing.T) {
+	t.Parallel()
 	p := checkEvalOrder(t, `package p
 type T struct{ a uint64 }
 func (t T) Get() uint64 { return t.a }
@@ -175,6 +179,7 @@ func Process(o, in []byte) uint64 {
 // Variadic calls (rewritten by Check to pass a slice literal) and writes
 // through pointers to pointers are analyzed like any other operands.
 func TestEvalOrderVariadicAndPointerToPointer(t *testing.T) {
+	t.Parallel()
 	p := checkEvalOrder(t, `package p
 var x uint64
 var q *uint64

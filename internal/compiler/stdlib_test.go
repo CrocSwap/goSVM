@@ -29,6 +29,7 @@ func stdlibCheck(t *testing.T, source string) string {
 // packages that are not available on chain: by name, at the use, with the
 // reason.
 func TestStdlibRejections(t *testing.T) {
+	t.Parallel()
 	importable := "bytes, encoding/binary, errors, io, math, strconv, strings, unicode, unicode/utf8"
 	for name, c := range map[string]struct{ source, want string }{
 		"fmt": {"package p\nimport \"fmt\"\nfunc Process(s, i []byte) uint64 { fmt.Println(); return 0 }\n",
@@ -79,6 +80,7 @@ func TestStdlibRejections(t *testing.T) {
 // TestStdlibImportForms: plain and renamed imports in a single file (no
 // go.mod), in a module program and in its shared packages.
 func TestStdlibImportForms(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"plain":   "package p\nimport \"strings\"\nfunc Process(s, i []byte) uint64 { return uint64(strings.Count(string(s), \"a\")) }\n",
 		"renamed": "package p\nimport str \"strings\"\nimport bin \"encoding/binary\"\nfunc Process(s, i []byte) uint64 { return uint64(str.Count(string(s), \"a\")) + bin.LittleEndian.Uint64(i) }\n",
@@ -131,6 +133,7 @@ func writeFile(t *testing.T, path, data string) {
 // TestStdlibConstantsOnly: math has only constants on chain, so a program
 // using them emits the same C as one that writes the values out.
 func TestStdlibConstantsOnly(t *testing.T) {
+	t.Parallel()
 	compile := func(source string) []byte {
 		out, err := CompileSources([]Source{{Name: "p.go", Data: []byte(source)}})
 		if err != nil {
@@ -148,6 +151,7 @@ func TestStdlibConstantsOnly(t *testing.T) {
 // TestStdlibIntrinsics checks the intrinsic and dispatch-except marks in
 // the checked program and the C they produce.
 func TestStdlibIntrinsics(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "p.go", Data: []byte(`package p
 import (
 	"errors"
@@ -217,6 +221,7 @@ func Process(s, i []byte) uint64 {
 // TestStdlibIdentity: the identity covers every overlay file of the listed
 // packages and the cache key includes it only for programs that reach them.
 func TestStdlibIdentity(t *testing.T) {
+	t.Parallel()
 	if StdlibIdentity(nil) != "" {
 		t.Fatal("identity of no packages")
 	}
@@ -384,6 +389,7 @@ func TestStdlibProvenance(t *testing.T) {
 // TestStdlibPackagesList pins the overlay packages and keeps their sources
 // gofmt-formatted, like Go's.
 func TestStdlibPackagesList(t *testing.T) {
+	t.Parallel()
 	want := "bytes encoding/binary errors internal/bytealg internal/errtext io math strconv strings unicode unicode/utf8"
 	if got := strings.Join(StdlibPackages, " "); got != want {
 		t.Fatalf("StdlibPackages %q", got)

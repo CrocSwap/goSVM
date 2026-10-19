@@ -145,6 +145,7 @@ func buildCPICallee(t *testing.T, llvm, profile, dir string) string {
 // signers. Skips without the v1.57 backend or a runner (make test).
 // GOSVM_CPI_RESULTS=<dir> keeps the ELFs, fixtures, reports and per-case CU.
 func TestCPILimitsSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

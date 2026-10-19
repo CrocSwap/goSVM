@@ -17,6 +17,7 @@ type Pair struct{ K uint32; V uint64 }
 `
 
 func TestLargeTablesAccepted(t *testing.T) {
+	t.Parallel()
 	for name, tc := range map[string]struct{ src, want string }{
 		// Read-only data: a constant [60]Int and a [300]Pair table (4,800
 		// bytes, above the 4 KiB SBF stack frame).
@@ -73,6 +74,7 @@ func Process(o, in []byte) uint64 {
 }
 
 func TestLargeTablesRejected(t *testing.T) {
+	t.Parallel()
 	const limit = "array storage exceeds experimental 1024-byte per-value limit"
 	for name, src := range map[string]string{
 		"local":                     `var pows [60]Int; func Process(o, in []byte) uint64 { var l [60]Int; return l[0][0] + pows[0][0] }`,

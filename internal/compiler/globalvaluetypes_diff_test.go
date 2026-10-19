@@ -152,6 +152,7 @@ func compareLines(t *testing.T, bin string, vectors [][]byte, want []string) {
 }
 
 func TestGlobalValueTypesDifferential(t *testing.T) {
+	t.Parallel()
 	oracle := goBinary(t, "../..", "./examples/global-value-types/oracle")
 	c, err := CompileProgram(globalValueTypesProgram(t, nil))
 	if err != nil {
@@ -192,6 +193,7 @@ func TestGlobalValueTypesDifferential(t *testing.T) {
 // constant initializers (including the two above the per-value limit) are
 // read-only data; written ones are in the globals block.
 func TestGlobalValueTypesPlacement(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(globalValueTypesProgram(t, nil))
 	if err != nil {
 		t.Fatal(err)
@@ -298,6 +300,7 @@ func initPanicProgram(src, lib string, sbf bool) *Program {
 // host-compiled C: the C must log the same line (none for a runtime error)
 // and abort with Process's output untouched.
 func TestGlobalInitPanics(t *testing.T) {
+	t.Parallel()
 	for _, probe := range globalInitPanicProbes {
 		t.Run(probe.name, func(t *testing.T) {
 			dir := t.TempDir()

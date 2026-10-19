@@ -12,6 +12,7 @@ import (
 )
 
 func TestMultiplyBuiltinNativeDifferential(t *testing.T) {
+	t.Parallel()
 	cc, err := exec.LookPath("clang")
 	if err != nil {
 		t.Skip("host Clang required")
@@ -72,6 +73,7 @@ while(scanf("%llu %llu %llu %llu",&al,&ah,&bl,&bh)==4){
 }
 
 func TestSBFUnresolvedSymbolGuard(t *testing.T) {
+	t.Parallel()
 	llvm := filepath.Join(os.Getenv("HOME"), ".cache/solana/v1.51/platform-tools/llvm/bin")
 	if _, err := os.Stat(filepath.Join(llvm, "clang")); err != nil {
 		t.Skip("pinned SBF LLVM required")

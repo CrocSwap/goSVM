@@ -12,6 +12,7 @@ import (
 )
 
 func TestSDK2ReturnDataNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.SetReturnData(c,solana.Instruction(c))}`
 	p := &Program{SDK: 2, Entry: "app", Packages: []PackageSources{unit("app", source)}}
 	c, err := CompileProgram(p)
@@ -76,6 +77,7 @@ int main(void){u64 n;while(scanf("%llu",&n)==1){
 }
 
 func TestSDK2GetReturnDataNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app;import "gosvm/solana"
 func Process(c solana.Context)uint64{
 	ix:=solana.Instruction(c);result:=solana.Data(c,0)

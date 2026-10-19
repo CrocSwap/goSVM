@@ -16,6 +16,7 @@ import (
 // MoveLamports' runtime is emitted only for programs that call it, so the C
 // of every other program is unchanged; SDK 1 does not have it.
 func TestSDK2MoveLamportsEmittedOnlyWhenCalled(t *testing.T) {
+	t.Parallel()
 	plain := `package app;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.CloseAccount(c,0,1)}`
 	moving := `package app;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.MoveLamports(c,0,1,2)}`
 	for _, tc := range []struct {
@@ -39,6 +40,7 @@ func TestSDK2MoveLamportsEmittedOnlyWhenCalled(t *testing.T) {
 // through duplicate descriptors, under undefined-behaviour sanitization.
 // Accounts 2 and 3 duplicate 0 and 1, so moves between them alias.
 func TestSDK2MoveLamportsNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app
 import "gosvm/solana"
 func Process(c solana.Context)uint64{

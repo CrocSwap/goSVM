@@ -10,6 +10,7 @@ import (
 )
 
 func TestMultiFileValueSemantics(t *testing.T) {
+	t.Parallel()
 	sources := []Source{
 		{"types.go", []byte(`package p
  type Small uint8
@@ -49,6 +50,7 @@ func TestMultiFileValueSemantics(t *testing.T) {
 }
 
 func TestValueTypeRejections(t *testing.T) {
+	t.Parallel()
 	for name, code := range map[string]string{
 		"hidden context": `import "gosvm/solana";type Box struct { C solana.Context };func Process(c solana.Context)uint64{return 0}`,
 		"float named":    `type Bad float64;func Process(s,i []byte)uint64{var b Bad;return uint64(b)}`,
@@ -68,6 +70,7 @@ func TestValueTypeRejections(t *testing.T) {
 }
 
 func TestPackageSourcesAndCache(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	src := filepath.Join(dir, "src")
 	os.Mkdir(src, 0700)
@@ -124,6 +127,7 @@ func TestPackageSourcesAndCache(t *testing.T) {
 }
 
 func TestPlatformWordsInsideFilename(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	if e := os.WriteFile(filepath.Join(dir, "my_linux_helpers.go"), []byte("package p"), 0600); e != nil {
 		t.Fatal(e)

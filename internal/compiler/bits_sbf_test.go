@@ -298,6 +298,7 @@ func bitsProbeCases() (probe, cu []probeCase) {
 // backend or a runner. GOSVM_BITS_RESULTS=<dir> keeps the fixtures, ELFs,
 // runner reports and a summary per target.
 func TestBitsSBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

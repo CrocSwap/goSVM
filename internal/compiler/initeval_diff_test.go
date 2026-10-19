@@ -88,6 +88,7 @@ func constInitVectors(seed int64, n int) [][]byte {
 func ConstInitVectorsForTest() [][]byte { return constInitVectors(20261016, 120) }
 
 func TestConstInitDifferential(t *testing.T) {
+	t.Parallel()
 	oracle := buildOracle(t, "./examples/const-init/oracle")
 	vectors := append(constInitVectors(20261017, 900), ConstInitVectorsForTest()...)
 	want := nativeGlobals(t, oracle, vectors)
@@ -165,6 +166,7 @@ func initHeap(t *testing.T, program *Program) (string, string) {
 // the allocator's in-use word after initialization is the same, so every
 // out-of-memory boundary is; and the heap's live contents are the same.
 func TestInitImageHeapAccounting(t *testing.T) {
+	t.Parallel()
 	programs := map[string]func() *Program{
 		"const-init":    func() *Program { return constInitProgram(t) },
 		"global-values": func() *Program { return globalProgramSources(t, nil) },

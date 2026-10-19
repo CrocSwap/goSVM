@@ -8,6 +8,7 @@ import (
 )
 
 func TestBuildReceiptInvalidation(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	llvm := filepath.Join(dir, "llvm")
 	mustWrite := func(p, s string) {

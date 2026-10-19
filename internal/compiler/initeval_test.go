@@ -92,6 +92,7 @@ func initEvalProgram(c initEvalCase) *Program {
 }
 
 func TestInitEvalStops(t *testing.T) {
+	t.Parallel()
 	for name, c := range initEvalCases {
 		t.Run(name, func(t *testing.T) {
 			checked, err := Check(initEvalProgram(c))
@@ -145,6 +146,7 @@ func TestInitEvalStops(t *testing.T) {
 // the variable, strings built at initialization are heap bytes, and each
 // PackageInit records the steps the image covers.
 func TestInitImageCheckedProgram(t *testing.T) {
+	t.Parallel()
 	src := `package p
 type T struct{ a, b uint64 }
 var arr [4]uint16
@@ -227,6 +229,7 @@ func Process(o, in []byte) uint64 { return x.a + y.b + uint64(view[1]) + uint64(
 // RuntimeInit disables compile-time evaluation: no image, and the C runs
 // every initializer as before it existed.
 func TestInitEvalRuntimeInit(t *testing.T) {
+	t.Parallel()
 	p := globalsProgram(unitFiles("program", `package p
 var a = f()
 func f() uint64 { return 4 }
@@ -252,6 +255,7 @@ func Process(s, i []byte) uint64 { return a }`))
 // of its synthetic initializer at run time, from the first one not
 // evaluated.
 func TestInitEvalPartialPackage(t *testing.T) {
+	t.Parallel()
 	src := `package p
 type T struct{ n uint64 }
 var a = &T{1}

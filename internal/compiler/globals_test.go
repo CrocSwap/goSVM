@@ -50,6 +50,7 @@ func resultOf(t *testing.T, out string) string {
 // Each program's Process returns the value native Go returns (worked out by
 // hand and noted beside each case); each run starts from fresh variables.
 func TestGlobalAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, tc := range map[string]struct {
 		src  string
 		want string
@@ -133,6 +134,7 @@ func Process(o, in []byte) uint64 { a := [2]uint64{1, 2}; keep = a[:]; a[1] = 9;
 // path) and files within a package by name; qualified variables are read,
 // written, addressed and called across packages.
 func TestGlobalPackages(t *testing.T) {
+	t.Parallel()
 	logPkg := unitFiles("ex/log", `package log
 var Trace []byte
 func Mark(b byte) byte { Trace = append(Trace, b); return b }`)
@@ -190,6 +192,7 @@ var C = log.Mark('c') - 'c'`),
 // Read-only placement is decided by every use; anything that could write the
 // variable keeps it in the globals block.
 func TestGlobalReadOnly(t *testing.T) {
+	t.Parallel()
 	src := `package p
 type S struct{ a uint64; b [2]uint8 }
 func (s *S) Ptr() uint64 { return s.a }
@@ -310,6 +313,7 @@ func Process(o, in []byte) uint64 {
 }
 
 func TestGlobalRejections(t *testing.T) {
+	t.Parallel()
 	for name, tc := range map[string]struct{ src, want string }{
 		"context variable": {`import "gosvm/solana"
 var d solana.Context
@@ -352,6 +356,7 @@ func Process(s, i []byte) uint64 { x1.a[0]++; x2.a[0]++; x3.a[0]++; x4.a[0]++; x
 // The globals block is the invocation heap's first allocation: with a block
 // of B bytes, 32,760 - B bytes remain for everything else.
 func TestGlobalHeapAccounting(t *testing.T) {
+	t.Parallel()
 	src := `package p
 var counters [5]uint64 // 40 bytes
 var flag bool          // 1 byte: the block is 48 bytes
@@ -381,6 +386,7 @@ func Process(o, in []byte) uint64 {
 // A trap during initialization aborts before Process runs: nothing is
 // written (Go panics before main).
 func TestGlobalInitTrap(t *testing.T) {
+	t.Parallel()
 	for name, src := range map[string]string{
 		"initializer": `var zero uint64
 var bad = 10 / zero
@@ -405,6 +411,7 @@ func Process(o, in []byte) uint64 { o[0] = 1; return 0 }`,
 // same expression, as gc does: a call that changes it is seen
 // (docs/ERROR_CONTRACT.md#evaluation-order).
 func TestGlobalOperandOrder(t *testing.T) {
+	t.Parallel()
 	src := `package p
 var x uint64 = 1
 func f() uint64 { x = 10; return 0 }
@@ -417,6 +424,7 @@ func Process(o, in []byte) uint64 { return x + f() }`
 // Programs without package variables or init functions get none of the
 // runtime; programs whose variables are all read-only get no initialization.
 func TestGlobalRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	for name, tc := range map[string]struct {
 		src          string
 		block, inits bool
@@ -444,6 +452,7 @@ func TestGlobalRuntimeOnlyWhenUsed(t *testing.T) {
 // package's synthetic Vars initializer assigns its non-read-only
 // initializers in go/types order; init functions follow in source order.
 func TestCheckedProgramGlobals(t *testing.T) {
+	t.Parallel()
 	src := `package p
 var a = b + 1
 var b uint64 = 2

@@ -87,5 +87,6 @@ func systemPDAFixture() ([]byte, error) {
 
 // TestSDKSystemPDASBF runs examples/system-pda against the real System program.
 func TestSDKSystemPDASBF(t *testing.T) {
+	t.Parallel()
 	runSDKProbe(t, "system-pda", systemPDAFixture)
 }

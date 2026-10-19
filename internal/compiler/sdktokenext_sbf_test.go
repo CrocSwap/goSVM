@@ -173,5 +173,6 @@ func tokenExtensionsFixture() ([]byte, error) {
 
 // TestSDKTokenExtensionsSBF runs examples/token-extensions against real Token-2022.
 func TestSDKTokenExtensionsSBF(t *testing.T) {
+	t.Parallel()
 	runSDKProbe(t, "token-extensions", tokenExtensionsFixture)
 }

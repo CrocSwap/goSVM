@@ -18,6 +18,7 @@ import (
 // exported API: the same names, the same signatures (including parameter and
 // result names) and the same constant values.
 func TestBitsDeclarationsMatchStandardLibrary(t *testing.T) {
+	t.Parallel()
 	std, err := importer.ForCompiler(token.NewFileSet(), "source", nil).Import(bitsPath)
 	if err != nil {
 		t.Skipf("standard library source unavailable: %v", err)
@@ -117,6 +118,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestBitsCheckAcceptsSupportedFunctions(t *testing.T) {
+	t.Parallel()
 	checked := checkSource(t, bitsAllSource)
 	if len(checked.Functions) != 3 || len(checked.Functions[2].Callees) != 2 {
 		t.Fatalf("math/bits calls must not be program callees: %+v", checked.Functions)
@@ -136,6 +138,7 @@ func TestBitsCheckAcceptsSupportedFunctions(t *testing.T) {
 }
 
 func TestBitsCheckRejections(t *testing.T) {
+	t.Parallel()
 	for name, tc := range map[string]struct{ body, want string }{
 		"function value": {`f := bits.Len64; return uint64(f(1))`, "math/bits functions cannot be used as values; call them in a function literal"},
 		"method value":   {`f := bits.RotateLeft; return uint64(f(1, 2))`, "math/bits functions cannot be used as values; call them in a function literal"},
@@ -165,6 +168,7 @@ func TestBitsCheckRejections(t *testing.T) {
 // RotateLeft counts that are not constants are ordinary Check-accepted code.
 // Their results are compared with Go in TestBitsDifferentialAgainstGo.
 func TestBitsCheckAcceptsUintAndIntValues(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"uint Add":       `sum, carry := bits.Add(1, 2, 0); return uint64(sum + carry)`,
 		"uint Mul":       `h, l := bits.Mul(1, 2); return uint64(h ^ l)`,
@@ -196,6 +200,7 @@ func TestBitsCheckAcceptsUintAndIntValues(t *testing.T) {
 // A single file needs no module for math/bits, and module programs may use it
 // from shared user packages.
 func TestBitsImportForms(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	writePackageFile(t, dir, "single/program.go", "package main\nimport \"math/bits\"\nfunc Process(s, i []byte) uint64 { h, _ := bits.Mul64(uint64(len(i)), 1<<63); return h }\n")
 	p, err := ReadProgram(filepath.Join(dir, "single", "program.go"))
@@ -230,6 +235,7 @@ func TestBitsImportForms(t *testing.T) {
 // Programs that do not call math/bits emit exactly the C they always have
 // (the frozen corpus checks hashes); the runtime appears only when used.
 func TestBitsRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	plain := "package main\nfunc Process(s, i []byte) uint64 { return uint64(len(s)) }\n"
 	c, err := CompileSources([]Source{{"p.go", []byte(plain)}})
 	if err != nil {

@@ -149,6 +149,7 @@ func dispatchCase(mode, n byte, u bool) allocCase {
 // the v1.57 backend or a runner (make test). GOSVM_IFACE_RESULTS=<dir> keeps
 // fixtures, ELFs, reports and a summary.
 func TestInterfaceSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

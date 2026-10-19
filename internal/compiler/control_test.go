@@ -12,6 +12,7 @@ import (
 )
 
 func TestControlValuesDifferential(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/control-values/program.go")
 	if err != nil {
 		t.Fatal(err)
@@ -50,6 +51,7 @@ func TestControlValuesDifferential(t *testing.T) {
 	}
 }
 func TestControlRejections(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"fallthrough":      `func Process(s,i []byte)uint64{switch i[0]{case 1:fallthrough;default:return 0}}`,
 		"labeled continue": `func Process(s,i []byte)uint64{L:for{continue L};return 0}`,
@@ -63,6 +65,7 @@ func TestControlRejections(t *testing.T) {
 	}
 }
 func TestImportedMultipleResults(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app;import "dep";func forward()(dep.Value,uint64){return dep.Pair()};func Process(s,i []byte)uint64{v,code:=forward();v.N,code=code,v.N;return dep.Add(dep.Pair())+v.N+code}`),
 		unit("dep", `package dep;type Value struct{N uint64};func Pair()(Value,uint64){return Value{N:7},3};func Add(v Value,n uint64)uint64{return v.N+n}`),

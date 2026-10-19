@@ -121,6 +121,7 @@ func runMapVectors(t *testing.T, bin string, vectors [][]byte) (map[byte]int, ma
 }
 
 func TestMapDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileMaps(t, 0), DefaultHeapBytes, allocDriver, false)
 	vectors := append(mapVectors(20261014, 600, 380), MapVectorsForTest()...)
 	panics, runs := runMapVectors(t, bin, vectors)

@@ -88,6 +88,7 @@ func compileFuncMaps(t *testing.T) []byte {
 }
 
 func TestFuncMapsDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileFuncMaps(t), DefaultHeapBytes, allocDriver, false)
 	vectors := funcMapVectors(20261014, 1500)
 	var want []string
@@ -192,6 +193,7 @@ func funcMapCounted(n int, done bool, kind byte) string {
 // value that does not fit aborts after exactly the predicted number; native
 // Go never runs out, so the expectation is computed.
 func TestClosureMapHeap(t *testing.T) {
+	t.Parallel()
 	if DefaultHeapBytes-8 != 32760 {
 		t.Fatalf("default heap %d", DefaultHeapBytes)
 	}

@@ -13,6 +13,7 @@ import (
 )
 
 func TestSDK2InvokeBoundaryDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package p;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.Invoke(c,uint64(solana.Instruction(c)[0]),solana.Data(c,1),solana.Data(c,2),solana.Data(c,3))}`
 	driver := `
 #include <stdio.h>
@@ -113,6 +114,7 @@ int main(void){unsigned p,exec;char m[1400],d[20500],s[5600];while(scanf("%u %u 
 }
 
 func TestSDKVersionsAndNativeOnlyTypes(t *testing.T) {
+	t.Parallel()
 	if _, err := CompileProgram(&Program{SDK: 3}); err == nil || !strings.Contains(err.Error(), "unsupported SDK") {
 		t.Fatal(err)
 	}

@@ -151,6 +151,7 @@ func valueTypesCases(vectors [][]byte) (cases []allocCase, aborts, logged int) {
 // runner (make test). GOSVM_INT_RESULTS=<dir> keeps fixtures, ELFs, reports
 // and a summary under value-types/.
 func TestValueTypesSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

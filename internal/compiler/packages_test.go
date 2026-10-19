@@ -19,6 +19,7 @@ func unit(path, source string) PackageSources {
 	return PackageSources{path, []Source{{path + "/program.go", []byte(source)}}}
 }
 func TestImportedValuesAndCalls(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app
 import first "shared/a"
@@ -57,6 +58,7 @@ func Process(b Box)uint64{return uint64(b.Key[0])+uint64(b.Key[1])+uint64(b.Key[
 	}
 }
 func TestImportedSDKAndEntryIdentity(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app;import "gosvm/solana";import "app/helper";func Process(c solana.Context)uint64{return helper.Process(c)}`),
 		unit("app/helper", `package helper;import chain "gosvm/solana";func Process(c chain.Context)uint64{return chain.Count(c)}`),
@@ -74,6 +76,7 @@ func TestImportedSDKAndEntryIdentity(t *testing.T) {
 	}
 }
 func TestImportedPackageRejections(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"float global":                   `var N float64=1;func F()uint64{return 1}`,
 		"unsupported init":               `func init(){go g()};func g(){};func F()uint64{return 1}`,
@@ -207,6 +210,7 @@ func TestModuleImportsAndCache(t *testing.T) {
 	}
 }
 func TestModuleImportFailures(t *testing.T) {
+	t.Parallel()
 	for name, dep := range map[string][3]string{
 		"cycle":            {`import "example.com/app/program";func F()uint64{return program.Process(nil,nil)}`, "example.com/app/lib", "import cycle"},
 		"standard library": {`func F()uint64{return 0}`, "fmt", `unsupported import "fmt"; standard-library packages on chain`},
@@ -232,6 +236,7 @@ func TestModuleImportFailures(t *testing.T) {
 }
 
 func TestSharedExampleDifferential(t *testing.T) {
+	t.Parallel()
 	root, err := filepath.Abs("../../examples/shared-packages")
 	if err != nil {
 		t.Fatal(err)
@@ -332,6 +337,7 @@ func TestSharedExampleDifferential(t *testing.T) {
 }
 
 func TestImportedMainPackage(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app;import "dep";func Process(s,i []byte)uint64{return dep.F()}`),
 		unit("dep", `package main;func F()uint64{return 1}`),
@@ -341,6 +347,7 @@ func TestImportedMainPackage(t *testing.T) {
 	}
 }
 func TestResolverFlagLikeImport(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	writePackageFile(t, dir, "go.mod", "module example.com/app\n\ngo 1.22\n")
 	writePackageFile(t, dir, "program.go", `package p;import "-export";func Process(s,i []byte)uint64{return 0}`)

@@ -64,6 +64,7 @@ func keccak256(data []byte) []byte {
 }
 
 func TestKeccakReference(t *testing.T) {
+	t.Parallel()
 	for input, want := range map[string]string{
 		"":    "c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
 		"abc": "4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45",
@@ -76,6 +77,7 @@ func TestKeccakReference(t *testing.T) {
 }
 
 func TestSDK2Keccak256NativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := strings.Replace(string(mustRead(t, filepath.Join("testdata", "keccak", "program.go"))), "package program", "package app", 1)
 	p := &Program{SDK: 2, Entry: "app", Packages: []PackageSources{unit("app", source)}}
 	c, err := CompileProgram(p)

@@ -46,6 +46,7 @@ func nativeByval(in []byte) []byte {
 }
 
 func TestByvalDifferential(t *testing.T) {
+	t.Parallel()
 	c, err := CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: byvalSource(t)}}}}})
 	if err != nil {
 		t.Fatal(err)
@@ -78,6 +79,7 @@ func TestByvalDifferential(t *testing.T) {
 // case must leave native Go's output. GOSVM_INT_RESULTS=<dir> keeps the
 // fixtures, ELFs and reports under byval/.
 func TestByvalSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}
@@ -112,6 +114,7 @@ func TestByvalSBF(t *testing.T) {
 // after a write that may change the caller's variable opaquely, and no
 // others, so programs without such parameters keep their C.
 func TestByvalCopies(t *testing.T) {
+	t.Parallel()
 	const prefix = `package p
 type P struct{ a, b uint64 }
 type K struct{ key [4]byte; n uint64 }

@@ -16,6 +16,7 @@ func checkSource(t *testing.T, source string) *CheckedProgram {
 }
 
 func TestCheckedProgramDescribesContextProgram(t *testing.T) {
+	t.Parallel()
 	checked := checkSource(t, `package main
 import "gosvm/solana"
 type S struct{ x uint64 }
@@ -73,6 +74,7 @@ func Process(c solana.Context) uint64 {
 }
 
 func TestCheckLegacyEntryAndRejection(t *testing.T) {
+	t.Parallel()
 	checked := checkSource(t, "package main\nfunc Process(input []byte, output []byte) uint64 { return 0 }\n")
 	if checked.EntryKind != EntryBytes || checked.SDKPackage != nil || len(checked.CallOrder) != 1 {
 		t.Fatalf("legacy entry %+v", checked)

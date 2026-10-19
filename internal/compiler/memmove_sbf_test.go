@@ -23,6 +23,7 @@ import (
 // without defining it, so every library-free program that LLVM lowered to a
 // memmove call failed to build.
 func TestMemmoveHelperCompiles(t *testing.T) {
+	t.Parallel()
 	cc, err := exec.LookPath("clang")
 	if err != nil {
 		t.Skip("host Clang required")
@@ -41,6 +42,7 @@ func TestMemmoveHelperCompiles(t *testing.T) {
 // copies LLVM lowers to memmove, for fogo-v0 and solana-v3 and checks the
 // copied account bytes, including a self-assignment, through the runners.
 func TestMemmoveSBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

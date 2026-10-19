@@ -122,5 +122,6 @@ func ataCreateFixture() ([]byte, error) {
 
 // TestSDKATACreateSBF runs examples/ata-create against real ATA and token programs.
 func TestSDKATACreateSBF(t *testing.T) {
+	t.Parallel()
 	runSDKProbe(t, "ata-create", ataCreateFixture)
 }

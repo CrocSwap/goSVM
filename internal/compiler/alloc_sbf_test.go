@@ -160,6 +160,7 @@ func allocLargeHeapCases() []allocCase {
 // runners. Skips without the v1.57 backend or a runner (make test).
 // GOSVM_ALLOC_RESULTS=<dir> keeps fixtures, ELFs, reports and a summary.
 func TestAllocationSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

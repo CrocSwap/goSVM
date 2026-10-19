@@ -11,6 +11,7 @@ import (
 )
 
 func TestPointerValuesDifferential(t *testing.T) {
+	t.Parallel()
 	p, err := ReadProgram("../../examples/pointer-values")
 	if err != nil {
 		t.Fatal(err)
@@ -56,6 +57,7 @@ func TestPointerValuesDifferential(t *testing.T) {
 }
 
 func TestPointerLifetimeRejections(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"named pointer":    `type P *uint64;func Process(s,i []byte)uint64{var p P;return *p}`,
 		"pointer slice":    `func Process(s,i []byte)uint64{p:=&s;return uint64(len(*p))}`,
@@ -72,6 +74,7 @@ func TestPointerLifetimeRejections(t *testing.T) {
 }
 
 func TestImportedMethodsAndBorrowedResults(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app;import "dep";func relay(v *dep.Value)(uint64,*uint64){return dep.Forward(v)};func Process(s,i []byte)uint64{v:=dep.Value{N:7};code,p:=relay(&v);*p=*p+5;old:=v.Read(2);v.Add(3);return code+old+v.N+(*dep.Value).Read(&v,1)}`),
 		unit("dep", `package dep;type Value struct{N uint64};func(v Value)Read(n uint64)uint64{v.N=v.N+n;return v.N};func(v *Value)Add(n uint64){v.N=v.N+n};func(v *Value)Field()*uint64{return &v.N};func Forward(v *Value)(uint64,*uint64){return 0,v.Field()}`),
@@ -101,6 +104,7 @@ func TestImportedMethodsAndBorrowedResults(t *testing.T) {
 }
 
 func TestPointerArrayLengthAndReceiverEffects(t *testing.T) {
+	t.Parallel()
 	source := `package p
  type K [4]byte
  type N uint64

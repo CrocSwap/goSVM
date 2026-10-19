@@ -30,6 +30,7 @@ func checkMessage(t *testing.T, source string) string {
 }
 
 func TestRangeAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"slice key value":      `for i, v := range s { s[i] = v }`,
 		"slice key":            `for i := range s { s[i] = 0 }`,
@@ -87,6 +88,7 @@ func TestRangeAcceptedForms(t *testing.T) {
 }
 
 func TestRangeRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"map":              {`for range map[uint64]uint64{} {}`, rangeMapRule},
 		"channel":          {`for range make(chan uint64) {}`, "range over channels unsupported"},
@@ -115,6 +117,7 @@ func TestRangeRejections(t *testing.T) {
 }
 
 func TestUint16Checks(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ source, want string }{
 		"scalars":         {`type U uint16;type S struct{ A uint16; B U; C [2]uint16 };func f(a uint16, p *uint16) (uint16, U) { *p = a; return a << 3, U(a) };func Process(s, i []byte) uint64 { var x S; x.C[1]++; a, b := f(x.A, &x.A); return uint64(a) + uint64(b) }`, ""},
 		"constant":        {`const C uint16 = 65535;func Process(s, i []byte) uint64 { return uint64(C) }`, ""},
@@ -135,6 +138,7 @@ func TestUint16Checks(t *testing.T) {
 // The uint16 typedef is emitted only for programs that use uint16, so the
 // C of every other program stays byte-identical.
 func TestUint16TypedefOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	without, err := Compile("a.go", []byte("package p\nfunc Process(s, i []byte) uint64 { return uint64(s[0]) }\n"))
 	if err != nil {
 		t.Fatal(err)
@@ -273,10 +277,12 @@ func uint16Vectors() []oracleVector {
 }
 
 func TestRangeDifferential(t *testing.T) {
+	t.Parallel()
 	differential(t, "../../examples/range-values/program.go", rangevalues.Process, rangeVectors())
 }
 
 func TestUint16Differential(t *testing.T) {
+	t.Parallel()
 	differential(t, "../../examples/uint16-values/program.go", uint16values.Process, uint16Vectors())
 }
 

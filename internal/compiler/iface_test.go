@@ -41,6 +41,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestInterfaceAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"any variable":            `var a any; _ = a`,
 		"nil interface":           `var a any = nil; if a == nil { s[0] = 1 }`,
@@ -93,6 +94,7 @@ func TestInterfaceAcceptedForms(t *testing.T) {
 }
 
 func TestInterfaceRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"float boxing":            {`var a any = 1.5; _ = a`, "unsupported type float64"},
 		"zero-size part":          {`type Z struct{ a [0]byte; b uint64 }; _ = Z{}`, "unsupported local declaration"},
@@ -141,6 +143,7 @@ func TestInterfaceRejections(t *testing.T) {
 // The checked program lists conversions, dynamic types (IDs in key order),
 // method slots, method tables, dynamic calls, assertions and type switches.
 func TestCheckedProgramInterfaces(t *testing.T) {
+	t.Parallel()
 	source := ifacePrefix + `var x Solid = &R{1, 1}
 	x.Scale(2)
 	var g Getter[int8] = Box[int8]{-1}
@@ -213,6 +216,7 @@ func TestCheckedProgramInterfaces(t *testing.T) {
 // Converting a reference to an interface is an escape: the referenced local
 // moves to the heap; an interface value holding only heap data moves nothing.
 func TestInterfaceHeapMoves(t *testing.T) {
+	t.Parallel()
 	source := `package p
 type I interface{ M(p *uint64) *uint64 }
 type T struct{}
@@ -268,6 +272,7 @@ func Process(s, i []byte) uint64 {
 // Programs without interface values emit no interface runtime; the C of an
 // interface program is deterministic.
 func TestInterfaceRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	plain := "package p\ntype C interface{ ~uint8 }\nfunc Id[T C](x T) T { return x }\nfunc Process(s, i []byte) uint64 { return uint64(Id(s[0])) }\n"
 	out, err := Compile("a.go", []byte(plain))
 	if err != nil {
@@ -292,6 +297,7 @@ func TestInterfaceRuntimeOnlyWhenUsed(t *testing.T) {
 // Unexported interface methods are package-qualified: a type in another
 // package with a method of the same name does not implement the interface.
 func TestInterfaceCrossPackage(t *testing.T) {
+	t.Parallel()
 	lib := `package lib
 type Counter interface {
 	inc() uint64

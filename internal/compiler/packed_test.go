@@ -37,6 +37,7 @@ func compilePackedStore(t *testing.T, sdk int, source string) []byte {
 }
 
 func TestPackedStoreRecognition(t *testing.T) {
+	t.Parallel()
 	for _, sdk := range []int{0, 1, 2} {
 		c := compilePackedStore(t, sdk, packedStoreSource)
 		want := 0
@@ -90,6 +91,7 @@ printf("%c:",driver_panic?'P':'W');for(int j=0;j<80;j++)printf("%02x",driver_dat
 return 0;}`
 
 func TestPackedStoreNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	cc, err := exec.LookPath("clang")
 	if err != nil {
 		t.Skip("host Clang needed for packed stores")

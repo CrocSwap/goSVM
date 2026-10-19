@@ -295,6 +295,7 @@ int main(void) {
 // and remainder by zero and negative shift counts abort exactly where Go
 // panics, and MinInt / -1 and MinInt % -1 do not.
 func TestIntValuesDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostSources(t, intValuesSources(t), intHostDriver)
 	vectors := intVectors(300)
 	var input strings.Builder

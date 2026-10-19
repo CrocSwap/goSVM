@@ -118,6 +118,7 @@ func compileStrings(t *testing.T) []byte {
 }
 
 func TestStringDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileStrings(t), DefaultHeapBytes, allocDriver, false)
 	vectors := append(stringVectors(20261014, 1500), StringVectorsForTest()...)
 	var want []string

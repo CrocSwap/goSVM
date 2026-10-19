@@ -10,6 +10,7 @@ import (
 // lifetime tables): each now compiles, moves the escaping local to the heap
 // and returns the value native Go would.
 func TestFormerEscapesMoveToHeap(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct {
 		source string
 		want   string
