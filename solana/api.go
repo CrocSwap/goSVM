@@ -45,9 +45,10 @@ func SetReturnData(c Context, data []byte) uint64 {
 // 1,024; zero when there is none) and copies min(len(output), size) bytes into
 // output. When it copies at least one byte it also writes the setting program's
 // key into program; otherwise both are unchanged. A size above len(output)
-// means output holds a prefix. Check the setter before trusting the bytes: a
-// CPI that sets nothing leaves earlier return data in place. program must be
-// exactly 32 bytes; any other length traps.
+// means output holds a prefix. Check the setter before trusting the bytes: the
+// runtime clears return data before every invocation, including a silent CPI.
+// program must be exactly 32 bytes. When bytes are copied, output[:n] and
+// program must not overlap; invalid length or overlap traps.
 func GetReturnData(c Context, output, program []byte) uint64 {
 	if len(program) != 32 {
 		panic("gosvm/solana: GetReturnData program is not 32 bytes")
@@ -61,6 +62,18 @@ func GetReturnData(c Context, output, program []byte) uint64 {
 		n = len(output)
 	}
 	if n != 0 {
+		// Two contiguous ranges overlap exactly when either start occurs in
+		// the other range. Pointer equality avoids unsafe in the SDK source.
+		for i := 0; i < n; i++ {
+			if &output[i] == &program[0] {
+				panic("gosvm/solana: GetReturnData buffers overlap")
+			}
+		}
+		for i := 0; i < len(program); i++ {
+			if &program[i] == &output[0] {
+				panic("gosvm/solana: GetReturnData buffers overlap")
+			}
+		}
 		copy(output[:n], data)
 		copy(program, setter)
 	}

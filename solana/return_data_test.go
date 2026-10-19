@@ -82,3 +82,33 @@ func TestGetReturnDataCopiesPrefixAndSetter(t *testing.T) {
 		}()
 	}
 }
+
+// Native tests must reject the same overlapping output regions as the syscall.
+func TestGetReturnDataOverlap(t *testing.T) {
+	for _, tc := range []struct {
+		name                  string
+		output, program, size int
+		trap                  bool
+	}{
+		{"same-start", 0, 0, 1, true}, {"program-start-inside-output", 0, 1, 4, true},
+		{"output-start-inside-program", 1, 0, 1, true},
+		{"adjacent", 0, 4, 4, false}, {"unused-output-tail", 0, 4, 1, false},
+		{"empty-data", 0, 0, 0, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			backing := bytes.Repeat([]byte{91}, 96)
+			before := append([]byte(nil), backing...)
+			c := Context{ReadReturnData: func() ([]byte, []byte) { return bytes.Repeat([]byte{7}, tc.size), bytes.Repeat([]byte{8}, 32) }}
+			defer func() {
+				panicked := recover() != nil
+				if panicked != tc.trap {
+					t.Fatalf("panic=%v, want %v", panicked, tc.trap)
+				}
+				if panicked && !bytes.Equal(backing, before) {
+					t.Fatal("overlap changed output before trapping")
+				}
+			}()
+			GetReturnData(c, backing[tc.output:tc.output+32], backing[tc.program:tc.program+32])
+		})
+	}
+}

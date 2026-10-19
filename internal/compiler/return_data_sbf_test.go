@@ -52,6 +52,10 @@ func returnDataCases() []returnDataCase {
 	}
 	return append(cases,
 		returnDataCase{name: "own-setter", capacity: 64, size: 20, copied: pattern(20), setter: true, ixs: [][]byte{returnDataIx(3, 64, 20)}},
+		returnDataCase{name: "overlap-traps", capacity: 64, trap: true, ixs: [][]byte{returnDataIx(7, 64, 1)}},
+		returnDataCase{name: "partial-overlap-traps", capacity: 64, trap: true, ixs: [][]byte{returnDataIx(8, 64, 4)}},
+		returnDataCase{name: "empty-overlap-allowed", capacity: 64, ixs: [][]byte{returnDataIx(7, 64, 0)}},
+		returnDataCase{name: "set-then-silent-cpi-clears", capacity: 64, ixs: [][]byte{returnDataIx(9, 64, 0)}},
 		returnDataCase{name: "silent-callee", capacity: 64, ixs: [][]byte{returnDataIx(6, 64, 0)}},
 		// The runtime clears return data before each top-level instruction:
 		// the second reads size 0 and leaves the first's output and setter.

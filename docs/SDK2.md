@@ -38,8 +38,8 @@ When it copies at least one byte it also writes the setter's 32-byte key into
 `program`; otherwise both buffers are unchanged, as in the runtime syscall. A
 size above `len(output)` means `output` holds a prefix. `program` must be
 exactly 32 bytes; any other length traps. Check the setter before decoding: a
-callee that sets nothing leaves earlier bytes in place, and the runtime clears
-return data before each top-level instruction. Native contexts supply
+runtime clears return data before every invocation, including a silent CPI.
+The copied output region and `program` must not overlap; an overlap traps. Native contexts supply
 `ReadReturnData func() (data, program []byte)`; a nil callback reads as no
 return data. The [return-data SBF test](../internal/compiler/return_data_sbf_test.go)
 reads data set by real self-CPIs, the program itself, a silent callee and an

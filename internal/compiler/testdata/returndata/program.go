@@ -8,13 +8,16 @@ package program
 import "gosvm/solana"
 
 const (
-	modeSet     = 0 // callee: set size bytes
-	modeCPI     = 1 // invoke modeSet, then read
-	modeSilent  = 2 // callee: set nothing
-	modeOwn     = 3 // set size bytes, then read without a CPI
-	modeRead    = 4 // read only
-	modeShort   = 5 // read with a 31-byte program buffer: traps
-	modeCPIRead = 6 // invoke modeSilent, then read
+	modeSet            = 0 // callee: set size bytes
+	modeCPI            = 1 // invoke modeSet, then read
+	modeSilent         = 2 // callee: set nothing
+	modeOwn            = 3 // set size bytes, then read without a CPI
+	modeRead           = 4 // read only
+	modeShort          = 5 // read with a 31-byte program buffer: traps
+	modeCPIRead        = 6 // invoke modeSilent, then read
+	modeOverlap        = 7 // set and read into exactly overlapping output buffers
+	modePartialOverlap = 8 // set and read into partially overlapping buffers
+	modeSetSilent      = 9 // set data, invoke modeSilent, then read cleared data
 )
 
 func set(c solana.Context, size uint64) uint64 {
@@ -39,10 +42,15 @@ func Process(c solana.Context) uint64 {
 	if mode == modeSilent {
 		return 0
 	}
-	if mode == modeCPI || mode == modeCPIRead {
+	if mode == modeSetSilent {
+		if code := set(c, 8); code != 0 {
+			return code
+		}
+	}
+	if mode == modeCPI || mode == modeCPIRead || mode == modeSetSilent {
 		var data [5]byte
 		data[0] = modeSet
-		if mode == modeCPIRead {
+		if mode == modeCPIRead || mode == modeSetSilent {
 			data[0] = modeSilent
 		}
 		data[3], data[4] = ix[3], ix[4]
@@ -50,7 +58,7 @@ func Process(c solana.Context) uint64 {
 			return code
 		}
 	}
-	if mode == modeOwn {
+	if mode == modeOwn || mode == modeOverlap || mode == modePartialOverlap {
 		if code := set(c, size); code != 0 {
 			return code
 		}
@@ -60,6 +68,12 @@ func Process(c solana.Context) uint64 {
 		return 2
 	}
 	program := result[8:40]
+	if mode == modeOverlap {
+		program = result[40:72]
+	}
+	if mode == modePartialOverlap {
+		program = result[41:73]
+	}
 	if mode == modeShort {
 		program = result[8:39]
 	}

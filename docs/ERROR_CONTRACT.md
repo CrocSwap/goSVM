@@ -648,3 +648,7 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+
+- 2026-10-19: `GetReturnData` requires a 32-byte setter buffer and disjoint
+  copied-output/setter regions when copying nonempty data. Violations trap on
+  native Go and both SBF profiles; zero-byte reads do not check overlap.
