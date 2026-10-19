@@ -55,7 +55,7 @@ func Address(c solana.Context, wallet, tokenProgram, mint [32]byte) ([32]byte, b
 		var none [32]byte
 		return none, 0, pda.ErrSeeds
 	}
-	return seeds.Find(c, ProgramID())
+	return seeds.FindAddress(c, ProgramID())
 }
 
 // Matches reports whether the account at index is that associated address.

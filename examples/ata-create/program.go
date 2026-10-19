@@ -75,7 +75,7 @@ func Process(c solana.Context) uint64 {
 		if search.AddBytes(vault[:]) != 0 {
 			return pda.ErrSeeds
 		}
-		address, bump, code = search.Find(c, caller)
+		address, bump, code = search.FindAddress(c, caller)
 	}
 	if code != 0 {
 		return code

@@ -1,6 +1,6 @@
 # SDK-2 associated token account probe
 
-This experimental fixture exercises `gosvm/sdk/ata` and `pda.Seeds.Find`
+This experimental fixture exercises `gosvm/sdk/ata` and `pda.Seeds.FindAddress`
 against the real ATA 1.1.1, Token-2022 8.0.0 and Token 3.5.0 images bundled
 with LiteSVM 0.8.2. It follows Hyperlane's warp-route `transfer_out`: the
 recipient's associated account is created idempotently and paid by a
@@ -10,7 +10,7 @@ data-less System-owned PDA (`"ata_payer"` + bump).
   `ImmutableOwner`, rent debited from the PDA payer; repeating is a no-op and a
   non-idempotent `Create` fails with the ATA program's `IllegalOwner`.
 - Classic Token with a transaction-signer payer.
-- On-chain `ata.Address` and `pda.Seeds.Find` match the host derivation.
+- On-chain `ata.Address` and `pda.Seeds.FindAddress` match the host derivation.
 - SDK rejections: a non-derived account, a mint of another program, wrong PDA
   seeds, an unsigned or program-owned payer and a non-ATA program.
 

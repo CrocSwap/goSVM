@@ -35,11 +35,7 @@ simulation/submission proofs, new frontend/SDK pins and runner observability.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using
 an explicit program key; `Matches` compares it with a context account key.
-These methods use supplied seeds. `Find(c, program)` searches the bump from 255
-down, as `find_program_address` does, and returns the address and bump; it
-rewrites one trailing byte per candidate and costs one `CreateAddress` call each.
-A status of 1 (the runtime's on-curve result) tries the next bump; others
-propagate. Pass a stored bump to `Address`/`Matches` when one is known.
+These methods use supplied seeds; a bump-search convenience API is not provided.
 
 `cpi.Metas.Add(index, writable, signer)` builds at most 16 account metas.
 `cpi.Signers.Add(&seeds)` copies at most two seed groups into a 1,024-byte buffer;
@@ -222,8 +218,10 @@ output length). These are experimental API codes, separate from schema-2 errors.
 ## Associated token accounts
 
 `ata.Address(c, wallet, tokenProgram, mint)` derives the canonical associated
-token account and its bump with `pda.Seeds.Find` over the wallet, token program
-and mint keys under the ATA program (`ata.ProgramID()`); `ata.Matches` compares
+token account and its bump with `pda.Seeds.FindAddress` (Solana's
+`find_program_address`: bumps 255 down to 1, 3001 when the builder has no room
+for the bump, 3004 when no bump gives an off-curve address) over the wallet,
+token program and mint keys under the ATA program (`ata.ProgramID()`); `ata.Matches` compares
 it with a context account. `ata.CreateIdempotent(c, ataProgram, payer, account,
 wallet, mint, system, tokenProgram)` and `ata.Create` invoke the real ATA program
 with its six accounts; the `...Signed` forms pay with a PDA under the caller.
