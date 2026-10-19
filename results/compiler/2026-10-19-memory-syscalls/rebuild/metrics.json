@@ -3,7 +3,7 @@
   "network_validation": false,
   "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "machine": "arm64",
-  "cli": "/private/tmp/gosvm-memcpy/bin/gosvm-dev",
+  "cli": "build/gosvm",
   "cli_sha256": "5b60abd78274fca18eb5f84ba51014d18c3ef95edd0b01b423e012d4e0bc2f91",
   "build_flags": [
     "-no-cache"
