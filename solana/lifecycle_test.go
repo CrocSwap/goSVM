@@ -142,8 +142,8 @@ func TestMoveLamportsRules(t *testing.T) {
 		{"executable-source", func(c *Context) { c.Accounts[0].Executable = true }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
 		{"readonly-destination", func(c *Context) { c.Accounts[1].Writable = false }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
 		{"executable-destination", func(c *Context) { c.Accounts[1].Executable = true }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2011},
-		{"insufficient", nil, func(c Context) uint64 { return MoveLamports(c, 0, 1, 101) }, 2018},
-		{"insufficient-self", nil, func(c Context) uint64 { return MoveLamports(c, 0, 2, 101) }, 2018},
+		{"insufficient", nil, func(c Context) uint64 { return MoveLamports(c, 0, 1, 101) }, 2020},
+		{"insufficient-self", nil, func(c Context) uint64 { return MoveLamports(c, 0, 2, 101) }, 2020},
 		{"overflow", func(c *Context) { c.Accounts[1].Lamports, c.Accounts[3].Lamports = math.MaxUint64, math.MaxUint64 }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2014},
 		{"key", func(c *Context) { c.Accounts[1].Key = nil }, func(c Context) uint64 { return MoveLamports(c, 0, 1, 1) }, 2013},
 	}

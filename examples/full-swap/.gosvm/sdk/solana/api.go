@@ -218,7 +218,7 @@ func MoveLamports(c Context, from, to, amount uint64) uint64 {
 		return 2013
 	}
 	if a.Lamports < amount {
-		return 2018
+		return 2020
 	}
 	same := true
 	for j := 0; j < 32; j++ {

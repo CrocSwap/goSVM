@@ -205,7 +205,7 @@ It enforces the runtime's rules before changing anything: the source must be
 owned by the calling program, writable and non-executable (2005, 2011, 2012, as
 for `ResizeAccount`); the destination must be in range (2005), writable and
 non-executable (2011), and may be any account, owned or not, existing or not.
-A source balance below `amount` returns 2018 and a destination overflow 2014.
+A source balance below `amount` returns 2020 and a destination overflow 2014.
 The checks apply to a zero amount too. Moving within one account (the same
 index or a duplicate descriptor) changes nothing; the total is always
 preserved. Rent exemption is the application's check: the runtime rejects a
@@ -229,7 +229,7 @@ System helper errors are 3021 (program), 3022 (account/alias/layout/privilege),
 3020 and propagated boundary/downstream errors. Owned lifecycle errors are
 2005 (index), 2010 (size/growth), 2011 (privilege/executable), 2012 (owner),
 2013 (self refund/malformed native key), 2014 (refund or credit overflow), 2015
-(Rent output length) and 2018 (`MoveLamports` source balance below the amount). These are experimental API codes, separate from schema-2 errors.
+(Rent output length) and 2020 (`MoveLamports` source balance below the amount). These are experimental API codes, separate from schema-2 errors.
 
 ## Validation and open work
 

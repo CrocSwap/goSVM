@@ -10,7 +10,7 @@ for the Hyperlane Sealevel port):** `solana.MoveLamports(c, from, to, amount)`
 debits an owned writable account and credits any writable one, the
 `**a.lamports -= x; **b.lamports += x` of Hyperlane's fee claims. Runtime rules
 are checked first (owned/writable/non-executable source, writable
-non-executable destination, balance 2018, overflow 2014); rent exemption is the
+non-executable destination, balance 2020, overflow 2014); rent exemption is the
 application's, and the runtime rejects a debit below it. Its C runtime is
 emitted only when called, so corpus C and the full-swap ELFs are unchanged;
 SDK-2 snapshots (and `sdk_sha256`) of tutorial/full-swap/escrow were refreshed.

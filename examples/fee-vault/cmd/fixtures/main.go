@@ -81,7 +81,7 @@ func suiteJSON() ([]byte, error) {
 
 	// MoveLamports checks the SDK rules before changing either balance.
 	f.Scenario("move-more-than-balance-fails").Override(vault, funded(5_000_000)).
-		Step(move(authority, recipient, 0, 2, minimum+5_000_001)).Fails(2018)
+		Step(move(authority, recipient, 0, 2, minimum+5_000_001)).Fails(2020)
 	f.Scenario("move-from-unowned-wallet-fails").Override(vault, funded(5_000_000)).
 		Step(move(authority, recipient, 2, 0, 1)).Fails(2012)
 	f.Scenario("move-from-signer-wallet-fails").Override(vault, funded(5_000_000)).

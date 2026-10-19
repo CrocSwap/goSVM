@@ -17,7 +17,7 @@ only (`network_validation: false`).
 | --- | ---: |
 | `from` in range, writable, non-executable, owned by the program | 2005 / 2011 / 2012 |
 | `to` in range, writable, non-executable (any owner, existing or not) | 2005 / 2011 |
-| `from`'s balance at least `amount` | 2018 (new) |
+| `from`'s balance at least `amount` | 2020 (new) |
 | `to`'s balance plus `amount` fits in 64 bits | 2014 (now also credits) |
 
 Then both balances change; the total is preserved. Within one account (the
@@ -41,7 +41,7 @@ for programs that call it; duplicate descriptors share one balance word.
 The SVM scenarios: a claim of everything above the rent-exempt minimum (and a
 second claim moving nothing), a fresh vault with nothing to claim, a claim to
 another account (6007), credits to an unowned wallet, the signer and a new
-address, a move within the vault, insufficient balance (2018), debits from an
+address, a move within the vault, insufficient balance (2020), debits from an
 unowned wallet and from the signer's wallet (2012), a readonly destination
 (2011), a missing index (2005), the wrong authority (6007), and a debit below
 the rent-exempt minimum (`InsufficientFundsForRent`, rolled back).

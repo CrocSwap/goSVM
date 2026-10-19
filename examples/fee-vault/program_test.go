@@ -75,7 +75,7 @@ func TestMoveRules(t *testing.T) {
 		{"vault-to-recipient", 0, 2, 1000, 0, minimum + 4000, 1500},
 		{"vault-to-authority", 0, 1, 1000, 0, minimum + 4000, 500},
 		{"within-vault", 0, 0, 1000, 0, minimum + 5000, 500},
-		{"insufficient", 0, 2, minimum + 5001, 2018, minimum + 5000, 500},
+		{"insufficient", 0, 2, minimum + 5001, 2020, minimum + 5000, 500},
 		{"unowned-recipient", 2, 0, 1, 2012, minimum + 5000, 500},
 		{"unowned-signer", 1, 0, 1, 2012, minimum + 5000, 500},
 		{"readonly-observer", 0, 3, 1, 2011, minimum + 5000, 500},
