@@ -153,6 +153,32 @@ wrapped native SOL, delegate-authorized transfers and multisig are unsupported.
 the compiler uses runtime syscalls instead. Native `solana.Account` construction
 is a testing facility, not an on-chain value type. Context remains opaque on chain.
 
+## Token and Token-2022 instructions
+
+`token.Program2022ID()` is the Token-2022 address and `token.IsProgram(c, index)`
+accepts the executable classic Token or Token-2022 program. The checked
+references above (`Load`, `Read`, `Transfer`, `Create`, `Close`) remain classic
+only. Instruction builders take the token program's context index and work with
+either program: `InitializeMint2` (optional freeze authority), `InitializeAccount3`,
+`InitializeAccount` (owner and Rent sysvar as accounts; the owner may be the
+account itself), `MintToChecked`, `BurnChecked`, `TransferChecked` and their
+`...Signed` PDA forms, `GetAccountDataSize` (up to 16 extra extension types) and,
+for Token-2022 only, `InitializeMetadataPointer`. A PDA authority may be the
+mint or source account itself, so the same index appears twice in the metas,
+as Hyperlane's self-authorized synthetic mint and escrow do.
+
+They check the program, that each named mint or token account is a
+non-executable account owned by that program, required writability, and the
+authority's transaction signature or PDA seeds under the caller (`ErrMint`,
+`ErrAccount`, `ErrWritable`, `ErrAuthority`, 2001 for the program). They do not
+decode account bytes: Token enforces balances, mint relationships, `decimals`
+and extension rules, and its errors propagate unchanged (for example 18
+`MintDecimalsMismatch`, 4 `OwnerMismatch`, 1 `InsufficientFunds`).
+`GetAccountDataSize` leaves its little-endian uint64 result in return data;
+reading it needs a `get_return_data` boundary the SDK does not provide yet.
+The [token CPI probe](../examples/token-cpi/README.md) runs every builder against
+the real Token-2022 8.0.0 and Token 3.5.0 images bundled with LiteSVM 0.8.2.
+
 ## Token account lifecycle
 
 `token.Create(c, systemProgram, tokenProgram, payer, account, mint, authorityKey)`
