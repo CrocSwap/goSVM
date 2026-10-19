@@ -151,7 +151,6 @@ func TestCreateGuards(t *testing.T) {
 		{"system", func(c *solana.Context) { c.Accounts[5].Key = bytes.Repeat([]byte{1}, 32) }, false, 0, ErrProgram},
 		{"mint-owner", func(c *solana.Context) { v := token.ProgramID(); c.Accounts[4].Owner = v[:] }, false, 0, ErrAccount},
 		{"mint-executable", func(c *solana.Context) { c.Accounts[4].Executable = true }, false, 0, ErrAccount},
-		{"not-derived", func(c *solana.Context) { c.Accounts[2].Key = bytes.Repeat([]byte{2}, 32) }, false, 0, ErrAccount},
 		{"account-readonly", func(c *solana.Context) { c.Accounts[2].Writable = false }, false, 0, ErrAccount},
 		{"payer-owner", func(c *solana.Context) { c.Accounts[1].Owner = c.Accounts[0].Key }, false, 0, ErrAccount},
 		{"payer-data", func(c *solana.Context) { c.Accounts[1].Data = []byte{0} }, false, 0, ErrAccount},
@@ -181,5 +180,22 @@ func TestCreateGuards(t *testing.T) {
 	c, _ := ataContext(t)
 	if CreateIdempotentSigned(c, 0, 7, 2, 3, 4, 5, 6, nil) != pda.ErrSeeds || CreateSigned(c, 0, 7, 2, 3, 4, 5, 6, nil) != pda.ErrSeeds {
 		t.Fatal("nil seeds")
+	}
+}
+
+func TestCreateDelegatesAddressValidation(t *testing.T) {
+	c, _ := ataContext(t)
+	c.Accounts[2].Key = bytes.Repeat([]byte{2}, 32)
+	c.DeriveAddress = func([]byte, []byte, []byte) uint64 { t.Fatal("creation redundantly derives the ATA"); return 1 }
+	calls := 0
+	c.InvokeInstruction = func(program uint64, metas, data, seeds []byte) uint64 {
+		calls++
+		if program != 0 || binary.LittleEndian.Uint64(metas[9:]) != 2 {
+			t.Fatal("wrong ATA CPI")
+		}
+		return 1234 // The native adapter models the ATA program's rejection.
+	}
+	if code := CreateIdempotent(c, 0, 1, 2, 3, 4, 5, 6); code != 1234 || calls != 1 {
+		t.Fatal(code, calls)
 	}
 }

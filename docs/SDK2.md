@@ -348,7 +348,7 @@ it with a context account. `ata.CreateIdempotent(c, ataProgram, payer, account,
 wallet, mint, system, tokenProgram)` and `ata.Create` invoke the real ATA program
 with its six accounts; the `...Signed` forms pay with a PDA under the caller.
 They check the ATA, System and token (classic or Token-2022) programs, the mint
-owner, that the writable account is the derived address, and a writable,
+owner, the destination's writable flag, and a writable,
 data-less System-owned payer with a transaction signature or matching seeds
 (3030 program, 3031 account, 3032 payer authority). ATA errors propagate, such
 as `IllegalOwner` for `Create` of an existing account. Under Token-2022 the ATA
@@ -356,8 +356,10 @@ program sizes the account for the mint (170 bytes with `ImmutableOwner` for a
 mint without account-required extensions). The caller checks a PDA payer's
 remaining rent if it must stay exempt, as Hyperlane's warp routes do.
 
-The derivation dominates the SDK's own cost: about 2,200 CU per extra bump
-candidate after the first. The ATA program derives the address again itself.
+Creation delegates canonical-address validation to the checked ATA program,
+which returns `InvalidSeeds` for a substituted address. It does not repeat
+that derivation in the SDK. Use `Address` or `Matches` for explicit preflight
+checks when needed.
 The [ATA probe](../examples/ata-create/README.md) runs creation and on-chain
 derivation against ATA 1.1.1, Token-2022 8.0.0 and Token 3.5.0.
 

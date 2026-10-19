@@ -445,6 +445,9 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 3012 | Token mints differ |
 | 3013 | Token authority or close authority mismatch, or missing signature |
 | 3014 | Token account not writable |
+| 3030 | ATA, System or token program invalid |
+| 3031 | ATA account, mint or payer preconditions invalid |
+| 3032 | ATA payer signature or PDA authority invalid |
 | 3020 | Rent: size over 10 MiB, overflow or invalid threshold |
 | 3021 | System program account invalid |
 | 3022 | System create: account, alias, layout or privilege |

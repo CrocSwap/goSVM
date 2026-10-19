@@ -111,12 +111,12 @@ func ataCreateFixture() ([]byte, error) {
 	sc.Step(ix(3, 0, 0, w(result))).ExpectData(result, found)
 
 	sc = f.Scenario("sdk-rejections")
-	sc.Step(create(0, w(ataPayer), 1, payerBump, ataClassic, mint, t22)).Fails(3031)                      // not the derived address
-	sc.Step(create(0, w(ataPayer), 1, payerBump, ata22, classicMint, t22)).Fails(3031)                    // mint of another program
-	sc.Step(create(0, w(ataPayer), 1, wrong, ata22, mint, t22)).Fails(3032)                               // wrong PDA payer seeds
-	sc.Step(create(0, w(funder), 0, 0, ata22, mint, t22)).Fails(3032)                                     // unsigned payer
-	sc.Step(create(0, w(result), 0, 0, ata22, mint, t22)).Fails(3031)                                     // program-owned payer
-	sc.Step(ix(0, 0, 0, r(t22), ws(funder), w(ata22), r(wallet), r(mint), r(system), r(t22))).Fails(3030) // not the ATA program
+	sc.Step(create(0, w(ataPayer), 1, payerBump, ataClassic, mint, t22)).FailsWith(fixture.InstructionError(0, "InvalidSeeds")) // ATA rejects the substituted address
+	sc.Step(create(0, w(ataPayer), 1, payerBump, ata22, classicMint, t22)).Fails(3031)                                          // mint of another program
+	sc.Step(create(0, w(ataPayer), 1, wrong, ata22, mint, t22)).Fails(3032)                                                     // wrong PDA payer seeds
+	sc.Step(create(0, w(funder), 0, 0, ata22, mint, t22)).Fails(3032)                                                           // unsigned payer
+	sc.Step(create(0, w(result), 0, 0, ata22, mint, t22)).Fails(3031)                                                           // program-owned payer
+	sc.Step(ix(0, 0, 0, r(t22), ws(funder), w(ata22), r(wallet), r(mint), r(system), r(t22))).Fails(3030)                       // not the ATA program
 	return f.JSON()
 }
 

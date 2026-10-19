@@ -914,9 +914,7 @@
             "error": {
               "InstructionError": [
                 0,
-                {
-                  "Custom": 3031
-                }
+                "InvalidSeeds"
               ]
             }
           },
