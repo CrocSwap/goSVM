@@ -10,6 +10,9 @@ u64 entrypoint(u8 *input) {
     for(u64 i=0;i<c.count;i++) {
         if(p[0]!=255) {
             if(p[0]>=i) return 1002;
+#ifdef GOSVM_MEMORY_SYSCALL_MOVE
+            if(sizeof(AccountInfo)>=GOSVM_MEMORY_SYSCALL_MIN) {GOSVM_MEMORY_SYSCALL_MOVE(&c.accounts[i],&c.accounts[p[0]],sizeof(AccountInfo));p+=8;continue;}
+#endif
             // Volatile byte copy avoids an implicit libc memcpy dependency.
             volatile u8 *dst=(volatile u8 *)&c.accounts[i];
             const u8 *src=(const u8 *)&c.accounts[p[0]];

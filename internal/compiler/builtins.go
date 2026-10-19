@@ -28,6 +28,8 @@ var legacySyscalls = map[string]bool{
 	"sol_log_64_":                true, // solana.Log64
 	"sol_log_pubkey":             true, // solana.LogPubkey
 	"sol_memcpy_":                true, // the initialization image (docs/GO_GLOBALS.md#compile-time-evaluation)
+	"sol_memmove_":               true, // bulk copies (docs/GO_ALLOCATION.md#bulk-memory-on-sbf)
+	"sol_memset_":                true, // bulk zeroing (docs/GO_ALLOCATION.md#bulk-memory-on-sbf)
 }
 
 func undefinedSymbols(path string, dynamic bool) ([]string, error) {

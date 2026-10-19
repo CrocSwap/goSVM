@@ -1,0 +1,45 @@
+// Coordinator's two patterns on a 1 KiB owned account: zeroing the unused
+// tail (mailbox and account-utils loop forms), zero-value assignment of a
+// large value, and 32-byte copies at different alignments.
+package main
+
+import "gosvm/solana"
+
+type Big struct {
+	A [512]byte
+}
+
+func Process(c solana.Context) uint64 {
+	data := solana.Data(c, 0)
+	ix := solana.Instruction(c)
+	off := uint64(ix[1]) | uint64(ix[2])<<8
+	switch ix[0] {
+	case 1: // mailbox: for j := off; j < uint64(len(data)); j++ { data[j] = 0 }
+		for j := off; j < uint64(len(data)); j++ {
+			data[j] = 0
+		}
+	case 2: // account-utils: tail := ...; for i := range tail { tail[i] = 0 }
+		tail := data[off:]
+		for i := range tail {
+			tail[i] = 0
+		}
+	case 3: // copy 32 bytes, unaligned
+		copy(data[off+1:off+33], data[603:635])
+	case 4: // copy 32 bytes, aligned
+		copy(data[off:off+32], data[600:632])
+	case 5: // hand-written 32-byte copy loop (not rewritten)
+		for j := uint64(0); j < 32; j++ {
+			data[off+1+j] = data[603+j]
+		}
+	case 6: // zero-value assignment of a 512-byte value
+		b := new(Big)
+		copy(b.A[:], data[:512])
+		*b = Big{}
+		copy(data[off:off+512], b.A[:])
+	case 7: // the same without the zeroing
+		b := new(Big)
+		copy(b.A[:], data[:512])
+		copy(data[off:off+512], b.A[:])
+	}
+	return 0
+}

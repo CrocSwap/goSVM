@@ -29,7 +29,7 @@ func TestMemmoveHelperCompiles(t *testing.T) {
 	}
 	dir := t.TempDir()
 	file := filepath.Join(dir, "memmove.c")
-	if err = os.WriteFile(file, []byte(memmoveHelper), 0600); err != nil {
+	if err = os.WriteFile(file, []byte(memmoveHelper()), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if out, err := exec.Command(cc, "-std=c11", "-ffreestanding", "-Werror", "-c", file, "-o", filepath.Join(dir, "memmove.o")).CombinedOutput(); err != nil {

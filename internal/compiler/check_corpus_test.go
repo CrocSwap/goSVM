@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -49,6 +50,34 @@ func loadCorpus(t *testing.T) []corpusEntry {
 		t.Fatalf("corpus has only %d programs", len(entries))
 	}
 	return entries
+}
+
+// withoutMemorySyscalls removes what the bulk-memory change (memops.go,
+// memclear.go) adds to the emitted C: the syscall declarations, and every
+// "#ifdef GOSVM_MEMORY_SYSCALL_..." block, keeping only the "#else" branch
+// when there is one. The rest must be the C recorded before the change, so
+// the corpus proves the change adds only the SBF syscall paths.
+func withoutMemorySyscalls(c []byte) []byte {
+	text := strings.ReplaceAll(string(c), memorySyscallDecls(), "")
+	var out []string
+	skip, inElse := false, false
+	for _, line := range strings.SplitAfter(text, "\n") {
+		switch {
+		case strings.HasPrefix(line, "#ifdef GOSVM_MEMORY_SYSCALL_"):
+			skip, inElse = true, false
+			continue
+		case skip && strings.HasPrefix(line, "#else"):
+			skip, inElse = false, true
+			continue
+		case (skip || inElse) && strings.HasPrefix(line, "#endif"):
+			skip, inElse = false, false
+			continue
+		}
+		if !skip {
+			out = append(out, line)
+		}
+	}
+	return []byte(strings.Join(out, ""))
 }
 
 // corpusChanges lists the recorded programs whose verdict changed on purpose
@@ -372,7 +401,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			continue
 		}
 		if err == nil {
-			sum := sha256.Sum256(out)
+			sum := sha256.Sum256(withoutMemorySyscalls(out))
 			if hex.EncodeToString(sum[:]) != e.CSHA256 {
 				t.Errorf("entry %d: emitted C changed (sha256 %x)", i, sum)
 			}

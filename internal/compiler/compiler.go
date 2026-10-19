@@ -277,7 +277,7 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
-		g.WriteString(libraryMemory)
+		g.WriteString(libraryMemory())
 	}
 	if len(program.Panics) > 0 {
 		// Only programs that call panic get its runtime, so the C of every
@@ -308,6 +308,8 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		if program.SDK == 2 || ownedLifecycle || program.Program.MaxAccounts != 0 {
 			g.WriteString("\n#define GOSVM_SDK2 1\n")
 		}
+		// The SDK runtime shares the modern memory syscall adapters.
+		g.WriteString(memorySyscallDecls())
 		if program.Program.MaxAccounts != 0 {
 			// Only opted-in programs get the wide table, so the C of every
 			// other program is unchanged.

@@ -291,6 +291,74 @@ field, use interface values or map values, or concatenate or convert strings. An
 (observable only through out-of-memory boundaries), the growth rule and the
 heap moves; see [BACKEND_INTERFACE.md](BACKEND_INTERFACE.md).
 
+## Bulk memory on SBF
+
+Since October 19, 2026, every bulk byte move of the generated program goes to
+the VM's memory syscalls on the fogo-v0 and solana-v3 profiles: `copy` on
+slices of any element type (including `copy(b, s)` from a string), `append`'s
+moves (growth and spreads, so `append(s[:i], s[j:]...)` too), string
+concatenation and `string`/`[]byte` conversions, the struct and array
+assignments, parameter copies and zeroing that LLVM lowers to `memcpy`,
+`memmove` and `memset` calls (in practice values of at least 48 bytes for
+copies and 96 bytes for zeroing; smaller ones are inline stores), the
+entrypoint's copy of a duplicate account descriptor, `ResizeAccount`'s
+zero fill, and two [zeroing loop](#zeroing-loops) forms. Pure Rust and Bend
+libraries linked into the program call the same `memcpy`/`memset`/`memmove`
+routines.
+
+- **Which syscall.** `sol_memmove_` for every copy and `sol_memset_` for
+  zeroing. `sol_memcpy_` is never used for these moves: the runtime fails it
+  with `CopyOverlapping` whenever the ranges overlap, including `src == dst`,
+  which Go's `copy` and LLVM's `memcpy` both allow. Agave and Firedancer charge
+  every memory syscall `max(10, n / 250)` CU, so `sol_memmove_` costs the same.
+- **Threshold.** A move of `n >= 1` bytes uses the syscall
+  (`memorySyscallMin` in [memops.go](../internal/compiler/memops.go)); `n == 0`
+  and, for `copy`/`append`, a move onto itself return without one, so a nil
+  or empty slice never reaches the VM. The threshold was measured on both
+  profiles: the syscall is cheaper than the loop it replaces at every size
+  from 1 byte and every alignment (the byte loop costs about 8 CU per byte,
+  the aligned word loop 6 CU per 8 bytes, the syscall about 15 CU in all),
+  and at 1 LLVM deletes the loops on SBF, which also makes the routines small
+  enough to inline. See the
+  [measurement](../results/compiler/2026-10-19-memory-syscalls/README.md).
+- **Semantics are unchanged.** `copy` keeps memmove semantics and Go's
+  result (`min(len(dst), len(src))`, computed before the move), and every
+  bounds, nil and out-of-memory trap still fires before any byte moves. A
+  write into a read-only account's data fails with `ReadonlyDataModified`
+  either way. Only CU and ELF bytes change.
+- **Where it applies.** Only SBF builds for the modern profiles define
+  `GOSVM_MEMORY_SYSCALLS` (`internal/compiler/build.go`). Host-compiled C
+  keeps the loops (so the host differential tests check the loops, and the
+  SBF tests the syscalls), and target-less legacy `v1.51` builds keep their
+  historical loops and ELFs byte for byte. On fogo-v0 the ELF imports
+  `sol_memmove_` and `sol_memset_` by name; on solana-v3 they are static
+  syscall hashes (`0x434371f8`, `0x3770fb22`).
+
+### Zeroing loops
+
+Two loop forms that store zero into every element of a slice from some index
+to its end are emitted as one `memset` of those bytes, so they cost one
+`sol_memset_` instead of about 5 CU per byte (zeroing a 1 KiB account tail:
+5,232 → 124 CU on both profiles):
+
+```go
+for i := range s { s[i] = 0 }                    // gc's own memclr idiom
+for j := e; j < uint64(len(s)); j++ { s[j] = 0 } // also j < len(s); j uint64 or uint
+```
+
+`s` is a variable of slice type with integer or `bool` elements, the loop
+declares `i`/`j` (`:=`), and the body is exactly that one assignment of the
+constant `0` (or `false`) to `s` indexed by the loop variable
+(`internal/compiler/memclear.go`). Neither form can trap (every index is below
+`len(s)`, which the body cannot change, and an unsigned `j` never wraps), `e`
+is evaluated once as before, and a start at or past `len(s)` stores nothing.
+Anything else compiles as written, including a signed `j` (a negative start
+must trap), a value variable, a nonzero store, `<=`, arrays, and hand-written
+copy loops (`for j := ...; j < n; j++ { d[o+j] = s[j] }`; use `copy`, which
+costs one syscall: a 32-byte unaligned `copy` is 137 CU against 463 for the
+loop). As with the other moves, host C and legacy builds compile the original
+loop.
+
 ## Verification
 
 - Check tables with exact messages and host-compiled accepted forms:
@@ -312,6 +380,25 @@ heap moves; see [BACKEND_INTERFACE.md](BACKEND_INTERFACE.md).
   `RequestHeapFrame` (65,528 fits, 65,529 aborts; no or a 48 KiB frame faults
   on the first allocation). Abort and access-violation logs are checked
   separately. [Results](../results/compiler/2026-10-14-allocation/README.md).
+- Bulk memory ([memops_diff_test.go](../internal/compiler/memops_diff_test.go),
+  [memops_sbf_test.go](../internal/compiler/memops_sbf_test.go),
+  [memops_runtime_sbf_test.go](../internal/compiler/memops_runtime_sbf_test.go)):
+  [examples/memory-values](../examples/memory-values/program.go) (copy
+  overlapping both ways, exactly aliased, empty and nil, short sources, heap,
+  string and read-only sources, six element types, append's deletes, inserts
+  and growth, aliasing struct and array assignment through pointers, swaps,
+  zeroing, string building, zeroing loops and their near misses) against
+  native Go: 13,660 vectors as host C (SDK 1 and SDK 2 routines) and 5,480
+  vectors (142 aborting) on each SBF profile, each built three
+  ways (threshold 1, threshold 64 so both paths run in one program around its
+  edges, and loops only), all matching. Also on both profiles: duplicate
+  account descriptors and `ResizeAccount` zero fill after a shrink (to the
+  10 KiB limit and past it), and read-only account and key writes; the
+  legacy ELF is identical for every threshold. The frozen check corpus
+  matches after removing the added syscall paths from the emitted C
+  (`withoutMemorySyscalls`), so nothing else in any recorded program's C
+  changed; [TestZeroLoopForms](../internal/compiler/memops_diff_test.go)
+  lists which loops are rewritten.
 - [Features report](FEATURES_REPORT.md) counts `new_calls`, `make_calls`,
   `append_calls`, `append_spreads` and `copy_calls`.
 

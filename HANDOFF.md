@@ -85,6 +85,29 @@ reference ELFs changed (fogo-v0 `bcd9253e…`, solana-v3 `86f0ed15…`, now
 Error-contract change (2006/2007/3002/3003) to announce to Qushta.
 [Evidence](results/compiler/2026-10-19-cpi-limits/README.md).
 
+**Bulk memory moves on the memory syscalls (October 19, branch
+`opt-memcpy-syscalls`, local, not pushed):** on fogo-v0 and solana-v3 every
+bulk byte move goes to `sol_memmove_`/`sol_memset_` from 1 byte (measured:
+the byte loop costs ~8 CU/byte, the word loop 6 CU/8 bytes, the syscall ~15
+CU in all): `copy`, `append`, string building, LLVM's
+`memcpy`/`memmove`/`memset` for aggregate assignment and zeroing, the
+entrypoint's duplicate-descriptor copy, `ResizeAccount`'s zero fill, and two
+zeroing-loop forms (`for i := range s { s[i] = 0 }`, `for j := e; j <
+uint64(len(s)); j++ { s[j] = 0 }`). Never `sol_memcpy_` (fails on any
+overlap, including `src == dst`). Host C and legacy v1.51 keep the loops
+(legacy ELFs unchanged). [GO_ALLOCATION](docs/GO_ALLOCATION.md#bulk-memory-on-sbf),
+ERROR_CONTRACT changelog (CU/ELF only; announce to Qushta). Hyperlane mailbox
+Init 25,182 → 13,372 CU (Rust 12,610), all 64 mailbox steps −33.5%; examples
+−1.4% to −13%, no step worse; a 1 KiB tail zero 5,232 → 124 CU. **New
+reference ELFs** (full swap fogo-v0 `9813e0d1…`, solana-v3 `94862a66…`;
+`clock2` changed too), `verify_rebuild.py`'s default. Evidence: 5,480
+`examples/memory-values` vectors per SBF profile × three thresholds and 13,660
+host vectors against native Go; corpus C equals the recording with the
+syscall blocks removed. Root suite passes with Go 1.22.0 except
+`TestStdlibAPI` and `TestFullSwapFacts`, which fail identically at the
+parent commit on this host. Includes the cherry-picked `fix-memmove-helper`.
+[Results](results/compiler/2026-10-19-memory-syscalls/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,

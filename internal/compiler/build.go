@@ -166,6 +166,11 @@ func buildProgramReport(program *Program, output, llvm, arch, report string) err
 		steps[0] = append(steps[0], "-DGOSVM_SBF_V3=1")
 		steps[1] = append(steps[1], "--no-undefined")
 	}
+	if modern {
+		// Bulk moves use the VM's memory syscalls (memops.go); target-less
+		// legacy builds keep their historical loops and ELFs.
+		steps[0] = append(steps[0], "-DGOSVM_MEMORY_SYSCALLS=1")
+	}
 	// compileOutput is what the Clang steps printed although they
 	// succeeded (frameDiagnostics).
 	var compileOutput []byte
@@ -271,7 +276,7 @@ func buildProgramReport(program *Program, output, llvm, arch, report string) err
 		}
 		for _, name := range names {
 			if name == "memmove" {
-				if err = helperObject("memmove", []byte(memmoveHelper)); err != nil {
+				if err = helperObject("memmove", []byte(memmoveHelper())); err != nil {
 					return err
 				}
 				break
