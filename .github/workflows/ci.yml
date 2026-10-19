@@ -37,6 +37,11 @@ jobs:
         with:
           go-version: '1.22.0'
           cache: true
+          # The root module has no go.sum; without an explicit path the
+          # module and build caches are never restored.
+          cache-dependency-path: |
+            go.mod
+            examples/*/go.sum
 
       - name: Isolated gosvm cache
         run: echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
@@ -70,13 +75,20 @@ jobs:
       - name: Doctor
         run: build/gosvm doctor
 
+      # The `make test` suite, with internal/compiler split across concurrent
+      # go test processes (scripts/test_shards.py). -count=1: with the build
+      # cache restored, `go test` would otherwise report cached results.
       - name: Root tests
+        env:
+          GOFLAGS: -count=1
         run: |
           # The real-libraries tests read these modules from the module cache.
           (cd examples/real-libraries && go mod download)
-          make test
+          python3 scripts/test_shards.py
 
       - name: Example and benchmark module tests
+        env:
+          GOFLAGS: -count=1
         run: |
           flags=""
           if [ "$(uname -s)" = Darwin ]; then flags="-ldflags=-linkmode=external"; fi
@@ -143,6 +155,6 @@ jobs:
           bash -n scripts/install.sh scripts/build-cli.sh scripts/build_runner_linux.sh
           sh -n scripts/install-release.sh
       - name: Python syntax
-        run: python3 -m py_compile scripts/package_runner_release.py scripts/update_runner_pins.py scripts/package_cli_release.py scripts/check_rebuild_reference.py
+        run: python3 -m py_compile scripts/package_runner_release.py scripts/update_runner_pins.py scripts/package_cli_release.py scripts/check_rebuild_reference.py scripts/test_shards.py
       - name: Committed release pins are well formed
         run: python3 -c "import json,glob; [json.load(open(p)) for p in glob.glob('internal/runner/pins/**/*.json', recursive=True)]"
