@@ -18,6 +18,7 @@ var legacySyscalls = map[string]bool{
 	"sol_create_program_address": true,
 	"sol_invoke_signed_c":        true,
 	"sol_sha256":                 true,
+	"sol_keccak256":              true,
 	"sol_get_clock_sysvar":       true,
 	"sol_get_rent_sysvar":        true,
 	"sol_set_return_data":        true,

@@ -1,0 +1,12 @@
+// Keccak-256 shares SHA256's bounds and single-segment syscall shape.
+#ifdef GOSVM_SBF_V3
+#define gosvm_keccak ((u64 (*)(Seed *,u64,u8 *))0xd7793abbULL)
+#else
+extern u64 sol_keccak256(Seed *,u64,u8 *);
+#define gosvm_keccak sol_keccak256
+#endif
+static __attribute__((always_inline)) inline u64 sol_Keccak256(Context *c,slice input,u64 offset,u64 length,slice output,u64 out_offset) {
+    if(offset>input.len || length>input.len-offset || out_offset>output.len || output.len-out_offset<32) return 2003;
+    Seed data={input.ptr ? input.ptr+offset : 0,length};
+    return gosvm_keccak(&data,1,output.ptr+out_offset);
+}

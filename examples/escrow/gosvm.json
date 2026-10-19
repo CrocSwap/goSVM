@@ -8,7 +8,7 @@
   "instruction": "",
   "handler": "",
   "result": "",
-  "sdk_sha256": "7d5b01f557f89ed11820b897a384cb5bdf0bab38615ad52471eb7b0b02f2ec9b",
+  "sdk_sha256": "888f4aae8c6ac936c3309c62f2e1d910745a98b6b74adfc6a533cc16ed600883",
   "sdk_version": 2,
   "imports": {
     "model": "example.org/gosvm/escrow/model"

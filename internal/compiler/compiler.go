@@ -311,6 +311,9 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 			if usesSDK(g.info, "Secp256k1Recover") {
 				g.WriteString(secp256k1RecoverRuntime)
 			}
+			if usesSDK(g.info, "Keccak256") {
+				g.WriteString(keccakRuntime)
+			}
 		}
 	}
 	// Define value structs and array wrappers before function prototypes.

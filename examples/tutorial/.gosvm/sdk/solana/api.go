@@ -23,6 +23,7 @@ type Context struct {
 	WriteReturnData     func(data []byte)                                                       // Native callback receives an owned copy; CPI callbacks model clearing.
 	ReadReturnData      func() (data, program []byte)                                           // Current return data and its setter; nil reads as none.
 	RecoverSecp256k1    func(hash []byte, recoveryID uint64, signature []byte) ([]byte, uint64) // 64-byte key or runtime status.
+	Keccak              func(input []byte) []byte                                               // Keccak-256 with the original 0x01 padding (not SHA3-256).
 }
 
 // SetReturnData copies at most 1,024 bytes into the runtime's current return
@@ -276,6 +277,28 @@ func Secp256k1Recover(c Context, hash []byte, recoveryID uint64, signature, outp
 		return 2018
 	}
 	copy(output, key)
+	return 0
+}
+
+// Keccak256 hashes an explicitly bounded region with Keccak-256, as Ethereum
+// does (the original 0x01 padding, not SHA3-256), into 32 bytes of output.
+// Bounds follow SHA256: 2003 for a range outside input or output, without a
+// syscall. SBF uses the runtime syscall; native tests supply Keccak, and a
+// missing callback returns 2009.
+func Keccak256(c Context, input []byte, offset, length uint64, output []byte, outOffset uint64) uint64 {
+	if offset > uint64(len(input)) || length > uint64(len(input))-offset || outOffset > uint64(len(output)) || uint64(len(output))-outOffset < 32 {
+		return 2003
+	}
+	if c.Keccak == nil {
+		return 2009
+	}
+	h := c.Keccak(input[offset : offset+length])
+	if len(h) != 32 {
+		return 2004
+	}
+	for i := uint64(0); i < 32; i++ {
+		output[outOffset+i] = h[i]
+	}
 	return 0
 }
 

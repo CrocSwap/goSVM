@@ -60,6 +60,18 @@ signer. The syscall costs 25,000 CU. Native contexts supply
 `RecoverSecp256k1 func(hash []byte, recoveryID uint64, signature []byte) ([]byte, uint64)`;
 a nil callback returns 2009. The [secp256k1 SBF test](../internal/compiler/secp256k1_sbf_test.go)
 compares recovered keys and statuses with an independent `math/big` oracle on
+
+`solana.Keccak256(c, input, offset, length, output, outOffset)` hashes
+`input[offset:offset+length]` with Keccak-256 as Ethereum does (the original
+0x01 padding, not SHA3-256) into `output[outOffset:outOffset+32]`, using the
+runtime's `sol_keccak256` syscall. Bounds and statuses match `SHA256`: 2003 for
+a range outside `input` or `output`, checked before the syscall, and 2004 for a
+native result that is not 32 bytes. Hash a concatenation, such as a Merkle node
+`keccak256(left || right)`, from one buffer. The syscall costs 85 CU plus half
+a CU per input byte on the pinned runners. Native contexts supply
+`Keccak func(input []byte) []byte`; a nil callback returns 2009. The
+[Keccak SBF test](../internal/compiler/keccak_sbf_test.go) compares whole and
+partial inputs from 0 to 10,240 bytes with a reference implementation on
 fogo-v0 and solana-v3.
 
 `pda.Seeds` supports `AddBytes`, `AddKey`, `AddByte`, `AddUint32` and `AddUint64`.
