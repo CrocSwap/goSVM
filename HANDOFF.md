@@ -5,6 +5,18 @@ Updated October 16, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Opt-in 64-account decoder (October 19, branch `gap2-accounts64`;
+unreleased, for the Hyperlane Sealevel port, whose cross-collateral
+`transfer_remote` takes 33 accounts):** low-level SDK-2 builds take
+`-max-accounts 64` (`Program.MaxAccounts`), a 64-entry table in the
+entrypoint's frame with `Process` called through a `noinline` trampoline,
+since inlined it overflows 4 KiB (tutorial 4,224, escrow 4,672 bytes).
+Opt-in because the call costs +1..+11 CU per transaction and would change
+every SDK-2 ELF; without it every program's C and ELF are unchanged. Schema-2
+handlers still declare at most 16 accounts. The SVM fixture harness now takes
+255 references per instruction (was 32). [ACCOUNT_DECODER64](docs/ACCOUNT_DECODER64.md),
+[evidence](results/compiler/2026-10-19-accounts64/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,

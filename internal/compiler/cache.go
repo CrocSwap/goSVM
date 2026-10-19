@@ -140,6 +140,9 @@ func buildProgramKey(program *Program, llvm, arch string) (string, error) {
 	if program.HeapBytes != 0 {
 		fmt.Fprintf(h, "heap:%d\n", program.HeapBytes)
 	}
+	if program.MaxAccounts != 0 {
+		fmt.Fprintf(h, "accounts:%d\n", program.MaxAccounts)
+	}
 	writeTrimIdentity(h, program)
 	for _, unit := range program.Packages {
 		fmt.Fprintf(h, "package:%s\x00", unit.Path)

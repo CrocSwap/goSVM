@@ -7,6 +7,7 @@ import (
 	"go/parser"
 	"go/token"
 	"go/types"
+	"strings"
 
 	"gosvm/solana"
 )
@@ -19,6 +20,39 @@ var accountsABI string
 
 //go:embed cpi.c.txt
 var cpiRuntime string
+
+// WideAccounts is the opt-in incoming account limit (Program.MaxAccounts):
+// a 64-entry account table, the most a 4 KiB SBF frame holds.
+const WideAccounts = 64
+
+// ValidateMaxAccounts accepts 0 (the SDK's limit: 16 for SDK 1, 32 for SDK
+// 2) or WideAccounts, which the frozen SDK 1 loader does not support.
+func ValidateMaxAccounts(n, sdk int) error {
+	if n != 0 && n != WideAccounts {
+		return fmt.Errorf("max accounts %d: use 0 (the SDK's limit: 16 for SDK 1, 32 for SDK 2) or %d", n, WideAccounts)
+	}
+	if n != 0 && sdk == 1 {
+		return fmt.Errorf("max accounts %d requires SDK 2; SDK 1 keeps its 16-account loader", n)
+	}
+	return nil
+}
+
+// wideTrampoline runs Process in a frame of its own for opted-in programs:
+// the 64-entry table (3,584 bytes) fills most of the entrypoint's 4 KiB SBF
+// frame, which Process inlined there would overflow.
+const wideTrampoline = `#define GOSVM_WIDE_ACCOUNTS 1
+static u64 go_Process(Context *);
+static __attribute__((noinline)) u64 gosvm_run(Context *c) {return go_Process(c);}
+`
+
+// wideRuntime is a runtime template with the 64-account change, applied only
+// to opted-in programs so that every other program's C is unchanged.
+func wideRuntime(template, old, replacement string) string {
+	if strings.Count(template, old) != 1 {
+		panic("gosvm: 64-account runtime template changed")
+	}
+	return strings.Replace(template, old, replacement, 1)
+}
 
 func sdkSource(version int) string {
 	if version == 1 {

@@ -648,3 +648,9 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+- 2026-10-19: addition (opt-in 64-account decoder; announce to Qushta), no
+  code added and nothing changed without the opt-in: `Program.MaxAccounts =
+  WideAccounts` (`-max-accounts 64`) raises the limit behind 1001 from 32 to
+  64 incoming descriptors; the built-in backend then calls `Process` in its
+  own frame ([64-account decoder](ACCOUNT_DECODER64.md)). Test harness only:
+  SVM fixtures accept up to 255 account references per instruction (was 32).

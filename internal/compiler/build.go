@@ -33,6 +33,9 @@ type BuildOptions struct {
 	// HeapBytes is the invocation heap budget for allocation; 0 selects the
 	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
 	HeapBytes int
+	// MaxAccounts is Program.MaxAccounts: 0, or WideAccounts for a 64-entry
+	// incoming account table (docs/ACCOUNT_DECODER64.md).
+	MaxAccounts int
 	// Trim lists the import-path patterns of packages checked and compiled
 	// only as far as Process reaches them (Program.Trim,
 	// docs/GO_PACKAGES.md#trimming). A build of a program with trimming
@@ -76,7 +79,10 @@ func readProgramWith(source string, o BuildOptions) (*Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	program.HeapBytes = o.HeapBytes
+	program.HeapBytes, program.MaxAccounts = o.HeapBytes, o.MaxAccounts
+	if err = ValidateMaxAccounts(program.MaxAccounts, program.SDK); err != nil {
+		return nil, err
+	}
 	return program, nil
 }
 
