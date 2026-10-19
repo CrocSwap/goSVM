@@ -1,0 +1,8 @@
+[package]
+name = "pda-oracle"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+solana-pubkey = { version = "=3.0.0", features = ["curve25519"] }
+sha2 = "0.10"

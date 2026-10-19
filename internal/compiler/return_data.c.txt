@@ -1,0 +1,12 @@
+// The runtime copies min(length, size) bytes, writes the setter's key only when
+// that is nonzero, and returns the full size.
+#ifdef GOSVM_SBF_V3
+#define gosvm_get_return_data ((u64 (*)(u8 *,u64,u8 *))0x5d2245e4ULL)
+#else
+extern u64 sol_get_return_data(u8 *,u64,u8 *);
+#define gosvm_get_return_data sol_get_return_data
+#endif
+static u64 sol_GetReturnData(Context *c,slice output,slice program) {
+    if(program.len!=32) abort();
+    return gosvm_get_return_data(output.ptr,(u64)output.len,program.ptr);
+}

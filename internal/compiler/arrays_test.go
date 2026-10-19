@@ -122,9 +122,9 @@ func TestArrayRejections(t *testing.T) {
 		"float element": `type K [32]float64;func Process(s,i []byte)uint64{return 0}`,
 		// Arrays of structs, arrays, slices and pointers are supported
 		// (docs/GO_ARRAYS.md, valuetypes_test.go); a nested array is bounded too.
-		"nested oversize":  `type K [2][1000]byte;func Process(s,i []byte)uint64{return 0}`,
-		"context element":  `import "gosvm/solana";type K [2]solana.Context;func Process(c solana.Context)uint64{return 0}`,
-		"slice conversion": `func Process(s,i []byte)uint64{a:=[24]byte(s);return uint64(a[0])}`,
+		// Slice-to-array conversions are supported (slicearray_test.go).
+		"nested oversize": `type K [2][1000]byte;func Process(s,i []byte)uint64{return 0}`,
+		"context element": `import "gosvm/solana";type K [2]solana.Context;func Process(c solana.Context)uint64{return 0}`,
 		// Value ranges over arrays are supported (range_test.go); an index-only
 		// range over a literal is not.
 		"literal range": `func Process(s,i []byte)uint64{for j:=range [32]byte{} {s[j]=0};return 0}`,

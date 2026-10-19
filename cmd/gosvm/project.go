@@ -83,11 +83,13 @@ with "elf_source": "external" and the ELF's elf_sha256.
 Programs are copied to build/fogo/program.so and build/solana/program.so;
 isolated outputs/reports are under build/<profile>/<tools>/<backend>/deps-<dependencies>/.
 Historical outputs retain build/program.so and build/svm-results.json.
-Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] [-heap-bytes N] [-trim pattern]... source.go|directory
+Low level: gosvm [-target <profile>] [-o program.so] [-emit-c] [-heap-bytes N] [-max-accounts 64] [-trim pattern]... source.go|directory
 Raw -arch v0|v3 retains historical low-level semantics.
 Heap: gosvm.json "heap_bytes" (projects) or -heap-bytes (low level) sets the
 allocation budget, 32768..262144 in 1 KiB steps (default 32768); above 32768
 every transaction must send ComputeBudget RequestHeapFrame (docs/GO_ALLOCATION.md).
+Accounts: -max-accounts 64 (low level, SDK 2) raises the incoming account limit
+from 32 to 64; Process then runs in its own stack frame (docs/ACCOUNT_DECODER64.md).
 Trimming: gosvm.json "trim": ["example.com/lib/..."] (projects) or repeated -trim
 (low level, also gosvm features) opts the matching dependency packages in to
 checking and compiling only the declarations Process reaches; builds warn with

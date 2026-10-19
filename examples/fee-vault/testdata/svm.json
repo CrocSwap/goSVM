@@ -1,0 +1,1903 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+  "payer_seed": "19e21998b8cb957f5ed202bff1fd1abffb403272b90a6876c0d72268114b19a8",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "authority",
+      "seed": "c1c0beebf166f272e64c6e7402a87cc2a7d51a349542ca652699be9a88520499"
+    },
+    {
+      "name": "intruder",
+      "seed": "8b3d39e62d7bb3f342a4279ab213a514fb6e0a7491e0314bf999e0bf15598570"
+    }
+  ],
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "DrbGUsaatqviYLgV2buhDSqkGajLkBvWRmHG4ahR9LJH",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "authority"
+    },
+    {
+      "address": "Am7TTVQcNNM1EgaQya5fEssePoKq392o9vTcYZm79WjM",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "intruder"
+    },
+    {
+      "address": "HGApqaQzJj7DBj8M3MVkuBm2B3vSdgEpuEr6UECfhrgu",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 2000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "beneficiary"
+    },
+    {
+      "address": "B2LPRd6QQZTaAaP3KtqF5x79SxzCad45JWR58CGqxp5c",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 3000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "recipient"
+    },
+    {
+      "address": "5RNkkQggnDoFzBis6mX36LWABUtrSCjiniTjb7wcgrY2",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 4000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "observer"
+    },
+    {
+      "address": "GtgwtUpGY8hs8av131h1KL8BLtc5XW9gUJabfEGAnpyu",
+      "name": "fresh"
+    },
+    {
+      "address": "9Q9RVxA4wmRJ2TVTDNZQULKa171e3h5y1s8tWKBZPj9b",
+      "name": "vault"
+    }
+  ],
+  "cases": [
+    {
+      "name": "claim-fees-above-rent",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 7000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 1398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "beneficiary",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c6",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 7000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 1398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "fresh_blockhash": true,
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "beneficiary",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c6",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "create-then-claim-nothing",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998601040,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 1398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9ebf19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998601040,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 1398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "beneficiary",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c6",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "claim-to-another-account-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "a87272bd9e1fd5c6",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-to-any-writable",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 5398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec000240420f0000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1001000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 4398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec000140420f0000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-creates-a-wallet",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "fresh",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 5398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "fresh",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec000240420f0000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-within-vault",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec000040420f0000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-more-than-balance-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2020
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec0002f1a3610000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-from-unowned-wallet-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2012
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec02000100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-from-signer-wallet-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2012
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec01000100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-to-readonly-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2011
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec00030100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-to-missing-index-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2005
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec00040100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "only-the-authority-moves",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 6007
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "intruder",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec00020100000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "move-below-rent-fails",
+      "overrides": [
+        {
+          "name": "vault",
+          "state": {
+            "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+            "executable": false,
+            "lamports": 6398960,
+            "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+            "rent_epoch": 0
+          }
+        }
+      ],
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "intruder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "beneficiary",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 2000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 3000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "observer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 4000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "fresh"
+              },
+              {
+                "account": "vault",
+                "state": {
+                  "data": "f5bc6ae5e859721ebf0072cf442e992851a14bb8b5e21732839180cf41548d0ec8282f7084654616f19dcfd731e0b35bffd43d1d643e1f446c9c24e51fc47282e6f96f025582512eff",
+                  "executable": false,
+                  "lamports": 6398960,
+                  "owner": "8dRvcPY8brMS9QjXBhWp9nfZXXECoyW1DtosU2jcnLys",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InsufficientFundsForRent": {
+                "account_index": 2
+              }
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "vault",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "observer",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "d59566db23a492ec0002414b4c0000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

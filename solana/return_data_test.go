@@ -39,3 +39,76 @@ func TestReturnDataBoundsCopiesAndUnavailable(t *testing.T) {
 		t.Fatal(code, calls)
 	}
 }
+
+func TestGetReturnDataCopiesPrefixAndSetter(t *testing.T) {
+	setter := bytes.Repeat([]byte{7}, 32)
+	for _, size := range []int{0, 1, 31, 32, 1024} {
+		data := make([]byte, size)
+		for i := range data {
+			data[i] = byte(i*13 + 5)
+		}
+		c := Context{ReadReturnData: func() ([]byte, []byte) { return data, setter }}
+		for _, capacity := range []int{0, 1, 32, 1023, 1024, 2048} {
+			output := bytes.Repeat([]byte{91}, capacity)
+			program := bytes.Repeat([]byte{91}, 32)
+			if got := GetReturnData(c, output, program); got != uint64(size) {
+				t.Fatal(size, capacity, got)
+			}
+			n := min(size, capacity)
+			if !bytes.Equal(output[:n], data[:n]) || !bytes.Equal(output[n:], bytes.Repeat([]byte{91}, capacity-n)) {
+				t.Fatal("output", size, capacity)
+			}
+			want := bytes.Repeat([]byte{91}, 32)
+			if n != 0 {
+				want = setter
+			}
+			if !bytes.Equal(program, want) {
+				t.Fatal("program", size, capacity)
+			}
+		}
+	}
+	program := make([]byte, 32)
+	if got := GetReturnData(Context{}, make([]byte, 8), program); got != 0 || !bytes.Equal(program, make([]byte, 32)) {
+		t.Fatal("missing callback should read as no return data", got)
+	}
+	for _, n := range []int{0, 31, 33} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Fatal("program length", n, "did not trap")
+				}
+			}()
+			GetReturnData(Context{}, nil, make([]byte, n))
+		}()
+	}
+}
+
+// Native tests must reject the same overlapping output regions as the syscall.
+func TestGetReturnDataOverlap(t *testing.T) {
+	for _, tc := range []struct {
+		name                  string
+		output, program, size int
+		trap                  bool
+	}{
+		{"same-start", 0, 0, 1, true}, {"program-start-inside-output", 0, 1, 4, true},
+		{"output-start-inside-program", 1, 0, 1, true},
+		{"adjacent", 0, 4, 4, false}, {"unused-output-tail", 0, 4, 1, false},
+		{"empty-data", 0, 0, 0, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			backing := bytes.Repeat([]byte{91}, 96)
+			before := append([]byte(nil), backing...)
+			c := Context{ReadReturnData: func() ([]byte, []byte) { return bytes.Repeat([]byte{7}, tc.size), bytes.Repeat([]byte{8}, 32) }}
+			defer func() {
+				panicked := recover() != nil
+				if panicked != tc.trap {
+					t.Fatalf("panic=%v, want %v", panicked, tc.trap)
+				}
+				if panicked && !bytes.Equal(backing, before) {
+					t.Fatal("overlap changed output before trapping")
+				}
+			}()
+			GetReturnData(c, backing[tc.output:tc.output+32], backing[tc.program:tc.program+32])
+		})
+	}
+}

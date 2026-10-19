@@ -33,6 +33,9 @@ type BuildOptions struct {
 	// HeapBytes is the invocation heap budget for allocation; 0 selects the
 	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
 	HeapBytes int
+	// MaxAccounts is Program.MaxAccounts: 0, or WideAccounts for a 64-entry
+	// incoming account table (docs/ACCOUNT_DECODER64.md).
+	MaxAccounts int
 	// Trim lists the import-path patterns of packages checked and compiled
 	// only as far as Process reaches them (Program.Trim,
 	// docs/GO_PACKAGES.md#trimming). A build of a program with trimming
@@ -76,7 +79,10 @@ func readProgramWith(source string, o BuildOptions) (*Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	program.HeapBytes = o.HeapBytes
+	program.HeapBytes, program.MaxAccounts = o.HeapBytes, o.MaxAccounts
+	if err = ValidateMaxAccounts(program.MaxAccounts, program.SDK); err != nil {
+		return nil, err
+	}
 	return program, nil
 }
 
@@ -159,6 +165,11 @@ func buildProgramReport(program *Program, output, llvm, arch, report string) err
 	if arch == "v3" {
 		steps[0] = append(steps[0], "-DGOSVM_SBF_V3=1")
 		steps[1] = append(steps[1], "--no-undefined")
+	}
+	if modern {
+		// Bulk moves use the VM's memory syscalls (memops.go); target-less
+		// legacy builds keep their historical loops and ELFs.
+		steps[0] = append(steps[0], "-DGOSVM_MEMORY_SYSCALLS=1")
 	}
 	// compileOutput is what the Clang steps printed although they
 	// succeeded (frameDiagnostics).
@@ -265,7 +276,7 @@ func buildProgramReport(program *Program, output, llvm, arch, report string) err
 		}
 		for _, name := range names {
 			if name == "memmove" {
-				if err = helperObject("memmove", []byte(memmoveHelper)); err != nil {
+				if err = helperObject("memmove", []byte(memmoveHelper())); err != nil {
 					return err
 				}
 				break

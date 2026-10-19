@@ -277,7 +277,7 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 	}
 	if len(program.Libraries) > 0 {
 		g.ensureMemory()
-		g.WriteString(libraryMemory)
+		g.WriteString(libraryMemory())
 	}
 	if len(program.Panics) > 0 {
 		// Only programs that call panic get its runtime, so the C of every
@@ -292,19 +292,52 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 		}
 	}
 	if program.SDKPackage != nil {
-		ownedLifecycle := false
+		ownedLifecycle, movesLamports, logs := false, false, false
 		for _, object := range g.info.Uses {
 			fn, ok := object.(*types.Func)
 			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && (fn.Name() == "ResizeAccount" || fn.Name() == "CloseAccount") {
 				ownedLifecycle = true
 			}
+			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && fn.Name() == "MoveLamports" {
+				movesLamports = true
+			}
+			if ok && fn.Pkg() != nil && fn.Pkg().Path() == "gosvm/solana" && sdkLogCalls[fn.Name()] {
+				logs = true
+			}
 		}
-		if program.SDK == 2 || ownedLifecycle {
+		if program.SDK == 2 || ownedLifecycle || program.Program.MaxAccounts != 0 {
 			g.WriteString("\n#define GOSVM_SDK2 1\n")
 		}
-		g.WriteString(solanaRuntime)
+		// The SDK runtime shares the modern memory syscall adapters.
+		g.WriteString(memorySyscallDecls())
+		if program.Program.MaxAccounts != 0 {
+			// Only opted-in programs get the wide table, so the C of every
+			// other program is unchanged.
+			g.WriteString(wideRuntime(solanaRuntime, "#define GOSVM_MAX_ACCOUNTS 32", "#define GOSVM_MAX_ACCOUNTS 64"))
+			g.WriteString(wideTrampoline)
+		} else {
+			g.WriteString(solanaRuntime)
+		}
 		if program.SDK != 1 {
 			g.WriteString(cpiRuntime)
+			if usesSDK(g.info, "GetReturnData") {
+				g.WriteString(getReturnDataRuntime)
+			}
+			if usesSDK(g.info, "Secp256k1Recover") {
+				g.WriteString(secp256k1RecoverRuntime)
+			}
+			if usesSDK(g.info, "Keccak256") {
+				g.WriteString(keccakRuntime)
+			}
+		}
+		if movesLamports {
+			g.WriteString(lamportsRuntime)
+		}
+		if logs {
+			if program.usesStrings {
+				g.WriteString("#define GOSVM_LOG_STRING 1\n")
+			}
+			g.WriteString(logRuntime)
 		}
 	}
 	// Define value structs and array wrappers before function prototypes.
@@ -426,7 +459,11 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 	g.emitInit(program)
 	if program.EntryKind == EntryContext {
 		g.WriteString("\n#define GOSVM_CONTEXT_ENTRY 1\n")
-		g.WriteString(accountsABI)
+		if program.Program.MaxAccounts != 0 {
+			g.WriteString(wideRuntime(accountsABI, "    return go_Process(&c);\n", "    return gosvm_run(&c);\n"))
+		} else {
+			g.WriteString(accountsABI)
+		}
 	}
 	names = map[string]string{}
 	for o, name := range g.names {
@@ -869,6 +906,9 @@ func (g *generator) exprValue(e ast.Expr) string {
 		if g.info.Types[e.Fun].IsType() {
 			if kind := classifyConversion(g.info, e); kind != notStringConversion {
 				return g.stringConversion(e, kind)
+			}
+			if a, ptr, ok := sliceToArray(g.info, e); ok {
+				return g.sliceToArray(e, tv.Type, a, ptr)
 			}
 			if isIface(tv.Type) {
 				return g.expr(e.Args[0]) // converted, or copied from an interface value

@@ -521,10 +521,10 @@ func (a *evalAnalysis) calleeOperands(c *ast.CallExpr) []ast.Expr {
 	return append(ops, c.Args...)
 }
 
-// sdkOutputs are the gosvm/solana functions that write bytes into an output
-// slice the program supplies (their last argument); the other writing ones
-// change account state only, which holds no Go variable.
-var sdkOutputs = map[string]bool{"Clock": true, "Rent": true, "SHA256": true, "CreateAddress": true}
+// sdkOutputs are the gosvm/solana functions that write bytes into output
+// slices the program supplies, with those arguments' indices; the other
+// writing ones change account state only, which holds no Go variable.
+var sdkOutputs = map[string][]int{"Clock": {1}, "Rent": {1}, "SHA256": {4}, "Keccak256": {4}, "CreateAddress": {3}, "GetReturnData": {1, 2}, "Secp256k1Recover": {4}}
 
 // siteEffect is what a write site may write.
 type siteEffect struct {
@@ -629,9 +629,11 @@ func (a *evalAnalysis) callWrites(c *ast.CallExpr, s writeScope) siteEffect {
 		if o.Pkg() != nil {
 			switch o.Pkg().Path() {
 			case "gosvm/solana":
-				if sdkOutputs[o.Name()] && len(c.Args) > 0 {
+				if outputs := sdkOutputs[o.Name()]; len(outputs) > 0 {
 					e.types.add(types.Typ[types.Uint8])
-					via(c.Args[len(c.Args)-1:])
+					for _, i := range outputs {
+						via(c.Args[i : i+1])
+					}
 				}
 				return e
 			case bitsPath:

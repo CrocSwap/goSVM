@@ -274,7 +274,7 @@ overwrite input files, their hard links, or unrelated existing files. A failure
 cannot leave an earlier passing report at that output path.
 
 Bounds: fixture file 16 MiB, each account's hex-decoded data 1 MiB, 4,096 account
-declarations, 1,024 scenarios, 64 steps/scenario, 32 references/instruction,
+declarations, 1,024 scenarios, 64 steps/scenario, 255 references/instruction,
 64 state checks/step, 64 signers, and the 1,232-byte transaction packet limit.
 These are harness limits; programs/runtime impose their own stricter bounds.
 Runner frames remain limited to 16 MiB. Transactions use the legacy message

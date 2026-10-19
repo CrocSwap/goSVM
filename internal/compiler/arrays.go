@@ -21,15 +21,23 @@ const maxArrayBytes = 1024
 // LLVM can lower aggregate initialization/copies to these calls even with
 // -fno-builtin. Provide them for array, pointer and view programs, keeping historical
 // scalar/struct ELFs unchanged. Volatile byte accesses prevent the optimizer
-// from transforming the helper loops back into calls to themselves.
+// from transforming the helper loops back into calls to themselves. On the
+// modern SBF profiles, counts at or above a threshold go to the VM's
+// syscalls instead (memops.go).
 const arrayMemory = `
 __attribute__((visibility("hidden"))) void *memcpy(void *dst,const void *src,__SIZE_TYPE__ count) {
+#ifdef GOSVM_MEMORY_SYSCALL_MOVE
+    if (count>=GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_MOVE(dst,src,count); return dst; }
+#endif
     volatile u8 *d=(volatile u8 *)dst;
     const volatile u8 *s=(const volatile u8 *)src;
     for (__SIZE_TYPE__ i=0;i<count;i++) d[i]=s[i];
     return dst;
 }
 __attribute__((visibility("hidden"))) void *memset(void *dst,int value,__SIZE_TYPE__ count) {
+#ifdef GOSVM_MEMORY_SYSCALL_SET
+    if (count>=GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_SET(dst,(u64)(u8)value,count); return dst; }
+#endif
     volatile u8 *d=(volatile u8 *)dst;
     for (__SIZE_TYPE__ i=0;i<count;i++) d[i]=(u8)value;
     return dst;
@@ -44,6 +52,9 @@ __attribute__((visibility("hidden"))) void *memset(void *dst,int value,__SIZE_TY
 const arrayMemoryWords = `
 typedef u64 gosvm_memory_word __attribute__((may_alias));
 __attribute__((visibility("hidden"))) void *memcpy(void *dst,const void *src,__SIZE_TYPE__ count) {
+#ifdef GOSVM_MEMORY_SYSCALL_MOVE
+    if (count>=GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_MOVE(dst,src,count); return dst; }
+#endif
     volatile u8 *d=(volatile u8 *)dst;
     const volatile u8 *s=(const volatile u8 *)src;
     __SIZE_TYPE__ i=0;
@@ -56,6 +67,9 @@ __attribute__((visibility("hidden"))) void *memcpy(void *dst,const void *src,__S
     return dst;
 }
 __attribute__((visibility("hidden"))) void *memset(void *dst,int value,__SIZE_TYPE__ count) {
+#ifdef GOSVM_MEMORY_SYSCALL_SET
+    if (count>=GOSVM_MEMORY_SYSCALL_MIN) { GOSVM_MEMORY_SYSCALL_SET(dst,(u64)(u8)value,count); return dst; }
+#endif
     volatile u8 *d=(volatile u8 *)dst;
     __SIZE_TYPE__ i=0;
     if (((__UINTPTR_TYPE__)dst&7)==0) {
@@ -70,6 +84,7 @@ __attribute__((visibility("hidden"))) void *memset(void *dst,int value,__SIZE_TY
 
 func (g *generator) ensureMemory() {
 	if !g.memory {
+		g.WriteString(memorySyscallDecls())
 		if g.memoryWords {
 			g.WriteString(arrayMemoryWords)
 		} else {
@@ -202,6 +217,7 @@ func (g *generator) emitType(node ast.Node, t types.Type) {
 	}
 	for i := 0; i < st.NumFields(); i++ {
 		f := st.Field(i)
+		nestedArrays(f.Type(), func(a *types.Array) { g.emitArray(node, a) })
 		if a, ok := f.Type().Underlying().(*types.Array); ok {
 			g.emitArray(node, a)
 		} else if _, ok := f.Type().Underlying().(*types.Struct); ok && !isEmptyStruct(f.Type()) {

@@ -17,7 +17,9 @@ fails with no custom error code and the transaction rolls back.
 - A negative shift count (a signed count below zero), where Go panics
   ([integers](GO_INTEGERS.md)).
 - Array index, slice index or slice-expression bounds out of range, including
-  a string index or string slice bounds ([strings](GO_STRINGS.md)).
+  a string index or string slice bounds ([strings](GO_STRINGS.md)), and a
+  slice shorter than the array in a conversion `(*[N]T)(s)` or `[N]T(s)`
+  ([arrays](GO_ARRAYS.md#slice-to-array-conversions)).
 - Nil pointer dereference, field access or method receiver, including a
   value-receiver method called through a nil `*T` held in an interface.
 - Account index out of range in SDK account accessors.
@@ -55,6 +57,11 @@ fails with no custom error code and the transaction rolls back.
   nil and empty maps), where Go panics `hash of unhashable type`.
 - A call of the `panic` builtin, after its argument is evaluated and one log
   line is written ([below](#panic)). This is the only trap that logs.
+- `solana.Log` with a message that is not valid UTF-8 (Rust's `str::from_utf8`
+  rule): the runtime's `sol_log_` syscall fails the instruction
+  (`ProgramFailedToComplete`, logging `failed: invalid utf-8 ...` or
+  `failed: incomplete utf-8 ...`) instead of `abort`; the transaction rolls
+  back the same way. The native SDK panics.
 
 A trap while package-level variables are initialized or an `init` function
 runs aborts the same way, before `Process` runs
@@ -207,6 +214,8 @@ because fixtures compare them byte for byte:
   nothing and never shrinks the table. Converting a map to an interface
   allocates nothing. The full table is in
   [GO_MAPS.md](GO_MAPS.md#heap-accounting).
+  SDK 2's `cpi.Metas` allocates 576 bytes at its 17th `Add` and nothing
+  before; no other SDK helper allocates ([SDK 2](SDK2.md#cpi-bounds)).
   Package-level variables that are not read-only live in the globals block:
   a C struct of those variables in `CheckedProgram.Globals` order (each at
   its Go alignment), rounded up to 8 bytes (`GlobalBytes`). Every invocation
@@ -311,7 +320,8 @@ operation's value is computed once and used where it appears.
 **Plain operations** are everything else: reading a variable, a field, an
 element or a map element; indirection; arithmetic, shifts and comparisons
 (including string, struct, array and interface comparisons); string
-concatenation and the other conversions (`string(b)`, integer conversions);
+concatenation and the other conversions (`string(b)`, integer conversions,
+slice-to-array conversions `(*[N]T)(s)` and `[N]T(s)`);
 boxing a value in an interface; struct, array and slice literals and map
 literals of constant entries; function literals; method values; `&x`; and
 type assertions to pointer-shaped types.
@@ -352,8 +362,8 @@ whatever their source order (`map[int]int{k: 3, 1: 2}` with `k == 1` holds
 
 **Traps.** A sequenced operation's traps happen where it is evaluated (a
 failed type assertion, slice bounds, a `make` length, an out-of-memory
-`append`). A plain operation's trap (index or slice-element bounds, nil
-dereference, division or modulo by zero, a negative shift count, an
+`append`). A plain operation's trap (index or slice-element bounds, a
+slice-to-array conversion's length, nil dereference, division or modulo by zero, a negative shift count, an
 uncomparable interface comparison or map key, a nil-map store, out of memory
 for a literal, concatenation, conversion or closure) happens after every
 sequenced operation of its owner: `z[5] + f()`, `z[5] = f()`, `p.x + f()`
@@ -403,21 +413,24 @@ SDK 1 single-account programs use 10–14 for their input checks
 | --- | --- |
 | 2001 | Program account not executable, or not the classic Token program where required |
 | 2002 | SDK 1 signed-transfer seed longer than 32 bytes |
-| 2003 | SHA-256 input or output range out of bounds |
-| 2004 | SHA-256 result not 32 bytes |
+| 2003 | SHA-256 or Keccak-256 input or output range out of bounds |
+| 2004 | SHA-256 or Keccak-256 result not 32 bytes |
 | 2005 | Account index out of range |
-| 2006 | Malformed CPI account metas |
-| 2007 | Malformed signer seeds or PDA input |
+| 2006 | Malformed CPI account metas, or more than 64 |
+| 2007 | Malformed signer seeds or PDA input, or more than 4 signer groups |
 | 2008 | CPI instruction data longer than 10,240 bytes |
 | 2009 | Native callback missing (native tests only) |
 | 2010 | Resize or original length beyond limits |
 | 2011 | Account not writable, or executable |
 | 2012 | Account not owned by the program |
 | 2013 | Refund account is the source, or malformed native key |
-| 2014 | Refund lamport overflow |
+| 2014 | Refund or credit lamport overflow |
 | 2015 | Rent output not 17 bytes |
 | 2016 | Clock output not 40 bytes |
 | 2017 | Return data longer than 1,024 bytes |
+| 2018 | Secp256k1 hash, signature, output or native result length wrong |
+| 2019 | `LogPubkey` key not 32 bytes |
+| 2020 | `MoveLamports` source balance below the amount |
 
 ### SDK 2 helpers
 
@@ -426,11 +439,18 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 3001 | Seeds: more than 16, or one longer than 32 bytes, or nil where required |
 | 3002 | CPI metas: more than 16, or nil |
 | 3003 | CPI signers: more than 2 groups or 1,024 bytes |
+| 3004 | `pda.Seeds.FindAddress`: no bump from 255 to 1 gives an off-curve address |
+| 3002 | CPI metas: more than 64, or nil |
+| 3003 | CPI signers: more than 4 groups or 1,024 bytes |
 | 3010 | Token account invalid (owner, executable, 165-byte layout, state, native) |
 | 3011 | Token account identity |
 | 3012 | Token mints differ |
 | 3013 | Token authority or close authority mismatch, or missing signature |
 | 3014 | Token account not writable |
+| 3015 | Token-2022 extension absent or invalid value |
+| 3030 | ATA, System or token program invalid |
+| 3031 | ATA account, mint or payer preconditions invalid |
+| 3032 | ATA payer signature or PDA authority invalid |
 | 3020 | Rent: size over 10 MiB, overflow or invalid threshold |
 | 3021 | System program account invalid |
 | 3022 | System create: account, alias, layout or privilege |
@@ -648,3 +668,85 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+
+- 2026-10-19: `GetReturnData` requires a 32-byte setter buffer and disjoint
+  copied-output/setter regions when copying nonempty data. Violations trap on
+  native Go and both SBF profiles; zero-byte reads do not check overlap.
+- 2026-10-19: addition (slice-to-array conversions; announce to Qushta), no
+  trap or code added and no existing behaviour changed: `(*[N]T)(s)` and
+  `[N]T(s)` compile ([arrays](GO_ARRAYS.md#slice-to-array-conversions)).
+  `len(s) < N` uses the bounds trap; both are plain operations under
+  [evaluation order](#evaluation-order), so the length check happens after
+  the owner's calls, as in gc. `[N]T(s)` was rejected (`array conversions
+  require identical underlying arrays; slice conversions unsupported`);
+  `(*[N]T)(s)` passed Check and then failed in the built-in backend's C
+  compile (CrocSwap/goSVM#7). The corpus's one recorded slice conversion
+  (`a:=[24]byte(s)`) now compiles; no other recorded program changed.
+- 2026-10-19: Check relaxation (generic type arguments), no trap, code or
+  generated code changed for accepted programs: a type argument holding an
+  array through a slice, pointer, map or function type
+  (`Pair[uint32, [][32]byte]`, `[]*[4]T`), and a generic struct field doing
+  so (`V [][3]T`), compile; they were rejected with `array type was not
+  declared before use` (CrocSwap/goSVM#8). An array in such a type argument
+  that exceeds the per-value limit, or a zero-length array in a slice, now
+  reports that rule's message (`array storage exceeds experimental 1024-byte
+  per-value limit`, `slice elements must not contain zero-length arrays or
+  empty structs`) instead. No recorded corpus program's C changed.
+
+- 2026-10-19: addition (`solana.MoveLamports`; announce to Qushta), no trap
+  added and no existing behaviour changed: code 2020 (source balance below the
+  amount) is new, and 2014 now also covers a destination credit overflow. The
+  other checks reuse 2005, 2011 and 2012 in `ResizeAccount`'s order (source,
+  then destination). Programs that do not call it compile to the same C.
+
+- 2026-10-19: addition (`solana.Log`, `Log64`, `LogPubkey`; announce to
+  Qushta), no existing behaviour changed: code 2019 (a `LogPubkey` key not 32
+  bytes) is new, and `Log` of invalid UTF-8 fails in the runtime's log
+  syscall (listed under traps). The three calls log and write nothing a later
+  operand reads, so evaluation order treats them like `SetReturnData`'s
+  logging without its write. `sol_log_64_` and `sol_log_pubkey` join the
+  admitted fogo-v0 imports. Programs that do not call them compile to the
+  same C.
+
+- 2026-10-19: addition (`pda.Seeds.FindAddress`; announce to Qushta), no
+  trap added and no existing behaviour changed: code 3004 is new;
+  `FindAddress` otherwise returns 3001 (no room for the bump) or the
+  create-program-address status. It is SDK Go over `solana.CreateAddress`,
+  so programs that do not call it compile to the same ELF.
+
+- 2026-10-19: addition (opt-in 64-account decoder; announce to Qushta), no
+  code added and nothing changed without the opt-in: `Program.MaxAccounts =
+  WideAccounts` (`-max-accounts 64`) raises the limit behind 1001 from 32 to
+  64 incoming descriptors; the built-in backend then calls `Process` in its
+  own frame ([64-account decoder](ACCOUNT_DECODER64.md)). Test harness only:
+  SVM fixtures accept up to 255 account references per instruction (was 32).
+
+- 2026-10-19: CPI bounds raised (contract change; announce to Qushta): 2006
+  now allows up to 64 account metas (was 16) and 2007 up to 4 signer groups
+  (was 2) in `solana.Invoke`; 3002 allows 64 metas and 3003 four groups in
+  `sdk/cpi`. Inputs within the old bounds give the same codes in the same
+  order. Seeds keep 16 per group, 32 bytes each and 1,024 encoded bytes.
+  `cpi.Metas` beyond 16 records allocates 576 bytes (heap accounting above),
+  so such a CPI can now hit the out-of-memory trap.
+
+- 2026-10-19: optimization, no trap or code added and no behaviour changed
+  (announce to Qushta for CU only): on fogo-v0 and solana-v3 the built-in
+  backend's bulk moves (`copy`, `append`, string building, the
+  `memcpy`/`memmove`/`memset` LLVM calls for aggregate assignment and
+  zeroing, duplicate account descriptors, `ResizeAccount`'s zero fill, and
+  the two [zeroing loop](GO_ALLOCATION.md#zeroing-loops) forms) use
+  the `sol_memmove_` and `sol_memset_` syscalls, which join the admitted
+  fogo-v0 imports ([bulk memory](GO_ALLOCATION.md#bulk-memory-on-sbf)).
+  `sol_memcpy_` is not used for them because the runtime fails it on
+  overlapping ranges, including `src == dst`. Traps still fire before any
+  byte moves, `copy`'s result and overlap semantics are Go's, and a write to
+  a read-only account still fails with `ReadonlyDataModified`; only CU and
+  ELF bytes change. Target-less legacy builds are unchanged. The emitted C
+  of SDK programs and programs with the memory or heap runtime gains
+  `#ifdef GOSVM_MEMORY_SYSCALL_*` blocks; with them removed it is byte for
+  byte the earlier C (the corpus test checks this for every entry).
+
+- 2026-10-19: SDK additions include Token-2022 extension code 3015 and ATA
+  precondition codes 3030–3032. ATA creation validates the known program IDs
+  and delegates canonical-address checking to ATA; a substituted address now
+  propagates the ATA program's `InvalidSeeds` rather than SDK code 3031.

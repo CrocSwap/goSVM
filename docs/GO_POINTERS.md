@@ -64,6 +64,10 @@ pointer to a local that escapes moves the local to the heap). Named pointer
 types themselves (`type P *T`) stay unsupported. Tests:
 `TestRealLibraryForms*` ([reallibs_forms_test.go](../internal/compiler/reallibs_forms_test.go)).
 
+`(*[N]T)(s)` converts a slice to a pointer to its first `N` elements,
+trapping when `len(s) < N`
+([slice-to-array conversions](GO_ARRAYS.md#slice-to-array-conversions)).
+
 ## Pointers to pointers
 
 `**T` (and deeper) values work as in Go: `pp := &p`, `**pp = v`, `*pp = &x`,

@@ -48,8 +48,10 @@ var gcSizes = types.SizesFor("gc", "amd64")
 // invocation) or set return data.
 var (
 	sdkPure = map[string]bool{"Count": true, "Data": true, "Executable": true, "Instruction": true, "IsPDA": true,
-		"IsTokenProgram": true, "Key": true, "Lamports": true, "Owner": true, "ProgramID": true, "Signer": true, "Writable": true}
-	sdkLogs = map[string]bool{"Invoke": true, "Transfer": true, "TransferSigned": true, "SetReturnData": true}
+		"IsTokenProgram": true, "Key": true, "Lamports": true, "Owner": true, "ProgramID": true, "Signer": true, "Writable": true,
+		"Log": true, "Log64": true, "LogPubkey": true}
+	sdkLogs = map[string]bool{"Invoke": true, "Transfer": true, "TransferSigned": true, "SetReturnData": true,
+		"Log": true, "Log64": true, "LogPubkey": true}
 )
 
 type evalEvent struct {
@@ -973,6 +975,12 @@ func (a *evalAnalysis) plain(e ast.Expr, o *evalOwner) {
 		a.event(o, e, false, true)
 	case *ast.CallExpr:
 		a.callOperands(e, o)
+		if arr, ptr, ok := sliceToArray(info, e); ok {
+			// A plain operation, as in gc: a short slice traps after the
+			// owner's calls, and [N]T(s) reads the elements there.
+			a.event(o, e, !ptr, arr.Len() > 0)
+			return
+		}
 		if info.Types[e.Fun].IsType() {
 			switch classifyConversion(info, e) {
 			case stringFromBytes, stringFromRunes:

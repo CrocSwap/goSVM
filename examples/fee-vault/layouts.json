@@ -1,0 +1,131 @@
+{
+  "format": "gosvm-layouts-2",
+  "layouts": [
+    {
+      "kind": "account",
+      "name": "Vault",
+      "type": "example.org/gosvm/fee-vault/model.Vault",
+      "version": 1,
+      "discriminator": [
+        245,
+        188,
+        106,
+        229,
+        232,
+        89,
+        114,
+        30
+      ],
+      "size": 73,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 40,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 72,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Claim",
+      "type": "example.org/gosvm/fee-vault/model.ClaimArgs",
+      "version": 1,
+      "discriminator": [
+        168,
+        114,
+        114,
+        189,
+        158,
+        31,
+        213,
+        198
+      ],
+      "size": 8,
+      "fields": null
+    },
+    {
+      "kind": "instruction",
+      "name": "Create",
+      "type": "example.org/gosvm/fee-vault/model.CreateArgs",
+      "version": 1,
+      "discriminator": [
+        178,
+        132,
+        11,
+        190,
+        21,
+        75,
+        217,
+        235
+      ],
+      "size": 41,
+      "fields": [
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 40,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Move",
+      "type": "example.org/gosvm/fee-vault/model.MoveArgs",
+      "version": 1,
+      "discriminator": [
+        213,
+        149,
+        102,
+        219,
+        35,
+        164,
+        146,
+        236
+      ],
+      "size": 18,
+      "fields": [
+        {
+          "name": "From",
+          "type": "byte",
+          "offset": 8,
+          "size": 1
+        },
+        {
+          "name": "To",
+          "type": "byte",
+          "offset": 9,
+          "size": 1
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 10,
+          "size": 8
+        }
+      ]
+    }
+  ]
+}

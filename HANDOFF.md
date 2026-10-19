@@ -1,9 +1,125 @@
 # goSVM session handoff
 
-Updated October 16, 2026 (America/New_York).
+Updated October 19, 2026 (America/New_York).
 **Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
+
+**Hyperlane contribution integration (October 19, unreleased):** PRs #9–#24
+combine the compiler fixes, syscall bindings, SDK helpers, opt-in 64-account
+decoder, outgoing 64-meta/four-signer CPI bounds and modern memory syscalls.
+The native return-data getter now matches SBF's overlapping-output trap;
+return data clears before silent CPIs. ATA creation delegates canonical-address
+validation to the checked ATA program (`InvalidSeeds`), retaining explicit
+`Address`/`Matches` helpers. All six SDK-2 example snapshots are refreshed as
+one generation. The combined full-swap ELFs differ from either standalone
+optimization's record; the current reproducible reference is
+[the integration rebuild](results/compiler/2026-10-19-hyperlane-integration/rebuild/metrics.json).
+Earlier October 19 entries below describe their individual branch checkpoints.
+
+**Slice-to-array conversions (October 19, CrocSwap/goSVM#7):** `(*[N]T)(s)`
+passed Check and then broke the C compile; `[N]T(s)` was rejected. Both now
+follow Go ([GO_ARRAYS](docs/GO_ARRAYS.md#slice-to-array-conversions)): bounds
+trap when `len(s) < N`, the pointer aliases the backing array (nil for a nil
+slice), plain operations in gc's order, converting initializers run at run
+time. Host differentials and SBF on both targets; example ELFs unchanged,
+one corpus rejection (`[24]byte(s)`) now compiles. [Evidence](results/compiler/2026-10-19-slice-array-conversions/README.md).
+
+**Arrays inside generic type arguments (October 19, CrocSwap/goSVM#8):**
+`Pair[uint32, [][32]byte]`, `[]*[4]T`, `map[K][][2]T` and generic struct
+fields such as `V [][3]T` were rejected with `array type was not declared
+before use`: type arguments were validated before any array was declared, and
+arrays reached only through a generic field were never declared. Both fixed
+([GO_GENERICS](docs/GO_GENERICS.md)); host differentials and SBF on both
+targets; corpus C and example ELFs unchanged.
+[Evidence](results/compiler/2026-10-19-generic-array-type-args/README.md).
+
+**Direct lamport moves (October 19, branch `gap1-move-lamports`; unreleased,
+for the Hyperlane Sealevel port):** `solana.MoveLamports(c, from, to, amount)`
+debits an owned writable account and credits any writable one, the
+`**a.lamports -= x; **b.lamports += x` of Hyperlane's fee claims. Runtime rules
+are checked first (owned/writable/non-executable source, writable
+non-executable destination, balance 2020, overflow 2014); rent exemption is the
+application's, and the runtime rejects a debit below it. Its C runtime is
+emitted only when called, so corpus C and the full-swap ELFs are unchanged;
+SDK-2 snapshots (and `sdk_sha256`) of tutorial/full-swap/escrow were refreshed.
+[examples/fee-vault](examples/fee-vault/README.md) passes `gosvm test --svm` on
+both targets. [Evidence](results/compiler/2026-10-19-move-lamports/README.md).
+
+**Program logging (October 19, branch `gap3-logging`; unreleased, for the
+Hyperlane Sealevel port):** `solana.Log(c, string)`, `Log64(c, 5 words)` and
+`LogPubkey(c, key)` call `sol_log_`, `sol_log_64_` and `sol_log_pubkey` (the
+last two join the admitted fogo-v0 imports) and return 0 (2019 for a key that
+is not 32 bytes). Invalid UTF-8 fails the instruction in the runtime's syscall,
+as for Rust; native tests panic, and native contexts get lines through
+`WriteLog`. The logging C runtime is emitted only when called: corpus C and
+full-swap ELFs unchanged; SDK-2 snapshots refreshed.
+[examples/logging](examples/logging/README.md) passes `gosvm test --svm` on
+both targets. [Evidence](results/compiler/2026-10-19-logging/README.md).
+
+**On-chain bump search (October 19, branch `gap4-find-pda`; unreleased, for
+the Hyperlane Sealevel port):** `pda.Seeds.FindAddress(c, program)` is
+`find_program_address`: bumps 255 down to 1 (Solana never tries 0) through
+`solana.CreateAddress`, skipping on-curve results (status 1), about 1,570 CU
+per attempt. It matches 401 vectors from Rust `solana-pubkey` 3.0.0, and the
+host `fixture.FindProgramAddress` was aligned (it used to try bump 0; no
+fixture changed). SDK Go only: full-swap ELFs unchanged; the SDK-2 example
+snapshots were refreshed. [examples/find-address](examples/find-address/README.md)
+passes `gosvm test --svm` on both targets.
+[Evidence](results/compiler/2026-10-19-find-address/README.md).
+
+**Opt-in 64-account decoder (October 19, branch `gap2-accounts64`;
+unreleased, for the Hyperlane Sealevel port, whose cross-collateral
+`transfer_remote` takes 33 accounts):** low-level SDK-2 builds take
+`-max-accounts 64` (`Program.MaxAccounts`), a 64-entry table in the
+entrypoint's frame with `Process` called through a `noinline` trampoline,
+since inlined it overflows 4 KiB (tutorial 4,224, escrow 4,672 bytes).
+Opt-in because the call costs +1..+11 CU per transaction and would change
+every SDK-2 ELF; without it every program's C and ELF are unchanged. Schema-2
+handlers still declare at most 16 accounts. The SVM fixture harness now takes
+255 references per instruction (was 32). [ACCOUNT_DECODER64](docs/ACCOUNT_DECODER64.md),
+[evidence](results/compiler/2026-10-19-accounts64/README.md).
+
+**Outgoing CPI bounds raised (October 19, branch `cpi-raise-limits`, local,
+unreleased):** for Hyperlane's Sealevel programs (22 metas in IGP `PayForGas`
+with quoted accounts, 17 in fee `QuoteFee`), `solana.Invoke`, the C runtime and
+`sdk/cpi` now allow 64 account metas and 4 signer groups (seeds unchanged:
+16 per group, 32 bytes, 1,024 encoded bytes); [bounds and justification](docs/SDK2.md#cpi-bounds).
+`sol_Invoke` is `noinline` with a 2,240-byte frame; `cpi.Metas` keeps 16 records
+inline and moves to one 576-byte heap array at the 17th `Add` (a fixed buffer cost
++324 CU per small CPI; a shorter `Add` pushed the full swap's `go_Process` over
+4 KiB on v1.57). SDK-2 snapshot change: the escrow, full-swap and tutorial
+snapshots and `sdk_sha256` were refreshed, and **existing SDK-2 projects must be
+recreated** (Load rejects the old snapshot). Small builder CPIs +9–23 CU,
+existing suites +0–21 CU, ELFs +1.6–1.8 KB (the allocator); the full-swap
+reference ELFs changed (fogo-v0 `bcd9253e…`, solana-v3 `86f0ed15…`, now
+`verify_rebuild.py`'s default reference); 33 corpus C hashes moved.
+`gosvm features` does not report the SDK's allocation in `uses.allocation`.
+Error-contract change (2006/2007/3002/3003) to announce to Qushta.
+[Evidence](results/compiler/2026-10-19-cpi-limits/README.md).
+
+**Bulk memory moves on the memory syscalls (October 19, branch
+`opt-memcpy-syscalls`, local, not pushed):** on fogo-v0 and solana-v3 every
+bulk byte move goes to `sol_memmove_`/`sol_memset_` from 1 byte (measured:
+the byte loop costs ~8 CU/byte, the word loop 6 CU/8 bytes, the syscall ~15
+CU in all): `copy`, `append`, string building, LLVM's
+`memcpy`/`memmove`/`memset` for aggregate assignment and zeroing, the
+entrypoint's duplicate-descriptor copy, `ResizeAccount`'s zero fill, and two
+zeroing-loop forms (`for i := range s { s[i] = 0 }`, `for j := e; j <
+uint64(len(s)); j++ { s[j] = 0 }`). Never `sol_memcpy_` (fails on any
+overlap, including `src == dst`). Host C and legacy v1.51 keep the loops
+(legacy ELFs unchanged). [GO_ALLOCATION](docs/GO_ALLOCATION.md#bulk-memory-on-sbf),
+ERROR_CONTRACT changelog (CU/ELF only; announce to Qushta). Hyperlane mailbox
+Init 25,182 → 13,372 CU (Rust 12,610), all 64 mailbox steps −33.5%; examples
+−1.4% to −13%, no step worse; a 1 KiB tail zero 5,232 → 124 CU. **New
+reference ELFs** (full swap fogo-v0 `9813e0d1…`, solana-v3 `94862a66…`;
+`clock2` changed too), `verify_rebuild.py`'s default. Evidence: 5,480
+`examples/memory-values` vectors per SBF profile × three thresholds and 13,660
+host vectors against native Go; corpus C equals the recording with the
+syscall blocks removed. Root suite passes with Go 1.22.0 except
+`TestStdlibAPI` and `TestFullSwapFacts`, which fail identically at the
+parent commit on this host. Includes the cherry-picked `fix-memmove-helper`.
+[Results](results/compiler/2026-10-19-memory-syscalls/README.md).
 
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter

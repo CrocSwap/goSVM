@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -49,6 +50,34 @@ func loadCorpus(t *testing.T) []corpusEntry {
 		t.Fatalf("corpus has only %d programs", len(entries))
 	}
 	return entries
+}
+
+// withoutMemorySyscalls removes what the bulk-memory change (memops.go,
+// memclear.go) adds to the emitted C: the syscall declarations, and every
+// "#ifdef GOSVM_MEMORY_SYSCALL_..." block, keeping only the "#else" branch
+// when there is one. The rest must be the C recorded before the change, so
+// the corpus proves the change adds only the SBF syscall paths.
+func withoutMemorySyscalls(c []byte) []byte {
+	text := strings.ReplaceAll(string(c), memorySyscallDecls(), "")
+	var out []string
+	skip, inElse := false, false
+	for _, line := range strings.SplitAfter(text, "\n") {
+		switch {
+		case strings.HasPrefix(line, "#ifdef GOSVM_MEMORY_SYSCALL_"):
+			skip, inElse = true, false
+			continue
+		case skip && strings.HasPrefix(line, "#else"):
+			skip, inElse = false, true
+			continue
+		case (skip || inElse) && strings.HasPrefix(line, "#endif"):
+			skip, inElse = false, false
+			continue
+		}
+		if !skip {
+			out = append(out, line)
+		}
+	}
+	return []byte(strings.Join(out, ""))
 }
 
 // corpusChanges lists the recorded programs whose verdict changed on purpose
@@ -250,27 +279,27 @@ var corpusChanges = map[int]corpusEntry{
 	8:   {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	10:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // program.go
 	11:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"},                                                                                                                                                       // entry.go
-	20:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"},                                                                                                                                                       // model.go
-	22:  {CSHA256: "dd4b8fe6acdc35feb26a086c9e48389a06d93e779aa48b64eb71d1b92691ebe6"},                                                                                                                                                       // pda.go
+	20:  {CSHA256: "9eea3c26d783a4a139269f4ee7ce08370c2c4c348e7215292f513a2ce1538d03"},                                                                                                                                                       // model.go; then the CPI bounds (below)
+	22:  {CSHA256: "8b36bc705cf986395c265e047fb7aa133b7e2561d4e259172930b6af11ee7358"},                                                                                                                                                       // pda.go; then the CPI bounds (below)
 	40:  {CSHA256: "8ea5fabbd6de885686956be6f6e294059b5115153b3866006e3d8a1deb7373ca"},                                                                                                                                                       // program.go
-	43:  {CSHA256: "328f4e2ee7ba46263674d9f6b7241eb79623a4497207c823f3928dde3336a6f1"},                                                                                                                                                       // model.go
+	43:  {CSHA256: "9eea3c26d783a4a139269f4ee7ce08370c2c4c348e7215292f513a2ce1538d03"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	48:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	51:  {CSHA256: "513db2a5c364047e3a630a5f2e38599aa5e1eb41c8b4658c3c4067b139aeff66"},                                                                                                                                                       // types.go
 	57:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	58:  {CSHA256: "7e0975a8e457446af4c53308487b583a1fd28d90c586064e235a2c578bb9c6e7"},                                                                                                                                                       // model.go
 	59:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	68:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"},                                                                                                                                                       // model.go
+	68:  {CSHA256: "b243ca6e867114fc883d29532f1d76a85183bb8e349e676715807bd4e3373b6d"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	77:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	83:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	85:  {CSHA256: "4b3199a3e995310ad3c61320415f382481451b2510de256382b9aad8fff44f52"},                                                                                                                                                       // model.go
-	86:  {CSHA256: "8da0bb74f191cf0df3dac6d2b84576707539f28f444ad62c894f22e5f4ac15e8"},                                                                                                                                                       // model.go
+	85:  {CSHA256: "a033ec1c6d2eabaac330c3c60ee55775aa603965f81066ca83904ee185e83438"},                                                                                                                                                       // model.go; then the CPI bounds (below)
+	86:  {CSHA256: "b243ca6e867114fc883d29532f1d76a85183bb8e349e676715807bd4e3373b6d"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	92:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	93:  {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // test.go
 	99:  {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	105: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	108: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	112: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"},                                                                                                                                                       // model.go
-	114: {CSHA256: "57baa962535ac47f6fcde53076bbb9138f6cfc467cc7e9d729ce4f903421712f"},                                                                                                                                                       // pda.go
+	112: {CSHA256: "e4a852c6db22eefec5f520cbcd4b7f609ab4b9cbf718c1000a155366fd8d7984"},                                                                                                                                                       // model.go; then the CPI bounds (below)
+	114: {CSHA256: "d508df22ee50a02bdf37a08cf366b6c97ba3d310baca4ce84795dd6a75957a60"},                                                                                                                                                       // pda.go; then the CPI bounds (below)
 	115: {CSHA256: "ff9d74d9cd831d0c92b087ea98d60ea3d16b969ddd582013014146d070930048"},                                                                                                                                                       // model.go
 	117: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	118: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
@@ -280,30 +309,56 @@ var corpusChanges = map[int]corpusEntry{
 	143: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	147: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	160: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	167: {CSHA256: "fdce1b88a9e6af0dd2036f6bf131b190aaa0809d58b9d81517a2ca69391e43f2"},                                                                                                                                                       // model.go
+	167: {CSHA256: "e4a852c6db22eefec5f520cbcd4b7f609ab4b9cbf718c1000a155366fd8d7984"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	169: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	172: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	176: {CSHA256: "c4320970229098e1a01bca4f4d73f17242472cc2d8ca081d13fab5479e5d078b"},                                                                                                                                                       // model.go
+	176: {CSHA256: "4d5e4c37f3960bd864eec5d57db4feec57401f779a0922b8d8ef644504964dc9"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	181: {CSHA256: "f3ec7d095818e1b1d8339cad5a0a05a40a47c8d14991736b41c7eb6094046e77"},                                                                                                                                                       // model.go
 	192: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	206: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	207: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	208: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	210: {CSHA256: "2157f52add09a2752cf5657c42aad883a793183c0df593203edee727232c7933"},                                                                                                                                                       // pda.go
+	210: {CSHA256: "9972da2424b26332db0ffefc83d0c1206dd02f978c7fa2e8802cf1acf0b3d15a"},                                                                                                                                                       // pda.go; then the CPI bounds (below)
 	211: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	217: {CSHA256: "81cbd346e56642a8063bd09788313c7714ee4e12bf95a201fdab93b8bed98ec1"},                                                                                                                                                       // model.go
+	217: {CSHA256: "53dd42168007cd967b671f8d2809218c04114f41e6d2946682d78c434a5e0adb"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	219: {CSHA256: "03a66c44f073b48586edb8f45ff3f74cf3d91eceee4f3cf3480ed5e3e17e0950"},                                                                                                                                                       // arrays.go
 	225: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // arrays.go
 	227: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	242: {CSHA256: "54eb5126883501afd5be891aeb609c4f5d55f5ffdd9a540163a889b16c6bac8f"},                                                                                                                                                       // model.go
+	242: {CSHA256: "2951b8daf4fbbcd53df58a0715fd040b930ee9ecfae912ef3a3c987fc16b2653"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	247: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	270: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	278: {CSHA256: "d0af7c7bf21c2bc15e6dfebe12bbb259bad502ab5678ea74668aeb0525631a34"},                                                                                                                                                       // arrays.go
-	281: {CSHA256: "b50201ffc29dbc8dfa9be0bc6a07f2d3eb16488b5d40009303b6b5bddfdad53b"},                                                                                                                                                       // pda.go
+	281: {CSHA256: "16142e17f43688e613ff873a0dfde14930f11661560529abb6c7a104d25ac748"},                                                                                                                                                       // pda.go; then the CPI bounds (below)
 	283: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
 	300: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
-	302: {CSHA256: "25b08138fe9dd864e7dbeb13f53c1167b5697621e9311b66363f2bea5d3c65ba"},                                                                                                                                                       // model.go
+	302: {CSHA256: "20a027a31cf7ecee4e78344692d5e2a2ec2c30a6972827bf9a1ba00bb900f8d0"},                                                                                                                                                       // model.go; then the CPI bounds (below)
 	309: {CSHA256: "01f287d402774053e6ca44fdcaa3157cd7f6c348df854f5098092cd87ab06724"},                                                                                                                                                       // model.go
+
+	// Slice-to-array conversions (docs/GO_ARRAYS.md#slice-to-array-conversions,
+	// results/compiler/2026-10-19-slice-array-conversions) compile.
+	282: {CSHA256: "dba1a9b2bc23a517d41657a18b7dfd0b5bdcc531cdcb2594cb008c93aebb0acc"}, // arrays-reject.go `a:=[24]byte(s)`: was "array conversions require identical underlying arrays; slice conversions unsupported"
+	// CPI bounds (docs/SDK2.md#cpi-bounds): no verdict changed. The SDK-2 C
+	// runtime's sol_Invoke now allows 64 metas and 4 signer groups and is
+	// never inlined, which changes the C of every recorded program that
+	// includes it: the 15 entries above marked "the CPI bounds" and these.
+	0:   {CSHA256: "1727cec46995666a495a458c870dc09a39999d3568eb2c56ec1ae3eb32268990"},
+	69:  {CSHA256: "20ac5f3f22f5ced2dc9f15ba7a044960acf5dcc82512344172bb988820c61ab2"},
+	75:  {CSHA256: "40ca71a5341383b89015c6eb3abda6be0168266436bf380a6d43dc7eb2b911ac"},
+	95:  {CSHA256: "483aeb8d977f92fde8df69df3d7e6fc899bb9f33c7f5ded03066d47a3f4f80bc"},
+	97:  {CSHA256: "da6e475c71a3bc3e043491d437671a37fc36a2648c537c9972c89d901fbb6809"},
+	109: {CSHA256: "3c8db21e9def028d47a45fba621349190ff89bab48467e121decd649390d85f7"},
+	129: {CSHA256: "769cf777dbd533eac1091ef4764276fd7e04a3c3b5707f0132090d54845b86fc"},
+	144: {CSHA256: "50e50e516938ed118c6f2c8e06c1ed64bf0219d9cebaef75f94630e67419ef37"},
+	152: {CSHA256: "4363f365bfe841379440ad9cb37fcecac61985311379d87c25c0b41075f8c23b"},
+	158: {CSHA256: "b7a06bf33a1bf33cf8d147223c92257bb4e0ac9ea911300a87df452ef6fe8b09"},
+	170: {CSHA256: "8f88245bddaccf43cf3a3915e643aa04fa9fddf0e71c95f7b5edbc5b7b813baf"},
+	174: {CSHA256: "8ab3c4f648c4dd65996dd8e7b58e4ed2498d8e60857a7996f54724acf3966b06"},
+	243: {CSHA256: "d6155fcce27285820eadc2b9b0fcee8738fee33d6e597a355581ca2c8e2dfb90"},
+	252: {CSHA256: "b554c9adaec403339df872c13c09658fb3c39a2320294d4ec66f9ddd996b4b1a"},
+	264: {CSHA256: "6fbb02e34c6b86c049d80e250e9aedea215ab1638d34a4cade1f6b70b856992c"},
+	279: {CSHA256: "a490ff6230552064bb25a323f268729ea71e6d59fcf0b454724b2ceaa47f75d3"},
+	294: {CSHA256: "07cb8f81bccffd7a03986d9b11e2cfd010d8033526cb02ad6228cba10e2c8cff"},
+	306: {CSHA256: "593b0f353b68b5b19a2362135a4b2686534656e44984331b2f3a2af7156dc9a1"},
 }
 
 const (
@@ -346,7 +401,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 			continue
 		}
 		if err == nil {
-			sum := sha256.Sum256(out)
+			sum := sha256.Sum256(withoutMemorySyscalls(out))
 			if hex.EncodeToString(sum[:]) != e.CSHA256 {
 				t.Errorf("entry %d: emitted C changed (sha256 %x)", i, sum)
 			}
@@ -356,7 +411,7 @@ func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
 	// compound assignment, package-level variables, value types (struct
 	// comparison, aliases, composite arrays), pointers to pointers and
 	// variadic functions each turned recorded rejections into accepted
-	// programs (corpusChanges); the rest (59) still exercise Check.
+	// programs (corpusChanges); the rest (58) still exercise Check.
 	if rejected < 57 {
 		t.Fatalf("corpus exercises only %d rejections", rejected)
 	}

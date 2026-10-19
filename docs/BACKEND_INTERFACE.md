@@ -88,6 +88,19 @@ exhausted), Go 1.22's `growslice` capacities, and the `makeslice` range checks.
 `Program.HeapBytes` comes from `gosvm.json` `heap_bytes` or the CLI's
 `-heap-bytes`.
 
+`Program.MaxAccounts` is the incoming account limit: 0 for the SDK's (16 for
+SDK 1, 32 otherwise) or `WideAccounts` (64, from the CLI's `-max-accounts`),
+beyond which the entrypoint returns 1001. The built-in backend keeps the
+64-entry table in the entrypoint's frame and calls `Process` without inlining
+it ([64-account decoder](ACCOUNT_DECODER64.md)).
+
+How a backend moves bytes is not contracted (only CU differ). The built-in
+backend hands every bulk move to `sol_memmove_`/`sol_memset_` on fogo-v0 and
+solana-v3 ([bulk memory](GO_ALLOCATION.md#bulk-memory-on-sbf)). A backend
+that uses the memory syscalls must not use `sol_memcpy_` for `copy`,
+`append` or aggregate assignment: the runtime fails it on any overlap,
+including a value assigned to itself.
+
 `make` lengths and capacities, indexes and slice bounds may have any integer
 type. A negative signed `make` operand traps like `len > cap`; a negative index
 or bound traps like any out-of-range one (the C backend compares them as `u64`,
@@ -634,6 +647,19 @@ new field:
   analysis gives the result `p`'s origins, as for other pointer and slice
   conversions. `gosvm features` reports `uses.pointer_conversions`.
 - **Read-only pointer parameters** only change `Global.ReadOnly` (above).
+
+## Slice-to-array conversions
+
+`(*[N]T)(s)` and `[N]T(s)` ([GO_ARRAYS.md](GO_ARRAYS.md#slice-to-array-conversions))
+need no new field: they are conversion calls (`Info.Types[Fun]` is a type)
+whose operand has a slice underlying type and whose result is a pointer to
+an array or an array. A backend checks `len(s) >= N` (the bounds trap), then
+yields `s`'s data pointer (nil for a nil slice) or a copy of the `N`
+elements it points to (nothing is read for `N == 0`). They are plain
+operations: `Sequenced` never lists them, and `Hoisted` hoists the calls
+of an owner where the conversion's trap or element reads could observe them.
+The borrow analysis gives the pointer `s`'s origins. `gosvm features` reports
+`uses.slice_array_conversions` (they do not count as `pointer_conversions`).
 
 ## Trimming
 
