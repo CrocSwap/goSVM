@@ -64,7 +64,7 @@ func sdkFiles(version int) map[string][]byte {
 	}
 	files := map[string][]byte{"solana/api.go": []byte(source)}
 	if version == 2 {
-		for _, path := range []string{"pda/pda.go", "cpi/cpi.go", "token/token.go", "token/lifecycle.go", "token/instructions.go", "system/system.go", "system/rent.go", hostFixture} {
+		for _, path := range []string{"ata/ata.go", "pda/pda.go", "cpi/cpi.go", "token/token.go", "token/lifecycle.go", "token/instructions.go", "system/system.go", "system/rent.go", hostFixture} {
 			b, err := sdk.Sources.ReadFile(path)
 			if err != nil {
 				panic(err)

@@ -1,0 +1,1595 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+  "payer_seed": "8362cc01eaaecad3e242bb9f3e41300455037fd1c226db3f2a8acc59ec980066",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "funder",
+      "seed": "4abb58df3343bfb833951a2e29c31d99764b35a3a5aee5111391f6a7f43025d8"
+    },
+    {
+      "name": "wallet",
+      "seed": "767b3a791a762469a4a2401802c13b4b7530bb64966e9402034ab6be894affc5"
+    }
+  ],
+  "programs": [
+    {
+      "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+      "elf": "../../../third_party/litesvm-0.8.2/src/programs/elf/spl_associated_token_account-1.1.1.so",
+      "name": "spl-ata",
+      "sha256": "6804554e69fd3a58caa191dc4a58f4c67223d30ca28ab8987f39fc18d2f7374d"
+    },
+    {
+      "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+      "elf": "../../../third_party/litesvm-0.8.2/src/programs/elf/spl_token_2022-8.0.0.so",
+      "name": "spl-token-2022",
+      "sha256": "d2f8858d3204d0f47cef71a419048380dee8e88da4c63cf207d61d486555d240"
+    },
+    {
+      "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      "elf": "../../../third_party/litesvm-0.8.2/src/programs/elf/spl_token-3.5.0.so",
+      "name": "spl-token",
+      "sha256": "7b44674b9704fa7640fbebfac68389f338b500b8c2bc29175c27ed66838b5a3c"
+    }
+  ],
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "5y4Xj73GkA54k14ooX6EChqE71MiwBWAxEutS1itz1M8",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 10000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "funder"
+    },
+    {
+      "address": "5UB7RuWNFmQFpAqavvugCTjViUHNng3PYyyiXNczCMeU",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "wallet"
+    },
+    {
+      "address": "NNtKHRs4WFRRHR5eiH9sKpPwavKQ9uEw8TGf2j1stma",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "ata-payer"
+    },
+    {
+      "address": "7LD7xLyHRq4h5pK4QskrbXwMRvxnKP1a3qELW9GBXasX",
+      "initial": {
+        "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+        "executable": false,
+        "lamports": 2519520,
+        "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+        "rent_epoch": 0
+      },
+      "name": "mint"
+    },
+    {
+      "address": "CaaPvztc3zhEZDeVbmFbaib3k1sN3Ye567B5suZCMvVD",
+      "initial": {
+        "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "lamports": 1461600,
+        "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        "rent_epoch": 0
+      },
+      "name": "classic-mint"
+    },
+    {
+      "address": "6HDC4WSPPKxs9Fq2cgp8abH5woMwMQhv2MWqryjYKA8W",
+      "name": "ata-2022"
+    },
+    {
+      "address": "F46Qi95H6CmsMBX6cipxvxfLfZtQn5xPT1tEad5jNVov",
+      "name": "ata-classic"
+    },
+    {
+      "address": "Amp9TYyCVdQeDpHvmhQBZiMjeUGfVCkfeE3jdHVanRfv",
+      "initial": {
+        "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "executable": false,
+        "lamports": 1169280,
+        "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+        "rent_epoch": 0
+      },
+      "name": "result"
+    }
+  ],
+  "cases": [
+    {
+      "name": "pda-payer-token-2022",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 997925920,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-2022",
+                "state": {
+                  "data": "5e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c464264dca73eb0e5601732fee874c2adff9a3dfa52df7316565fc4c75f6fcddbb500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "000001020304050601fa",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 997925920,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-2022",
+                "state": {
+                  "data": "5e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c464264dca73eb0e5601732fee874c2adff9a3dfa52df7316565fc4c75f6fcddbb500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL invoke": 1
+            }
+          },
+          "fresh_blockhash": true,
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "000001020304050601fa",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 997925920,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-2022",
+                "state": {
+                  "data": "5e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c464264dca73eb0e5601732fee874c2adff9a3dfa52df7316565fc4c75f6fcddbb500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000207000000",
+                  "executable": false,
+                  "lamports": 2074080,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                "IllegalOwner"
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "010001020304050601fa",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signer-payer-classic",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 9997960720,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "account": "ata-classic",
+                "state": {
+                  "data": "ac0a7baf6f137db4766f33ba8e6590d1826444ab189282e9c9fedb20524e87a84264dca73eb0e5601732fee874c2adff9a3dfa52df7316565fc4c75f6fcddbb50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 2039280,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "funder",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "ata-classic",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "classic-mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01000102030405060000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-on-chain",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "4e7182fb086f2f39ee630120626959be05d346b5238937f6bb291f83a8c1da77fc00000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "02000102030000000000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "9688533a857495f95aded134296d9f47a14952ca9b3214974e2424c596921fe9ff00000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "03000000000000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sdk-rejections",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3031
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-classic",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "000001020304050601fa",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3031
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "classic-mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "000001020304050601fa",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3032
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "ata-payer",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "000001020304050601f9",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3032
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "funder",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000102030405060000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3031
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-ata",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "result",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000102030405060000",
+              "program": "program"
+            }
+          ]
+        },
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "funder",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 10000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "wallet",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "ata-payer",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "mint",
+                "state": {
+                  "data": "010000005e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46000000000000000006010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011200400049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c75e11dc66eaf1a14809017b407abb7a0ae9520976686276be722895418b563c46",
+                  "executable": false,
+                  "lamports": 2519520,
+                  "owner": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "classic-mint",
+                "state": {
+                  "data": "0100000049cb439d9262976c8b45553723d77f400a8071c3b7f8150386c03bfe9ab165c700000000000000000601000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1461600,
+                  "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "ata-2022"
+              },
+              {
+                "absent": true,
+                "account": "ata-classic"
+              },
+              {
+                "account": "result",
+                "state": {
+                  "data": "00000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                  "executable": false,
+                  "lamports": 1169280,
+                  "owner": "B1A5i7uirmEZ7vtUz172uvTzGfUgoNqmfcfXVCZT5kug",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3030
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "funder",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "ata-2022",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "wallet",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "mint",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "spl-token-2022",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "00000102030405060000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
