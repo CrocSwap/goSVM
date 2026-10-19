@@ -745,3 +745,8 @@ Handler results propagate unchanged.
   of SDK programs and programs with the memory or heap runtime gains
   `#ifdef GOSVM_MEMORY_SYSCALL_*` blocks; with them removed it is byte for
   byte the earlier C (the corpus test checks this for every entry).
+
+- 2026-10-19: SDK additions include Token-2022 extension code 3015 and ATA
+  precondition codes 3030–3032. ATA creation validates the known program IDs
+  and delegates canonical-address checking to ATA; a substituted address now
+  propagates the ATA program's `InvalidSeeds` rather than SDK code 3031.

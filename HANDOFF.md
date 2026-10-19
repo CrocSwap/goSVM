@@ -5,6 +5,18 @@ Updated October 19, 2026 (America/New_York).
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
 
+**Hyperlane contribution integration (October 19, unreleased):** PRs #9–#24
+combine the compiler fixes, syscall bindings, SDK helpers, opt-in 64-account
+decoder, outgoing 64-meta/four-signer CPI bounds and modern memory syscalls.
+The native return-data getter now matches SBF's overlapping-output trap;
+return data clears before silent CPIs. ATA creation delegates canonical-address
+validation to the checked ATA program (`InvalidSeeds`), retaining explicit
+`Address`/`Matches` helpers. All six SDK-2 example snapshots are refreshed as
+one generation. The combined full-swap ELFs differ from either standalone
+optimization's record; the current reproducible reference is
+[the integration rebuild](results/compiler/2026-10-19-hyperlane-integration/rebuild/metrics.json).
+Earlier October 19 entries below describe their individual branch checkpoints.
+
 **Slice-to-array conversions (October 19, CrocSwap/goSVM#7):** `(*[N]T)(s)`
 passed Check and then broke the C compile; `[N]T(s)` was rejected. Both now
 follow Go ([GO_ARRAYS](docs/GO_ARRAYS.md#slice-to-array-conversions)): bounds
