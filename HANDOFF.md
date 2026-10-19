@@ -1,6 +1,6 @@
 # goSVM session handoff
 
-Updated October 16, 2026 (America/New_York).
+Updated October 19, 2026 (America/New_York).
 **Current phase:** the user's two pre-core-language hurdles (Fogo/Solana with
 minimal user awareness; Go+Bend+Rust in one program) are met and merged to `main`;
 core-language work has started. See the October 9 section below.
@@ -66,6 +66,24 @@ every SDK-2 ELF; without it every program's C and ELF are unchanged. Schema-2
 handlers still declare at most 16 accounts. The SVM fixture harness now takes
 255 references per instruction (was 32). [ACCOUNT_DECODER64](docs/ACCOUNT_DECODER64.md),
 [evidence](results/compiler/2026-10-19-accounts64/README.md).
+
+**Outgoing CPI bounds raised (October 19, branch `cpi-raise-limits`, local,
+unreleased):** for Hyperlane's Sealevel programs (22 metas in IGP `PayForGas`
+with quoted accounts, 17 in fee `QuoteFee`), `solana.Invoke`, the C runtime and
+`sdk/cpi` now allow 64 account metas and 4 signer groups (seeds unchanged:
+16 per group, 32 bytes, 1,024 encoded bytes); [bounds and justification](docs/SDK2.md#cpi-bounds).
+`sol_Invoke` is `noinline` with a 2,240-byte frame; `cpi.Metas` keeps 16 records
+inline and moves to one 576-byte heap array at the 17th `Add` (a fixed buffer cost
++324 CU per small CPI; a shorter `Add` pushed the full swap's `go_Process` over
+4 KiB on v1.57). SDK-2 snapshot change: the escrow, full-swap and tutorial
+snapshots and `sdk_sha256` were refreshed, and **existing SDK-2 projects must be
+recreated** (Load rejects the old snapshot). Small builder CPIs +9–23 CU,
+existing suites +0–21 CU, ELFs +1.6–1.8 KB (the allocator); the full-swap
+reference ELFs changed (fogo-v0 `bcd9253e…`, solana-v3 `86f0ed15…`, now
+`verify_rebuild.py`'s default reference); 33 corpus C hashes moved.
+`gosvm features` does not report the SDK's allocation in `uses.allocation`.
+Error-contract change (2006/2007/3002/3003) to announce to Qushta.
+[Evidence](results/compiler/2026-10-19-cpi-limits/README.md).
 
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter

@@ -28,7 +28,7 @@ u64 sol_invoke_signed_c(Instruction *ix,AccountInfo *infos,u64 count,Seeds *grou
 }
 
 static int unhex(char *s,u8 *b){if(!strcmp(s,"-"))return 0;int n=0;for(int j=0;s[j];j+=2){unsigned x;if(sscanf(s+j,"%2x",&x)!=1)return -1;b[n++]=(u8)x;}return n;}
-int main(void){unsigned p,exec;char m[1000],d[20500],s[2200];while(scanf("%u %u %999s %20499s %2199s",&p,&exec,m,d,s)==5){u8 mb[500],db[10250],sb[1100],ix[1]={(u8)p};u8 keys[4][32]={{0},{1},{2},{3}};Context c={0};c.count=4;c.accounts[0].executable=exec;c.accounts[1].data=mb;c.accounts[1].data_len=unhex(m,mb);c.accounts[2].data=db;c.accounts[2].data_len=unhex(d,db);c.accounts[3].data=sb;c.accounts[3].data_len=unhex(s,sb);for(int j=0;j<4;j++)c.accounts[j].key=keys[j];c.instruction=GOSVM_SLICE(ix,1);observed=&c;printf("%llu\n",go_Process(&c));}return 0;}
+int main(void){unsigned p,exec;char m[1400],d[20500],s[5600];while(scanf("%u %u %1399s %20499s %5599s",&p,&exec,m,d,s)==5){u8 mb[700],db[10250],sb[2800],ix[1]={(u8)p};u8 keys[4][32]={{0},{1},{2},{3}};Context c={0};c.count=4;c.accounts[0].executable=exec;c.accounts[1].data=mb;c.accounts[1].data_len=unhex(m,mb);c.accounts[2].data=db;c.accounts[2].data_len=unhex(d,db);c.accounts[3].data=sb;c.accounts[3].data_len=unhex(s,sb);for(int j=0;j<4;j++)c.accounts[j].key=keys[j];c.instruction=GOSVM_SLICE(ix,1);observed=&c;printf("%llu\n",go_Process(&c));}return 0;}
 `
 	bin := hostProgram(t, source, driver)
 	rng := rand.New(rand.NewSource(221051))
@@ -50,24 +50,54 @@ int main(void){unsigned p,exec;char m[1000],d[20500],s[2200];while(scanf("%u %u 
 		fmt.Fprintf(&want, "%d\n", solana.Invoke(c, uint64(program), metas, data, seeds))
 	}
 	for i := 0; i < 1000; i++ {
-		metas := make([]byte, rng.Intn(160))
+		metas := make([]byte, rng.Intn(660))
 		seeds := make([]byte, rng.Intn(64))
 		data := make([]byte, rng.Intn(64))
 		rng.Read(metas)
 		rng.Read(seeds)
 		rng.Read(data)
 		if i%3 == 0 {
-			metas = make([]byte, rng.Intn(17)*9)
+			metas = make([]byte, rng.Intn(67)*9)
 			for j := 0; j < len(metas); j += 9 {
 				binary.LittleEndian.PutUint64(metas[j:], uint64(rng.Intn(4)))
 				metas[j+8] = byte(rng.Intn(4))
 			}
 			seeds = []byte{1, 2, 1, 7, 0}
+			if i%2 == 0 {
+				// One to five groups of random seeds, within or past the
+				// four-group and 1,024-byte limits.
+				seeds = []byte{byte(1 + rng.Intn(5))}
+				for g := 0; g < int(seeds[0]); g++ {
+					n := rng.Intn(17)
+					seeds = append(seeds, byte(n))
+					for k := 0; k < n; k++ {
+						seed := make([]byte, rng.Intn(33))
+						rng.Read(seed)
+						seeds = append(append(seeds, byte(len(seed))), seed...)
+					}
+				}
+			}
 		}
 		add(byte(i%5), i%7 != 0, metas, data, seeds)
 	}
-	for _, s := range [][]byte{nil, {0}, {1, 0}, {2, 1, 0, 1, 1, 8}, {1, 17}, {1, 1, 33}, {1, 1, 2, 7}, {0, 0}, bytes.Repeat([]byte{0}, 1025)} {
+	// Four full groups: 64 seeds of 14 bytes, 965 encoded bytes.
+	full := []byte{4}
+	for g := 0; g < 4; g++ {
+		full = append(full, 16)
+		for k := 0; k < 16; k++ {
+			full = append(append(full, 14), bytes.Repeat([]byte{byte(g*16 + k)}, 14)...)
+		}
+	}
+	for _, s := range [][]byte{nil, {0}, {1, 0}, {2, 1, 0, 1, 1, 8}, {3, 0, 0, 0}, {4, 0, 0, 0, 0}, {5, 0, 0, 0, 0, 0}, {4, 0, 0, 0}, full, append(full, 0), {1, 17}, {1, 1, 33}, {1, 1, 2, 7}, {0, 0}, bytes.Repeat([]byte{0}, 1025)} {
 		add(0, true, nil, nil, s)
+	}
+	for _, n := range []int{16, 17, 22, 63, 64, 65} {
+		metas := make([]byte, n*9)
+		for j := 0; j < n; j++ {
+			metas[j*9] = byte(j % 4)
+			metas[j*9+8] = byte(j % 4)
+		}
+		add(0, true, metas, nil, full)
 	}
 	add(0, true, nil, make([]byte, 10240), nil)
 	add(0, true, nil, make([]byte, 10241), nil)

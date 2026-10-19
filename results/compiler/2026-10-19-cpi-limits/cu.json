@@ -1,0 +1,262 @@
+{
+ "baseline": "origin/main 79cf25c with this branch's example, callee and TestCPILimitsSBF (old-limit cases only)",
+ "examples_test_svm": {
+  "escrow": {
+   "changed": 11,
+   "changed_steps": {
+    "legacy-v1.51-v3 atomic-close-bad-open-rollback step 1": [
+     23790,
+     23797
+    ],
+    "legacy-v1.51-v3 atomic-open-bad-claim-rollback step 1": [
+     27963,
+     27977
+    ],
+    "legacy-v1.51-v3 current-rent-lifecycle-0 step 1": [
+     20837,
+     20851
+    ],
+    "legacy-v1.51-v3 current-rent-lifecycle-1 step 1": [
+     20356,
+     20370
+    ],
+    "legacy-v1.51-v3 deposit-cpi-failure-rollback step 1": [
+     19024,
+     19038
+    ],
+    "legacy-v1.51-v3 failed-claim-then-success step 1": [
+     20849,
+     20863
+    ],
+    "legacy-v1.51-v3 open-cancel-reuse step 1": [
+     20849,
+     20863
+    ],
+    "legacy-v1.51-v3 open-cancel-reuse step 3": [
+     20849,
+     20863
+    ],
+    "legacy-v1.51-v3 open-claim-reuse step 1": [
+     20849,
+     20863
+    ],
+    "legacy-v1.51-v3 open-claim-reuse step 3": [
+     20849,
+     20863
+    ],
+    "legacy-v1.51-v3 zero-deposit-rollback step 1": [
+     17034,
+     17041
+    ]
+   },
+   "cu_delta_max": 14,
+   "cu_delta_min": 0,
+   "elf_bytes_after": [
+    27232
+   ],
+   "elf_bytes_before": [
+    25384
+   ],
+   "steps": 42
+  },
+  "full-swap": {
+   "changed": 6,
+   "changed_steps": {
+    "legacy-v1.51-v3 input-frozen step 1": [
+     32762,
+     32774
+    ],
+    "legacy-v1.51-v3 output-frozen step 1": [
+     43980,
+     44001
+    ],
+    "legacy-v1.51-v3 stateful-swaps-and-atomic-rollback step 1": [
+     46631,
+     46651
+    ],
+    "legacy-v1.51-v3 stateful-swaps-and-atomic-rollback step 2": [
+     46626,
+     46646
+    ],
+    "legacy-v1.51-v3 stateful-swaps-and-atomic-rollback step 3": [
+     71885,
+     71905
+    ],
+    "legacy-v1.51-v3 wide-swap step 1": [
+     46631,
+     46651
+    ]
+   },
+   "cu_delta_max": 21,
+   "cu_delta_min": 0,
+   "elf_bytes_after": [
+    70112
+   ],
+   "elf_bytes_before": [
+    68472
+   ],
+   "steps": 15
+  },
+  "tutorial": {
+   "changed": 8,
+   "changed_steps": {
+    "fogo-v0 create-and-increment step 1": [
+     14844,
+     14851
+    ],
+    "fogo-v0 failed-create-rolls-back step 1": [
+     14000,
+     14007
+    ],
+    "fogo-v0 increment-past-limit step 1": [
+     14844,
+     14851
+    ],
+    "fogo-v0 only-the-owner-increments step 1": [
+     14844,
+     14851
+    ],
+    "solana-v3 create-and-increment step 1": [
+     14790,
+     14797
+    ],
+    "solana-v3 failed-create-rolls-back step 1": [
+     13946,
+     13953
+    ],
+    "solana-v3 increment-past-limit step 1": [
+     14790,
+     14797
+    ],
+    "solana-v3 only-the-owner-increments step 1": [
+     14790,
+     14797
+    ]
+   },
+   "cu_delta_max": 7,
+   "cu_delta_min": 0,
+   "elf_bytes_after": [
+    17640,
+    16464
+   ],
+   "elf_bytes_before": [
+    16000,
+    14824
+   ],
+   "steps": 18
+  }
+ },
+ "network_validation": false,
+ "profiles": {
+  "fogo-v0": {
+   "caller_elf_sha256": {
+    "after": "6dc542787124799f272ee4bb505ff7829d37b999b4eaf3674388488b789b9bff",
+    "before": "19f74dad8cc5f7ee006c3eaa2fee01c2638ac27daf6eda1b6444a70b2a32f45a"
+   },
+   "cu_after": {
+    "builder-16-metas": 7096,
+    "builder-16-metas-2-groups": 7593,
+    "builder-17-metas": 7308,
+    "builder-17-metas-2-groups": 7805,
+    "builder-22-metas": 8068,
+    "builder-22-metas-4-groups": 9049,
+    "builder-3-metas": 5146,
+    "builder-3-metas-1-group": 5401,
+    "builder-32-metas-4-groups": 10585,
+    "builder-5-groups": 4788,
+    "builder-64-metas": 14612,
+    "builder-64-metas-4-groups": 15577,
+    "builder-65-metas": 8906,
+    "callee-rejects-wrong-count": 73,
+    "callee-rejects-wrong-duplicate": 98,
+    "raw-16-metas-2-groups": 5524,
+    "raw-22-metas-4-groups": 6158,
+    "raw-3-metas": 4414,
+    "raw-5-groups": 3452,
+    "raw-64-metas-4-groups": 9032,
+    "raw-65-metas": 3687
+   },
+   "cu_before": {
+    "builder-16-metas": 7073,
+    "builder-16-metas-2-groups": 7572,
+    "builder-17-metas": 4120,
+    "builder-3-groups": 4470,
+    "builder-3-metas": 5136,
+    "builder-3-metas-1-group": 5392,
+    "callee-rejects-wrong-count": 73,
+    "callee-rejects-wrong-duplicate": 98,
+    "raw-16-metas-2-groups": 5524,
+    "raw-17-metas": 3159,
+    "raw-3-groups": 3387,
+    "raw-3-metas": 4414
+   }
+  },
+  "solana-v3": {
+   "caller_elf_sha256": {
+    "after": "dc12871ab8f0748d91fea0822305a300309c8a1419095267443d01c444199473",
+    "before": "4f80fb33de5488760e29660d0fc0d32f8eb17bf7f494fc4c90f3768aa6b6a1d5"
+   },
+   "cu_after": {
+    "builder-16-metas": 7053,
+    "builder-16-metas-2-groups": 7550,
+    "builder-17-metas": 7266,
+    "builder-17-metas-2-groups": 7763,
+    "builder-22-metas": 8031,
+    "builder-22-metas-4-groups": 9012,
+    "builder-3-metas": 5101,
+    "builder-3-metas-1-group": 5356,
+    "builder-32-metas-4-groups": 10560,
+    "builder-5-groups": 4788,
+    "builder-64-metas": 14623,
+    "builder-64-metas-4-groups": 15588,
+    "builder-65-metas": 8954,
+    "callee-rejects-wrong-count": 73,
+    "callee-rejects-wrong-duplicate": 98,
+    "raw-16-metas-2-groups": 5481,
+    "raw-22-metas-4-groups": 6115,
+    "raw-3-metas": 4369,
+    "raw-5-groups": 3452,
+    "raw-64-metas-4-groups": 8995,
+    "raw-65-metas": 3687
+   },
+   "cu_before": {
+    "builder-16-metas": 7030,
+    "builder-16-metas-2-groups": 7529,
+    "builder-17-metas": 4120,
+    "builder-3-groups": 4470,
+    "builder-3-metas": 5091,
+    "builder-3-metas-1-group": 5347,
+    "callee-rejects-wrong-count": 73,
+    "callee-rejects-wrong-duplicate": 98,
+    "raw-16-metas-2-groups": 5481,
+    "raw-17-metas": 3159,
+    "raw-3-groups": 3387,
+    "raw-3-metas": 4369
+   }
+  }
+ },
+ "schema": 1,
+ "static_frames_bytes": {
+  "cpi-limits entrypoint": {
+   "after": 3200,
+   "before": 3200
+  },
+  "escrow largest Metas holder": {
+   "after": 1408,
+   "before": 1408
+  },
+  "full-swap go_Process (fogo-v0, solana-v3, legacy)": {
+   "after": 3904,
+   "before": 3904
+  },
+  "sol_Invoke": {
+   "after": 2240,
+   "before": 960
+  },
+  "tutorial largest Metas holder": {
+   "after": 1920,
+   "before": 1920
+  }
+ },
+ "workload": "examples/cpi-limits (29 incoming accounts) calling examples/cpi-limits/callee.c.txt"
+}

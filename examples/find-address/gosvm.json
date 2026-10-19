@@ -12,7 +12,7 @@
   "instruction": "",
   "handler": "",
   "result": "",
-  "sdk_sha256": "572ca77c60b4112fddea5f3867e0a41bac4f2950c71705a98d48e1cb16ea8389",
+  "sdk_sha256": "f66ccbb30ab2be273f8bcedc30e8f850e2c061d9414f1c081997d1d1b6572c59",
   "sdk_version": 2,
   "imports": {
     "model": "example.org/gosvm/find-address/model"

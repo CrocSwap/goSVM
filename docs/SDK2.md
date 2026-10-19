@@ -102,20 +102,49 @@ propagate. Store the bump and use `Address` where it is known; see
 [examples/find-address](../examples/find-address/README.md). The host
 `fixture.FindProgramAddress` now also stops at bump 1.
 
-`cpi.Metas.Add(index, writable, signer)` builds at most 16 account metas.
-`cpi.Signers.Add(&seeds)` copies at most two seed groups into a 1,024-byte buffer;
-the combined encoding must fit that buffer even if both groups separately fit.
+`cpi.Metas.Add(index, writable, signer)` builds at most 64 account metas
+(`cpi.MaxMetas`); repeated accounts count. `cpi.Signers.Add(&seeds)` copies at
+most four seed groups (`cpi.MaxSigners`) into a 1,024-byte buffer; the combined
+encoding must fit that buffer even if each group separately fits.
 `cpi.Invoke` accepts an executable program's context index, metas, at most 10,240
 instruction bytes, and optional signer groups. Generic CPI uses explicit account
 indices and does not itself implement application owner, relationship or alias
 policy. The SDK-2 account loader accepts up to 32 incoming account descriptors,
-including duplicates; SDK 1 remains capped at 16. Outgoing CPI metas and schema-2
-declared accounts retain their separate 16-account bounds. Custom handlers can
+including duplicates; SDK 1 remains capped at 16. Schema-2 declared accounts
+retain their separate 16-account bound. Custom handlers can
 accept extra incoming accounts, while generated handlers retain their declared
 count checks. See the [decoder extension and new pin](ACCOUNT_DECODER32.md).
 Low-level builds can opt in to 64 incoming descriptors with `-max-accounts 64`,
 which runs `Process` in its own stack frame (a few CU per transaction); see the
 [64-account decoder](ACCOUNT_DECODER64.md).
+
+### CPI bounds
+
+| Bound | goSVM | Runtime (Agave 3.0) |
+| --- | --- | --- |
+| Account metas per CPI | 64 (`solana.Invoke` 2006, `Metas.Add` 3002) | 255 (`MAX_ACCOUNTS_PER_INSTRUCTION`) |
+| Distinct accounts (account infos) | the incoming accounts, at most 32 | 64, or 128 with `increase_tx_account_lock_limit` |
+| Signer groups | 4 (2007, `Signers.Add` 3003) | 16 (`MAX_SIGNERS`) |
+| Seeds per group, bytes per seed | 16, 32 (2007; `pda.Seeds` 3001) | 16, 32 (`MAX_SEEDS`, `MAX_SEED_LEN`) |
+| Encoded signer groups | 1,024 bytes (2007, 3003) | none |
+| Instruction data | 10,240 bytes (2008) | 10,240 |
+
+Every meta indexes the invocation's own accounts and `Invoke` passes those as
+the account infos, so a CPI names at most 32 distinct accounts, within every
+feature-set's account-info limit; more than 32 metas repeat accounts.
+64 metas cover Hyperlane's Sealevel CPIs (22 for IGP `PayForGas` with quoted
+accounts, 17 for fee `QuoteFee`) with room for repeated references, and keep the
+C runtime's descriptor arrays (16 bytes per meta and per seed) in one SBF frame:
+`sol_Invoke` is never inlined and takes 2,240 bytes of its own frame, so callers'
+frames are unchanged. The runtime's 255 would need 4,080 bytes of metas alone.
+
+`cpi.Metas` keeps its first 16 records (`cpi.InlineMetas`) in the builder.
+The 17th `Add` allocates one 576-byte array on the invocation heap, copies the
+inline records there and continues in it; that is the only SDK allocation, it
+counts toward the heap budget like any other (the out-of-memory trap of
+[ERROR_CONTRACT](ERROR_CONTRACT.md#traps)), and a builder that stays within 16
+metas allocates nothing. Copying a `Metas` value after its 17th record shares
+the heap array between the copies; pass builders by pointer.
 
 `cpi.SingleSigner` encodes one signer group directly, avoiding the intermediate
 `pda.Seeds` to `cpi.Signers` copy. It offers `AddBytes` and `AddByte`, with the
@@ -126,11 +155,11 @@ uses the existing invoke boundary and propagates its statuses unchanged. Nil
 metas return 3002; a nil signer invokes without PDA signing, matching `Invoke`.
 A nonnil empty builder encodes one empty group (`[1, 0]`). Keep the borrowed
 `Bytes` backing value alive and unmodified through invocation. Use the general
-builder for two groups. See the [adoption evidence](COMPACT_SIGNER_ADOPTION.md).
+builder for two to four groups. See the [adoption evidence](COMPACT_SIGNER_ADOPTION.md).
 
-Builders use caller-owned scalar arrays. `Bytes` returns a borrowed view that
-must not escape its backing value. Failed additions leave builders unchanged.
-There is no allocation on chain. These bounds are the SDK's experimental
+Builders use caller-owned scalar arrays, except `Metas` beyond 16 records (above).
+`Bytes` returns a borrowed view that must not escape its backing value. Failed
+additions leave builders unchanged. These bounds are the SDK's experimental
 contract, not a claim to cover all transactions accepted by Solana.
 
 `token.Load(context, index, writable)` returns an opaque checked `token.Account`.
@@ -367,6 +396,17 @@ The [ATA probe](../examples/ata-create/README.md) runs creation and on-chain
 derivation against ATA 1.1.1, Token-2022 8.0.0 and Token 3.5.0.
 
 ## Validation and open work
+
+The [CPI bounds proof](../results/compiler/2026-10-19-cpi-limits/README.md) runs
+[examples/cpi-limits](../examples/cpi-limits/program.go) on fogo-v0 and solana-v3:
+3, 16, 17, 22, 32 and 64 metas with up to four PDA signer groups, through the
+builders and the raw encoding, against a callee that checks its account count,
+signers and every repeated-account position; 65 metas and five groups fail
+before invoking (3002/3003, 2006/2007). A 3-meta builder CPI costs 9–10 CU more
+than before and a 16-meta one 21–23 (the builder's heap pointer and branch); the
+raw path is unchanged. Existing token/System CPIs in the escrow, swap and
+tutorial suites cost 0–21 CU more per transaction, and every program using
+`sdk/cpi` links the allocator (about 1.7 KB of ELF) even when it never spills.
 
 The [checked-token fixture](../examples/checked-token/program.go) and
 [evidence](../results/compiler/2026-10-05-checked-token-lifecycle-final/README.md)
