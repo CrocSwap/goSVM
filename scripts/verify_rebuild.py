@@ -22,9 +22,9 @@ def main():
     ap.add_argument('--output', type=pathlib.Path, required=True)
     ap.add_argument('--cli', type=pathlib.Path, default=ROOT / 'build/gosvm')
     ap.add_argument('--reference', type=pathlib.Path,
-                    default=ROOT / 'results/compiler/2026-10-15-byval-rebuild/metrics.json',
+                    default=ROOT / 'results/compiler/2026-10-19-cpi-limits/metrics.json',
                     help='earlier metrics.json whose ELF hashes are compared (informational); the default is '
-                         'the current reference (the October 15 aggregate-parameter fix changed the full swap)')
+                         'the current reference (the October 19 CPI bounds changed the full swap)')
     a = ap.parse_args(); a.output = a.output.resolve(); a.cli = a.cli.resolve()
     if a.output.exists():
         sys.exit(f'{a.output} exists; use a new results directory')
