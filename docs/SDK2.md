@@ -245,6 +245,21 @@ insufficient payer funds. `system.Transfer` uses the same checked System payer
 contract to fund a distinct writable destination, including an existing owned
 account before growth.
 
+PDA-signed System calls cover program vaults. `system.TransferSigned(c, system,
+source, destination, amount, &seeds)` moves lamports out of a data-less
+System-owned PDA under the caller, such as a native-SOL vault or an ATA payer.
+`Allocate`/`AllocateSigned` set an empty System account's length (at most 10,240
+bytes) and `Assign`/`AssignSigned` change the owner of a System account whose data
+is empty or all zero; the plain forms need the target's transaction signature.
+`system.CreatePDA` accepts a target address that already holds lamports, which
+makes `CreateAccount` (and `CreateSigned`) fail, so anyone could otherwise block
+creation by pre-funding the address. An unfunded target uses `CreateSigned`; a
+funded one is topped up from the payer to the current rent minimum, then
+allocated and assigned with its seeds. None of these fund later rent: a transfer
+that leaves a vault below its minimum must be checked by the caller.
+The [System PDA probe](../examples/system-pda/README.md) runs them against the
+real System program under both runner profiles.
+
 `solana.ResizeAccount(context, index, newLength)` requires a writable,
 non-executable account owned by the calling program. It updates the serialized
 length and all duplicate descriptors. Newly exposed bytes are zeroed, including
