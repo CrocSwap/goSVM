@@ -1,0 +1,100 @@
+{
+  "format": "gosvm-layouts-2",
+  "layouts": [
+    {
+      "kind": "account",
+      "name": "Record",
+      "type": "example.org/gosvm/find-address/model.Record",
+      "version": 1,
+      "discriminator": [
+        246,
+        14,
+        145,
+        67,
+        0,
+        180,
+        15,
+        69
+      ],
+      "size": 41,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/find-address/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 40,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Create",
+      "type": "example.org/gosvm/find-address/model.CreateArgs",
+      "version": 1,
+      "discriminator": [
+        178,
+        132,
+        11,
+        190,
+        21,
+        75,
+        217,
+        235
+      ],
+      "size": 9,
+      "fields": [
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 8,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Derive",
+      "type": "example.org/gosvm/find-address/model.DeriveArgs",
+      "version": 1,
+      "discriminator": [
+        46,
+        166,
+        23,
+        141,
+        157,
+        92,
+        95,
+        93
+      ],
+      "size": 42,
+      "fields": [
+        {
+          "name": "Seed",
+          "type": "[32]byte",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Length",
+          "type": "byte",
+          "offset": 40,
+          "size": 1
+        },
+        {
+          "name": "Extra",
+          "type": "byte",
+          "offset": 41,
+          "size": 1
+        }
+      ]
+    }
+  ]
+}

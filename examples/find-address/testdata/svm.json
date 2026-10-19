@@ -1,0 +1,541 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo",
+  "payer_seed": "c770d729f4e9f64b7883b7c6796cb5380a8a4207d3ee4b50417cf2a135cab530",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "signers": [
+    {
+      "name": "authority-1",
+      "seed": "5983d9b97610fb9d251ecc7dff13787f5ac408a6812c873e77c69207faf4ad5f"
+    }
+  ],
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "6T7UDcxvNX6FwZuKLHmZf7JLw8JSt41Cd1LSbfcRHtUQ",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "authority-1"
+    },
+    {
+      "address": "9BWKCo6KSrFKxoCzk262oB9ZXBWT16yyWCqQnRq1miHq",
+      "name": "record"
+    },
+    {
+      "address": "SP6KexvUoAGUZ45zgB98gkx35tNrSaNstEthz318MD9",
+      "name": "noncanonical"
+    }
+  ],
+  "cases": [
+    {
+      "name": "create-at-the-canonical-bump-252",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 998823760,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "record",
+                "state": {
+                  "data": "f60e914300b40f4550fad9b9ec3f46653eb93b36fcd0c12a6f42d5d5d0f928168c8cde4951ae7ec1fc",
+                  "executable": false,
+                  "lamports": 1176240,
+                  "owner": "FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "record",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9ebfc",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "noncanonical-bump-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 2
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "noncanonical",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "b2840bbe154bd9ebfa",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-a-bump-255",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo UKpwddkTbvprWZ8IPDPY4cpNxVLmZhzzQJbVkLk4Ovz/": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d61000000000000000000000000000000000000000000000000000000000000000100",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-fees-bump-254",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo F41anA2cqG4T/yosVpFCGw+p+z44JTLKtZBJ5V3nZXz+": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d66656573000000000000000000000000000000000000000000000000000000000400",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-outbox-bump-255",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo K4BWPehdXKhsPg24KknXto4GJHJZC6HXLgawPa5gUxf/": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d6f7574626f7800000000000000000000000000000000000000000000000000000600",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-dispatched_message-bump-254",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo ZdjZquD2c4YYBvegBTCkcTnq2E3TU0PasYQT3sfdT1j+": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d646973706174636865645f6d65737361676500000000000000000000000000001200",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-igp-bump-253",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo tJYO194kxcW//7CzBTdfdoE9MaZYdR7ZdKgb+blqKfL9": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d69677000000000000000000000000000000000000000000000000000000000000300",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-seed-1-bump-250",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo DnNEkYnStvGUVDWnwvpNAXzS5/qaF6uSuTP96n7MpEb6": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d736565642d3100000000000000000000000000000000000000000000000000000600",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-fifteen-seeds",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "Program return: FFoyBvQ6VRcUXCMJ7hPrEkiSqqEywjhNT86FT8pzuRmo xlWAL67IcG32JaykO4FwPTdlmTEsHoB3jxZHo4ol/Gr/": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200e",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "derive-sixteen-seeds-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "authority-1",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "absent": true,
+                "account": "record"
+              },
+              {
+                "absent": true,
+                "account": "noncanonical"
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 3001
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "authority-1",
+                  "signer": true,
+                  "writable": false
+                }
+              ],
+              "data": "2ea6178d9d5c5f5d0000000000000000000000000000000000000000000000000000000000000000010f",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

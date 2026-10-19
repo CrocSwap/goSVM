@@ -35,7 +35,15 @@ simulation/submission proofs, new frontend/SDK pins and runner observability.
 Integer seeds use little-endian encoding. Each builder accepts at most 16 seeds
 of at most 32 bytes each, including any bump. `Address` derives an address using
 an explicit program key; `Matches` compares it with a context account key.
-These methods use supplied seeds; a bump-search convenience API is not provided.
+`FindAddress(c, program)` is Solana's `find_program_address`: it appends each
+bump from 255 down to 1 (never 0, as in Solana) and returns the first
+off-curve address with its bump, using one create-program-address syscall
+(about 1,570 CU) per attempt, so on-curve results are skipped exactly. The
+builder is unchanged; add the bump for signing. A builder with 16 seeds has
+no room for the bump (3001), no bump found is 3004, and other syscall statuses
+propagate. Store the bump and use `Address` where it is known; see
+[examples/find-address](../examples/find-address/README.md). The host
+`fixture.FindProgramAddress` now also stops at bump 1.
 
 `cpi.Metas.Add(index, writable, signer)` builds at most 16 account metas.
 `cpi.Signers.Add(&seeds)` copies at most two seed groups into a 1,024-byte buffer;
