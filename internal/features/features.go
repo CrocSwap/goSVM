@@ -107,6 +107,11 @@ type Uses struct {
 	// PointerConversions: conversions (*T)(p) between pointer types
 	// (docs/GO_POINTERS.md#conversions). Added within gosvm-features-v1.
 	PointerConversions bool `json:"pointer_conversions"`
+	// SliceArrayConversions: conversions of a slice to an array pointer,
+	// (*[N]T)(s), or to an array, [N]T(s)
+	// (docs/GO_ARRAYS.md#slice-to-array-conversions). Added within
+	// gosvm-features-v1.
+	SliceArrayConversions bool `json:"slice_array_conversions"`
 	// Stdlib lists, sorted, the standard-library packages the program
 	// reaches besides math/bits (MathBits): the overlay packages of
 	// docs/GO_STDLIB.md that program code imports, and the overlay packages
@@ -304,6 +309,7 @@ func summarize(u *Usage) {
 	u.Uses.TypeAliases = sum("type_aliases") > 0
 	u.Uses.CompositeArrays = sum("composite_array_types") > 0
 	u.Uses.PointerConversions = sum("pointer_conversions") > 0
+	u.Uses.SliceArrayConversions = sum("slice_array_conversions") > 0
 	u.Uses.Panic = has(func(s *Side) map[string]int { return s.Builtins }, "panic")
 }
 
@@ -454,6 +460,9 @@ var ConstructNames = []string{
 	// Pointer conversions (added within gosvm-features-v1): conversions
 	// (*T)(p) to a pointer type (docs/GO_POINTERS.md#conversions).
 	"pointer_conversions",
+	// Slice-to-array conversions (added within gosvm-features-v1):
+	// (*[N]T)(s) and [N]T(s) (docs/GO_ARRAYS.md#slice-to-array-conversions).
+	"slice_array_conversions",
 }
 
 // allocationConstructs counts the allocation builtins by name.
@@ -859,6 +868,26 @@ func (w *walker) typeString(t types.Type) string { return types.TypeString(t, ni
 func (w *walker) isType(e ast.Expr) bool {
 	tv, ok := w.tp.Info.Types[e]
 	return ok && tv.IsType()
+}
+
+// sliceToArray reports whether the conversion n to type to converts a
+// slice to an array, [N]T(s), or to a pointer to one, (*[N]T)(s).
+func (w *walker) sliceToArray(n *ast.CallExpr, to types.Type) bool {
+	if len(n.Args) != 1 {
+		return false
+	}
+	from := w.typeOf(n.Args[0])
+	if from == nil {
+		return false
+	}
+	if _, ok := from.Underlying().(*types.Slice); !ok {
+		return false
+	}
+	if p, ok := to.Underlying().(*types.Pointer); ok {
+		to = p.Elem()
+	}
+	_, ok := to.Underlying().(*types.Array)
+	return ok
 }
 
 func (w *walker) typeOf(e ast.Expr) types.Type {
@@ -1399,7 +1428,9 @@ func (w *walker) call(n *ast.CallExpr) {
 	if tv, ok := w.tp.Info.Types[fun]; ok && tv.IsType() {
 		w.count("conversions")
 		w.side.Conversions[w.typeString(tv.Type)]++
-		if _, ok := tv.Type.Underlying().(*types.Pointer); ok {
+		if w.sliceToArray(n, tv.Type) {
+			w.count("slice_array_conversions")
+		} else if _, ok := tv.Type.Underlying().(*types.Pointer); ok {
 			w.count("pointer_conversions")
 		}
 		if len(n.Args) == 1 && w.tp.Info.Types[n].Value == nil {

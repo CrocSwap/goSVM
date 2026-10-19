@@ -212,14 +212,8 @@ func formSBFSource(src string) string {
 	return src + "\nfunc Process(c solana.Context) uint64 { run(solana.Data(c, 0), solana.Instruction(c)); return 0 }\n"
 }
 
-// formNative builds src natively and runs it over the inputs, one fresh
-// process per input (every SBF invocation initializes the package
-// variables anew): one line per input, "result:hex" over the 1 KiB output,
-// or "P:hex" when it panics.
-func formNative(t *testing.T, src string, inputs [][]byte) []string {
-	t.Helper()
-	dir := t.TempDir()
-	main := `package main
+// formMain is formNative's driver.
+const formMain = `package main
 
 import (
 	"bufio"
@@ -247,6 +241,20 @@ func main() {
 	}
 }
 `
+
+// formNative builds src natively and runs it over the inputs, one fresh
+// process per input (every SBF invocation initializes the package
+// variables anew): one line per input, "result:hex" over the 1 KiB output,
+// or "P:hex" when it panics.
+func formNative(t *testing.T, src string, inputs [][]byte) []string {
+	t.Helper()
+	return formNativeMain(t, src, formMain, inputs)
+}
+
+// formNativeMain is formNative with its own main package source.
+func formNativeMain(t *testing.T, src, main string, inputs [][]byte) []string {
+	t.Helper()
+	dir := t.TempDir()
 	for name, data := range map[string]string{"go.mod": "module forms\n\ngo 1.22\n", "prog.go": src, "main.go": main} {
 		if err := os.WriteFile(filepath.Join(dir, name), []byte(data), 0644); err != nil {
 			t.Fatal(err)

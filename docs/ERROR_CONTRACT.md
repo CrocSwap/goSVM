@@ -17,7 +17,9 @@ fails with no custom error code and the transaction rolls back.
 - A negative shift count (a signed count below zero), where Go panics
   ([integers](GO_INTEGERS.md)).
 - Array index, slice index or slice-expression bounds out of range, including
-  a string index or string slice bounds ([strings](GO_STRINGS.md)).
+  a string index or string slice bounds ([strings](GO_STRINGS.md)), and a
+  slice shorter than the array in a conversion `(*[N]T)(s)` or `[N]T(s)`
+  ([arrays](GO_ARRAYS.md#slice-to-array-conversions)).
 - Nil pointer dereference, field access or method receiver, including a
   value-receiver method called through a nil `*T` held in an interface.
 - Account index out of range in SDK account accessors.
@@ -311,7 +313,8 @@ operation's value is computed once and used where it appears.
 **Plain operations** are everything else: reading a variable, a field, an
 element or a map element; indirection; arithmetic, shifts and comparisons
 (including string, struct, array and interface comparisons); string
-concatenation and the other conversions (`string(b)`, integer conversions);
+concatenation and the other conversions (`string(b)`, integer conversions,
+slice-to-array conversions `(*[N]T)(s)` and `[N]T(s)`);
 boxing a value in an interface; struct, array and slice literals and map
 literals of constant entries; function literals; method values; `&x`; and
 type assertions to pointer-shaped types.
@@ -352,8 +355,8 @@ whatever their source order (`map[int]int{k: 3, 1: 2}` with `k == 1` holds
 
 **Traps.** A sequenced operation's traps happen where it is evaluated (a
 failed type assertion, slice bounds, a `make` length, an out-of-memory
-`append`). A plain operation's trap (index or slice-element bounds, nil
-dereference, division or modulo by zero, a negative shift count, an
+`append`). A plain operation's trap (index or slice-element bounds, a
+slice-to-array conversion's length, nil dereference, division or modulo by zero, a negative shift count, an
 uncomparable interface comparison or map key, a nil-map store, out of memory
 for a literal, concatenation, conversion or closure) happens after every
 sequenced operation of its owner: `z[5] + f()`, `z[5] = f()`, `p.x + f()`
@@ -648,3 +651,13 @@ Handler results propagate unchanged.
   Process reaches in package "P", opt in with "trim" in gosvm.json or -trim
   (docs/GO_PACKAGES.md#trimming)`. No recorded corpus entry's message
   changed (their dependency packages are not module paths).
+- 2026-10-19: addition (slice-to-array conversions; announce to Qushta), no
+  trap or code added and no existing behaviour changed: `(*[N]T)(s)` and
+  `[N]T(s)` compile ([arrays](GO_ARRAYS.md#slice-to-array-conversions)).
+  `len(s) < N` uses the bounds trap; both are plain operations under
+  [evaluation order](#evaluation-order), so the length check happens after
+  the owner's calls, as in gc. `[N]T(s)` was rejected (`array conversions
+  require identical underlying arrays; slice conversions unsupported`);
+  `(*[N]T)(s)` passed Check and then failed in the built-in backend's C
+  compile (CrocSwap/goSVM#7). The corpus's one recorded slice conversion
+  (`a:=[24]byte(s)`) now compiles; no other recorded program changed.

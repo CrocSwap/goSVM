@@ -576,8 +576,8 @@ conversions, embedding, `recover` and build constraints are rejected
 explicitly. Wire layout is generated independently of C or Go layout.
 
 Fixed-size scalar arrays, including named `[32]byte` key types, now support value
-copies, literals, indexed reads/writes, equality, `len`/`cap` and matching-underlying
-array conversions. Each array value is limited to 1,024 bytes (except package-level
+copies, literals, indexed reads/writes, equality, `len`/`cap`, matching-underlying
+array conversions and [slice-to-array conversions](../docs/GO_ARRAYS.md#slice-to-array-conversions). Each array value is limited to 1,024 bytes (except package-level
 tables that are only indexed; see [large tables](../docs/GO_GLOBALS.md#large-tables)). Elements may be
 structs, arrays, pointers, slices, maps, strings, interfaces or function values
 ([value types](../docs/GO_TYPES.md), checked against ordinary Go on the host and

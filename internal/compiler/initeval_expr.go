@@ -811,6 +811,11 @@ func (ev *evaluator) conversionCall(e *ast.CallExpr, t types.Type) value {
 	if isIface(t) {
 		return ev.eval(arg) // converted, or an interface value
 	}
+	if _, _, ok := sliceToArray(ev.info, e); ok {
+		// (*[N]T)(s) and [N]T(s) run at run time (their bounds trap, and
+		// the pointer may address part of a backing array).
+		ev.stopf(e, "converts a slice to an array")
+	}
 	if ev.info.Types[arg].IsNil() {
 		return ev.zero(t)
 	}

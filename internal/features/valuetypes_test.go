@@ -110,3 +110,33 @@ func Process(s, i []byte) uint64 {
 		t.Errorf("array conversion set pointer_conversions: %+v", u)
 	}
 }
+
+// Slice-to-array conversions have their own counter and uses flag; they are
+// not pointer conversions.
+func TestSliceArrayConversionCounter(t *testing.T) {
+	dir := t.TempDir()
+	source := `package program
+
+type Key [4]byte
+
+func Process(s, i []byte) uint64 {
+	p := (*[4]byte)(s)
+	k := Key(i)
+	q := (*Key)(p)
+	return uint64(p[0]) + uint64(k[1]) + uint64(q[2])
+}
+`
+	if err := os.WriteFile(filepath.Join(dir, "program.go"), []byte(source), 0644); err != nil {
+		t.Fatal(err)
+	}
+	u := checkedReport(t, dir)
+	if got := u.Language.Handwritten.Constructs["slice_array_conversions"]; got != 2 {
+		t.Errorf("slice_array_conversions = %d, want 2", got)
+	}
+	if got := u.Language.Handwritten.Constructs["pointer_conversions"]; got != 1 {
+		t.Errorf("pointer_conversions = %d, want 1", got)
+	}
+	if !u.Uses.Checked || !u.Uses.SliceArrayConversions || !u.Uses.PointerConversions {
+		t.Errorf("uses: %+v", u.Uses)
+	}
+}

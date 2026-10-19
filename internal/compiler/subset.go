@@ -912,6 +912,10 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 			c.stringConversionRule(e, tv)
 			return
 		}
+		if _, _, ok := sliceToArray(c.info, e); ok {
+			c.sliceToArrayRule(e, tv)
+			return
+		}
 		if isIface(tv.Type) {
 			// I(x): the argument is converted (or copied, when it is an
 			// interface value already).
@@ -941,7 +945,7 @@ func (c *checker) call(e *ast.CallExpr, tv types.TypeAndValue) {
 		}
 		if a, ok := tv.Type.Underlying().(*types.Array); ok {
 			if len(e.Args) != 1 || !types.Identical(c.info.Types[e.Args[0]].Type.Underlying(), a) {
-				c.fail(e, "array conversions require identical underlying arrays; slice conversions unsupported")
+				c.fail(e, "array conversions require identical underlying arrays")
 			}
 			c.expr(e.Args[0])
 			c.typeRule(e, tv.Type)

@@ -973,6 +973,12 @@ func (a *evalAnalysis) plain(e ast.Expr, o *evalOwner) {
 		a.event(o, e, false, true)
 	case *ast.CallExpr:
 		a.callOperands(e, o)
+		if arr, ptr, ok := sliceToArray(info, e); ok {
+			// A plain operation, as in gc: a short slice traps after the
+			// owner's calls, and [N]T(s) reads the elements there.
+			a.event(o, e, !ptr, arr.Len() > 0)
+			return
+		}
 		if info.Types[e.Fun].IsType() {
 			switch classifyConversion(info, e) {
 			case stringFromBytes, stringFromRunes:
