@@ -18,7 +18,25 @@ typedef struct { Seed *ptr; u64 len; } Seeds;
 _Static_assert(sizeof(AccountInfo)==56, "C account ABI");
 _Static_assert(sizeof(AccountMeta)==16, "C meta ABI");
 _Static_assert(sizeof(Instruction)==40, "C instruction ABI");
+#ifdef __bpf__
+// SBF loads and stores at any alignment, and clang lowers a fixed-size
+// __builtin_memcpy to whole-word ldx/stx: one instruction per 8 bytes instead
+// of a byte loop (docs/BACKEND_INTERFACE.md#runtime-word-access).
+static inline u64 sol_read64(const u8 *p) {u64 v;__builtin_memcpy(&v,p,8);return v;}
+static inline void sol_write64(u8 *p,u64 v) {__builtin_memcpy(p,&v,8);}
+static inline u64 sol_read32(const u8 *p) {u32 v;__builtin_memcpy(&v,p,4);return v;}
+static inline void sol_write32(u8 *p,u32 v) {__builtin_memcpy(p,&v,4);}
+static inline boolean sol_eq32(const u8 *a,const u8 *b) {
+    u64 x[4],y[4];__builtin_memcpy(x,a,32);__builtin_memcpy(y,b,32);
+    return ((x[0]^y[0])|(x[1]^y[1])|(x[2]^y[2])|(x[3]^y[3]))==0;
+}
+#else
 static u64 sol_read64(const u8 *p) {u64 v=0;for(u64 i=0;i<8;i++) v|=(u64)p[i]<<(i*8);return v;}
+static void sol_write64(u8 *p,u64 v) {for(u64 i=0;i<8;i++) p[i]=(u8)(v>>(i*8));}
+static u64 sol_read32(const u8 *p) {u64 v=0;for(u64 i=0;i<4;i++) v|=(u64)p[i]<<(i*8);return v;}
+static void sol_write32(u8 *p,u32 v) {for(u64 i=0;i<4;i++) p[i]=(u8)(v>>(i*8));}
+static boolean sol_eq32(const u8 *a,const u8 *b) {for(u64 j=0;j<32;j++) if(a[j]!=b[j]) return 0;return 1;}
+#endif
 static AccountInfo *sol_account(Context *c,u64 i) {if(i>=c->count) abort();return &c->accounts[i];}
 static u64 sol_Count(Context *c) {return c->count;}
 static slice sol_Data(Context *c,u64 i) {AccountInfo *a=sol_account(c,i);return GOSVM_SLICE(a->data,a->data_len);}
@@ -32,8 +50,7 @@ static slice sol_ProgramID(Context *c) {return c->program;}
 static boolean sol_IsTokenProgram(Context *c,u64 i) {
     static const u8 id[32]={6,221,246,225,215,101,161,147,217,203,225,70,206,235,121,172,28,180,133,237,95,91,55,145,58,140,245,133,126,255,0,169};
     AccountInfo *a=sol_account(c,i);if(!a->executable) return 0;
-    for(u64 j=0;j<32;j++) if(a->key[j]!=id[j]) return 0;
-    return 1;
+    return sol_eq32(a->key,id);
 }
 #ifdef GOSVM_SBF_V3
 #define sol_create_pda ((u64 (*)(Seed *,u64,u8 *,u8 *))2474062396ULL)
@@ -56,9 +73,7 @@ static boolean sol_IsPDA(Context *c,u64 i,slice seed,u8 bump) {
     if(seed.len>32) return 0;
     u8 address[32];Seed seeds[2]={{seed.ptr,seed.len},{&bump,1}};
     if(sol_create_pda(seeds,2,c->program.ptr,address)!=0) return 0;
-    u8 *key=sol_account(c,i)->key;
-    for(u64 j=0;j<32;j++) if(key[j]!=address[j]) return 0;
-    return 1;
+    return sol_eq32(sol_account(c,i)->key,address);
 }
 static __attribute__((always_inline)) inline u64 sol_transfer(
     Context *c,u64 program,u64 source,u64 destination,u64 authority,u64 amount,
@@ -66,7 +81,7 @@ static __attribute__((always_inline)) inline u64 sol_transfer(
     if(!sol_IsTokenProgram(c,program)) return 2001;
     AccountInfo *src=sol_account(c,source),*dst=sol_account(c,destination),*auth=sol_account(c,authority);
     u8 data[9];data[0]=3; // SPL Token Transfer, little-endian amount.
-    for(u64 i=0;i<8;i++) data[1+i]=(u8)(amount>>(i*8));
+    sol_write64(data+1,amount);
     AccountMeta metas[3]={{src->key,1,0},{dst->key,1,0},{auth->key,0,1}};
     Instruction ix={sol_account(c,program)->key,metas,3,data,9};
     Seed seed_parts[2]={{seed.ptr,seed.len},{&bump,1}};

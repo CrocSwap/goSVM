@@ -792,6 +792,21 @@ Runtime traps, error codes and check order are a stable contract:
 compile-time diagnostics above are a separate matter. They come only from
 `Check`, so they are identical for every backend.
 
+<a id="runtime-word-access"></a>
+## Runtime word access
+
+SBF loads and stores at any alignment, so on SBF builds (`__bpf__`) the C
+runtime reads and writes whole words where it used to loop over bytes:
+`sol_read64`/`sol_write64` (and 32-bit forms) are a fixed-size
+`__builtin_memcpy`, which clang lowers to one `ldxdw`/`stxdw`, and 32-byte key
+comparisons (`IsTokenProgram`, `IsPDA`, the owner check behind `ResizeAccount` and
+`CloseAccount`, `CloseAccount`'s same-key check) fold four
+word XORs. `CreateAddress` passes the caller's output straight to
+`sol_create_program_address`, which reads every seed before it writes and
+writes only on success, so there is no staging copy. Results, error codes and
+check order are unchanged; host C keeps the byte loops.
+[Measurements](../results/compiler/2026-10-19-runtime-word-access/README.md).
+
 ## Equivalence evidence
 
 [`internal/compiler/check_corpus_test.go`](../internal/compiler/check_corpus_test.go)

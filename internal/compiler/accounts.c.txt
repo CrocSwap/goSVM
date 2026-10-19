@@ -27,7 +27,7 @@ u64 entrypoint(u8 *input) {
 #ifdef GOSVM_SDK2
             // Mirror the pinned SDK: original length occupies the padding
             // immediately before the key and survives resize/CPI changes.
-            for(u64 j=0;j<4;j++) p[4+j]=(u8)(a->data_len>>(j*8));
+            sol_write32(p+4,(u32)a->data_len);
 #endif
             p=a->data+a->data_len+10240;
             p=(u8 *)(((u64)p+7)&~7ULL);

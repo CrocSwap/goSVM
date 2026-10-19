@@ -40,7 +40,7 @@ extern u64 sol_get_rent_sysvar(GosvmRent *);
 static u64 sol_Rent(Context *c,slice output) {
     if(output.len!=17) return 2015;
     GosvmRent rent;u64 code=gosvm_get_rent(&rent);if(code) return code;
-    for(u64 j=0;j<8;j++) {output.ptr[j]=(u8)(rent.rate>>(j*8));output.ptr[8+j]=(u8)(rent.threshold_bits>>(j*8));}
+    sol_write64(output.ptr,rent.rate);sol_write64(output.ptr+8,rent.threshold_bits);
     output.ptr[16]=rent.burn;return 0;
 }
 
@@ -48,14 +48,13 @@ static u64 sol_owned_writable(Context *c,u64 index) {
     if(index>=c->count) return 2005;
     AccountInfo *a=&c->accounts[index];if(!a->writable || a->executable) return 2011;
     if(c->program.len!=32) return 2012;
-    for(u64 j=0;j<32;j++) if(a->owner[j]!=c->program.ptr[j]) return 2012;
-    return 0;
+    return sol_eq32(a->owner,c->program.ptr) ? 0 : 2012;
 }
 static u64 sol_original_len(AccountInfo *a) {
-    u64 n=0;for(u64 j=0;j<4;j++) n|=(u64)(a->key-4)[j]<<(j*8);return n;
+    return sol_read32(a->key-4);
 }
 static void sol_set_data_len(Context *c,AccountInfo *a,u64 n) {
-    for(u64 j=0;j<8;j++) (a->data-8)[j]=(u8)(n>>(j*8));
+    sol_write64(a->data-8,n);
     for(u64 j=0;j<c->count;j++) if(c->accounts[j].data==a->data) c->accounts[j].data_len=n;
 }
 static u64 sol_ResizeAccount(Context *c,u64 index,u64 n) {
@@ -73,12 +72,11 @@ static u64 sol_CloseAccount(Context *c,u64 index,u64 destination) {
     if(destination>=c->count) return 2005;
     AccountInfo *a=&c->accounts[index],*b=&c->accounts[destination];
     if(!b->writable || b->executable) return 2011;
-    boolean same=1;for(u64 j=0;j<32;j++) if(a->key[j]!=b->key[j]) same=0;
-    if(same) return 2013;
+    if(sol_eq32(a->key,b->key)) return 2013;
     if(*a->lamports>~0ULL-*b->lamports) return 2014;
     if(sol_original_len(a)>10485760) return 2010;
     *b->lamports+=*a->lamports;*a->lamports=0;
-    sol_set_data_len(c,a,0);for(u64 j=0;j<32;j++) a->owner[j]=0;
+    sol_set_data_len(c,a,0);for(u64 j=0;j<32;j+=8) sol_write64(a->owner+j,0);
     return 0;
 }
 
@@ -99,10 +97,9 @@ static u64 sol_CreateAddress(Context *c,slice b,slice program,slice output) {
     if(program.len!=32 || output.len!=32 || b.len>529) return 2007;
     Seed seeds[16];u64 off=0,count=0;
     if(!sol_seed_group(b,&off,seeds,&count) || off!=(u64)b.len) return 2007;
-    u8 address[32];u64 code=sol_create_pda(seeds,count,program.ptr,address);
-    if(code) return code;
-    for(u64 j=0;j<32;j++) output.ptr[j]=address[j];
-    return 0;
+    // The syscall reads every seed before it writes, and writes the address
+    // only on success, so output needs no staging copy.
+    return sol_create_pda(seeds,count,program.ptr,output.ptr);
 }
 
 // Outgoing CPI bounds (solana/api.go Invoke, docs/SDK2.md#cpi-bounds): 64
