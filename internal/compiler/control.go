@@ -24,6 +24,7 @@ func (g *generator) loop(s *ast.ForStmt) {
 	if g.zeroFor(s) {
 		return
 	}
+	g.byteLoop(s)
 	label := ""
 	if containsContinue(s.Body) {
 		g.next++
