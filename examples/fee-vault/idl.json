@@ -1,0 +1,276 @@
+{
+  "format": "gosvm-2",
+  "name": "fee-vault",
+  "accounts": [
+    {
+      "kind": "account",
+      "name": "Vault",
+      "type": "example.org/gosvm/fee-vault/model.Vault",
+      "version": 1,
+      "discriminator": [
+        245,
+        188,
+        106,
+        229,
+        232,
+        89,
+        114,
+        30
+      ],
+      "size": 73,
+      "fields": [
+        {
+          "name": "Authority",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 40,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 72,
+          "size": 1
+        }
+      ]
+    }
+  ],
+  "arguments": [
+    {
+      "kind": "instruction",
+      "name": "Create",
+      "type": "example.org/gosvm/fee-vault/model.CreateArgs",
+      "version": 1,
+      "discriminator": [
+        178,
+        132,
+        11,
+        190,
+        21,
+        75,
+        217,
+        235
+      ],
+      "size": 41,
+      "fields": [
+        {
+          "name": "Beneficiary",
+          "type": "example.org/gosvm/fee-vault/model.PublicKey",
+          "offset": 8,
+          "size": 32,
+          "length": 32
+        },
+        {
+          "name": "Bump",
+          "type": "byte",
+          "offset": 40,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "kind": "instruction",
+      "name": "Claim",
+      "type": "example.org/gosvm/fee-vault/model.ClaimArgs",
+      "version": 1,
+      "discriminator": [
+        168,
+        114,
+        114,
+        189,
+        158,
+        31,
+        213,
+        198
+      ],
+      "size": 8,
+      "fields": null
+    },
+    {
+      "kind": "instruction",
+      "name": "Move",
+      "type": "example.org/gosvm/fee-vault/model.MoveArgs",
+      "version": 1,
+      "discriminator": [
+        213,
+        149,
+        102,
+        219,
+        35,
+        164,
+        146,
+        236
+      ],
+      "size": 18,
+      "fields": [
+        {
+          "name": "From",
+          "type": "byte",
+          "offset": 8,
+          "size": 1
+        },
+        {
+          "name": "To",
+          "type": "byte",
+          "offset": 9,
+          "size": 1
+        },
+        {
+          "name": "Amount",
+          "type": "uint64",
+          "offset": 10,
+          "size": 8
+        }
+      ]
+    }
+  ],
+  "instructions": [
+    {
+      "name": "Create",
+      "handler": "Create",
+      "args": "model.CreateArgs",
+      "bundle": "CreateAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id",
+          "pda": {
+            "program": "program_id",
+            "seeds": [
+              {
+                "kind": "bytes",
+                "hex": "7661756c74"
+              },
+              {
+                "kind": "key",
+                "account": "Authority"
+              },
+              {
+                "kind": "byte",
+                "field": "args.Bump"
+              }
+            ]
+          },
+          "init": {
+            "payer": "Authority",
+            "system": "System"
+          }
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "write",
+          "owner": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "System",
+          "kind": "program",
+          "access": "read",
+          "address": "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "name": "Claim",
+      "handler": "Claim",
+      "args": "model.ClaimArgs",
+      "bundle": "ClaimAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id",
+          "ref": "VaultRef"
+        },
+        {
+          "name": "Beneficiary",
+          "kind": "account",
+          "access": "write"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Vault.Beneficiary",
+          "account": "Beneficiary"
+        }
+      ]
+    },
+    {
+      "name": "Move",
+      "handler": "Move",
+      "args": "model.MoveArgs",
+      "bundle": "MoveAccounts",
+      "version": 1,
+      "accounts": [
+        {
+          "name": "Vault",
+          "kind": "state",
+          "layout": "Vault",
+          "access": "write",
+          "owner": "program_id"
+        },
+        {
+          "name": "Authority",
+          "kind": "signer",
+          "access": "write"
+        },
+        {
+          "name": "Recipient",
+          "kind": "account",
+          "access": "write"
+        },
+        {
+          "name": "Observer",
+          "kind": "account",
+          "access": "read"
+        }
+      ],
+      "relations": [
+        {
+          "field": "Vault.Authority",
+          "account": "Authority"
+        }
+      ]
+    }
+  ],
+  "errors": {
+    "AccountAlias": 6006,
+    "AccountCount": 6000,
+    "AccountFlags": 6001,
+    "AccountIdentity": 6005,
+    "AccountInit": 6009,
+    "AccountOwner": 6002,
+    "AccountPDA": 6008,
+    "AccountRelation": 6007,
+    "InstructionLayout": 6004,
+    "StateLayout": 6003
+  },
+  "validation_order": [
+    "instruction_layout",
+    "account_count",
+    "privileges",
+    "identity_owner",
+    "alias_policy",
+    "init_target",
+    "state_layout",
+    "relations",
+    "pda",
+    "initialize",
+    "handler",
+    "writable_state_commit"
+  ]
+}

@@ -417,11 +417,13 @@ SDK 1 single-account programs use 10–14 for their input checks
 | 2011 | Account not writable, or executable |
 | 2012 | Account not owned by the program |
 | 2013 | Refund account is the source, or malformed native key |
-| 2014 | Refund lamport overflow |
+| 2014 | Refund or credit lamport overflow |
 | 2015 | Rent output not 17 bytes |
 | 2016 | Clock output not 40 bytes |
 | 2017 | Return data longer than 1,024 bytes |
 | 2018 | Secp256k1 hash, signature, output or native result length wrong |
+
+| 2020 | `MoveLamports` source balance below the amount |
 
 ### SDK 2 helpers
 
@@ -676,3 +678,9 @@ Handler results propagate unchanged.
   reports that rule's message (`array storage exceeds experimental 1024-byte
   per-value limit`, `slice elements must not contain zero-length arrays or
   empty structs`) instead. No recorded corpus program's C changed.
+
+- 2026-10-19: addition (`solana.MoveLamports`; announce to Qushta), no trap
+  added and no existing behaviour changed: code 2020 (source balance below the
+  amount) is new, and 2014 now also covers a destination credit overflow. The
+  other checks reuse 2005, 2011 and 2012 in `ResizeAccount`'s order (source,
+  then destination). Programs that do not call it compile to the same C.

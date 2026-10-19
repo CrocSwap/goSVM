@@ -21,6 +21,18 @@ arrays reached only through a generic field were never declared. Both fixed
 targets; corpus C and example ELFs unchanged.
 [Evidence](results/compiler/2026-10-19-generic-array-type-args/README.md).
 
+**Direct lamport moves (October 19, branch `gap1-move-lamports`; unreleased,
+for the Hyperlane Sealevel port):** `solana.MoveLamports(c, from, to, amount)`
+debits an owned writable account and credits any writable one, the
+`**a.lamports -= x; **b.lamports += x` of Hyperlane's fee claims. Runtime rules
+are checked first (owned/writable/non-executable source, writable
+non-executable destination, balance 2020, overflow 2014); rent exemption is the
+application's, and the runtime rejects a debit below it. Its C runtime is
+emitted only when called, so corpus C and the full-swap ELFs are unchanged;
+SDK-2 snapshots (and `sdk_sha256`) of tutorial/full-swap/escrow were refreshed.
+[examples/fee-vault](examples/fee-vault/README.md) passes `gosvm test --svm` on
+both targets. [Evidence](results/compiler/2026-10-19-move-lamports/README.md).
+
 **First-program tutorial and release walkthrough (October 18):**
 [docs/TUTORIAL.md](docs/TUTORIAL.md) builds a PDA counter
 ([examples/tutorial](examples/tutorial/README.md), in the CI module loop): scaffold,

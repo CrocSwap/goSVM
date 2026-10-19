@@ -241,6 +241,22 @@ with appropriate signing authority, including within the same invocation. A
 zero-lamport closed account is absent after commit; simulation represents its
 zero balance, empty data and System owner separately.
 
+`solana.MoveLamports(context, from, to, amount)` changes two balances directly,
+as a Rust program does with `**from.lamports.borrow_mut() -= amount` and
+`**to.lamports.borrow_mut() += amount` (Hyperlane's fee claims, for example).
+It enforces the runtime's rules before changing anything: the source must be
+owned by the calling program, writable and non-executable (2005, 2011, 2012, as
+for `ResizeAccount`); the destination must be in range (2005), writable and
+non-executable (2011), and may be any account, owned or not, existing or not.
+A source balance below `amount` returns 2020 and a destination overflow 2014.
+The checks apply to a zero amount too. Moving within one account (the same
+index or a duplicate descriptor) changes nothing; the total is always
+preserved. Rent exemption is the application's check: the runtime rejects a
+transaction that leaves the source below its minimum (`InsufficientFundsForRent`),
+so claim only the excess over `system.MinimumBalance`, as
+[examples/fee-vault](../examples/fee-vault/README.md) does. Programs that do not
+call it compile to the same C as before.
+
 These boundary operations do **not** decide application authorization. Handlers
 and generated policies must validate the creator/admin, payer, recipient and
 account relationships before moving funds or closing state. Checked SPL Token
@@ -255,8 +271,8 @@ System helper errors are 3021 (program), 3022 (account/alias/layout/privilege),
 3023 (signer/PDA authority), and 3024 (initial allocation size), in addition to
 3020 and propagated boundary/downstream errors. Owned lifecycle errors are
 2005 (index), 2010 (size/growth), 2011 (privilege/executable), 2012 (owner),
-2013 (self refund/malformed native key), 2014 (refund overflow), and 2015 (Rent
-output length). These are experimental API codes, separate from schema-2 errors.
+2013 (self refund/malformed native key), 2014 (refund or credit overflow), 2015
+(Rent output length) and 2020 (`MoveLamports` source balance below the amount). These are experimental API codes, separate from schema-2 errors.
 
 ## Validation and open work
 

@@ -29,6 +29,9 @@ var secp256k1RecoverRuntime string
 //go:embed keccak.c.txt
 var keccakRuntime string
 
+//go:embed lamports.c.txt
+var lamportsRuntime string
+
 func sdkSource(version int) string {
 	if version == 1 {
 		return solana.LegacySource

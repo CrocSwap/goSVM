@@ -1,0 +1,13 @@
+// Emitted only for programs that call MoveLamports, so every other program's
+// C is unchanged. Duplicate descriptors share one balance word, so moving
+// within one account subtracts and adds the same word: a no-op.
+static u64 sol_MoveLamports(Context *c,u64 from,u64 to,u64 amount) {
+    u64 code=sol_owned_writable(c,from);if(code) return code;
+    if(to>=c->count) return 2005;
+    AccountInfo *a=&c->accounts[from],*b=&c->accounts[to];
+    if(!b->writable || b->executable) return 2011;
+    if(*a->lamports<amount) return 2020;
+    if(a->lamports!=b->lamports && *b->lamports>~0ULL-amount) return 2014;
+    *a->lamports-=amount;*b->lamports+=amount;
+    return 0;
+}

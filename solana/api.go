@@ -239,6 +239,67 @@ func CloseAccount(c Context, index, destination uint64) uint64 {
 	return 0
 }
 
+// MoveLamports moves amount lamports from an owned writable account to any
+// writable account, as a program may by changing balances directly. Neither
+// may be executable. Both balances are checked before either changes, so the
+// total is preserved; moving within one account changes nothing. Application
+// checks must authorize the move; the runtime still rejects a transaction
+// that leaves either account below its rent-exempt minimum.
+func MoveLamports(c Context, from, to, amount uint64) uint64 {
+	code := ownedWritable(c, from)
+	if code != 0 {
+		return code
+	}
+	if to >= uint64(len(c.Accounts)) {
+		return 2005
+	}
+	a, b := c.Accounts[from], c.Accounts[to]
+	if !b.Writable || b.Executable {
+		return 2011
+	}
+	if len(a.Key) != 32 || len(b.Key) != 32 {
+		return 2013
+	}
+	if a.Lamports < amount {
+		return 2020
+	}
+	same := true
+	for j := 0; j < 32; j++ {
+		if a.Key[j] != b.Key[j] {
+			same = false
+		}
+	}
+	if same {
+		return 0
+	}
+	if b.Lamports > ^uint64(0)-amount {
+		return 2014
+	}
+	left, right := a.Lamports-amount, b.Lamports+amount
+	for j := range c.Accounts {
+		other := &c.Accounts[j]
+		if len(other.Key) != 32 {
+			continue
+		}
+		source, destination := true, true
+		for k := 0; k < 32; k++ {
+			if other.Key[k] != a.Key[k] {
+				source = false
+			}
+			if other.Key[k] != b.Key[k] {
+				destination = false
+			}
+		}
+		if source {
+			other.Lamports = left
+		}
+		if destination {
+			other.Lamports = right
+		}
+	}
+	return 0
+}
+
 // SHA256 hashes an explicitly bounded region into 32 bytes of output. SBF uses
 // the runtime syscall; native tests supply the standard library implementation.
 func SHA256(c Context, input []byte, offset, length uint64, output []byte, outOffset uint64) uint64 {
