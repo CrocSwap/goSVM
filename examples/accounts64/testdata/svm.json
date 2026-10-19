@@ -1,0 +1,3602 @@
+{
+  "format": "gosvm-svm-fixtures-v1",
+  "program_id": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+  "payer_seed": "f40a750c28df36960bdc2c36ad663752ba5f07632ce75116f09a142c4a4a308e",
+  "sysvars": {
+    "rent": {
+      "burn_percent": 50,
+      "exemption_threshold": 2,
+      "lamports_per_byte_year": 3480
+    }
+  },
+  "native_programs": [
+    {
+      "address": "11111111111111111111111111111111",
+      "name": "system"
+    }
+  ],
+  "accounts": [
+    {
+      "address": "BtaLHaDyxYEEbkBvR3xHNeLmQSKCsCr6Vn2vn6QNV6KB",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-00"
+    },
+    {
+      "address": "F8i1kSdE5pxQfJimhuDRtzjrSM5GsAfPjKcvgCggdCnm",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-01"
+    },
+    {
+      "address": "AfzrXSQW2hYsPZGg4bUT5xSjR3yBuPWmq8W9pPyZ5ND8",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-02"
+    },
+    {
+      "address": "2LZwx7e6EymrtPynVN69dmQbw3fg1XCU5LmJ9KjgR8BS",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-03"
+    },
+    {
+      "address": "h84NTkADibmyQfkxMi3inrL77ZLSGR2kJzupTqthLNp",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-04"
+    },
+    {
+      "address": "GcrQi2ZrSMFL6jyWveMK93VyJPdkN93S26U8eGZ58Fhs",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-05"
+    },
+    {
+      "address": "A8tYEGhiFuyqQvyfiZBNWXxW7PaUTLunLRupUe88qH4U",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-06"
+    },
+    {
+      "address": "6GdH5YZbzixp2PurC2YmwP9eEpd9xd3LUf9EgtoiQg46",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-07"
+    },
+    {
+      "address": "GSwxuJRcxCWWaenDZTMd5cPw66v58dEtg7BQaNC5QaR2",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-08"
+    },
+    {
+      "address": "Aw13124bQor7KEH7jhhTiXKEQWeqDry8CkkNUyHNa2Ty",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-09"
+    },
+    {
+      "address": "F55XvheXViXQgVXiU12TP3WsRLaBDU6bjhLd5Bv72jHh",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-10"
+    },
+    {
+      "address": "71fhPUW6MznWYvUPSjyjBz7RLrcEcTyy8b6d92riD6fQ",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-11"
+    },
+    {
+      "address": "14CZ4DUFQ3rjk8g51Jf87RCgE4FCWv4jPVNAVpTPfW9N",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-12"
+    },
+    {
+      "address": "Du55TMJNvfbYEscvx8xoEgrSnmpCnC7MRydLUGXnHaEC",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-13"
+    },
+    {
+      "address": "9tnu32CZUiNjHbjSV7ToMJWdgEcEbPjbLdUAXx3uVc8E",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-14"
+    },
+    {
+      "address": "LuPcwyo4WQWhrdy6StUmuwU68zK8b4dPwY7yohfqJW4",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-15"
+    },
+    {
+      "address": "Gx5uUTXZooZZTCaSWTp8Hx9ifTSf4LKuSaUTYT2VuiJd",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-16"
+    },
+    {
+      "address": "DzowW8tRPKkfDrP2H3trr1DMBp6TNh7amrDBFVaJqV7u",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-17"
+    },
+    {
+      "address": "FAETTufnspS2EyUzN3sntYcZUGXjidPYqLf3hK1Bhejd",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-18"
+    },
+    {
+      "address": "DFnCHCLmZFTkeZvML1dQYRc7Ymu2dEraWDEdVKiaajYp",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-19"
+    },
+    {
+      "address": "38oRuNT1m4757LtyNXFNRLQsSmsvvpk5GEARDmpLFQVy",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-20"
+    },
+    {
+      "address": "3DtoqgSPtptpwrD8EAyFVkJcV5RWcoWRfrtqqfXUV2xG",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-21"
+    },
+    {
+      "address": "2DRQjc7K5apkuGoyCMWrGNCFn3t6g9M25y13PURqbBaw",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-22"
+    },
+    {
+      "address": "2HdQWdJGxWxeCd9S4wd4QqtGJv3VXFSpE1ksxJnFSCRa",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-23"
+    },
+    {
+      "address": "FtCeQAqKd1k8FWTpiJRGQQQZKzHQTrcrd8GPPFmUQhoH",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-24"
+    },
+    {
+      "address": "2yLqDYiLnB9YahwoY8WrpMHbqnwcvw6L9ZymF5XKBy9j",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-25"
+    },
+    {
+      "address": "4QEJ5ehyCNfEELdRLHv5tKiPtjbpYngxwvBbrJ12z5qK",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-26"
+    },
+    {
+      "address": "F8pwWofuVkDxKH62Ka4VnA6qvrSBLA1CXutpBjXKePvR",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-27"
+    },
+    {
+      "address": "DkAFEMsu3vvtsEc8L8bmu5Ch9A1VSpP98TZXCsGaGR1x",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-28"
+    },
+    {
+      "address": "68A7MeeEkSoxbGM2gEJ42A4JiiDRdsnxD2695P8uthPq",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-29"
+    },
+    {
+      "address": "9ZyLpBuzZDxnCDV4ECCKsqq8gYKGJZLArXi6T1hhQjeT",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-30"
+    },
+    {
+      "address": "8PBuN2WtsBaVD2mZbUTATvJkcFozowE3wLNmy6yrZzbh",
+      "initial": {
+        "data": "00",
+        "executable": false,
+        "lamports": 897840,
+        "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+        "rent_epoch": 0
+      },
+      "name": "owned-31"
+    },
+    {
+      "address": "3bRMLcYUjXvmt7qEJfPMgv3vTRJQQVtAFAUfXpjKrXZ6",
+      "initial": {
+        "data": "",
+        "executable": false,
+        "lamports": 1000000,
+        "owner": "11111111111111111111111111111111",
+        "rent_epoch": 0
+      },
+      "name": "recipient"
+    }
+  ],
+  "cases": [
+    {
+      "name": "thirty-three-unique",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owned-00",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-01",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-02",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-03",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-04",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-05",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-06",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-07",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-08",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-09",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-10",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-11",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-12",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-13",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-14",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-15",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-16",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-17",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-18",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-19",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-20",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-21",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-22",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-23",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-24",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-25",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-26",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-27",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-28",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-29",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-30",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-31",
+                "state": {
+                  "data": "01",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "payer",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-08",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-09",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-10",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-11",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-12",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-13",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-14",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-15",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-16",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-17",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-18",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-19",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-20",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-21",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-22",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-23",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-24",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-25",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-26",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-27",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-28",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-29",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-30",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-31",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "0021",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sixty-four-with-duplicates",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owned-00",
+                "state": {
+                  "data": "07",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-01",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-02",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-03",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-04",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-05",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-06",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-07",
+                "state": {
+                  "data": "08",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-08",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-09",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-10",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-11",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-12",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-13",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-14",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-15",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-16",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-17",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-18",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-19",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-20",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-21",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-22",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-23",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-24",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-25",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-26",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-27",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-28",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-29",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-30",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-31",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "payer",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "0040",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sixty-five-fails",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owned-00",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-01",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-02",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-03",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-04",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-05",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-06",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-07",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-08",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-09",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-10",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-11",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-12",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-13",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-14",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-15",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-16",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-17",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-18",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-19",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-20",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-21",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-22",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-23",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-24",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-25",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-26",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-27",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-28",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-29",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-30",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-31",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 1001
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "payer",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "0041",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "system-transfer-beyond-32",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owned-00",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-01",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-02",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-03",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-04",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-05",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-06",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-07",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-08",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-09",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-10",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-11",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-12",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-13",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-14",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-15",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-16",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-17",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-18",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-19",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-20",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-21",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-22",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-23",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-24",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-25",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-26",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-27",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-28",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-29",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-30",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-31",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1250000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": null,
+            "log_counts": {
+              "11111111111111111111111111111111 invoke": 1
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "payer",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "recipient",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": false
+                },
+                {
+                  "account": "system",
+                  "signer": false,
+                  "writable": false
+                }
+              ],
+              "data": "01403f212890d0030000000000",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "failure-rolls-back",
+      "steps": [
+        {
+          "expect": {
+            "accounts": [
+              {
+                "account": "owned-00",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-01",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-02",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-03",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-04",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-05",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-06",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-07",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-08",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-09",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-10",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-11",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-12",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-13",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-14",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-15",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-16",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-17",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-18",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-19",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-20",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-21",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-22",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-23",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-24",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-25",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-26",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-27",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-28",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-29",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-30",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "owned-31",
+                "state": {
+                  "data": "00",
+                  "executable": false,
+                  "lamports": 897840,
+                  "owner": "4RtjWZmXwoLZFaNG5tWVnKpBj3HRfkYZiEANfxAsNXDB",
+                  "rent_epoch": 0
+                }
+              },
+              {
+                "account": "recipient",
+                "state": {
+                  "data": "",
+                  "executable": false,
+                  "lamports": 1000000,
+                  "owner": "11111111111111111111111111111111",
+                  "rent_epoch": 0
+                }
+              }
+            ],
+            "error": {
+              "InstructionError": [
+                0,
+                {
+                  "Custom": 7002
+                }
+              ]
+            }
+          },
+          "instructions": [
+            {
+              "accounts": [
+                {
+                  "account": "payer",
+                  "signer": true,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-00",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-01",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-02",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-03",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-04",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-05",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-06",
+                  "signer": false,
+                  "writable": true
+                },
+                {
+                  "account": "owned-07",
+                  "signer": false,
+                  "writable": true
+                }
+              ],
+              "data": "0240",
+              "program": "program"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

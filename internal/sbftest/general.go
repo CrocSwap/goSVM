@@ -345,8 +345,8 @@ func (s FixtureSuite) validate() (fixtureKeys, error) {
 				}
 			}
 			for _, ix := range step.Instructions {
-				if !programs[ix.Program] || len(ix.Accounts) > 32 {
-					return k, fmt.Errorf("%s: unknown program or over 32 instruction account references", c.Name)
+				if !programs[ix.Program] || len(ix.Accounts) > 255 {
+					return k, fmt.Errorf("%s: unknown program or over 255 instruction account references", c.Name)
 				}
 				data, e := hex.DecodeString(ix.Data)
 				if e != nil || len(data) > 1024 {

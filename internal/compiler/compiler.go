@@ -305,10 +305,17 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 				logs = true
 			}
 		}
-		if program.SDK == 2 || ownedLifecycle {
+		if program.SDK == 2 || ownedLifecycle || program.Program.MaxAccounts != 0 {
 			g.WriteString("\n#define GOSVM_SDK2 1\n")
 		}
-		g.WriteString(solanaRuntime)
+		if program.Program.MaxAccounts != 0 {
+			// Only opted-in programs get the wide table, so the C of every
+			// other program is unchanged.
+			g.WriteString(wideRuntime(solanaRuntime, "#define GOSVM_MAX_ACCOUNTS 32", "#define GOSVM_MAX_ACCOUNTS 64"))
+			g.WriteString(wideTrampoline)
+		} else {
+			g.WriteString(solanaRuntime)
+		}
 		if program.SDK != 1 {
 			g.WriteString(cpiRuntime)
 			if usesSDK(g.info, "GetReturnData") {
@@ -450,7 +457,11 @@ func emitCNamed(program *CheckedProgram) (out []byte, names map[string]string, e
 	g.emitInit(program)
 	if program.EntryKind == EntryContext {
 		g.WriteString("\n#define GOSVM_CONTEXT_ENTRY 1\n")
-		g.WriteString(accountsABI)
+		if program.Program.MaxAccounts != 0 {
+			g.WriteString(wideRuntime(accountsABI, "    return go_Process(&c);\n", "    return gosvm_run(&c);\n"))
+		} else {
+			g.WriteString(accountsABI)
+		}
 	}
 	names = map[string]string{}
 	for o, name := range g.names {

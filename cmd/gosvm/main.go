@@ -42,6 +42,7 @@ func legacy() {
 	profileName := flag.String("target", "", "explicit profile; raw -arch retains historical semantics")
 	noCache := flag.Bool("no-cache", false, "rebuild even if source, compiler, backend and output match the last build")
 	heapBytes := flag.Int("heap-bytes", 0, "invocation heap budget for allocation: a multiple of 1024 from 32768 to 262144 (0: 32768); above 32768 every transaction must send ComputeBudget RequestHeapFrame")
+	maxAccounts := flag.Int("max-accounts", 0, "incoming account limit: 0 (the SDK's: 16 for SDK 1, 32 for SDK 2) or 64, which runs Process in its own stack frame (docs/ACCOUNT_DECODER64.md)")
 	var trim trimFlag
 	flag.Var(&trim, "trim", "opt in to trimming for packages matching this import path or path/... pattern: only the declarations Process reaches are checked and compiled (repeatable; docs/GO_PACKAGES.md#trimming)")
 	flag.Parse()
@@ -53,7 +54,11 @@ func legacy() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	options := compiler.BuildOptions{HeapBytes: *heapBytes, Trim: trim}
+	if err := compiler.ValidateMaxAccounts(*maxAccounts, 2); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	options := compiler.BuildOptions{HeapBytes: *heapBytes, MaxAccounts: *maxAccounts, Trim: trim}
 	emitArch := *arch
 	if *profileName != "" {
 		explicitArch, explicitLLVM := false, false
@@ -97,7 +102,7 @@ func legacy() {
 		var src *compiler.Program
 		src, err = compiler.ReadProgramWithOptions(flag.Arg(0), compiler.ReadOptions{Trim: options.Trim})
 		if err == nil {
-			src.HeapBytes = options.HeapBytes
+			src.HeapBytes, src.MaxAccounts = options.HeapBytes, options.MaxAccounts
 			var checked *compiler.CheckedProgram
 			if checked, err = compiler.Check(src); err == nil {
 				out, err = compiler.EmitC(checked)

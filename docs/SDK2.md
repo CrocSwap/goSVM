@@ -113,6 +113,9 @@ including duplicates; SDK 1 remains capped at 16. Outgoing CPI metas and schema-
 declared accounts retain their separate 16-account bounds. Custom handlers can
 accept extra incoming accounts, while generated handlers retain their declared
 count checks. See the [decoder extension and new pin](ACCOUNT_DECODER32.md).
+Low-level builds can opt in to 64 incoming descriptors with `-max-accounts 64`,
+which runs `Process` in its own stack frame (a few CU per transaction); see the
+[64-account decoder](ACCOUNT_DECODER64.md).
 
 `cpi.SingleSigner` encodes one signer group directly, avoiding the intermediate
 `pda.Seeds` to `cpi.Signers` copy. It offers `AddBytes` and `AddByte`, with the

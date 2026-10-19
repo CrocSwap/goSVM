@@ -556,6 +556,9 @@ func loadProgram(program *Program) (*frontend, *programImporter, error) {
 	if err := ValidateHeapBytes(program.HeapBytes); err != nil {
 		return nil, nil, err
 	}
+	if err := ValidateMaxAccounts(program.MaxAccounts, program.SDK); err != nil {
+		return nil, nil, err
+	}
 	if len(program.Trim) == 0 {
 		return loadProgramOnce(program, nil)
 	}

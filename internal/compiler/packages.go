@@ -36,6 +36,10 @@ type Program struct {
 	// HeapBytes is the invocation heap budget for allocation; 0 selects the
 	// 32 KiB default. See ValidateHeapBytes and docs/GO_ALLOCATION.md.
 	HeapBytes int `json:",omitempty"`
+	// MaxAccounts is the incoming account limit: 0 selects the SDK's (16 for
+	// SDK 1, 32 otherwise); WideAccounts opts in to 64. See
+	// ValidateMaxAccounts and docs/ACCOUNT_DECODER64.md.
+	MaxAccounts int `json:",omitempty"`
 	// RuntimeInit disables compile-time evaluation of package
 	// initialization (docs/GO_GLOBALS.md#compile-time-evaluation): every
 	// initializer runs at run time on every invocation. A diagnostic and

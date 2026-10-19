@@ -710,3 +710,10 @@ Handler results propagate unchanged.
   `FindAddress` otherwise returns 3001 (no room for the bump) or the
   create-program-address status. It is SDK Go over `solana.CreateAddress`,
   so programs that do not call it compile to the same ELF.
+
+- 2026-10-19: addition (opt-in 64-account decoder; announce to Qushta), no
+  code added and nothing changed without the opt-in: `Program.MaxAccounts =
+  WideAccounts` (`-max-accounts 64`) raises the limit behind 1001 from 32 to
+  64 incoming descriptors; the built-in backend then calls `Process` in its
+  own frame ([64-account decoder](ACCOUNT_DECODER64.md)). Test harness only:
+  SVM fixtures accept up to 255 account references per instruction (was 32).

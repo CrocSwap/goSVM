@@ -88,6 +88,12 @@ exhausted), Go 1.22's `growslice` capacities, and the `makeslice` range checks.
 `Program.HeapBytes` comes from `gosvm.json` `heap_bytes` or the CLI's
 `-heap-bytes`.
 
+`Program.MaxAccounts` is the incoming account limit: 0 for the SDK's (16 for
+SDK 1, 32 otherwise) or `WideAccounts` (64, from the CLI's `-max-accounts`),
+beyond which the entrypoint returns 1001. The built-in backend keeps the
+64-entry table in the entrypoint's frame and calls `Process` without inlining
+it ([64-account decoder](ACCOUNT_DECODER64.md)).
+
 `make` lengths and capacities, indexes and slice bounds may have any integer
 type. A negative signed `make` operand traps like `len > cap`; a negative index
 or bound traps like any out-of-range one (the C backend compares them as `u64`,
