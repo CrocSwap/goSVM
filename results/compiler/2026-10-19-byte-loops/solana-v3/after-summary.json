@@ -1,0 +1,84 @@
+{
+  "aborts": 309,
+  "cases": 2050,
+  "cu": {
+    "0": {
+      "equal": 368,
+      "first_differs": 377,
+      "last_differs": 721
+    },
+    "1": {
+      "equal": 420,
+      "first_differs": 357,
+      "last_differs": 420
+    },
+    "2": {
+      "equal": 361,
+      "first_differs": 338,
+      "last_differs": 688
+    },
+    "3": {
+      "equal": 358,
+      "first_differs": 358,
+      "last_differs": 358
+    },
+    "4": {
+      "equal": 382,
+      "first_differs": 354,
+      "last_differs": 382
+    },
+    "5": {
+      "equal": 357,
+      "first_differs": 357,
+      "last_differs": 357
+    },
+    "6": {
+      "equal": 372,
+      "first_differs": 372,
+      "last_differs": 372
+    },
+    "7": {
+      "equal": 415,
+      "first_differs": 415,
+      "last_differs": 415
+    },
+    "8": {
+      "equal": 405,
+      "first_differs": 405,
+      "last_differs": 405
+    },
+    "9": {
+      "equal": 358,
+      "first_differs": 358,
+      "last_differs": 358
+    }
+  },
+  "elf_sha256": "30354d2e3ec08404c734d8b30b4af5f25c3d4209100c662d1a57dfecd77cae13",
+  "probes": {
+    "array32": {
+      "equal": 175,
+      "first_differs": 183
+    },
+    "none": {
+      "equal": 98,
+      "first_differs": 98
+    },
+    "pointer32": {
+      "equal": 148,
+      "first_differs": 152
+    },
+    "slice13": {
+      "equal": 109,
+      "first_differs": 106
+    },
+    "slice32": {
+      "equal": 112,
+      "first_differs": 110
+    },
+    "slice8": {
+      "equal": 106,
+      "first_differs": 106
+    }
+  },
+  "profile": "solana-v3"
+}
