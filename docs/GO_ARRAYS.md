@@ -139,6 +139,31 @@ pointers and type parameters (`func First[T any](s []T) *[4]T`).
 Tests: `TestSliceArray*` ([slicearray_test.go](../internal/compiler/slicearray_test.go),
 [evidence](../results/compiler/2026-10-19-slice-array-conversions/README.md)).
 
+<a id="hand-written-byte-loops"></a>**Hand-written byte loops.** A compare
+loop of this shape costs about 10 CU per byte on SBF, since any byte
+may return:
+
+```go
+for i := 0; i < 32; i++ {
+    if key[i] != want[i] {
+        return false // any body; it sees i as usual
+    }
+}
+```
+
+On SBF the compiler puts a word compare in front of it when the start and
+bound are constants, the variable is declared by the loop, the body is only
+that `if` (no `else`) and `key` and `want` are variables of type `[]E`,
+`[N]E` or `*[N]E` with `E` a one-byte integer. If both hold the bytes (a
+pointer is non-nil) and they are all equal, the loop is skipped: it would
+have run to the end without entering the `if` or trapping. Otherwise the loop
+runs unchanged, so the first different byte decides, and a short operand or
+nil pointer traps at the same index as before. An equal 32-byte compare costs
+about 15 CU instead of about 320; a difference costs 3 to 17 CU more than
+before ([measurements](../results/compiler/2026-10-19-byte-loops/README.md)).
+Host C keeps only the loop. Little-endian loads (`v |= uint64(b[i]) << (8*i)`
+over 8 bytes) need nothing: clang already combines them into one load.
+
 [`range`](GO_CONTROL.md#range-loops) iterates over arrays (over a copy
 when a value variable is used) and pointers to arrays. [Constrained array pointers](GO_POINTERS.md), indexed
 increment/decrement and [borrowed byte views](GO_VIEWS.md) are now supported. Diagnostics identify Go source
