@@ -47,3 +47,15 @@ Over all 532 cases: every fast-path input with a nonzero product costs 482 to
 759 CU less, a zero product 3 to 6 CU less, and the exact path 2 to 8 CU more
 (the threshold compares and a repeated bounds check). Errors before the
 threshold check are unchanged.
+
+## Reference ELFs
+
+This change moves the full swap (fogo-v0 `7d162f10…`, solana-v3 `42e1deba…`).
+`clock2` is unchanged. `rebuild/metrics.json` is the fresh-rebuild check
+against the previous reference (the #25 integration rebuild), and
+`scripts/verify_rebuild.py` now uses it as the default reference:
+
+```sh
+python3 scripts/verify_rebuild.py --output <new-directory> --cli build/gosvm
+python3 scripts/check_rebuild_reference.py <new-directory>/metrics.json
+```
