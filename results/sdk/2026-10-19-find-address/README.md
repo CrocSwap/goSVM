@@ -33,6 +33,27 @@ of the group was a byte loop, which inflated the saving for long groups (5,233
 CU for 15 × 32 bytes, median 911); #22 made that copy `sol_memmove_`. The
 per-try cost is unchanged.
 
+## `pda.Seeds.FindAddress`
+
+The SDK builder's search (#16) looped over `CreateAddress` and now makes one
+`FindAddress` call. `examples/find-address` under `gosvm test --svm`, whole
+transaction, fogo-v0 (solana-v3 within 54 CU, same savings):
+
+| scenario | bump | main `939b215` | this branch |
+| --- | ---: | ---: | ---: |
+| `derive-a-bump-255` | 255 | 2,931 | 2,263 |
+| `derive-fees-bump-254` | 254 | 4,532 | 3,805 |
+| `derive-igp-bump-253` | 253 | 6,077 | 5,291 |
+| `derive-seed-1-bump-250` | 250 | 10,796 | 9,833 |
+| `derive-fifteen-seeds` | | 3,969 | 3,273 |
+| `create-at-the-canonical-bump-252` | 252 | 20,054 | 19,421 |
+| `derive-sixteen-seeds-fails` (3001) | | 1,250 | 924 |
+
+630 to 960 CU less per search. The builder no longer copies itself to try
+the bump either, which is the saving on the failing case. `sdk/pda`'s native
+tests (401 `solana-pubkey` vectors, statuses, the missing callback) pass
+unchanged.
+
 ## Hyperlane Go programs
 
 Measured before #25, on `79cf25c`: `hyperlane-monorepo` `sealevel` with

@@ -16,7 +16,7 @@ exactly as Solana does.
 (`go run ./cmd/fixtures > testdata/svm.json`) with the host's
 `fixture.FindProgramAddress` as the oracle. Its authority and one seed are
 chosen so the canonical bumps are 252 and 250: the on-chain search skips
-on-curve addresses, each attempt costing about 1,570 CU. A valid but
+on-curve addresses, each attempt costing 1,500 CU. A valid but
 noncanonical bump is refused and the creation rolls back.
 
 ```sh
