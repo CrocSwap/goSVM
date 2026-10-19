@@ -102,23 +102,29 @@ static u64 sol_CreateAddress(Context *c,slice b,slice program,slice output) {
     return 0;
 }
 
-static u64 sol_Invoke(Context *c,u64 program,slice metas,slice data,slice encoded) {
+// Outgoing CPI bounds (solana/api.go Invoke, docs/SDK2.md#cpi-bounds): 64
+// account metas, 4 signer groups of at most 16 seeds of at most 32 bytes, in
+// at most 1,024 encoded bytes. The descriptor arrays take 2,112 bytes, so
+// sol_Invoke keeps its own SBF frame rather than growing its caller's.
+#define GOSVM_CPI_METAS 64
+#define GOSVM_CPI_GROUPS 4
+static __attribute__((noinline)) u64 sol_Invoke(Context *c,u64 program,slice metas,slice data,slice encoded) {
     if(program>=c->count) return 2005;
     AccountInfo *p=&c->accounts[program];if(!p->executable) return 2001;
     // Slice lengths are nonnegative. Use unsigned remainder: legacy SBF has no
     // signed-remainder instruction and otherwise emits an unrelated __moddi3.
-    if((u64)metas.len>16*9 || (u64)metas.len%9) return 2006;
-    AccountMeta accounts[16];u64 n=(u64)metas.len/9;
+    if((u64)metas.len>GOSVM_CPI_METAS*9 || (u64)metas.len%9) return 2006;
+    AccountMeta accounts[GOSVM_CPI_METAS];u64 n=(u64)metas.len/9;
     for(u64 j=0;j<n;j++) {
         u64 index=sol_read64(metas.ptr+j*9);u8 flags=metas.ptr[j*9+8];
         if(index>=c->count || flags>3) return 2006;
         accounts[j]=(AccountMeta){c->accounts[index].key,(flags&1)!=0,(flags&2)!=0};
     }
     if(data.len>10240) return 2008;
-    Seed parts[32];Seeds groups[2];u64 group_count=0,offset=0;
+    Seed parts[GOSVM_CPI_GROUPS*16];Seeds groups[GOSVM_CPI_GROUPS];u64 group_count=0,offset=0;
     if(encoded.len) {
         if(encoded.len>1024) return 2007;
-        group_count=encoded.ptr[offset++];if(group_count>2) return 2007;
+        group_count=encoded.ptr[offset++];if(group_count>GOSVM_CPI_GROUPS) return 2007;
         for(u64 j=0;j<group_count;j++) {
             u64 count=0;
             if(!sol_seed_group(encoded,&offset,parts+j*16,&count)) return 2007;

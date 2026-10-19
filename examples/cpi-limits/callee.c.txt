@@ -1,0 +1,47 @@
+/* CPI callee for examples/cpi-limits: instruction data [metas, groups, plain].
+   Succeeds only when it received exactly `metas` instruction accounts, its
+   first `groups` accounts are signers, and the rest cycle through `plain`
+   distinct accounts: account i is new for i < groups+plain and otherwise a
+   duplicate of account groups+(i-groups)%plain, which checks every caller
+   meta record's index. Custom errors: 5000 short data, 5001+count wrong count,
+   5300+i account i not a signer, 5600+i account i not the expected
+   duplicate or new account. No syscalls, so one source builds for v0 and v3. */
+typedef unsigned long long u64;
+typedef unsigned char u8;
+
+static u64 read64(const u8 *p) {
+    u64 v = 0;
+    for (u64 j = 0; j < 8; j++) v |= (u64)p[j] << (j * 8);
+    return v;
+}
+
+u64 entrypoint(u8 *input) {
+    u8 signer[256], dup[256];
+    u64 n = read64(input);
+    if (n > 255) return 5000;
+    u8 *p = input + 8;
+    for (u64 i = 0; i < n; i++) {
+        dup[i] = p[0];
+        if (p[0] != 255) {
+            signer[i] = signer[p[0]];
+            p += 8;
+        } else {
+            signer[i] = p[1];
+            u64 len = read64(p + 80);
+            p += 88 + len + 10240;
+            p = (u8 *)(((u64)p + 7) & ~7ULL);
+            p += 8;
+        }
+    }
+    u64 len = read64(p);
+    const u8 *data = p + 8;
+    if (len < 3) return 5000;
+    u64 groups = data[1], plain = data[2];
+    if (n != data[0]) return 5001 + n;
+    for (u64 i = 0; i < groups && i < n; i++) if (!signer[i]) return 5300 + i;
+    for (u64 i = 0; i < n; i++) {
+        u64 want = i < groups + plain || plain == 0 ? 255 : groups + (i - groups) % plain;
+        if (dup[i] != want) return 5600 + i;
+    }
+    return 0;
+}
