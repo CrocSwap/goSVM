@@ -40,3 +40,16 @@ suites (584/584 pass both ways, 4,577 paired invocations). Per-call median 6%
 less CU. Total CU per program: test ISM 10% less, composite ISM 6% less,
 mailbox 7% less, token programs 6% to 8% less, IGP 5% less, fee 4% less. No
 program got more expensive in total.
+
+## Reference ELFs
+
+This change moves the full swap (fogo-v0 `43bf30fa…`, solana-v3 `147b1b26…`)
+and the `clock2` (fogo-v0 `35307d23…`, solana-v3 `38060141…`).
+`rebuild/metrics.json` is the fresh-rebuild check against the previous
+reference (the #25 integration rebuild), and `scripts/verify_rebuild.py` now
+uses it as the default reference:
+
+```sh
+python3 scripts/verify_rebuild.py --output <new-directory> --cli build/gosvm
+python3 scripts/check_rebuild_reference.py <new-directory>/metrics.json
+```
