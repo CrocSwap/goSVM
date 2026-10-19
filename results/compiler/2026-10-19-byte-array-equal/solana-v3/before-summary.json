@@ -1,0 +1,16 @@
+{
+  "cases": 437,
+  "elf_sha256": "d57fc40047f3a027ccae96fd59e4e1b90a58d5484a85c408f5c213b94e53fc06",
+  "equal_cu": {
+    "kind0-len8-equal": 301,
+    "kind1-len13-equal": 431,
+    "kind2-len20-equal": 577,
+    "kind3-len32-equal": 1548,
+    "kind4-len64-equal": 3197,
+    "kind5-len13-equal": 409,
+    "kind6-len32-equal": 1167,
+    "kind7-len32-equal": 1345,
+    "kind8-len16-equal": 160
+  },
+  "profile": "solana-v3"
+}
