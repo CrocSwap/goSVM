@@ -71,6 +71,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestAllocationAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"new scalar":           `p := new(uint64); *p = 1; s[0] = byte(*p)`,
 		"new struct":           `v := new(V); v.N = 2; s[0] = byte(v.N)`,
@@ -123,6 +124,7 @@ func TestAllocationAcceptedForms(t *testing.T) {
 }
 
 func TestAllocationRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"make channel":        {`ch := make(chan uint64); _ = ch`, "make supports only slices and maps"},
 		"new int":             {`p := new(int); _ = p`, ""},
@@ -179,6 +181,7 @@ func TestAllocationRejections(t *testing.T) {
 // Heap moves and parameter escapes are part of the checked program, so a
 // backend allocates exactly the same storage.
 func TestHeapMovesExported(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "alloc.go", Data: []byte(`package p
 type N struct{ Next *N; V uint64 }
 func keep(h *N, n *N) { h.Next = n }
@@ -229,6 +232,7 @@ func Process(s, i []byte) uint64 {
 // Programs that do not allocate keep their exact C; the runtime and the
 // configured budget appear only when used.
 func TestAllocationRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	without, err := Compile("a.go", []byte("package p\ntype B struct{ K [4]byte }\nfunc Process(s, i []byte) uint64 { var b B; v := b.K[:]; return uint64(len(v)) }\n"))
 	if err != nil {
 		t.Fatal(err)
@@ -339,6 +343,7 @@ func AllocVectorsForTest() [][]byte { return allocVectors(20261015, 3, 3000, 150
 // for 18 element kinds, make/new zero values and make traps, copy overlap,
 // slicing bounds, linked structures, escaping locals, literals and aliasing.
 func TestAllocationDifferential(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/alloc-values/program.go")
 	if err != nil {
 		t.Fatal(err)
@@ -411,6 +416,7 @@ func runOOM(t *testing.T, bin string, n uint64) string {
 // first allocation that does not fit aborts. Native Go never runs out of
 // memory at these sizes, so the expectations are computed, not observed.
 func TestOutOfMemoryBoundaries(t *testing.T) {
+	t.Parallel()
 	build := func(heap int, body string) string {
 		source := "package p\nfunc load(i []byte) uint64 { n := uint64(0); for j := uint64(0); j < 8; j++ { n = n | uint64(i[j])<<(8*j) }; return n }\nfunc save(s []byte, v uint64) { for j := uint64(0); j < 8; j++ { s[j] = byte(v >> (8 * j)) } }\nfunc Process(s, i []byte) uint64 {\nn := load(i)\n" + body + "\n}\n"
 		c, err := CompileProgram(&Program{Entry: "program", HeapBytes: heap, Packages: []PackageSources{{"program", []Source{{Name: "oom.go", Data: []byte(source)}}}}})

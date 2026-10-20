@@ -69,6 +69,7 @@ func intProbeCases() []probeCase {
 // without the v1.57 backend or a runner. GOSVM_INT_RESULTS=<dir> keeps the
 // fixtures, ELFs and runner reports.
 func TestIntValuesSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

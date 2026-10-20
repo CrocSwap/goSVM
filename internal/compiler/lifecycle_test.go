@@ -16,6 +16,7 @@ import (
 )
 
 func TestSDK2LifecycleLoaderSelection(t *testing.T) {
+	t.Parallel()
 	plain := `package app;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.Count(c)}`
 	for _, sdk := range []int{0, 1, 2} {
 		p := &Program{SDK: sdk, Entry: "app", Packages: []PackageSources{unit("app", plain)}}
@@ -39,6 +40,7 @@ func TestSDK2LifecycleLoaderSelection(t *testing.T) {
 }
 
 func TestSDK2OwnedLifecycleDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app
 import "gosvm/solana"
 func Process(c solana.Context)uint64{
@@ -159,6 +161,7 @@ int main(void){u64 mode,n,original,w,x,owned,dw,dx,left,right,rc;
 }
 
 func TestSDK2RentCalculationC(t *testing.T) {
+	t.Parallel()
 	p, err := ReadProgram("../../examples/lifecycle2")
 	if err != nil {
 		t.Fatal(err)

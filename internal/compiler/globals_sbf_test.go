@@ -130,6 +130,7 @@ func runGlobalProgram(t *testing.T, llvm, runner, profile, name string, program 
 // Skips without the v1.57 backend or a runner (make test).
 // GOSVM_GLOBAL_RESULTS=<dir> keeps fixtures, ELFs, reports and a summary.
 func TestGlobalsSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

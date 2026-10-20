@@ -7,6 +7,7 @@ import (
 )
 
 func TestTypeCheckBeforeEntryGeneration(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{
 		unit("app", `package app;import "gosvm/solana";import "app/model";type Accounts struct{Pool model.Pool};func Swap(c solana.Context,a Accounts,n model.Amount)(model.Pool,uint64){a.Pool.N=a.Pool.N+n;return a.Pool,0}`),
 		unit("app/model", `package model;type Key [32]byte;type Amount uint64;type Pool struct{Authority Key;N Amount}`),
@@ -29,6 +30,7 @@ func TestTypeCheckBeforeEntryGeneration(t *testing.T) {
 	}
 }
 func TestTypeInspectionIsNotSubsetCertification(t *testing.T) {
+	t.Parallel()
 	p := &Program{Entry: "app", Packages: []PackageSources{unit("app", `package app;func Process(s,i []byte)uint64{n:=float64(i[0]);return uint64(n)}`)}}
 	if _, err := TypeCheckProgram(p); err != nil {
 		t.Fatal(err)

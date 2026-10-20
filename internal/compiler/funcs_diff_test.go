@@ -85,6 +85,7 @@ func compileFuncValues(t *testing.T) []byte {
 }
 
 func TestFuncValuesDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileFuncValues(t), DefaultHeapBytes, allocDriver, false)
 	vectors := append(funcVectors(20261014, 1500), FuncVectorsForTest()...)
 	var want []string
@@ -177,6 +178,7 @@ func envLimit(kind byte) int {
 // exactly: the value that does not fit aborts, after exactly the predicted
 // number; native Go never runs out, so the expectation is computed.
 func TestClosureEnvironmentHeap(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileFuncValues(t), DefaultHeapBytes, allocDriver, false)
 	counted := func(n int, done bool, kind byte) string {
 		out := make([]byte, 1024)

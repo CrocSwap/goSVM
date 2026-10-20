@@ -85,6 +85,7 @@ func compileFuncStrings(t *testing.T) []byte {
 }
 
 func TestFuncStringsDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileFuncStrings(t), DefaultHeapBytes, allocDriver, false)
 	vectors := funcStringVectors(20261014, 1500)
 	var want []string
@@ -167,6 +168,7 @@ func funcStringInput(kind byte, n int) []byte {
 // not fit aborts after exactly the predicted number; native Go never runs
 // out, so the expectation is computed.
 func TestClosureStringHeap(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileFuncStrings(t), DefaultHeapBytes, allocDriver, false)
 	counted := func(n int, done bool, kind byte) string {
 		out := make([]byte, 1024)

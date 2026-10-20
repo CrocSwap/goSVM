@@ -12,6 +12,7 @@ import (
 )
 
 func TestSDK2Secp256k1RecoverNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := strings.Replace(string(mustRead(t, filepath.Join("testdata", "secp256k1", "program.go"))), "package program", "package app", 1)
 	p := &Program{SDK: 2, Entry: "app", Packages: []PackageSources{unit("app", source)}}
 	c, err := CompileProgram(p)

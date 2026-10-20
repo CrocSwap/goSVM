@@ -81,6 +81,7 @@ func itoa(n int) string {
 // without the v1.57 backend or a runner. GOSVM_RETURN_DATA_RESULTS=<dir>
 // keeps the fixtures, ELFs and reports.
 func TestGetReturnDataSBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

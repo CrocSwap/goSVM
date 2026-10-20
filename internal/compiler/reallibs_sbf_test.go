@@ -298,6 +298,7 @@ func Process(c solana.Context) uint64 {
 // GOSVM_REALLIBS_RESULTS=<dir> keeps fixtures, ELFs, reports and a summary
 // per target and form.
 func TestRealLibrariesSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

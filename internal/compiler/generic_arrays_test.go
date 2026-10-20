@@ -192,6 +192,7 @@ func genericArrayInputs(count int) [][]byte {
 }
 
 func TestGenericArrayTypeArgsDifferential(t *testing.T) {
+	t.Parallel()
 	inputs := genericArrayInputs(256)
 	for name, src := range genericArrayPrograms {
 		t.Run(name, func(t *testing.T) {
@@ -224,6 +225,7 @@ func TestGenericArrayTypeArgsDifferential(t *testing.T) {
 // (each was "array type was not declared before use"), and the storage
 // rules inside them still apply.
 func TestGenericArrayTypeArgsForms(t *testing.T) {
+	t.Parallel()
 	const decls = `type Pair[K any, V any] struct { Key K; Value V }
 type Box[T any] struct { V [][3]T }
 type PB[T any] struct { P *[4]T }
@@ -279,6 +281,7 @@ func Id[T any](x T) T { return x }
 }
 
 func TestGenericArrayTypeArgsSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

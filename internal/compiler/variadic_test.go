@@ -11,6 +11,7 @@ import (
 // calls with no, one and several extra arguments, spread slices, nil
 // spreads, deferred calls and interface elements check.
 func TestVariadicForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"none":         `func f(xs ...uint64) uint64 { return uint64(len(xs)) }; func Process(s, i []byte) uint64 { return f() }`,
 		"several":      `func f(a byte, xs ...uint64) uint64 { return uint64(a) + uint64(len(xs)) }; func Process(s, i []byte) uint64 { return f(1, 2, 3, uint64(s[0])) }`,
@@ -32,6 +33,7 @@ func TestVariadicForms(t *testing.T) {
 // TestVariadicRejections: variadic function values, literals, function
 // types and interface methods stay unsupported.
 func TestVariadicRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"function value": {`func f(xs ...uint64) {}; func Process(s, i []byte) uint64 { g := f; _ = g; return 0 }`, "variadic function types are unsupported"},
 		"literal":        {`func Process(s, i []byte) uint64 { g := func(xs ...uint64) {}; g(); return 0 }`, "variadics are unsupported"},
@@ -50,6 +52,7 @@ func TestVariadicRejections(t *testing.T) {
 // "..." into one that passes the final parameter as a slice literal or nil
 // (docs/BACKEND_INTERFACE.md#variadic-functions).
 func TestVariadicLowering(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "p.go", Data: []byte(
 		"package p\nfunc f(a byte, xs ...uint64) uint64 { return uint64(len(xs)) }\nfunc Process(s, i []byte) uint64 { return f(1) + f(2, 3, 4) + f(5, nil...) }\n")}}}}})
 	if err != nil {
@@ -87,6 +90,7 @@ func TestVariadicLowering(t *testing.T) {
 // into heap data, so a local stored that way moves to the heap, and a
 // parameter whose address is taken is the caller's obligation.
 func TestPointerToPointerBorrows(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "p.go", Data: []byte(`package p
 func viaLocal() *uint64 {
 	var p *uint64

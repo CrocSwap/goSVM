@@ -38,6 +38,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestMixedAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"generic make":              `w := Map([]int8{-1, 2}, -3); s[0] = byte(w[0])`,
 		"generic append field":      `var v Vec[int32]; v.Add(-1); v.Add(2); s[0] = byte(len(v.items))`,
@@ -77,6 +78,7 @@ func TestMixedAcceptedForms(t *testing.T) {
 }
 
 func TestMixedRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"generic zero-size elements": {`_ = Lit[[0]byte]([0]byte{}, [0]byte{})`,
 			"instantiation Lit[[0]uint8]: alloc.go:15:1: slice elements must not contain zero-length arrays or empty structs"},
@@ -97,6 +99,7 @@ func TestMixedRejections(t *testing.T) {
 // moved parameters and locals are the instance's own objects, and an
 // instance whose values do not escape moves nothing.
 func TestMixedInstanceHeapMoves(t *testing.T) {
+	t.Parallel()
 	source := mixedPrefix + "p, q := Box(int16(-2)), Box(uint8(3)); h := Push[int64](nil, 1); _ = Id(int8(1)); ps := Ptrs([]int{1}); s[0] = byte(*p) + *q + byte(h.Val) + byte(*ps[0])\nreturn 0 }\n"
 	checked, err := Check(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "alloc.go", Data: []byte(source)}}}}})
 	if err != nil {
@@ -145,6 +148,7 @@ func TestMixedInstanceHeapMoves(t *testing.T) {
 // uninstantiated generic function that would allocate adds nothing, and an
 // instance over byte slices that only reads them needs no runtime.
 func TestMixedHeapRuntimeOnlyForInstances(t *testing.T) {
+	t.Parallel()
 	plain := "package p\nfunc Process(s, i []byte) uint64 { return uint64(len(s)) }\n"
 	unused := "package p\nfunc Mk[T any](n int) []T { return make([]T, n) }\nfunc Sum[T ~[]E, E ~uint8](s T) uint64 { t := uint64(0); for _, v := range s { t = t + uint64(v) }; return t }\nfunc Process(s, i []byte) uint64 { return Sum(s) }\n"
 	used := "package p\nfunc Mk[T any](n int) []T { return make([]T, n) }\nfunc Process(s, i []byte) uint64 { return uint64(len(Mk[int8](3))) }\n"
@@ -221,6 +225,7 @@ func mixedSource(t *testing.T) []byte { return mustRead(t, "../../examples/mixed
 // C on the host (32 KiB heap, as on chain by default) and compares output
 // bytes, results and panics for every vector.
 func TestMixedDifferential(t *testing.T) {
+	t.Parallel()
 	c, err := CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: mixedSource(t)}}}}})
 	if err != nil {
 		t.Fatal(err)
@@ -291,6 +296,7 @@ func mixedSBFSource(t *testing.T) []byte {
 // completions must leave native Go's output bytes; panics must abort and roll
 // back. Skips without the v1.57 backend or a runner (make test).
 func TestMixedSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

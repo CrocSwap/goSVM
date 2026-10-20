@@ -238,6 +238,7 @@ func bitsEdges(width int) []uint64 {
 }
 
 func TestBitsDifferentialAgainstGo(t *testing.T) {
+	t.Parallel()
 	ops := bitsOps()
 	program := bitsDifferentialProgram(ops)
 	bin := hostProgram(t, program, bitsHostDriver)

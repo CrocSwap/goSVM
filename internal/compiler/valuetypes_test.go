@@ -54,6 +54,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestValueTypesAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"struct equality":         `a, b := P{1, 2}, P{X: int16(i[0])}; if a == b || a != b { s[0] = 1 }`,
 		"struct with every kind":  `x := P{}; a := Q{A: 1, S: "x", I: 3, R: &x}; b := a; b.N[1].Y = 2; if a == b { s[0] = 1 }`,
@@ -112,6 +113,7 @@ func must[T comparable](v T) T { var zero T; if v == zero { panic("zero") }; ret
 `
 
 func TestValueTypesRejections(t *testing.T) {
+	t.Parallel()
 	cases := map[string][2]string{
 		"recover":          {`defer func() { _ = recover() }()`, recoverRule},
 		"defer panic":      {`defer panic("x")`, "defer panic(...) unsupported; defer a function literal that panics"},
@@ -142,6 +144,7 @@ func TestValueTypesRejections(t *testing.T) {
 // of generic instantiations and through chains of aliases behave as the
 // aliased types: methods, map keys, interfaces and comparisons.
 func TestCrossPackageAliases(t *testing.T) {
+	t.Parallel()
 	wide := `package wide
 type Int [4]uint64
 func (z *Int) Add(x, y *Int) *Int { var c uint64; for j := range z { s := x[j] + y[j] + c; c = 0; if s < x[j] || (s == x[j] && y[j]+c != 0 && c != 0) { c = 1 }; z[j] = s }; return z }
@@ -205,6 +208,7 @@ func Process(s, i []byte) uint64 {
 // Arrays of pointers keep Go's escape rules: a local whose address is
 // stored into an array literal or element moves to the heap.
 func TestCompositeArrayEscapes(t *testing.T) {
+	t.Parallel()
 	source := `package p
 type P struct{ X uint8 }
 func f() [2]*P { x := P{1}; return [2]*P{&x, nil} }
@@ -228,6 +232,7 @@ func Process(s, i []byte) uint64 { s[0] = f()[0].X + g()[1].X + h(); return 0 }
 // Check records every panic call's log line; the backend view is complete
 // and the C is deterministic. Programs without panic get no panic runtime.
 func TestPanicSites(t *testing.T) {
+	t.Parallel()
 	source := valuePrefix + `switch i[0] {
 	case 0: panic("boom")
 	case 1: panic(string(i[:2]))
@@ -297,6 +302,7 @@ func TestPanicSites(t *testing.T) {
 // then aborts; deferred calls do not run (Go would run them, but the
 // transaction fails and rolls back either way).
 func TestPanicLogLine(t *testing.T) {
+	t.Parallel()
 	source := `package p
 func Process(s, i []byte) uint64 {
 	defer func() { s[1] = 9 }()

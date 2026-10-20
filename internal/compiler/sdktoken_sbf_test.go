@@ -141,5 +141,6 @@ func tokenCPIFixture() ([]byte, error) {
 
 // TestSDKTokenCPISBF runs examples/token-cpi against real Token-2022 and Token.
 func TestSDKTokenCPISBF(t *testing.T) {
+	t.Parallel()
 	runSDKProbe(t, "token-cpi", tokenCPIFixture)
 }

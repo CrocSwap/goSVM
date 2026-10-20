@@ -14,6 +14,7 @@ import (
 // directly. Duplicate descriptors must retain data/flags/key aliasing across
 // both the old boundary and the new final slot.
 func TestSDKAccountDecoderCapacityAndAliases(t *testing.T) {
+	t.Parallel()
 	source := `package app;import "gosvm/solana"
 func Process(c solana.Context)uint64 {
  d:=solana.Instruction(c)
@@ -144,6 +145,7 @@ while(scanf("%llu %u %u %u",&n,&pattern,&bad,&strict)==4){
 // Only programs that opt in to 64 accounts get the wide table and Process's
 // own frame; SDK 1 and other limits are rejected.
 func TestMaxAccountsOptIn(t *testing.T) {
+	t.Parallel()
 	source := `package app;import "gosvm/solana";func Process(c solana.Context)uint64{return solana.Count(c)}`
 	for _, tc := range []struct {
 		sdk, max   int

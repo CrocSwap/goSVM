@@ -237,6 +237,7 @@ func compareHostVectors(t *testing.T, bin string, vectors [][]byte, want []strin
 }
 
 func TestStdlibDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileStdlib(t), DefaultHeapBytes, valueTypesDriver, false)
 	vectors := append(stdlibVectors(20261014, 600), StdlibVectorsForTest()...)
 	want := make([]string, len(vectors))

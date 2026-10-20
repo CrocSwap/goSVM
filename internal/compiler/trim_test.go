@@ -88,6 +88,7 @@ func trimProgram(dep, app string, trim ...string) *Program {
 }
 
 func TestTrimDropsUnreachable(t *testing.T) {
+	t.Parallel()
 	// By default the whole package is checked, and the rejection names the
 	// opt-in.
 	_, err := Check(trimProgram(trimDep, trimApp))
@@ -163,6 +164,7 @@ func TestTrimDropsUnreachable(t *testing.T) {
 // TestTrimRejections: what Process reaches is checked exactly as before,
 // with the same messages (only the opt-in hint is gone).
 func TestTrimRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ dep, app, want string }{
 		"reached float": {"package dep\nfunc F() uint64 { var f float64 = 1; return uint64(f) }\n",
 			"package app\nimport \"example.com/dep\"\nfunc Process(s, i []byte) uint64 { return dep.F() }\n", ""},
@@ -201,6 +203,7 @@ func TestTrimRejections(t *testing.T) {
 // TestTrimEntryPackage: the entry package is trimmed only when a pattern
 // names it exactly.
 func TestTrimEntryPackage(t *testing.T) {
+	t.Parallel()
 	app := trimApp + "\nfunc unused() float64 { return 1 }\n"
 	dep := "package dep\nconst K = 7\nvar Count uint64\nfunc F(x uint64) (uint64, error) { return x, nil }\n"
 	if _, err := Check(trimProgram(dep, app, "example.com/...")); err == nil || !strings.Contains(err.Error(), "float") {
@@ -216,6 +219,7 @@ func TestTrimEntryPackage(t *testing.T) {
 }
 
 func TestValidateTrim(t *testing.T) {
+	t.Parallel()
 	for _, ok := range []string{"example.com/lib", "example.com/lib/...", "lib"} {
 		if err := ValidateTrim([]string{ok}); err != nil {
 			t.Errorf("%s: %v", ok, err)
@@ -237,6 +241,7 @@ func TestValidateTrim(t *testing.T) {
 // information, compiled (promoted) only when a reached declaration uses
 // them; then they follow the ordinary rules.
 func TestTrimModules(t *testing.T) {
+	t.Parallel()
 	dir := t.TempDir()
 	write := func(name, content string) {
 		t.Helper()
@@ -319,6 +324,7 @@ func TestTrimModules(t *testing.T) {
 // TestTrimWarnings: builds write the report beside the output and warn
 // from it.
 func TestTrimWarnings(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(trimProgram(trimDep, trimApp, "example.com/dep"))
 	if err != nil {
 		t.Fatal(err)

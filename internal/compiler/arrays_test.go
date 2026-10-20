@@ -43,6 +43,7 @@ while(scanf("%32s %48s",ih,sh)==2){
 }return 0;}`
 
 func TestScalarArraysDifferential(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/array-values/program.go")
 	if err != nil {
 		t.Fatal(err)
@@ -96,6 +97,7 @@ func TestScalarArraysDifferential(t *testing.T) {
 }
 
 func TestArrayDeclarationOrder(t *testing.T) {
+	t.Parallel()
 	sources := []Source{
 		{"a.go", []byte(`package p; type Box struct { K Key };func Process(s,i []byte)uint64 {b:=Box{K:Key{1}};return uint64(b.K[0])}`)},
 		{"b.go", []byte(`package p;type Key [32]byte;func echo(k [32]byte)[32]byte{return k}`)},
@@ -115,6 +117,7 @@ func TestArrayDeclarationOrder(t *testing.T) {
 }
 
 func TestArrayRejections(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"oversize byte": `type K [1025]byte;func Process(s,i []byte)uint64{return 0}`,
 		"oversize word": `type K [129]uint64;func Process(s,i []byte)uint64{return 0}`,
@@ -139,6 +142,7 @@ func TestArrayRejections(t *testing.T) {
 }
 
 func TestArrayStorageLimit(t *testing.T) {
+	t.Parallel()
 	for _, typ := range []string{"[1024]byte", "[128]uint64", "[256]uint32", "[1024]bool", "[0]byte"} {
 		_, err := Compile("limit.go", []byte("package p;type K "+typ+`;func Process(s,i []byte)uint64{var a K;return uint64(len(a))}`))
 		if err != nil {
@@ -148,6 +152,7 @@ func TestArrayStorageLimit(t *testing.T) {
 }
 
 func TestArrayCapacityMemory(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/array-capacity/program.go")
 	if err != nil {
 		t.Fatal(err)

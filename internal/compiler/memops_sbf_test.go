@@ -44,7 +44,9 @@ var memoryVariants = []struct {
 	{"loops", 1 << 62},
 }
 
-// buildMemoryVariant builds source with the given thresholds.
+// buildMemoryVariant builds source with the given thresholds. It sets the
+// package-level memorySyscallMin, which every build reads, so its callers
+// must not call t.Parallel.
 func buildMemoryVariant(t *testing.T, dir, llvm, profile string, source []byte, threshold uint64) string {
 	t.Helper()
 	saved := memorySyscallMin

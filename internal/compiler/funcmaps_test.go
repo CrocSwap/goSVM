@@ -22,6 +22,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestFuncMapAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"closure capturing a map":             `m := map[uint8]uint8{}; f := func(k uint8) { m[k]++ }; f(1); f(1); return uint64(m[1])`,
 		"closure replacing a map":             `m := map[uint8]uint8{1: 1}; f := func() { m = nil }; f(); return uint64(len(m))`,
@@ -60,6 +61,7 @@ func TestFuncMapAcceptedForms(t *testing.T) {
 // signature, and signatures over different map types (or a named map type
 // and its underlying type) are different classes.
 func TestFuncMapRecursion(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ source, want string }{
 		"map closure calling itself": {funcMapPrefix + "var f func(map[string]int) int\nf = func(m map[string]int) int { return f(m) }\nreturn uint64(f(nil))\n}\n",
 			"f.go:12:5: recursion is not supported"},
@@ -86,6 +88,7 @@ func TestFuncMapRecursion(t *testing.T) {
 // values are captured like any variable, and loop defer records save a map
 // as its 8-byte reference.
 func TestCheckedProgramFuncMaps(t *testing.T) {
+	t.Parallel()
 	source := funcMapPrefix + `m := map[uint8]uint64{}
 f := func(k uint8) uint64 { m[k]++; return m[k] }
 g := func(mm map[uint8]uint64) uint64 { return mm[1] }

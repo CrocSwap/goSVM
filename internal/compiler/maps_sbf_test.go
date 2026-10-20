@@ -108,6 +108,7 @@ func mapSBFCases() ([]allocCase, int) {
 // the v1.57 backend or a runner (make test). GOSVM_MAP_RESULTS=<dir> keeps
 // fixtures, ELFs, reports and a summary.
 func TestMapSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

@@ -82,6 +82,7 @@ func funcStringLimit(kind byte) int {
 // without the v1.57 backend or a runner (make test). GOSVM_COMBO_RESULTS=<dir>
 // keeps fixtures, ELFs, reports and a summary.
 func TestFuncCombinationsSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

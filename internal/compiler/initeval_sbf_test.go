@@ -92,6 +92,7 @@ func keepDir(t *testing.T, keep, profile string) string {
 // measures initialization (the idle vector) both ways.
 // GOSVM_CONSTINIT_RESULTS=<dir> keeps fixtures, ELFs, reports and a summary.
 func TestConstInitSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}
@@ -151,6 +152,7 @@ func TestConstInitSBF(t *testing.T) {
 // line, and that an image under a heap budget above 32 KiB faults at entry
 // without a large enough heap frame, as the first allocation does.
 func TestInitEvalEdgesSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}
@@ -237,6 +239,7 @@ var realLibsInitMeasured = []string{"none", "uint256", "int256", "uint128", "con
 // CU includes initialization. Outputs must match the libraries run
 // natively both ways. GOSVM_CONSTINIT_RESULTS=<dir> keeps the reports.
 func TestRealLibrariesInitSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

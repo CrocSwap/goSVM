@@ -81,6 +81,7 @@ func ifaceVectors(seed int64, perMode int) [][]byte {
 func IfaceVectorsForTest() [][]byte { return ifaceVectors(20261017, 24) }
 
 func TestInterfaceDifferential(t *testing.T) {
+	t.Parallel()
 	c, err := CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: ifaceSource(t)}}}}})
 	if err != nil {
 		t.Fatal(err)
@@ -158,6 +159,7 @@ var boxLimits = map[byte]int{0: 4095, 1: 1365, 2: -1, 3: -1, 4: 4095, 5: 4095}
 // conversion that does not fit aborts, after exactly the predicted number of
 // conversions; native Go never runs out, so the expectation is computed.
 func TestInterfaceBoxingHeap(t *testing.T) {
+	t.Parallel()
 	c, err := CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: ifaceSource(t)}}}}})
 	if err != nil {
 		t.Fatal(err)

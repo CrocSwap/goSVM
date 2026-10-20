@@ -316,6 +316,7 @@ func sliceArrayInputs(count int) [][]byte {
 }
 
 func TestSliceArrayDifferential(t *testing.T) {
+	t.Parallel()
 	inputs := sliceArrayInputs(256)
 	for name, src := range sliceArrayPrograms {
 		t.Run(name, func(t *testing.T) {
@@ -350,6 +351,7 @@ func TestSliceArrayDifferential(t *testing.T) {
 // moves the local to the heap; the slice of a package-level variable makes
 // it writable; and the initializers converting slices run at run time.
 func TestSliceArrayCheck(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(globalsProgram(unitFiles("program", formHostSource(sliceArrayPrograms["slice-array-pointers"]))))
 	if err != nil {
 		t.Fatal(err)
@@ -373,6 +375,7 @@ func TestSliceArrayCheck(t *testing.T) {
 }
 
 func TestSliceArrayRejections(t *testing.T) {
+	t.Parallel()
 	for _, tc := range []struct{ body, want string }{
 		// Go evaluates nothing for an index-only range over a converted
 		// pointer without calls; the existing rule keeps rejecting it.
@@ -386,6 +389,7 @@ func TestSliceArrayRejections(t *testing.T) {
 }
 
 func TestSliceArraySBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

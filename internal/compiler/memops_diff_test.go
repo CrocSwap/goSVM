@@ -219,6 +219,7 @@ func MemoryVectorsForTest() [][]byte { return memoryVectors(20261019, 300) }
 // (SDK 2's word routines and the legacy byte routines) on the SBF vectors
 // and more random ones.
 func TestMemoryDifferential(t *testing.T) {
+	t.Parallel()
 	for _, sdk := range []int{0, 2} {
 		t.Run(fmt.Sprintf("sdk%d", sdk), func(t *testing.T) {
 			c, err := CompileProgram(&Program{SDK: sdk, Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "program.go", Data: memoryValuesSource(t)}}}}})
@@ -289,6 +290,7 @@ func runHostAll(t *testing.T, bin string, vectors [][]byte) string {
 // set compiled for SBF with the modern define, and the standalone memmove
 // helper, under -Werror.
 func TestMemorySyscallRoutinesCompileForSBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")
@@ -320,6 +322,7 @@ func TestMemorySyscallRoutinesCompileForSBF(t *testing.T) {
 // TestZeroLoopForms checks which loops become a memset on SBF
 // (memclear.go): the two zeroing forms do; near misses compile as written.
 func TestZeroLoopForms(t *testing.T) {
+	t.Parallel()
 	for body, want := range map[string]bool{
 		`for i := range s { s[i] = 0 }`:                            true,
 		`for i := range w { w[i] = 0 }`:                            true,

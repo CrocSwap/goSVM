@@ -40,6 +40,7 @@ func genericCheck(t *testing.T, source string) string {
 const unsigned = "type Unsigned interface{ ~uint8 | ~uint16 | ~uint32 | ~uint64 }\n"
 
 func TestGenericAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"inferred and explicit": unsigned + `func Min[T Unsigned](a, b T) T { if a < b { return a }; return b }
 func Process(s, i []byte) uint64 { return Min(uint64(s[0]), 2) + uint64(Min[uint8](s[0], s[1])) + uint64(Min[uint16](3, 4)) }`,
@@ -101,6 +102,7 @@ func Process(s, i []byte) uint64 { a, b := Split(s[0]); h := Head(s, uint32(2));
 }
 
 func TestGenericRejections(t *testing.T) {
+	t.Parallel()
 	limit := func(format string) string {
 		var b strings.Builder
 		b.WriteString("func Process(s, i []byte) uint64 {\n")
@@ -165,6 +167,7 @@ func TestGenericRejections(t *testing.T) {
 // A library package's generic types and functions are instantiated with the
 // importing package's types; the instance belongs to the generic's package.
 func TestGenericCrossPackage(t *testing.T) {
+	t.Parallel()
 	lib := `package lib
 type Unsigned interface{ ~uint32 | ~uint64 }
 type Stack[T any] struct { top, prev T; n uint64 }
@@ -211,6 +214,7 @@ func Process(s, i []byte) uint64 {
 // CheckedProgram lists each instantiation as an ordinary function, in place
 // of its generic declaration, with its own callees and borrow summary.
 func TestCheckedProgramInstances(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(genericSource(`type Box[T any] struct{ V T }
 func (b *Box[T]) Ref() *T { return &b.V }
 func Pick[T any](a T, s []byte) T { return a }
@@ -285,6 +289,7 @@ func Process(s, i []byte) uint64 {
 // Box[uint8] as distinct, identical instances, which share one key, one C
 // struct, one field layout and one instance per method.
 func TestGenericAliasSpellingsShareInstances(t *testing.T) {
+	t.Parallel()
 	source := `type Box[T any] struct{ V T; N uint64 }
 func (b *Box[T]) Set(v T) { b.V = v; b.N++ }
 func Id[T any](x T) T { return x }
@@ -343,6 +348,7 @@ func symbols(c []byte) []string {
 // every instance and type-instance symbol (local temporaries are numbered in
 // emission order, for generic and ordinary code alike).
 func TestGenericNamesAreDeterministic(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/generic-values/program.go")
 	if err != nil {
 		t.Fatal(err)
@@ -384,6 +390,7 @@ func TestGenericNamesAreDeterministic(t *testing.T) {
 }
 
 func TestMangleIsInjective(t *testing.T) {
+	t.Parallel()
 	keys := []string{"a.F[uint8]", "a.F[uint8]_", "a.F_5buint8]", "a_DF", "a.DF", "a._DF", "a/b.F[x, y]", "a/b.F[x,y]", "a.S[*a.T].M", "a.S[a.T].M", "a.F[[2]uint8]", "é.F", "_xc3_xa9.F"}
 	seen := map[string]string{}
 	for _, k := range keys {
@@ -401,6 +408,7 @@ func TestMangleIsInjective(t *testing.T) {
 // Programs without generics lower to their own files: no instance or type
 // instance, and the lowered view is the original syntax.
 func TestNoGenericsLowersToItself(t *testing.T) {
+	t.Parallel()
 	checked, err := Check(genericSource("type P struct{ a uint64 }\nfunc (p P) A() uint64 { return p.a }\nfunc Process(s, i []byte) uint64 { return P{1}.A() }"))
 	if err != nil {
 		t.Fatal(err)
@@ -448,6 +456,7 @@ func genericVectors() []oracleVector {
 // instance (four unsigned widths, structs, arrays, pointers, nested calls)
 // must match Go's results, panics and state.
 func TestGenericDifferential(t *testing.T) {
+	t.Parallel()
 	differential(t, "../../examples/generic-values/program.go", genericvalues.Process, genericVectors())
 }
 

@@ -21,6 +21,7 @@ import (
 // platform-tools v1.57 is absent, and skips the runs (after building) when the
 // managed runners are not installed.
 func TestGenericSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}
@@ -121,6 +122,7 @@ func Process(s, i []byte) uint64 {
 // compile to the same SBF machine code as hand-written per-type copies, so
 // size and compute units are identical.
 func TestGenericMatchesHandwrittenSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF builds are skipped in -short mode")
 	}

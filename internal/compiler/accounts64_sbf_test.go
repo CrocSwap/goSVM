@@ -221,6 +221,7 @@ func TestAccounts64SBF(t *testing.T) {
 // 3,584-byte table overflows 4 KiB in the tutorial (4,224 bytes) and escrow
 // (4,672); with -max-accounts 64 both build for both targets.
 func TestAccounts64Frames(t *testing.T) {
+	t.Parallel()
 	llvm := compiler.ModernLLVMForTest()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

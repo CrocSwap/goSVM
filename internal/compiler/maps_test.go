@@ -47,6 +47,7 @@ func Process(s, i []byte) uint64 {
 func mapMessage(t *testing.T, source string) string { return allocMessage(t, source) }
 
 func TestMapAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"make and index":       `m := make(map[uint64]uint64); m[1] = 2; s[0] = byte(m[1] + m[3])`,
 		"make hint":            `m := make(map[int8]uint8, i[0]); neg := -1; n := make(map[uint32]bool, neg); m[-1] = 1; n[1] = true; s[0] = byte(len(m) + len(n))`,
@@ -111,6 +112,7 @@ func TestMapAcceptedForms(t *testing.T) {
 }
 
 func TestMapRejections(t *testing.T) {
+	t.Parallel()
 	const noRange = rangeMapRule
 	cases := map[string][2]string{
 		"range key value":    {`m := map[int]int{}; for k, v := range m { _, _ = k, v }`, noRange},
@@ -322,6 +324,7 @@ var mapHeapKinds = [][2]int{{0, 0}, {1, 1}, {1, 7}, {1, 384}, {1, 385}, {1, 768}
 // TestMapHeap checks the exact out-of-memory point of map growth with the
 // default 32 KiB heap against the documented accounting.
 func TestMapHeap(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileMaps(t, 0), DefaultHeapBytes, allocDriver, false)
 	oom := fmt.Sprintf("P:%x\n", make([]byte, 1024))
 	checked := 0
@@ -368,6 +371,7 @@ func TestMapHeap(t *testing.T) {
 // TestCheckedProgramMaps: the backend view lists every map type with its
 // sizes, slot size and whether hashing a key can abort.
 func TestCheckedProgramMaps(t *testing.T) {
+	t.Parallel()
 	source := `package p
 type K struct {
 	A uint8
@@ -420,6 +424,7 @@ func Process(s, i []byte) uint64 {
 // TestMapRuntimeOnlyWhenUsed: programs without maps carry no map runtime;
 // the C of a map program is deterministic.
 func TestMapRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	without, err := Compile("a.go", []byte("package p\nfunc Process(s, i []byte) uint64 { b := make([]byte, 2); return uint64(len(b)) }\n"))
 	if err != nil {
 		t.Fatal(err)
@@ -447,6 +452,7 @@ func TestMapRuntimeOnlyWhenUsed(t *testing.T) {
 // TestMapDocumentationExample compiles and runs the example in
 // docs/GO_MAPS.md.
 func TestMapDocumentationExample(t *testing.T) {
+	t.Parallel()
 	doc := string(mustRead(t, "../../docs/GO_MAPS.md"))
 	start := strings.Index(doc, "```go\n")
 	if start < 0 {
@@ -465,6 +471,7 @@ func TestMapDocumentationExample(t *testing.T) {
 // by assignment or in a literal) moves its local to the heap; lookups and
 // deletes do not; elements read from a map are heap storage.
 func TestMapHeapMoves(t *testing.T) {
+	t.Parallel()
 	source := `package p
 type P struct{ X uint64 }
 func get(m map[int]*uint64) *uint64 { v, _ := m[1]; return v }

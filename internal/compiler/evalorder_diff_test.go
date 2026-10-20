@@ -90,6 +90,7 @@ func compileEvalOrder(t *testing.T) []byte {
 }
 
 func TestEvalOrderDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileEvalOrder(t), DefaultHeapBytes, valueTypesDriver, false)
 	vectors := evalOrderVectors(20261015, 6)
 	var want []string

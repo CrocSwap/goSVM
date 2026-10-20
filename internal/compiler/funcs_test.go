@@ -44,6 +44,7 @@ func funcMessage(t *testing.T, source string) string {
 }
 
 func TestFuncAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"function value":           `f := add; return f(1, 2)`,
 		"named function type":      `var o Op = add; return o(3, 4)`,
@@ -96,6 +97,7 @@ func (UF) Do(f Op) uint64 { return f(1, 2) }
 }
 
 func TestFuncRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ source, want string }{
 		// Recursion through function values: a call through a value may run
 		// every target of its signature (the address-taken set).
@@ -164,6 +166,7 @@ func TestFuncRejections(t *testing.T) {
 // The backend view: targets, classes, closures with their environments,
 // defer sites, and captured variables moved to the heap.
 func TestCheckedProgramFunctions(t *testing.T) {
+	t.Parallel()
 	source := funcPrefix + `x := uint64(s[0])
 	f := func() uint64 { return x }
 	g := add
@@ -256,6 +259,7 @@ func TestCheckedProgramFunctions(t *testing.T) {
 
 // A closure can capture the Context; a deferred one writes account data.
 func TestFuncContextCapture(t *testing.T) {
+	t.Parallel()
 	source := "package p\nimport \"gosvm/solana\"\nfunc Process(c solana.Context) uint64 {\n" +
 		"defer func() { solana.Data(c, 0)[0] = 1 }()\nn := func() uint64 { return solana.Count(c) }\nreturn n()\n}\n"
 	c, err := CompileProgram(&Program{Entry: "program", Packages: []PackageSources{{"program", []Source{{Name: "f.go", Data: []byte(source)}}}}})
@@ -268,6 +272,7 @@ func TestFuncContextCapture(t *testing.T) {
 // Programs without function values or defer emit no function-value
 // runtime; named results alone need none either.
 func TestFuncRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	for _, tc := range []struct {
 		body string
 		used bool

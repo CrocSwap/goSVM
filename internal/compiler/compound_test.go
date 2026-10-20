@@ -33,6 +33,7 @@ func compoundMessage(t *testing.T, body string) string {
 }
 
 func TestCompoundAcceptedForms(t *testing.T) {
+	t.Parallel()
 	ops := []string{"+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "&^=", "<<=", ">>="}
 	types := []string{"uint8", "uint16", "uint32", "uint64", "uint", "int8", "int16", "int32", "int64", "int", "Amount", "byte"}
 	for _, typ := range types {
@@ -92,6 +93,7 @@ func TestCompoundAcceptedForms(t *testing.T) {
 }
 
 func TestCompoundRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"bool":           {`b := i[0] > 1; b += true; return 0`, "f.go:13:16: invalid operation: operator + not defined on b (variable of type bool)"},
 		"string minus":   {`t := "a"; t -= "b"; return 0`, "f.go:13:11: invalid operation: operator - not defined on t (variable of type string)"},
@@ -116,6 +118,7 @@ func TestCompoundRejections(t *testing.T) {
 // reassigns the slice, map or index variable of its own target updates the
 // new target. Elements changed by the right operand are seen.
 func TestCompoundOperandOrder(t *testing.T) {
+	t.Parallel()
 	source := `package p
 func Process(s, i []byte) uint64 {
 	b := []uint64{1, 2, 3}
@@ -161,6 +164,7 @@ func Process(s, i []byte) uint64 {
 // Programs without compound assignment take none of its paths; a program
 // with one gets the signed-division runtime only for a signed /= or %=.
 func TestCompoundEmission(t *testing.T) {
+	t.Parallel()
 	compile := func(body string) []byte {
 		t.Helper()
 		c, err := Compile("f.go", []byte("package p\nfunc Process(s, i []byte) uint64 {\n"+body+"\n}\n"))

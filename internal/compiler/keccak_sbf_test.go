@@ -25,6 +25,7 @@ import (
 // the v1.57 backend or a runner. GOSVM_KECCAK_RESULTS=<dir> keeps the
 // fixtures, ELFs and reports.
 func TestKeccak256SBF(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

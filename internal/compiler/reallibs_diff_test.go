@@ -542,6 +542,7 @@ func nativeRealLibs(t *testing.T, oracle string, vectors [][]byte) []string {
 // trimmed module copies, and compares every vector's output, result and
 // panic with the unmodified modules run natively.
 func TestRealLibrariesDifferential(t *testing.T) {
+	t.Parallel()
 	env := realLibs(t)
 	vectors := append(realLibsVectors(20261016, 80), realLibsTickSweep()...)
 	vectors = append(vectors, realLibsSBFVectors()...)
@@ -636,6 +637,7 @@ var realLibsWhole = []struct{ path, use, at, want string }{
 }
 
 func TestRealLibrariesWholePackages(t *testing.T) {
+	t.Parallel()
 	env := realLibs(t)
 	example, err := filepath.Abs(realLibsExample)
 	if err != nil {

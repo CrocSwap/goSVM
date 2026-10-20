@@ -167,6 +167,7 @@ func stdlibProbeCase(name string, flag byte, want uint64) allocCase {
 // runner (make test). GOSVM_STDLIB_RESULTS=<dir> keeps fixtures, ELFs,
 // reports and a summary.
 func TestStdlibSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

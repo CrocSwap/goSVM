@@ -14,6 +14,7 @@ import (
 // The logging runtime is emitted only for programs that call Log, Log64 or
 // LogPubkey; SDK 1 does not have them.
 func TestSDK2LogRuntimeEmittedOnlyWhenCalled(t *testing.T) {
+	t.Parallel()
 	for _, tc := range []struct {
 		source string
 		want   bool
@@ -42,6 +43,7 @@ func TestSDK2LogRuntimeEmittedOnlyWhenCalled(t *testing.T) {
 // same bytes for Log, the same words for Log64 and key for LogPubkey, and
 // the same statuses.
 func TestSDK2LogNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app
 import "gosvm/solana"
 func word(b []byte,o uint64)uint64{n:=uint64(0);for j:=uint64(0);j<8;j++{n=n|uint64(b[o+j])<<(j*8)};return n}

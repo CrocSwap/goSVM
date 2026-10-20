@@ -10,6 +10,7 @@ import (
 )
 
 func TestFrameDiagnosticsParse(t *testing.T) {
+	t.Parallel()
 	names := map[string]string{"v12": "program.big"}
 	for _, line := range []string{
 		"Error: Function v12 overflows the maximum allowed frame space by accessing an offset 960 bytes greater than the maximum of 4096. Please, minimize large stack variables.",
@@ -29,6 +30,7 @@ func TestFrameDiagnosticsParse(t *testing.T) {
 // A function whose frame exceeds 4 KiB fails the fogo-v0 build (fixed
 // frames) naming the Go function; Clang alone exits successfully.
 func TestFrameOverflowFailsBuild(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

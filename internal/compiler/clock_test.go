@@ -14,6 +14,7 @@ import (
 )
 
 func TestSDK2ClockNativeCDifferential(t *testing.T) {
+	t.Parallel()
 	source := `package app;import "gosvm/solana"
 func Process(c solana.Context)uint64{return solana.Clock(c,solana.Data(c,0)[1:uint64(solana.Instruction(c)[0])+1])}`
 	p := &Program{SDK: 2, Entry: "app", Packages: []PackageSources{unit("app", source)}}

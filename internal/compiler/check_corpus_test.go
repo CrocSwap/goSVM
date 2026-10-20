@@ -371,6 +371,7 @@ const (
 // failure after a successful Check would surface here as a mismatch. Entries
 // in corpusChanges are verified against their new expected outcome instead.
 func TestCorpusMatchesPreCheckCompiler(t *testing.T) {
+	t.Parallel()
 	rejected, changed := 0, 0
 	for i, e := range loadCorpus(t) {
 		e := e

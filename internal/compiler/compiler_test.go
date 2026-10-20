@@ -47,6 +47,7 @@ func hostGenerated(t *testing.T, c []byte, driver string) string {
 }
 
 func TestWideQuoteDifferential(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/tokenswap/swap.go")
 	if err != nil {
 		t.Fatal(err)
@@ -79,6 +80,7 @@ int main(void){u64 x,y,a;while(scanf("%llu %llu %llu",&x,&y,&a)==3){u8 s[16],i[8
 }
 
 func TestRejectUnsupported(t *testing.T) {
+	t.Parallel()
 	for name, source := range map[string]string{
 		"imports":            `import "fmt";func Process(s,i []byte) uint64 {fmt.Println("x");return 0}`,
 		"float":              `func Process(s,i []byte) uint64 {x:=1.5;return uint64(x)}`,
@@ -108,6 +110,7 @@ func TestRejectUnsupported(t *testing.T) {
 }
 
 func TestSDKContext(t *testing.T) {
+	t.Parallel()
 	// Host execution exercises the emitted account decoder, alias import, opaque
 	// context copies, mutable account views, and boundary getters. CPI/PDA calls
 	// are covered in the actual validator suite rather than mocked here.
@@ -131,6 +134,7 @@ u64 r=entrypoint(raw);return r?r:(raw[96]==42?0:3);}`)
 }
 
 func TestSDKHashBounds(t *testing.T) {
+	t.Parallel()
 	source := `package p
 import "gosvm/solana"
 func Process(c solana.Context)uint64 {
@@ -148,6 +152,7 @@ int main(void){Context c={0};u8 b[64]={0};c.count=1;c.accounts[0].data=b;c.accou
 }
 
 func TestGoSemantics(t *testing.T) {
+	t.Parallel()
 	source := `package p
 func bump(s []byte) uint64 { s[0] = s[0]+1; return uint64(s[0]) }
 func Process(s,i []byte) uint64 {
@@ -175,6 +180,7 @@ func Process(s,i []byte) uint64 {
 }
 
 func TestRuntimeGuards(t *testing.T) {
+	t.Parallel()
 	for name, expr := range map[string]string{"bounds": "uint64(s[uint64(i[0])])", "division": "uint64(s[0])/uint64(i[0])"} {
 		t.Run(name, func(t *testing.T) {
 			index := 0
@@ -192,6 +198,7 @@ func TestRuntimeGuards(t *testing.T) {
 }
 
 func TestAMMDifferential(t *testing.T) {
+	t.Parallel()
 	source, err := os.ReadFile("../../examples/amm/amm.go")
 	if err != nil {
 		t.Fatal(err)

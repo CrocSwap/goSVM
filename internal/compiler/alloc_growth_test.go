@@ -90,6 +90,7 @@ func hasPointers(t reflect.Type) bool {
 // growthTypes and append sequences of 1, 2, 3, 7 and 100 elements, until the
 // backing array exceeds 300 KiB.
 func TestGrowthModelMatchesGoRuntime(t *testing.T) {
+	t.Parallel()
 	if v := strings.TrimPrefix(runtime.Version(), "go"); !strings.HasPrefix(v, "1.22") {
 		t.Skipf("the oracle is Go 1.22's runtime; running %s", v)
 	}
@@ -127,6 +128,7 @@ func TestGrowthModelMatchesGoRuntime(t *testing.T) {
 // the host over a grid of lengths, capacities, counts, sizes and both
 // pointer modes, and compares every resulting capacity with the model.
 func TestGrowthRuntimeMatchesModel(t *testing.T) {
+	t.Parallel()
 	cc, err := exec.LookPath("clang")
 	if err != nil {
 		t.Skip("host Clang is needed")
@@ -202,6 +204,7 @@ while(scanf("%llu %llu %llu %llu %llu",&l,&c,&n,&s,&scan)==5){
 // TestGrowthModelMatchesCompiledAppend checks the model against append on
 // concrete compiled types (no reflect), which is what native fixtures run.
 func TestGrowthModelMatchesCompiledAppend(t *testing.T) {
+	t.Parallel()
 	type big struct {
 		P *uint64
 		A [64]uint64

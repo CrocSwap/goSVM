@@ -27,6 +27,7 @@ func modernLLVM() string {
 // Uncached builds of the same source from different absolute paths must be
 // byte-identical (no embedded build paths or temporary names).
 func TestModernRebuildIsByteIdentical(t *testing.T) {
+	t.Parallel()
 	llvm := modernLLVM()
 	if llvm == "" {
 		t.Skip("pinned platform-tools v1.57 backend required")

@@ -198,6 +198,7 @@ func compareGlobalVectors(t *testing.T, bin string, vectors [][]byte, want []str
 }
 
 func TestGlobalsDifferential(t *testing.T) {
+	t.Parallel()
 	oracle := globalOracle(t)
 	bin := hostCompile(t, compileGlobals(t, nil), DefaultHeapBytes, allocDriver, false)
 	vectors := append(globalVectors(20261014, 300), GlobalVectorsForTest()...)

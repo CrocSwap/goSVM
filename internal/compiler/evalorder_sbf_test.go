@@ -19,6 +19,7 @@ import (
 // without the v1.57 backend or a runner (make test). GOSVM_INT_RESULTS=<dir>
 // keeps fixtures, ELFs, reports and a summary under eval-order/.
 func TestEvalOrderSBF(t *testing.T) {
+	t.Parallel()
 	if testing.Short() {
 		t.Skip("SBF runs are skipped in -short mode")
 	}

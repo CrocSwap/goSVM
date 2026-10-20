@@ -88,6 +88,7 @@ func compileCompound(t *testing.T) []byte {
 }
 
 func TestCompoundDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileCompound(t), DefaultHeapBytes, allocDriver, false)
 	vectors := compoundVectors(20261014, 2400)
 	var want []string

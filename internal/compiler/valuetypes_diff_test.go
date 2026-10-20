@@ -160,6 +160,7 @@ func compileValueTypes(t *testing.T) []byte {
 }
 
 func TestValueTypesDifferential(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileValueTypes(t), DefaultHeapBytes, valueTypesDriver, false)
 	vectors := valueTypesVectors(20261014, 2000)
 	var want []string

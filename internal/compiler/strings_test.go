@@ -37,6 +37,7 @@ func Process(s, i []byte) uint64 {
 `
 
 func TestStringAcceptedForms(t *testing.T) {
+	t.Parallel()
 	for name, body := range map[string]string{
 		"literals":             "a, b := \"x\\n\\x00é\", `raw\\n`; s[0] = a[0] + b[0]",
 		"empty":                `var e string; if e == "" { s[0] = byte(len(e)) }`,
@@ -85,6 +86,7 @@ func TestStringAcceptedForms(t *testing.T) {
 }
 
 func TestStringRejections(t *testing.T) {
+	t.Parallel()
 	for name, c := range map[string]struct{ body, want string }{
 		"compound bool":     {`x := true; x += false; _ = x`, "invalid operation: operator + not defined on x (variable of type bool)"},
 		"float conversion":  {`var f float64 = 1; _ = f`, "unsupported type float64"},
@@ -121,6 +123,7 @@ func TestStringRejections(t *testing.T) {
 // string runtime (string constants used only in constant expressions are
 // folded); programs that never allocate strings carry no heap runtime.
 func TestStringRuntimeOnlyWhenUsed(t *testing.T) {
+	t.Parallel()
 	constant := "package p\nconst k = \"abc\"\nfunc Process(s, i []byte) uint64 { s[0] = byte(len(k + \"d\")); return uint64(len(k)) }\n"
 	out, err := Compile("a.go", []byte(constant))
 	if err != nil {
@@ -198,6 +201,7 @@ func intStringNative(in []byte) string {
 // values, surrogates, values above U+10FFFF, including values that only
 // truncate into range) is U+FFFD.
 func TestStringIntegerConversions(t *testing.T) {
+	t.Parallel()
 	c, err := Compile("a.go", []byte(intStringSource()))
 	if err != nil {
 		t.Fatal(err)
@@ -268,6 +272,7 @@ func stringHeapLimit(kind byte, la, lb int) int {
 // exactly: the iteration that does not fit aborts after the predicted number
 // of iterations; native Go never runs out, so the expectation is computed.
 func TestStringHeap(t *testing.T) {
+	t.Parallel()
 	bin := hostCompile(t, compileStrings(t), DefaultHeapBytes, allocDriver, false)
 	oom := func(n int) string {
 		out := make([]byte, 1024)
@@ -306,6 +311,7 @@ func TestStringHeap(t *testing.T) {
 
 // TestStringDocumentationExample compiles the example in docs/GO_STRINGS.md.
 func TestStringDocumentationExample(t *testing.T) {
+	t.Parallel()
 	doc := string(mustRead(t, "../../docs/GO_STRINGS.md"))
 	start := strings.Index(doc, "```go\n")
 	if start < 0 {
