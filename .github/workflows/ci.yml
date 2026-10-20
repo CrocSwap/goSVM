@@ -18,39 +18,51 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The make test suite: every top-level test of every package runs in
+  # exactly one shard, packed by recorded duration (scripts/test_shards.py).
+  # macOS: four shards plus checks fit GitHub's five concurrent macOS jobs.
   test:
-    name: test (${{ matrix.platform }})
+    name: test (${{ matrix.platform }}, ${{ matrix.shard }}/${{ matrix.shards }})
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-24.04
-            platform: linux-amd64
-          - os: macos-14
-            platform: darwin-arm64
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 1}
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 2}
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 3}
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 4}
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 5}
+          - {os: ubuntu-24.04, platform: linux-amd64, shards: 6, shard: 6}
+          - {os: macos-14, platform: darwin-arm64, shards: 4, shard: 1}
+          - {os: macos-14, platform: darwin-arm64, shards: 4, shard: 2}
+          - {os: macos-14, platform: darwin-arm64, shards: 4, shard: 3}
+          - {os: macos-14, platform: darwin-arm64, shards: 4, shard: 4}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache locations
+        run: |
+          echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
+          echo "GOCACHE=$RUNNER_TEMP/go-build" >> "$GITHUB_ENV"
+          echo "GOMODCACHE=$RUNNER_TEMP/go-mod" >> "$GITHUB_ENV"
 
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22.0'
-          cache: true
-          # The root module has no go.sum; without an explicit path the
-          # module and build caches are never restored.
-          cache-dependency-path: |
-            go.mod
-            examples/*/go.sum
+          cache: false
 
-      - name: Isolated gosvm cache
-        run: echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
-
-      - name: Build CLI
-        run: bash scripts/build-cli.sh build/gosvm
-
-      - name: Vet
-        run: go vet ./...
+      # Module and build caches under one key per commit's Go sources, so a
+      # run restores the latest earlier build of the same platform.
+      - name: Go caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/go-build
+            ${{ runner.temp }}/go-mod
+          key: go-${{ matrix.platform }}-${{ hashFiles('go.mod', '**/go.sum', '**/*.go') }}
+          restore-keys: go-${{ matrix.platform }}-
 
       # The official archive is 430-530 MB; only the extracted Clang/LLD are
       # cached, keyed by the files that pin them.
@@ -60,31 +72,87 @@ jobs:
           path: ${{ runner.temp }}/gosvm-cache/toolchains
           key: platform-tools-v1.57-${{ matrix.platform }}-${{ hashFiles('internal/toolchain/archives.go', 'internal/targets/profile.go') }}
 
-      - name: Install backend
-        run: build/gosvm toolchain install -runners=false
-
-      # Runner releases exist only after the maintainer publishes them (and
-      # Linux pins only after the first runner release); until then the SBF
-      # executions in the tests skip, saying so.
-      - name: Install SVM runners
+      - name: Build CLI and install backend and runners
         run: |
+          bash scripts/build-cli.sh build/gosvm
+          build/gosvm toolchain install -runners=false
+          # Runner releases exist only after the maintainer publishes them;
+          # until then the SBF executions in the tests skip, saying so.
           if ! build/gosvm runner install; then
             echo "::warning::SVM runners not installed for ${{ matrix.platform }}; SBF executions will be skipped"
           fi
 
-      - name: Doctor
-        run: build/gosvm doctor
-
-      # The `make test` suite, with internal/compiler split across concurrent
-      # go test processes (scripts/test_shards.py). -count=1: with the build
-      # cache restored, `go test` would otherwise report cached results.
+      # -count=1: with the build cache restored, `go test` would otherwise
+      # report cached results instead of running the tests.
       - name: Root tests
         env:
           GOFLAGS: -count=1
         run: |
           # The real-libraries tests read these modules from the module cache.
           (cd examples/real-libraries && go mod download)
-          python3 scripts/test_shards.py
+          python3 scripts/test_shards.py --shard ${{ matrix.shard }}/${{ matrix.shards }}
+
+  # Everything else, alongside the test shards.
+  checks:
+    name: checks (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-amd64
+          - os: macos-14
+            platform: darwin-arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache locations
+        run: |
+          echo "GOSVM_CACHE=$RUNNER_TEMP/gosvm-cache" >> "$GITHUB_ENV"
+          echo "GOCACHE=$RUNNER_TEMP/go-build" >> "$GITHUB_ENV"
+          echo "GOMODCACHE=$RUNNER_TEMP/go-mod" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.0'
+          cache: false
+
+      # Module and build caches under one key per commit's Go sources, so a
+      # run restores the latest earlier build of the same platform.
+      - name: Go caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/go-build
+            ${{ runner.temp }}/go-mod
+          key: go-${{ matrix.platform }}-${{ hashFiles('go.mod', '**/go.sum', '**/*.go') }}
+          restore-keys: go-${{ matrix.platform }}-
+
+      # The official archive is 430-530 MB; only the extracted Clang/LLD are
+      # cached, keyed by the files that pin them.
+      - name: Cache platform-tools backend
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/gosvm-cache/toolchains
+          key: platform-tools-v1.57-${{ matrix.platform }}-${{ hashFiles('internal/toolchain/archives.go', 'internal/targets/profile.go') }}
+
+      - name: Build CLI and install backend and runners
+        run: |
+          bash scripts/build-cli.sh build/gosvm
+          build/gosvm toolchain install -runners=false
+          # Runner releases exist only after the maintainer publishes them;
+          # until then the SBF executions in the tests skip, saying so.
+          if ! build/gosvm runner install; then
+            echo "::warning::SVM runners not installed for ${{ matrix.platform }}; SBF executions will be skipped"
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Doctor
+        run: build/gosvm doctor
 
       - name: Example and benchmark module tests
         env:
@@ -158,3 +226,15 @@ jobs:
         run: python3 -m py_compile scripts/package_runner_release.py scripts/update_runner_pins.py scripts/package_cli_release.py scripts/check_rebuild_reference.py scripts/test_shards.py
       - name: Committed release pins are well formed
         run: python3 -c "import json,glob; [json.load(open(p)) for p in glob.glob('internal/runner/pins/**/*.json', recursive=True)]"
+
+  # The single required check for branch protection.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [test, checks, scripts]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: All jobs passed
+        run: |
+          echo '${{ toJSON(needs) }}'
+          [ "${{ needs.test.result }}" = success ] && [ "${{ needs.checks.result }}" = success ] && [ "${{ needs.scripts.result }}" = success ]
